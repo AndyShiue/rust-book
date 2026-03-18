@@ -6694,10 +6694,12 @@ c 的總和：7
 </code></pre></div>
 
 <p>這裡用到的 <code>.chars()</code> 是一個 method——String 和 &amp;str 都有實作。它會把字串拆成一個一個字元讓你走訪。</p>
-<p>這樣做的好處是：
-1. 傳 <code>&amp;str</code>（字串字面值）可以用
-2. 傳 <code>&amp;String</code> 也可以用（自動轉換）
-3. 不會 move 任何東西</p>
+<p>這樣做的好處是：</p>
+<ol>
+<li>傳 <code>&amp;str</code>（字串字面值）可以用</li>
+<li>傳 <code>&amp;String</code> 也可以用（自動轉換）</li>
+<li>不會 move 任何東西</li>
+</ol>
 <p>這就是為什麼 Rust 社群普遍建議：<strong>函數參數用 <code>&amp;str</code> 而不是 <code>&amp;String</code></strong>。</p>
 <h4 id="string_2">什麼時候用 String？</h4>
 <ul>

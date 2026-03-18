@@ -46,6 +46,7 @@ fn count_chars(s: &str) -> i32 {
 這裡用到的 `.chars()` 是一個 method——String 和 &str 都有實作。它會把字串拆成一個一個字元讓你走訪。
 
 這樣做的好處是：
+
 1. 傳 `&str`（字串字面值）可以用
 2. 傳 `&String` 也可以用（自動轉換）
 3. 不會 move 任何東西
