@@ -12,6 +12,7 @@ CHAPTERS = [
     ("第三章：Struct、Enum 與 Pattern Matching", "chapter3"),
     ("第四章：所有權與借用", "chapter4"),
     ("第五章：泛型、Trait Bound 與生命週期", "chapter5"),
+    ("第六章：閉包與迭代器", "chapter6"),
 ]
 
 parts = []

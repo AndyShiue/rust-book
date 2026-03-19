@@ -1,0 +1,135 @@
+# 第六章第 11 集：聚合
+
+## 本集目標
+學會用迭代器的聚合方法把一整個序列「摺疊」成一個值。
+
+## 概念說明
+
+### 什麼是聚合？
+
+前幾集我們學了怎麼建立迭代器、怎麼 collect 成集合。但有時候你不需要一個集合，你要的是一個**單一的值**——總和、最大值、個數⋯⋯這就是聚合（aggregation）。
+
+### .count() —— 數有幾個
+
+```rust
+let count = (1..=100).filter(|n| n % 3 == 0).count();
+// 100 以內 3 的倍數有幾個？33 個
+```
+
+### .sum() 和 .product()
+
+```rust
+let total: i32 = (1..=10).sum();       // 55
+let factorial: i64 = (1..=10).product(); // 3628800
+```
+
+注意 `.sum()` 和 `.product()` 需要知道回傳型別，因為不同數字型別的加法/乘法結果不同。通常用型別標註解決。
+
+### .min() 和 .max()
+
+```rust
+let v = vec![3, 1, 4, 1, 5, 9, 2, 6];
+let smallest = v.iter().min();  // Some(&1)
+let largest = v.iter().max();   // Some(&9)
+```
+
+回傳 `Option`，因為迭代器可能是空的（空的就回傳 None）。
+
+### .fold() —— 最通用的聚合
+
+`fold` 是所有聚合方法的「老大」。它接受一個初始值和一個閉包，每一步把「累積值」和「當前元素」組合起來：
+
+```rust
+let sum = (1..=5).fold(0, |acc, x| acc + x);
+// 步驟：0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15
+```
+
+`fold` 能做的事情遠比 sum 多。想把數字串成字串？想同時追蹤多個值？都可以：
+
+```rust
+let text = (1..=5).fold(String::new(), |mut acc, x| {
+    if !acc.is_empty() {
+        acc.push_str(", ");
+    }
+    acc.push_str(&x.to_string());
+    acc
+});
+// "1, 2, 3, 4, 5"
+```
+
+### .reduce() —— 沒有初始值的 fold
+
+`reduce` 跟 `fold` 很像，但它用第一個元素當初始值：
+
+```rust
+let product = vec![2, 3, 4].into_iter().reduce(|acc, x| acc * x);
+// Some(24)：2*3=6, 6*4=24
+```
+
+因為可能沒有第一個元素（迭代器是空的），所以 `reduce` 回傳 `Option`。
+
+## 範例程式碼
+
+```rust
+fn main() {
+    let scores = vec![85, 92, 78, 95, 88, 76, 91];
+
+    // .count()
+    let total = scores.iter().count();
+    println!("總共 {} 個分數", total);
+
+    // .sum()
+    let sum: i32 = scores.iter().sum();
+    println!("總分：{}", sum);
+
+    // .min() / .max()
+    let min = scores.iter().min();
+    let max = scores.iter().max();
+    println!("最低分：{:?}，最高分：{:?}", min, max);
+
+    // .product()
+    let factorial: i64 = (1..=10).product();
+    println!("\n10! = {}", factorial);
+
+    // .fold() —— 計算平均分
+    let (count2, sum2) = scores.iter().fold((0, 0), |(c, s), &score| {
+        (c + 1, s + score)
+    });
+    println!("\n用 fold 算平均：{} / {} = {}", sum2, count2, sum2 / count2);
+
+    // .fold() —— 把數字串成字串
+    let nums = vec![1, 2, 3, 4, 5];
+    let formatted = nums.iter().fold(String::new(), |mut acc, &n| {
+        if !acc.is_empty() {
+            acc.push_str(" → ");
+        }
+        acc.push_str(&n.to_string());
+        acc
+    });
+    println!("連接：{}", formatted);
+
+    // .reduce() —— 找最長的字串
+    let words = vec!["cat", "elephant", "dog", "hippopotamus"];
+    let longest = words
+        .iter()
+        .reduce(|a, b| if a.len() >= b.len() { a } else { b });
+    println!("\n最長的字：{:?}", longest);
+
+    // 及格人數
+    let pass_count = scores.iter().filter(|&&s| s >= 80).count();
+    println!("\n及格（≥80）人數：{}", pass_count);
+
+    // .reduce() 回傳 Option（空迭代器的情況）
+    let empty: Vec<i32> = vec![];
+    let result = empty.into_iter().reduce(|a, b| a + b);
+    println!("空 Vec 的 reduce：{:?}", result);
+}
+```
+
+## 重點整理
+- `.count()` 計算元素個數
+- `.sum()` 和 `.product()` 計算總和與乘積，需要標註回傳型別
+- `.min()` 和 `.max()` 回傳 `Option`，因為迭代器可能是空的
+- `.fold(init, |acc, x| ...)` 是最通用的聚合——用初始值和閉包逐步累積
+- `.reduce(|acc, x| ...)` 類似 fold 但用第一個元素當初始值，回傳 `Option`
+- 聚合方法會消耗整個迭代器，產出一個單一的值
