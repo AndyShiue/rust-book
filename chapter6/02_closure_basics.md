@@ -7,7 +7,7 @@
 
 ### 閉包的語法
 
-上一集的函數指標很好用，但有個限制：它不能「記住」外部的東西。閉包（closure）就是為了解決這個問題而存在的。
+上一集的函數指標很好用，但有個限制：它不能使用呼叫處的區域變數。閉包（closure）就是為了解決這個問題而存在的。
 
 閉包的基本語法用 `|` 來包參數：
 
@@ -21,7 +21,29 @@ let add_one = |x| x + 1;
 let add_one = |x: i32| -> i32 { x + 1 };
 ```
 
-兩種寫法效果一樣，Rust 通常能自動推導型別，所以短的寫法更常見。
+### 什麼時候要加大括號？
+
+規則很簡單：
+
+- **只有一個表達式**的時候，可以省略大括號：`|x| x + 1`
+- **有多行程式碼**或**需要 `let`、`if` 等語句**的時候，要用大括號包起來：
+
+```rust
+let process = |x: i32| {
+    let doubled = x * 2;
+    println!("計算中：{}", doubled);
+    doubled + 1
+};
+```
+
+跟函數一樣，大括號裡最後一行不加分號就是回傳值。
+
+另外，如果有加型別標註（`-> i32`），就一定要加大括號：
+
+```rust
+let add_one = |x: i32| -> i32 { x + 1 };  // 有 -> 就必須有 {}
+let add_one = |x: i32| x + 1;             // 沒有 -> 可以省略 {}
+```
 
 ### 閉包能捕捉外部變數
 
@@ -35,40 +57,71 @@ println!("{}", add_offset(5));     // 15
 
 `add_offset` 這個閉包「記住」了外部的 `offset`，每次呼叫都會用到它。普通函數做不到這件事。
 
+### 閉包不是只有一種
+
+根據閉包**怎麼使用**捕捉到的變數，Rust 會把閉包分成不同的種類——有些閉包只能呼叫一次，有些可以呼叫很多次。這一集先看兩個例子感受一下差別，下幾集再深入解釋。
+
 ### Result::map —— FnOnce 的例子
 
-標準庫很多方法都接受閉包。還記得第五章的 `Result<T, E>` 嗎？它有一個 `map` 方法，可以把 `Ok` 裡的值做轉換：
+標準庫很多方法都接受閉包。還記得第五章的 `Result<T, E>` 嗎？它有一個 `map` 方法，可以把 `Ok` 裡的值做轉換。`map` 只需要呼叫閉包一次，所以它接受 `FnOnce`——「至少能呼叫一次」就夠了。
+
+這意味著你可以傳一個**會消耗捕捉到的變數**的閉包給它：
 
 ```rust
-let result: Result<i32, String> = Ok(5);
-let doubled = result.map(|x| x * 2);  // Ok(10)
+let prefix = String::from("結果是：");
+let result: Result<i32, String> = Ok(42);
+let message = result.map(|x| {
+    // prefix 被 move 進來，這個閉包只能呼叫一次
+    let mut s = prefix;  // move！
+    s.push_str(&x.to_string());
+    s
+});
+println!("{:?}", message);  // Ok("結果是：42")
 ```
 
-`map` 只需要呼叫閉包一次（對 `Ok` 裡的值），所以它要求的是 `FnOnce`——「至少能呼叫一次」。關於 FnOnce 的細節，我們第 4 集會深入。
+這個閉包把 `prefix` move 進來了，呼叫一次之後 `prefix` 就沒了。但沒關係，`map` 本來就只呼叫接收的函數一次。
 
 ### Vec::retain —— FnMut 的例子
 
-`Vec` 的 `retain` 方法會保留符合條件的元素，移除不符合的：
+`Vec<T>` 的 `retain` 方法會保留符合條件的元素，移除不符合的。它接受一個閉包，這個閉包接收 `&T`（每個元素的引用）、回傳 `bool`（true 保留、false 移除）。因為 `retain` 要對每個元素都呼叫一次，所以它要求 `FnMut`——「可以多次呼叫」。
+
+你可以傳一個**會修改捕捉到的變數**的閉包：
 
 ```rust
 let mut numbers = vec![1, 2, 3, 4, 5, 6];
-numbers.retain(|x| x % 2 == 0);
-// numbers 現在是 [2, 4, 6]
+let mut removed_count = 0;
+numbers.retain(|x| {
+    if x % 2 == 0 {
+        true  // 保留偶數
+    } else {
+        removed_count += 1;  // 修改外部變數
+        false
+    }
+});
+println!("{:?}，移除了 {} 個", numbers, removed_count);
+// [2, 4, 6]，移除了 3 個
 ```
 
-`retain` 要對每個元素都呼叫閉包，而且過程中會修改 Vec，所以它要求 `FnMut`——「可以多次呼叫，而且可以修改狀態」。
+這個閉包每次被呼叫都會修改 `removed_count`——它是 FnMut。注意它沒有 move 任何東西（只是透過 `&mut` 修改外部變數），所以可以被呼叫很多次。
 
 ### 如果把 FnOnce 傳給 retain？
 
-假設你有一個閉包用了 `String`，而且會消耗（move）它：
+上面 `Result::map` 那種會 move 變數的閉包，能傳給 `retain` 嗎？
 
 ```rust
 let mut items = vec![1, 2, 3];
-let message = String::from("keeping");
-// items.retain(|x| { drop(message); *x > 1 });  // 編譯錯誤！
+let header = String::from("剔除：");
+// items.retain(|x| {
+//     if *x <= 1 {
+//         let mut log = header;  // move header
+//         log.push_str(&x.to_string());
+//         log.push(' ');
+//     }
+//     *x > 1
+// });  // 編譯錯誤！
 ```
 
-這個閉包在第一次呼叫時就 `drop` 了 `message`，第二次就沒得 drop 了。它只能呼叫一次（FnOnce），但 `retain` 需要 FnMut（多次呼叫）。所以編譯器會報錯。
+這個閉包在第一次剔除元素時就把 `header` move 走了，第二次要剔除時 `header` 已經不存在。它只能呼叫一次（FnOnce），但 `retain` 需要多次呼叫（FnMut）。所以編譯器會報錯。
 
 ### 不捕捉變數的閉包 → 可以轉成函數指標
 

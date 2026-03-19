@@ -1,4 +1,4 @@
-# 第六章第 7 集：Iterator trait
+# 第六章第 8 集：Iterator trait
 
 ## 本集目標
 認識 `Iterator` trait 的核心——只要實作 `next()` 方法，就能免費獲得數十個好用的方法。

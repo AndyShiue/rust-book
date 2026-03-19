@@ -1,4 +1,4 @@
-# 第六章第 4 集：Fn / FnMut / FnOnce
+# 第六章第 5 集：Fn / FnMut / FnOnce
 
 ## 本集目標
 理解 Fn、FnMut、FnOnce 是 trait 而非型別，掌握它們的繼承關係，並學會在 API 設計中選擇正確的 bound。
@@ -7,7 +7,7 @@
 
 ### 它們是 trait，不是型別
 
-上一集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？
+前幾集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？
 
 - `FnOnce(Args) -> Ret`：可以被呼叫至少一次（可能會消耗自己）
 - `FnMut(Args) -> Ret`：可以被多次呼叫（可能會修改內部狀態）
@@ -32,7 +32,7 @@ Fn : FnMut : FnOnce
 
 ### 用 impl Trait 接受閉包
 
-還記得第五章第 14 集的 `impl Trait` 嗎？它用在函數參數上，可以接受任何實作了該 trait 的型別：
+還記得第五章的 `impl Trait` 嗎？用它來接受閉包參數：
 
 ```rust
 fn call_once(f: impl FnOnce() -> String) -> String {
@@ -50,6 +50,8 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 }
 ```
 
+注意 `FnMut` 的參數要加 `mut`——因為呼叫 FnMut 閉包需要 `&mut self`，而 `f` 擁有這個閉包，所以 `f` 本身要是 `mut` 的。
+
 ### API 設計原則：選最寬鬆的 bound
 
 當你設計一個接受閉包的函數時，應該選**最寬鬆**的 trait bound：
@@ -59,8 +61,6 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 3. 最後才用 `Fn` —— 如果你需要多次呼叫且不允許修改
 
 為什麼？因為 `FnOnce` 接受的範圍最廣（所有閉包都至少是 FnOnce），而 `Fn` 最窄（只有不修改狀態的閉包才行）。選最寬鬆的 bound，使用者的自由度最高。
-
-這個原則跟第五章的 trait bound 設計思路是一樣的——不要要求你不需要的能力。
 
 ### 函數指標也實作了這三個 trait
 
@@ -90,8 +90,9 @@ fn sum_two_calls(f: impl Fn(i32) -> i32, x: i32) -> i32 {
 fn main() {
     // FnOnce：閉包消耗了捕捉的值
     let name = String::from("Rust");
-    consume_and_print(move || {
-        format!("Hello, {}!", name)  // name 被 move 進來
+    consume_and_print(|| {
+        let s = name;  // move name
+        format!("Hello, {}!", s)
     });
 
     // FnMut：閉包修改了捕捉的變數
@@ -128,5 +129,6 @@ fn main() {
 - `Fn`、`FnMut`、`FnOnce` 是 **trait**，不是型別；`fn` 才是函數指標型別
 - 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（Fn 最嚴格，FnOnce 最寬鬆）
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數
+- `FnMut` 的參數要加 `mut`
 - API 設計原則：**先選 FnOnce**，不夠再升級到 FnMut、Fn
 - 普通函數和函數指標自動實作了 Fn + FnMut + FnOnce

@@ -9,20 +9,21 @@
 
 我們今天來手動做一次，你就會完全懂了。
 
-### 第一步：把捕捉的變數放進 struct
+### 把捕捉的變數放進 struct
 
-假設我們有一個閉包，捕捉了一個 `String`：
+假設我們有一個閉包，捕捉了一個 `String`，而且在呼叫時會把它 move 走：
 
 ```rust
 let name = String::from("Alice");
-let greet = move || {
-    let msg = format!("Hello, {}!", name);
-    println!("{}", msg);
-    name  // 把 name 移出去（消耗了它）
+let greet = || {
+    let s = name;  // move name 進來
+    println!("Hello, {}!", s);
 };
+greet();
+// greet();  // 編譯錯誤！name 已經被 move 走了，不能再呼叫
 ```
 
-這個閉包捕捉了 `name`（String），而且在呼叫的時候會**消耗** name（把它移出去）。要模擬它，我們可以寫一個 struct：
+跟上一集 `Result::map` 的例子一樣——閉包體裡面把捕捉的變數 move 走了，所以只能呼叫一次。編譯器在背後會把被捕捉的變數放進一個匿名的 struct 裡。我們手動來做一次：
 
 ```rust
 struct Greet {
@@ -30,7 +31,19 @@ struct Greet {
 }
 ```
 
-### 第二步：self → FnOnce（只能呼叫一次）
+### 閉包呼叫的真面目
+
+當你寫 `greet()` 呼叫一個閉包時，編譯器其實是在呼叫那個匿名 struct 上的方法。根據閉包的種類不同，呼叫方式也不同：
+
+- **FnOnce**：`greet.call_once()` — 傳 `self`，消耗 struct
+- **FnMut**：`greet.call_mut()` — 傳 `&mut self`，借用但可修改
+- **Fn**：`greet.call()` — 傳 `&self`，唯讀借用
+
+上一集介紹了 FnOnce（消耗捕捉的值，只能呼叫一次）和 FnMut（可以修改捕捉的值，多次呼叫）。Fn 是第三種——只讀取捕捉的值，不消耗也不修改，也可以多次呼叫。
+
+看到了嗎？這就是第四章學的 `self` / `&mut self` / `&self` 三種方法——閉包的呼叫就是在呼叫方法！接下來我們分別模擬這三種。
+
+### self → FnOnce（只能呼叫一次）
 
 如果方法接受 `self`（by value），那呼叫一次之後 struct 就被消耗了，不能再用：
 
@@ -45,7 +58,7 @@ impl Greet {
 
 這就對應 `FnOnce`——**只能呼叫一次**。因為 `self.name` 被 move 走了，第二次就沒有東西可以 move 了。
 
-### 第三步：&mut self → FnMut（可以多次呼叫）
+### &mut self → FnMut（可以多次呼叫）
 
 如果改成 `&mut self`，struct 不會被消耗，可以多次呼叫：
 
@@ -60,7 +73,7 @@ impl Greet {
 
 但注意，`&mut self` 不能把 `self.name` move 走——你只是借用了它，不能搬走主人的東西。這就對應 `FnMut`——**可以多次呼叫，可以修改捕捉的變數，但不能消耗它們**。
 
-### 第四步：&self → Fn（最寬鬆）
+### &self → Fn（最寬鬆）
 
 如果改成 `&self`，連修改都不行，只能讀取：
 
@@ -84,7 +97,9 @@ impl Greet {
 
 ### 所以閉包到底是什麼？
 
-閉包就是一個匿名 struct，裡面存著捕捉的變數，然後編譯器幫你 impl 了對應的 Fn / FnMut / FnOnce trait。你每次寫 `|x| x + 1`，編譯器就在幕後幫你做了上面這些事。
+閉包就是一個匿名 struct，裡面存著捕捉的變數，然後編譯器幫你 impl 了對應的 Fn / FnMut / FnOnce trait。而你寫在 `||` 後面的閉包體（`{ ... }` 裡的程式碼），就是那個方法的內部實作。當你寫 `f()` 呼叫一個閉包時，編譯器會根據閉包的種類，呼叫 struct 上對應的方法（`self` / `&mut self` / `&self`），執行你寫的閉包體。
+
+你每次寫 `|x| x + 1`，編譯器就在幕後幫你做了「建 struct + impl trait + 呼叫對應方法」這些事。
 
 ## 範例程式碼
 

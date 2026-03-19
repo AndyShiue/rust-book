@@ -1,4 +1,4 @@
-# 第六章第 9 集：iter / into_iter / iter_mut
+# 第六章第 10 集：iter / into_iter / iter_mut
 
 ## 本集目標
 搞懂三種迭代模式的差別——借用、消耗、可變借用——以及它們和所有權系統的關係。

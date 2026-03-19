@@ -395,17 +395,18 @@
 <li><a href="#1-function-pointer">第六章第 1 集：Function Pointer</a></li>
 <li><a href="#2_1">第六章第 2 集：閉包用法展示</a></li>
 <li><a href="#3_2">第六章第 3 集：手動實作閉包</a></li>
-<li><a href="#4-fn-fnmut-fnonce">第六章第 4 集：Fn / FnMut / FnOnce</a></li>
-<li><a href="#5-move">第六章第 5 集：move 閉包</a></li>
-<li><a href="#6-option-result">第六章第 6 集：Option / Result 的閉包方法</a></li>
-<li><a href="#7-iterator-trait">第六章第 7 集：Iterator trait</a></li>
-<li><a href="#8-for">第六章第 8 集：for 迴圈的真面目</a></li>
-<li><a href="#9-iter-into_iter-iter_mut">第六章第 9 集：iter / into_iter / iter_mut</a></li>
-<li><a href="#10_1">第六章第 10 集：收集</a></li>
-<li><a href="#11_2">第六章第 11 集：聚合</a></li>
-<li><a href="#12_2">第六章第 12 集：組合與截取</a></li>
-<li><a href="#13">第六章第 13 集：轉換與過濾</a></li>
-<li><a href="#14_2">第六章第 14 集：惰性求值</a></li>
+<li><a href="#4_1">第六章第 4 集：閉包種類的推斷</a></li>
+<li><a href="#5-fn-fnmut-fnonce">第六章第 5 集：Fn / FnMut / FnOnce</a></li>
+<li><a href="#6-move">第六章第 6 集：move 閉包</a></li>
+<li><a href="#7-option-result">第六章第 7 集：Option / Result 的閉包方法</a></li>
+<li><a href="#8-iterator-trait">第六章第 8 集：Iterator trait</a></li>
+<li><a href="#9-for">第六章第 9 集：for 迴圈的真面目</a></li>
+<li><a href="#10-iter-into_iter-iter_mut">第六章第 10 集：iter / into_iter / iter_mut</a></li>
+<li><a href="#11_2">第六章第 11 集：收集</a></li>
+<li><a href="#12_2">第六章第 12 集：聚合</a></li>
+<li><a href="#13">第六章第 13 集：組合與截取</a></li>
+<li><a href="#14_2">第六章第 14 集：轉換與過濾</a></li>
+<li><a href="#15">第六章第 15 集：惰性求值</a></li>
 </ul>
 </li>
 </ul>
@@ -9888,7 +9889,7 @@ c 的總和：7
 <h3 id="_608">本集目標</h3>
 <p>認識函數指標（function pointer）型別，學會把函數名稱當成值來傳遞和儲存。</p>
 <h3 id="_609">概念說明</h3>
-<p>在 Rust 裡，每個函數都有自己獨特的型別。但除了這個獨特型別之外，函數還可以被「轉換」成一個通用的<strong>函數指標型別</strong>。</p>
+<p>在 Rust 裡，函數不只能被呼叫——還能像值一樣被傳來傳去、存進變數、放進 Vec。要做到這件事，我們需要認識<strong>函數指標（function pointer）</strong>型別。</p>
 <h4 id="_610">函數指標的寫法</h4>
 <p>假設你有一個函數：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">add_one</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
@@ -9912,15 +9913,14 @@ c 的總和：7
 
 <p>這讓 <code>apply</code> 可以接受任何簽名為 <code>fn(i32) -&gt; i32</code> 的函數，非常靈活。</p>
 <h4 id="_613">多個參數和不同回傳型別</h4>
-<p>函數指標的型別完全由參數和回傳值決定：</p>
+<p>函數指標的型別由參數和回傳值決定：</p>
 <ul>
 <li>沒有參數、沒有回傳值：<code>fn()</code></li>
 <li>兩個參數：<code>fn(i32, i32) -&gt; i32</code></li>
 <li>回傳 String：<code>fn(&amp;str) -&gt; String</code></li>
 </ul>
-<p>只要簽名一樣，就能互相替換。</p>
 <h4 id="vs_2">函數指標 vs 下一集的閉包</h4>
-<p>函數指標 <code>fn(...)</code> 是一個具體的型別，大小固定（就是一個記憶體位址）。下一集會介紹閉包（closure），它比函數指標更強大，因為它能「捕捉」外部變數。但今天先把函數指標搞清楚——它是閉包的基礎。</p>
+<p>函數指標 <code>fn(...) -&gt; ...</code> 是一個具體的型別，大小固定。但它有一個限制——函數體沒辦法使用呼叫處的區域變數。下一集會介紹閉包（closure），它能做到這件事。</p>
 <h3 id="_614">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">add_one</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
@@ -9969,10 +9969,8 @@ c 的總和：7
 <h3 id="_615">重點整理</h3>
 <ul>
 <li>函數指標型別寫作 <code>fn(參數型別) -&gt; 回傳型別</code>，注意是小寫 <code>fn</code></li>
-<li>函數名稱可以直接當成值，賦值給變數或傳遞給其他函數</li>
-<li>函數指標的大小固定（一個記憶體位址），可以存進 Vec 等容器</li>
-<li>只要簽名相同的函數，就能互相替換</li>
-<li>函數指標是閉包的基礎，下一集會介紹更強大的閉包</li>
+<li>函數名稱可以直接當成值，賦值給變數或傳遞給其他函數，也可以存進 Vec 等容器</li>
+<li>函數指標的限制：沒辦法使用呼叫處的區域變數。下一集的閉包能做到這件事</li>
 </ul>
 <hr />
 <h2 id="2_1">第六章第 2 集：閉包用法展示</h2>
@@ -9980,7 +9978,7 @@ c 的總和：7
 <p>學會閉包的基本語法，了解閉包如何捕捉外部變數，並看到標準庫中使用閉包的實際案例。</p>
 <h3 id="_617">概念說明</h3>
 <h4 id="_618">閉包的語法</h4>
-<p>上一集的函數指標很好用，但有個限制：它不能「記住」外部的東西。閉包（closure）就是為了解決這個問題而存在的。</p>
+<p>上一集的函數指標很好用，但有個限制：它不能使用呼叫處的區域變數。閉包（closure）就是為了解決這個問題而存在的。</p>
 <p>閉包的基本語法用 <code>|</code> 來包參數：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </code></pre></div>
@@ -9989,8 +9987,26 @@ c 的總和：7
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">};</span>
 </code></pre></div>
 
-<p>兩種寫法效果一樣，Rust 通常能自動推導型別，所以短的寫法更常見。</p>
-<h4 id="_619">閉包能捕捉外部變數</h4>
+<h4 id="_619">什麼時候要加大括號？</h4>
+<p>規則很簡單：</p>
+<ul>
+<li><strong>只有一個表達式</strong>的時候，可以省略大括號：<code>|x| x + 1</code></li>
+<li><strong>有多行程式碼</strong>或<strong>需要 <code>let</code>、<code>if</code> 等語句</strong>的時候，要用大括號包起來：</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">process</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">doubled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;計算中：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">doubled</span><span class="p">);</span>
+<span class="w">    </span><span class="n">doubled</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>跟函數一樣，大括號裡最後一行不加分號就是回傳值。</p>
+<p>另外，如果有加型別標註（<code>-&gt; i32</code>），就一定要加大括號：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">};</span><span class="w">  </span><span class="c1">// 有 -&gt; 就必須有 {}</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">             </span><span class="c1">// 沒有 -&gt; 可以省略 {}</span>
+</code></pre></div>
+
+<h4 id="_620">閉包能捕捉外部變數</h4>
 <p>這是閉包和函數指標最大的差別：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">add_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">offset</span><span class="p">;</span><span class="w">  </span><span class="c1">// 捕捉了 offset</span>
@@ -9998,36 +10014,63 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>add_offset</code> 這個閉包「記住」了外部的 <code>offset</code>，每次呼叫都會用到它。普通函數做不到這件事。</p>
+<h4 id="_621">閉包不是只有一種</h4>
+<p>根據閉包<strong>怎麼使用</strong>捕捉到的變數，Rust 會把閉包分成不同的種類——有些閉包只能呼叫一次，有些可以呼叫很多次。這一集先看兩個例子感受一下差別，下幾集再深入解釋。</p>
 <h4 id="resultmap-fnonce">Result::map —— FnOnce 的例子</h4>
-<p>標準庫很多方法都接受閉包。還記得第五章的 <code>Result&lt;T, E&gt;</code> 嗎？它有一個 <code>map</code> 方法，可以把 <code>Ok</code> 裡的值做轉換：</p>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">doubled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Ok(10)</span>
+<p>標準庫很多方法都接受閉包。還記得第五章的 <code>Result&lt;T, E&gt;</code> 嗎？它有一個 <code>map</code> 方法，可以把 <code>Ok</code> 裡的值做轉換。<code>map</code> 只需要呼叫閉包一次，所以它接受 <code>FnOnce</code>——「至少能呼叫一次」就夠了。</p>
+<p>這意味著你可以傳一個<strong>會消耗捕捉到的變數</strong>的閉包給它：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;結果是：&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// prefix 被 move 進來，這個閉包只能呼叫一次</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefix</span><span class="p">;</span><span class="w">  </span><span class="c1">// move！</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">());</span>
+<span class="w">    </span><span class="n">s</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">);</span><span class="w">  </span><span class="c1">// Ok(&quot;結果是：42&quot;)</span>
 </code></pre></div>
 
-<p><code>map</code> 只需要呼叫閉包一次（對 <code>Ok</code> 裡的值），所以它要求的是 <code>FnOnce</code>——「至少能呼叫一次」。關於 FnOnce 的細節，我們第 4 集會深入。</p>
+<p>這個閉包把 <code>prefix</code> move 進來了，呼叫一次之後 <code>prefix</code> 就沒了。但沒關係，<code>map</code> 本來就只呼叫接收的函數一次。</p>
 <h4 id="vecretain-fnmut">Vec::retain —— FnMut 的例子</h4>
-<p><code>Vec</code> 的 <code>retain</code> 方法會保留符合條件的元素，移除不符合的：</p>
+<p><code>Vec&lt;T&gt;</code> 的 <code>retain</code> 方法會保留符合條件的元素，移除不符合的。它接受一個閉包，這個閉包接收 <code>&amp;T</code>（每個元素的引用）、回傳 <code>bool</code>（true 保留、false 移除）。因為 <code>retain</code> 要對每個元素都呼叫一次，所以它要求 <code>FnMut</code>——「可以多次呼叫」。</p>
+<p>你可以傳一個<strong>會修改捕捉到的變數</strong>的閉包：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">];</span>
-<span class="n">numbers</span><span class="p">.</span><span class="n">retain</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="c1">// numbers 現在是 [2, 4, 6]</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">removed_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">numbers</span><span class="p">.</span><span class="n">retain</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kc">true</span><span class="w">  </span><span class="c1">// 保留偶數</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">removed_count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// 修改外部變數</span>
+<span class="w">        </span><span class="kc">false</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}，移除了 {} 個&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">numbers</span><span class="p">,</span><span class="w"> </span><span class="n">removed_count</span><span class="p">);</span>
+<span class="c1">// [2, 4, 6]，移除了 3 個</span>
 </code></pre></div>
 
-<p><code>retain</code> 要對每個元素都呼叫閉包，而且過程中會修改 Vec，所以它要求 <code>FnMut</code>——「可以多次呼叫，而且可以修改狀態」。</p>
+<p>這個閉包每次被呼叫都會修改 <code>removed_count</code>——它是 FnMut。注意它沒有 move 任何東西（只是透過 <code>&amp;mut</code> 修改外部變數），所以可以被呼叫很多次。</p>
 <h4 id="fnonce-retain">如果把 FnOnce 傳給 retain？</h4>
-<p>假設你有一個閉包用了 <code>String</code>，而且會消耗（move）它：</p>
+<p>上面 <code>Result::map</code> 那種會 move 變數的閉包，能傳給 <code>retain</code> 嗎？</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;keeping&quot;</span><span class="p">);</span>
-<span class="c1">// items.retain(|x| { drop(message); *x &gt; 1 });  // 編譯錯誤！</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;剔除：&quot;</span><span class="p">);</span>
+<span class="c1">// items.retain(|x| {</span>
+<span class="c1">//     if *x &lt;= 1 {</span>
+<span class="c1">//         let mut log = header;  // move header</span>
+<span class="c1">//         log.push_str(&amp;x.to_string());</span>
+<span class="c1">//         log.push(&#39; &#39;);</span>
+<span class="c1">//     }</span>
+<span class="c1">//     *x &gt; 1</span>
+<span class="c1">// });  // 編譯錯誤！</span>
 </code></pre></div>
 
-<p>這個閉包在第一次呼叫時就 <code>drop</code> 了 <code>message</code>，第二次就沒得 drop 了。它只能呼叫一次（FnOnce），但 <code>retain</code> 需要 FnMut（多次呼叫）。所以編譯器會報錯。</p>
-<h4 id="_620">不捕捉變數的閉包 → 可以轉成函數指標</h4>
+<p>這個閉包在第一次剔除元素時就把 <code>header</code> move 走了，第二次要剔除時 <code>header</code> 已經不存在。它只能呼叫一次（FnOnce），但 <code>retain</code> 需要多次呼叫（FnMut）。所以編譯器會報錯。</p>
+<h4 id="_622">不捕捉變數的閉包 → 可以轉成函數指標</h4>
 <p>如果一個閉包沒有捕捉任何外部變數，它就跟普通函數沒什麼差別。Rust 允許它自動轉型成函數指標 <code>fn</code>：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="p">:</span><span class="w"> </span><span class="nc">fn</span><span class="p">(</span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// 沒有捕捉，可以轉成 fn</span>
 </code></pre></div>
 
 <p>但如果捕捉了外部變數，就不能這樣轉了。</p>
-<h3 id="_621">範例程式碼</h3>
+<h3 id="_623">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">apply_fn_pointer</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">fn</span><span class="p">(</span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">f</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 <span class="p">}</span>
@@ -10066,7 +10109,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_622">重點整理</h3>
+<h3 id="_624">重點整理</h3>
 <ul>
 <li>閉包用 <code>|參數| 表達式</code> 語法，可以省略型別標註讓 Rust 推導</li>
 <li>閉包最大的特色是能<strong>捕捉外部變數</strong>，這是函數指標做不到的</li>
@@ -10077,28 +10120,38 @@ c 的總和：7
 </ul>
 <hr />
 <h2 id="3_2">第六章第 3 集：手動實作閉包</h2>
-<h3 id="_623">本集目標</h3>
+<h3 id="_625">本集目標</h3>
 <p>透過手動把閉包拆解成 struct + 方法，理解閉包背後的運作原理以及 FnOnce / FnMut / Fn 的本質差別。</p>
-<h3 id="_624">概念說明</h3>
+<h3 id="_626">概念說明</h3>
 <p>上一集我們用了閉包，看到它能捕捉外部變數。但閉包到底是怎麼「記住」外部變數的？其實很簡單——編譯器幫你把捕捉的變數收集進一個匿名的 struct 裡。</p>
 <p>我們今天來手動做一次，你就會完全懂了。</p>
-<h4 id="struct_3">第一步：把捕捉的變數放進 struct</h4>
-<p>假設我們有一個閉包，捕捉了一個 <code>String</code>：</p>
+<h4 id="struct_3">把捕捉的變數放進 struct</h4>
+<p>假設我們有一個閉包，捕捉了一個 <code>String</code>，而且在呼叫時會把它 move 走：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p">);</span>
-<span class="w">    </span><span class="n">name</span><span class="w">  </span><span class="c1">// 把 name 移出去（消耗了它）</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">  </span><span class="c1">// move name 進來</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 <span class="p">};</span>
+<span class="n">greet</span><span class="p">();</span>
+<span class="c1">// greet();  // 編譯錯誤！name 已經被 move 走了，不能再呼叫</span>
 </code></pre></div>
 
-<p>這個閉包捕捉了 <code>name</code>（String），而且在呼叫的時候會<strong>消耗</strong> name（把它移出去）。要模擬它，我們可以寫一個 struct：</p>
+<p>跟上一集 <code>Result::map</code> 的例子一樣——閉包體裡面把捕捉的變數 move 走了，所以只能呼叫一次。編譯器在背後會把被捕捉的變數放進一個匿名的 struct 裡。我們手動來做一次：</p>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Greet</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="self-fnonce">第二步：self → FnOnce（只能呼叫一次）</h4>
+<h4 id="_627">閉包呼叫的真面目</h4>
+<p>當你寫 <code>greet()</code> 呼叫一個閉包時，編譯器其實是在呼叫那個匿名 struct 上的方法。根據閉包的種類不同，呼叫方式也不同：</p>
+<ul>
+<li><strong>FnOnce</strong>：<code>greet.call_once()</code> — 傳 <code>self</code>，消耗 struct</li>
+<li><strong>FnMut</strong>：<code>greet.call_mut()</code> — 傳 <code>&amp;mut self</code>，借用但可修改</li>
+<li><strong>Fn</strong>：<code>greet.call()</code> — 傳 <code>&amp;self</code>，唯讀借用</li>
+</ul>
+<p>上一集介紹了 FnOnce（消耗捕捉的值，只能呼叫一次）和 FnMut（可以修改捕捉的值，多次呼叫）。Fn 是第三種——只讀取捕捉的值，不消耗也不修改，也可以多次呼叫。</p>
+<p>看到了嗎？這就是第四章學的 <code>self</code> / <code>&amp;mut self</code> / <code>&amp;self</code> 三種方法——閉包的呼叫就是在呼叫方法！接下來我們分別模擬這三種。</p>
+<h4 id="self-fnonce">self → FnOnce（只能呼叫一次）</h4>
 <p>如果方法接受 <code>self</code>（by value），那呼叫一次之後 struct 就被消耗了，不能再用：</p>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
@@ -10109,7 +10162,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>這就對應 <code>FnOnce</code>——<strong>只能呼叫一次</strong>。因為 <code>self.name</code> 被 move 走了，第二次就沒有東西可以 move 了。</p>
-<h4 id="mut-self-fnmut">第三步：&amp;mut self → FnMut（可以多次呼叫）</h4>
+<h4 id="mut-self-fnmut">&amp;mut self → FnMut（可以多次呼叫）</h4>
 <p>如果改成 <code>&amp;mut self</code>，struct 不會被消耗，可以多次呼叫：</p>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -10120,7 +10173,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>但注意，<code>&amp;mut self</code> 不能把 <code>self.name</code> move 走——你只是借用了它，不能搬走主人的東西。這就對應 <code>FnMut</code>——<strong>可以多次呼叫，可以修改捕捉的變數，但不能消耗它們</strong>。</p>
-<h4 id="self-fn">第四步：&amp;self → Fn（最寬鬆）</h4>
+<h4 id="self-fn">&amp;self → Fn（最寬鬆）</h4>
 <p>如果改成 <code>&amp;self</code>，連修改都不行，只能讀取：</p>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_ref</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -10130,7 +10183,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>這對應 <code>Fn</code>——<strong>可以多次呼叫，不會修改也不會消耗任何東西</strong>。</p>
-<h4 id="_625">對照表</h4>
+<h4 id="_628">對照表</h4>
 <table>
 <thead>
 <tr>
@@ -10157,9 +10210,10 @@ c 的總和：7
 </tr>
 </tbody>
 </table>
-<h4 id="_626">所以閉包到底是什麼？</h4>
-<p>閉包就是一個匿名 struct，裡面存著捕捉的變數，然後編譯器幫你 impl 了對應的 Fn / FnMut / FnOnce trait。你每次寫 <code>|x| x + 1</code>，編譯器就在幕後幫你做了上面這些事。</p>
-<h3 id="_627">範例程式碼</h3>
+<h4 id="_629">所以閉包到底是什麼？</h4>
+<p>閉包就是一個匿名 struct，裡面存著捕捉的變數，然後編譯器幫你 impl 了對應的 Fn / FnMut / FnOnce trait。而你寫在 <code>||</code> 後面的閉包體（<code>{ ... }</code> 裡的程式碼），就是那個方法的內部實作。當你寫 <code>f()</code> 呼叫一個閉包時，編譯器會根據閉包的種類，呼叫 struct 上對應的方法（<code>self</code> / <code>&amp;mut self</code> / <code>&amp;self</code>），執行你寫的閉包體。</p>
+<p>你每次寫 <code>|x| x + 1</code>，編譯器就在幕後幫你做了「建 struct + impl trait + 呼叫對應方法」這些事。</p>
+<h3 id="_630">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 模擬一個捕捉 String 的閉包</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">MyClosure</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">captured</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
@@ -10231,7 +10285,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_628">重點整理</h3>
+<h3 id="_631">重點整理</h3>
 <ul>
 <li>閉包背後其實是一個匿名 struct，捕捉的變數就是 struct 的欄位</li>
 <li>方法接受 <code>self</code>（by value）→ 對應 <code>FnOnce</code>，呼叫一次就消耗</li>
@@ -10240,19 +10294,100 @@ c 的總和：7
 <li>每次你寫一個閉包，編譯器就在幕後做了「建 struct + impl trait」這些事</li>
 </ul>
 <hr />
-<h2 id="4-fn-fnmut-fnonce">第六章第 4 集：Fn / FnMut / FnOnce</h2>
-<h3 id="_629">本集目標</h3>
+<h2 id="4_1">第六章第 4 集：閉包種類的推斷</h2>
+<h3 id="_632">本集目標</h3>
+<p>理解 Rust 如何根據閉包體的內容，自動推斷一個閉包是 FnOnce、FnMut 還是 Fn。</p>
+<h3 id="_633">概念說明</h3>
+<p>上一集我們手動用 struct 模擬了三種閉包，對應 <code>self</code>、<code>&amp;mut self</code>、<code>&amp;self</code>。但你寫閉包的時候從來不需要告訴 Rust「這是 FnOnce」或「這是 FnMut」——Rust 會自動判斷。</p>
+<h4 id="_634">推斷規則</h4>
+<p>Rust 看的是<strong>閉包體裡面對捕捉變數做了什麼</strong>：</p>
+<ol>
+<li><strong>如果閉包體裡 move 了捕捉的變數</strong>（例如 <code>let s = captured_string;</code>）→ 這個閉包是 <strong>FnOnce</strong>，因為 move 走了就沒了，只能呼叫一次</li>
+<li><strong>如果閉包體裡修改了捕捉的變數</strong>（例如 <code>count += 1;</code>）→ 這個閉包是 <strong>FnMut</strong>，可以多次呼叫但需要 <code>&amp;mut</code></li>
+<li><strong>如果閉包體只讀取捕捉的變數</strong>（例如 <code>println!("{}", name);</code>）→ 這個閉包是 <strong>Fn</strong>，只需要 <code>&amp;self</code></li>
+</ol>
+<p>Rust 會選<strong>最寬鬆但足夠的那個</strong>——如果只讀取，就給 Fn（最寬鬆，因為 Fn 的閉包也能當 FnMut 和 FnOnce 用）。如果有修改，升級到 FnMut。如果有 move，再升級到 FnOnce。</p>
+<h4 id="_635">範例對照</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+
+<span class="c1">// 只讀取 name → Fn</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hi, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+
+<span class="c1">// 修改 count → FnMut</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">increment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="c1">// move name → FnOnce</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">consume</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+
+<p>你不需要寫任何標記——Rust 看閉包體就知道了。</p>
+<h4 id="_636">如果沒有捕捉任何變數呢？</h4>
+<p>沒有捕捉變數的閉包自動是 Fn（最寬鬆的），因為它不需要存取任何外部狀態：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// Fn</span>
+</code></pre></div>
+
+<p>第 2 集提到的「不捕捉變數的閉包可以轉成函數指標」也是因為這個原因——它連 struct 都不需要。</p>
+<h3 id="_637">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">require_fn</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">f</span><span class="p">();</span>
+<span class="w">    </span><span class="n">f</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">require_fn_mut</span><span class="p">(</span><span class="k">mut</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnMut</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">f</span><span class="p">();</span>
+<span class="w">    </span><span class="n">f</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">require_fn_once</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">f</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 只讀取 → Fn → 可以傳給所有三種</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">read_only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="n">require_fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
+<span class="w">    </span><span class="n">require_fn_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
+<span class="w">    </span><span class="n">require_fn_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 修改 → FnMut → 可以傳給 FnMut 和 FnOnce，但不能傳給 Fn</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">mutating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;count = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="c1">// require_fn(&amp;mutating);  // 編譯錯誤！FnMut 不是 Fn</span>
+<span class="w">    </span><span class="n">require_fn_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">mutating</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// move → FnOnce → 只能傳給 FnOnce</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;消耗我&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">consuming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="n">_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="c1">// require_fn(&amp;consuming);      // 編譯錯誤！</span>
+<span class="w">    </span><span class="c1">// require_fn_mut(&amp;consuming);   // 編譯錯誤！</span>
+<span class="w">    </span><span class="n">require_fn_once</span><span class="p">(</span><span class="n">consuming</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_638">重點整理</h3>
+<ul>
+<li>Rust 根據閉包體的內容自動推斷閉包的種類：move → FnOnce、修改 → FnMut、只讀 → Fn</li>
+<li>不需要手動標記，編譯器會選最寬鬆但足夠的 trait</li>
+<li>沒有捕捉變數的閉包是 Fn，也可以轉成函數指標</li>
+<li>Fn 的閉包可以傳給 FnMut 和 FnOnce；FnMut 可以傳給 FnOnce；反過來不行</li>
+</ul>
+<hr />
+<h2 id="5-fn-fnmut-fnonce">第六章第 5 集：Fn / FnMut / FnOnce</h2>
+<h3 id="_639">本集目標</h3>
 <p>理解 Fn、FnMut、FnOnce 是 trait 而非型別，掌握它們的繼承關係，並學會在 API 設計中選擇正確的 bound。</p>
-<h3 id="_630">概念說明</h3>
+<h3 id="_640">概念說明</h3>
 <h4 id="trait_8">它們是 trait，不是型別</h4>
-<p>上一集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？</p>
+<p>前幾集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？</p>
 <ul>
 <li><code>FnOnce(Args) -&gt; Ret</code>：可以被呼叫至少一次（可能會消耗自己）</li>
 <li><code>FnMut(Args) -&gt; Ret</code>：可以被多次呼叫（可能會修改內部狀態）</li>
 <li><code>Fn(Args) -&gt; Ret</code>：可以被多次呼叫（不會修改任何東西）</li>
 </ul>
 <p>注意！<code>fn(i32) -&gt; i32</code>（小寫）是函數指標<strong>型別</strong>，而 <code>Fn(i32) -&gt; i32</code>（大寫）是 <strong>trait</strong>。兩個完全不同的東西。</p>
-<h4 id="_631">繼承關係</h4>
+<h4 id="_641">繼承關係</h4>
 <p>這三個 trait 有繼承（supertrait）關係：</p>
 <div class="highlight"><pre><span></span><code>Fn : FnMut : FnOnce
 </code></pre></div>
@@ -10265,7 +10400,7 @@ c 的總和：7
 </ul>
 <p>這很直覺：如果一個閉包「只讀取就好」（Fn），那它當然也能「允許修改」（FnMut）地被使用，也能「只用一次」（FnOnce）地被使用。反過來就不行——一個會消耗自己的閉包（FnOnce）不能保證多次呼叫。</p>
 <h4 id="impl-trait_3">用 impl Trait 接受閉包</h4>
-<p>還記得第五章第 14 集的 <code>impl Trait</code> 嗎？它用在函數參數上，可以接受任何實作了該 trait 的型別：</p>
+<p>還記得第五章的 <code>impl Trait</code> 嗎？用它來接受閉包參數：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">call_once</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">f</span><span class="p">()</span>
 <span class="p">}</span>
@@ -10281,6 +10416,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
+<p>注意 <code>FnMut</code> 的參數要加 <code>mut</code>——因為呼叫 FnMut 閉包需要 <code>&amp;mut self</code>，而 <code>f</code> 擁有這個閉包，所以 <code>f</code> 本身要是 <code>mut</code> 的。</p>
 <h4 id="api-bound">API 設計原則：選最寬鬆的 bound</h4>
 <p>當你設計一個接受閉包的函數時，應該選<strong>最寬鬆</strong>的 trait bound：</p>
 <ol>
@@ -10289,10 +10425,9 @@ c 的總和：7
 <li>最後才用 <code>Fn</code> —— 如果你需要多次呼叫且不允許修改</li>
 </ol>
 <p>為什麼？因為 <code>FnOnce</code> 接受的範圍最廣（所有閉包都至少是 FnOnce），而 <code>Fn</code> 最窄（只有不修改狀態的閉包才行）。選最寬鬆的 bound，使用者的自由度最高。</p>
-<p>這個原則跟第五章的 trait bound 設計思路是一樣的——不要要求你不需要的能力。</p>
 <h4 id="trait_9">函數指標也實作了這三個 trait</h4>
 <p>普通的函數（和函數指標 <code>fn</code>）自動實作了 <code>Fn</code>、<code>FnMut</code>、<code>FnOnce</code>。所以你可以把函數名稱傳給任何接受這三個 trait 的地方。</p>
-<h3 id="_632">範例程式碼</h3>
+<h3 id="_642">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 只需要呼叫一次 → 用 FnOnce（最寬鬆）</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">consume_and_print</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">();</span>
@@ -10314,8 +10449,9 @@ c 的總和：7
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// FnOnce：閉包消耗了捕捉的值</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="n">consume_and_print</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w">  </span><span class="c1">// name 被 move 進來</span>
+<span class="w">    </span><span class="n">consume_and_print</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">  </span><span class="c1">// move name</span>
+<span class="w">        </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
 <span class="w">    </span><span class="p">});</span>
 
 <span class="w">    </span><span class="c1">// FnMut：閉包修改了捕捉的變數</span>
@@ -10348,20 +10484,21 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_633">重點整理</h3>
+<h3 id="_643">重點整理</h3>
 <ul>
 <li><code>Fn</code>、<code>FnMut</code>、<code>FnOnce</code> 是 <strong>trait</strong>，不是型別；<code>fn</code> 才是函數指標型別</li>
 <li>繼承關係：<code>Fn</code> ⊂ <code>FnMut</code> ⊂ <code>FnOnce</code>（Fn 最嚴格，FnOnce 最寬鬆）</li>
 <li>用 <code>impl FnOnce()</code> / <code>impl FnMut()</code> / <code>impl Fn()</code> 來接受閉包參數</li>
+<li><code>FnMut</code> 的參數要加 <code>mut</code></li>
 <li>API 設計原則：<strong>先選 FnOnce</strong>，不夠再升級到 FnMut、Fn</li>
 <li>普通函數和函數指標自動實作了 Fn + FnMut + FnOnce</li>
 </ul>
 <hr />
-<h2 id="5-move">第六章第 5 集：move 閉包</h2>
-<h3 id="_634">本集目標</h3>
+<h2 id="6-move">第六章第 6 集：move 閉包</h2>
+<h3 id="_644">本集目標</h3>
 <p>學會用 <code>move</code> 關鍵字強制閉包以 by-value 方式捕捉外部變數，理解它為什麼能解決生命週期問題。</p>
-<h3 id="_635">概念說明</h3>
-<h4 id="_636">預設的捕捉行為</h4>
+<h3 id="_645">概念說明</h3>
+<h4 id="_646">預設的捕捉行為</h4>
 <p>Rust 的閉包很聰明，會自動選擇「最輕量」的捕捉方式：</p>
 <ul>
 <li>如果只讀取變數 → 用 <code>&amp;T</code>（借用）</li>
@@ -10369,7 +10506,7 @@ c 的總和：7
 <li>如果需要消耗 → 用 <code>T</code>（移動）</li>
 </ul>
 <p>大部分時候這很好用。但有些情況下，借用會造成生命週期的問題。</p>
-<h4 id="_637">問題場景：回傳閉包</h4>
+<h4 id="_647">問題場景：回傳閉包</h4>
 <p>假設你想寫一個函數，回傳一個閉包：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">make_greeter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w">  </span><span class="c1">// 編譯錯誤！</span>
@@ -10412,7 +10549,7 @@ c 的總和：7
 
 <h4 id="send-sync">Send / Sync（預告）</h4>
 <p>類似地，閉包是否實作 <code>Send</code> 和 <code>Sync</code>，也取決於捕捉的變數。這兩個 trait 跟多執行緒有關——第九章會詳細介紹。現在只需要知道：<code>move</code> 閉包通常更容易滿足 <code>Send</code> 的要求，因為它擁有所有東西，不依賴外部的借用。</p>
-<h3 id="_638">範例程式碼</h3>
+<h3 id="_648">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 回傳閉包時，通常需要 move</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">make_adder</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">(</span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">move</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span>
@@ -10463,7 +10600,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_639">重點整理</h3>
+<h3 id="_649">重點整理</h3>
 <ul>
 <li><code>move</code> 強制閉包以 by-value 方式捕捉所有外部變數</li>
 <li>回傳閉包時通常需要 <code>move</code>，避免 dangling reference</li>
@@ -10472,10 +10609,10 @@ c 的總和：7
 <li><code>move</code> 閉包通常更容易滿足 Send（第九章會詳細介紹）</li>
 </ul>
 <hr />
-<h2 id="6-option-result">第六章第 6 集：Option / Result 的閉包方法</h2>
-<h3 id="_640">本集目標</h3>
+<h2 id="7-option-result">第六章第 7 集：Option / Result 的閉包方法</h2>
+<h3 id="_650">本集目標</h3>
 <p>用閉包方法重寫第五章的 Option 和 Result 操作，體會閉包如何讓程式碼更簡潔流暢。</p>
-<h3 id="_641">概念說明</h3>
+<h3 id="_651">概念說明</h3>
 <p>第五章我們用 <code>match</code> 處理 <code>Option</code> 和 <code>Result</code>，每次都要展開兩個分支。現在學了閉包，很多操作可以一行搞定。</p>
 <h4 id="option_3">Option 的閉包方法</h4>
 <h5 id="map-some">map —— 轉換 Some 裡的值</h5>
@@ -10550,7 +10687,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>一行搞定，而且意圖更清晰——「對 Some 裡的值做轉換」。</p>
-<h3 id="_642">範例程式碼</h3>
+<h3 id="_652">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">parse_and_double</span><span class="p">(</span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">input</span>
 <span class="w">        </span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span>
@@ -10620,7 +10757,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_643">重點整理</h3>
+<h3 id="_653">重點整理</h3>
 <ul>
 <li><code>Option::map</code> / <code>Result::map</code> 對內部值做轉換，None / Err 時不執行</li>
 <li><code>and_then</code> 用於閉包本身也回傳 Option / Result 的情況，避免巢狀</li>
@@ -10630,10 +10767,10 @@ c 的總和：7
 <li>這些方法可以鏈式呼叫，比層層 match 更簡潔易讀</li>
 </ul>
 <hr />
-<h2 id="7-iterator-trait">第六章第 7 集：Iterator trait</h2>
-<h3 id="_644">本集目標</h3>
+<h2 id="8-iterator-trait">第六章第 8 集：Iterator trait</h2>
+<h3 id="_654">本集目標</h3>
 <p>認識 <code>Iterator</code> trait 的核心——只要實作 <code>next()</code> 方法，就能免費獲得數十個好用的方法。</p>
-<h3 id="_645">概念說明</h3>
+<h3 id="_655">概念說明</h3>
 <h4 id="iterator">Iterator 的定義</h4>
 <p><code>Iterator</code> trait 的核心簡單到不行：</p>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="nb">Iterator</span><span class="w"> </span><span class="p">{</span>
@@ -10685,7 +10822,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>只要實作了 <code>next()</code>，就能用 for 迴圈、用 <code>collect()</code>、用 <code>map()</code>——全部都行。</p>
-<h4 id="_646">標準庫的迭代器工廠</h4>
+<h4 id="_656">標準庫的迭代器工廠</h4>
 <p>標準庫提供了一些方便的函數來建立迭代器：</p>
 <ul>
 <li><code>std::iter::repeat(value)</code> —— 無限重複同一個值</li>
@@ -10709,7 +10846,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>注意 <code>repeat</code> 和 <code>from_fn</code> 產生的迭代器可能是<strong>無限的</strong>——永遠不會回傳 None。第 14 集會深入討論這個特性。</p>
-<h3 id="_647">範例程式碼</h3>
+<h3 id="_657">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">iter</span><span class="p">;</span>
 
 <span class="c1">// 自訂迭代器：產生費氏數列</span>
@@ -10778,7 +10915,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_648">重點整理</h3>
+<h3 id="_658">重點整理</h3>
 <ul>
 <li><code>Iterator</code> trait 的核心是 <code>next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;</code></li>
 <li>只需實作 <code>next()</code>，就能免費獲得 <code>map</code>、<code>filter</code>、<code>sum</code>、<code>count</code> 等數十個方法（trait default method 的威力）</li>
@@ -10788,10 +10925,10 @@ c 的總和：7
 <li>迭代器可以是無限的（永不回傳 None），用 <code>.take(n)</code> 取有限個</li>
 </ul>
 <hr />
-<h2 id="8-for">第六章第 8 集：for 迴圈的真面目</h2>
-<h3 id="_649">本集目標</h3>
+<h2 id="9-for">第六章第 9 集：for 迴圈的真面目</h2>
+<h3 id="_659">本集目標</h3>
 <p>揭開 <code>for</code> 迴圈的語法糖，理解它背後其實是 <code>IntoIterator</code> + <code>while let</code> 的組合。</p>
-<h3 id="_650">概念說明</h3>
+<h3 id="_660">概念說明</h3>
 <h4 id="for_2">for 迴圈不是魔法</h4>
 <p>從第一章開始我們就在用 <code>for</code> 迴圈：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
@@ -10801,7 +10938,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>看起來很簡單對吧？但這背後到底發生了什麼事？</p>
-<h4 id="_651">語法糖展開</h4>
+<h4 id="_661">語法糖展開</h4>
 <p>上面的 <code>for</code> 迴圈，編譯器其實會轉換成這樣：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="p">::</span><span class="n">into_iter</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
@@ -10847,7 +10984,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>下一集會更深入探討這三種模式。</p>
-<h3 id="_652">範例程式碼</h3>
+<h3 id="_662">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 正常的 for 迴圈</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">fruits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;蘋果&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;香蕉&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;橘子&quot;</span><span class="p">];</span>
@@ -10907,7 +11044,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_653">重點整理</h3>
+<h3 id="_663">重點整理</h3>
 <ul>
 <li><code>for x in v</code> 是語法糖，展開後是 <code>IntoIterator::into_iter(v)</code> + <code>while let Some(x) = iter.next()</code></li>
 <li><code>IntoIterator</code> trait 定義了「如何把自己轉成迭代器」</li>
@@ -10916,11 +11053,11 @@ c 的總和：7
 <li><code>for x in v</code> / <code>for x in &amp;v</code> / <code>for x in &amp;mut v</code> 分別對應消耗、借用、可變借用</li>
 </ul>
 <hr />
-<h2 id="9-iter-into_iter-iter_mut">第六章第 9 集：iter / into_iter / iter_mut</h2>
-<h3 id="_654">本集目標</h3>
+<h2 id="10-iter-into_iter-iter_mut">第六章第 10 集：iter / into_iter / iter_mut</h2>
+<h3 id="_664">本集目標</h3>
 <p>搞懂三種迭代模式的差別——借用、消耗、可變借用——以及它們和所有權系統的關係。</p>
-<h3 id="_655">概念說明</h3>
-<h4 id="_656">三種迭代方式</h4>
+<h3 id="_665">概念說明</h3>
+<h4 id="_666">三種迭代方式</h4>
 <p>上一集提到 <code>for x in &amp;v</code> 和 <code>for x in v</code> 的差別。今天來正式介紹 Vec 提供的三個方法：</p>
 <table>
 <thead>
@@ -10980,7 +11117,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>.iter_mut()</code> 回傳 <code>&amp;mut T</code>，讓你可以原地修改每個元素。</p>
-<h4 id="_657">對應關係</h4>
+<h4 id="_667">對應關係</h4>
 <p>這三種方法其實對應第四章學的三種所有權操作：</p>
 <table>
 <thead>
@@ -11008,14 +11145,14 @@ c 的總和：7
 </tr>
 </tbody>
 </table>
-<h4 id="_658">選哪一個？</h4>
+<h4 id="_668">選哪一個？</h4>
 <ul>
 <li>只需要讀取 → <code>.iter()</code>（最常用）</li>
 <li>需要拿走元素的所有權 → <code>.into_iter()</code></li>
 <li>需要原地修改 → <code>.iter_mut()</code></li>
 </ul>
 <p>原則跟所有權一樣：不要拿你不需要的權限。</p>
-<h3 id="_659">範例程式碼</h3>
+<h3 id="_669">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// .iter() —— 只讀借用</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">animals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span>
@@ -11071,7 +11208,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_660">重點整理</h3>
+<h3 id="_670">重點整理</h3>
 <ul>
 <li><code>.iter()</code> 產出 <code>&amp;T</code>，借用元素，集合不受影響</li>
 <li><code>.into_iter()</code> 產出 <code>T</code>，消耗整個集合，拿走所有權</li>
@@ -11080,10 +11217,10 @@ c 的總和：7
 <li>選擇原則：不要拿超過需要的權限——只讀就 <code>.iter()</code>，要改就 <code>.iter_mut()</code>，要消耗就 <code>.into_iter()</code></li>
 </ul>
 <hr />
-<h2 id="10_1">第六章第 10 集：收集</h2>
-<h3 id="_661">本集目標</h3>
+<h2 id="11_2">第六章第 11 集：收集</h2>
+<h3 id="_671">本集目標</h3>
 <p>學會用 <code>.collect()</code> 把迭代器收集成各種集合型別，以及用 turbofish 語法指定目標型別。</p>
-<h3 id="_662">概念說明</h3>
+<h3 id="_672">概念說明</h3>
 <h4 id="collect">collect() —— 迭代器的終點站</h4>
 <p>前幾集我們建立了迭代器、做了轉換和過濾，但迭代器本身是<strong>惰性的</strong>（第 14 集會詳細講）——它不會真的執行，直到有人「拉動」它。<code>.collect()</code> 就是最常用的拉動方式：把迭代器的所有元素收集成一個集合。</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
@@ -11123,7 +11260,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>注意它需要走完整個迭代器才能知道最後一個是什麼。</p>
-<h3 id="_663">範例程式碼</h3>
+<h3 id="_673">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 基本 collect —— Range 轉 Vec</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">numbers</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">10</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
@@ -11176,7 +11313,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_664">重點整理</h3>
+<h3 id="_674">重點整理</h3>
 <ul>
 <li><code>.collect()</code> 把迭代器的元素收集成目標集合型別</li>
 <li>用型別標註 <code>let v: Vec&lt;i32&gt;</code> 或 turbofish <code>.collect::&lt;Vec&lt;i32&gt;&gt;()</code> 告訴 Rust 目標型別</li>
@@ -11185,11 +11322,11 @@ c 的總和：7
 <li><code>.last()</code> 消耗整個迭代器，回傳 <code>Option</code> 包裝的最後一個元素</li>
 </ul>
 <hr />
-<h2 id="11_2">第六章第 11 集：聚合</h2>
-<h3 id="_665">本集目標</h3>
+<h2 id="12_2">第六章第 12 集：聚合</h2>
+<h3 id="_675">本集目標</h3>
 <p>學會用迭代器的聚合方法把一整個序列「摺疊」成一個值。</p>
-<h3 id="_666">概念說明</h3>
-<h4 id="_667">什麼是聚合？</h4>
+<h3 id="_676">概念說明</h3>
+<h4 id="_677">什麼是聚合？</h4>
 <p>前幾集我們學了怎麼建立迭代器、怎麼 collect 成集合。但有時候你不需要一個集合，你要的是一個<strong>單一的值</strong>——總和、最大值、個數⋯⋯這就是聚合（aggregation）。</p>
 <h4 id="count">.count() —— 數有幾個</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">100</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
@@ -11233,7 +11370,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>因為可能沒有第一個元素（迭代器是空的），所以 <code>reduce</code> 回傳 <code>Option</code>。</p>
-<h3 id="_668">範例程式碼</h3>
+<h3 id="_678">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">91</span><span class="p">];</span>
 
@@ -11289,7 +11426,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_669">重點整理</h3>
+<h3 id="_679">重點整理</h3>
 <ul>
 <li><code>.count()</code> 計算元素個數</li>
 <li><code>.sum()</code> 和 <code>.product()</code> 計算總和與乘積，需要標註回傳型別</li>
@@ -11299,10 +11436,10 @@ c 的總和：7
 <li>聚合方法會消耗整個迭代器，產出一個單一的值</li>
 </ul>
 <hr />
-<h2 id="12_2">第六章第 12 集：組合與截取</h2>
-<h3 id="_670">本集目標</h3>
+<h2 id="13">第六章第 13 集：組合與截取</h2>
+<h3 id="_680">本集目標</h3>
 <p>學會用 <code>.zip()</code>、<code>.chain()</code>、<code>.take()</code>、<code>.skip()</code>、<code>.flatten()</code>、<code>.flat_map()</code> 來組合和截取迭代器。</p>
-<h3 id="_671">概念說明</h3>
+<h3 id="_681">概念說明</h3>
 <h4 id="zip">.zip() —— 把兩個迭代器配對</h4>
 <p><code>zip</code> 把兩個迭代器「拉鍊式」地配對起來，產出 tuple：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">];</span>
@@ -11352,7 +11489,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>還記得第 6 集的 <code>Option::and_then</code> 和 <code>Result::and_then</code> 嗎？<code>flat_map</code> 在迭代器上做的事情本質上一樣——「轉換，但如果轉換結果本身是容器，就攤平它」。</p>
-<h3 id="_672">範例程式碼</h3>
+<h3 id="_682">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// .zip() —— 名字和分數配對</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">students</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;小明&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;小華&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;小美&quot;</span><span class="p">];</span>
@@ -11420,7 +11557,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_673">重點整理</h3>
+<h3 id="_683">重點整理</h3>
 <ul>
 <li><code>.zip()</code> 把兩個迭代器配對成 tuple，以較短的為準</li>
 <li><code>.chain()</code> 把兩個迭代器首尾串接</li>
@@ -11430,10 +11567,10 @@ c 的總和：7
 <li>這些方法可以自由組合，打造出強大的資料處理管道</li>
 </ul>
 <hr />
-<h2 id="13">第六章第 13 集：轉換與過濾</h2>
-<h3 id="_674">本集目標</h3>
+<h2 id="14_2">第六章第 14 集：轉換與過濾</h2>
+<h3 id="_684">本集目標</h3>
 <p>學會迭代器最常用的轉換與過濾方法，以及如何用鏈式呼叫組合出強大的資料管道。</p>
-<h3 id="_675">概念說明</h3>
+<h3 id="_685">概念說明</h3>
 <h4 id="map">.map() —— 轉換每個元素</h4>
 <p><code>map</code> 對每個元素套用閉包，產出轉換後的新元素：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">doubled</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">].</span><span class="n">iter</span><span class="p">().</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
@@ -11482,7 +11619,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>.rev()</code> 需要迭代器實作 <code>DoubleEndedIterator</code> trait——也就是說，它必須能從兩端取元素。Vec、陣列、Range 等都支援，但像 <code>from_fn</code> 產出的迭代器就不支援（因為沒有「尾端」的概念）。</p>
-<h4 id="_676">鏈式呼叫的威力</h4>
+<h4 id="_686">鏈式呼叫的威力</h4>
 <p>迭代器的方法可以自由串接，形成資料處理管道：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span>
 <span class="w">    </span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
@@ -11493,7 +11630,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>每一步都做一件小事，串在一起就能做很複雜的操作。而且因為迭代器是惰性的（下一集會講），中間不會產生額外的 Vec。</p>
-<h3 id="_677">範例程式碼</h3>
+<h3 id="_687">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">91</span><span class="p">,</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">];</span>
 
@@ -11557,7 +11694,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_678">重點整理</h3>
+<h3 id="_688">重點整理</h3>
 <ul>
 <li><code>.map()</code> 轉換每個元素，<code>.filter()</code> 過濾不符合條件的元素</li>
 <li><code>.enumerate()</code> 為每個元素加上從 0 開始的索引</li>
@@ -11567,11 +11704,11 @@ c 的總和：7
 <li>配合 <code>.copied()</code> 可以避免 <code>filter</code> 中惱人的 <code>&amp;&amp;T</code> 問題</li>
 </ul>
 <hr />
-<h2 id="14_2">第六章第 14 集：惰性求值</h2>
-<h3 id="_679">本集目標</h3>
+<h2 id="15">第六章第 15 集：惰性求值</h2>
+<h3 id="_689">本集目標</h3>
 <p>理解迭代器的惰性（lazy）本質——<code>.map()</code> 和 <code>.filter()</code> 不會立刻執行，而是建立巢狀結構，等 <code>.collect()</code> 或 <code>for</code> 才逐一拉動。</p>
-<h3 id="_680">概念說明</h3>
-<h4 id="_681">迭代器是惰性的</h4>
+<h3 id="_690">概念說明</h3>
+<h4 id="_691">迭代器是惰性的</h4>
 <p>這可能是整個第六章最重要的概念：<strong>迭代器的轉換方法不會立刻執行</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
@@ -11582,7 +11719,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>map</code> 並沒有「跑過」每個元素。它只是建立了一個新的迭代器結構，記錄了「等下要做什麼」。直到有人呼叫 <code>collect()</code>、<code>for</code>、<code>sum()</code> 等「消費」方法時，才會一個一個元素地拉動。</p>
-<h4 id="_682">俄羅斯套娃</h4>
+<h4 id="_692">俄羅斯套娃</h4>
 <p>每次呼叫 <code>.map()</code> 或 <code>.filter()</code>，你其實是在迭代器外面「套一層」。就像俄羅斯套娃：</p>
 <div class="highlight"><pre><span></span><code><span class="n">v</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span><span class="w">                    </span><span class="c1">// 最內層：原始迭代器</span>
 <span class="w">    </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">   </span><span class="c1">// 第二層：Filter 結構，存著 inner + 閉包</span>
@@ -11606,7 +11743,7 @@ c 的總和：7
 <li>Map 套用閉包：<code>3 * 10 = 30</code>，回傳 <code>Some(30)</code></li>
 </ol>
 <p>每個元素是<strong>一路到底</strong>處理完的——不像先做完所有 filter，再做所有 map。這意味著<strong>中間不需要任何暫存的 Vec</strong>。</p>
-<h4 id="_683">無限迭代器</h4>
+<h4 id="_693">無限迭代器</h4>
 <p>因為是惰性的，迭代器可以是<strong>無限的</strong>。<code>std::iter::repeat</code> 和 <code>std::iter::from_fn</code> 都可以產生永遠不回傳 None 的迭代器：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">iter</span><span class="p">;</span>
 
@@ -11626,14 +11763,14 @@ c 的總和：7
 </code></pre></div>
 
 <p>這就是惰性求值的威力——你可以先描述一個「概念上無限」的計算，最後再決定要取多少。</p>
-<h4 id="_684">不小心忘記消費？</h4>
+<h4 id="_694">不小心忘記消費？</h4>
 <p>因為迭代器是惰性的，如果你寫了 <code>.map()</code> 但忘記 <code>.collect()</code> 或 <code>for</code>，什麼事都不會發生。Rust 編譯器會發出警告：</p>
 <div class="highlight"><pre><span></span><code>warning: unused `Map` that must be used
 note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>看到這個警告就知道：你忘了消費迭代器了。</p>
-<h3 id="_685">範例程式碼</h3>
+<h3 id="_695">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">iter</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -11703,7 +11840,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_686">重點整理</h3>
+<h3 id="_696">重點整理</h3>
 <ul>
 <li>迭代器的 <code>.map()</code> / <code>.filter()</code> 等方法是<strong>惰性的</strong>，不會立刻執行</li>
 <li>每次呼叫轉換方法都是在外面「套一層」struct（俄羅斯套娃）</li>

@@ -1,4 +1,4 @@
-# 第六章第 6 集：Option / Result 的閉包方法
+# 第六章第 7 集：Option / Result 的閉包方法
 
 ## 本集目標
 用閉包方法重寫第五章的 Option 和 Result 操作，體會閉包如何讓程式碼更簡潔流暢。
