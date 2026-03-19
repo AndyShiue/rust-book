@@ -35,6 +35,39 @@ let consume = || { let s = name; };
 
 你不需要寫任何標記——Rust 看閉包體就知道了。
 
+### 捕捉多個變數時怎麼辦？
+
+一個閉包可能同時捕捉多個變數，而且對每個變數的用法不同：
+
+```rust
+let name = String::from("Alice");
+let mut count = 0;
+let closure = || {
+    count += 1;          // 修改 count → 需要 &mut
+    println!("{}", name); // 只讀取 name → 只需要 &
+};
+```
+
+想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：`count`（需要 `&mut`）和 `name`（只需要 `&`）。但呼叫閉包時只有一個 `self`——所以整體取**最嚴格的那個用法**。`&mut` 比 `&` 嚴格，所以整個閉包是 FnMut（`&mut self`）。在 `&mut self` 裡面，你仍然可以對某些欄位只做 `&` 的操作——就像一個 method 接收 `&mut self`，但裡面不一定每個欄位都要改：
+
+```rust
+struct Data {
+    count: i32,
+    name: String,
+}
+
+impl Data {
+    fn increment_and_greet(&mut self) {
+        self.count += 1;                     // 修改 count
+        println!("Hello, {}!", self.name);   // 只讀取 name
+    }
+}
+```
+
+閉包也是同樣的道理。
+
+同理，FnOnce 的 `self` 裡面的值當然也能取 `&` 或 `&mut`——擁有一個值就包含了可以借用它。
+
 ### 如果沒有捕捉任何變數呢？
 
 沒有捕捉變數的閉包自動是 Fn（最寬鬆的），因為它不需要存取任何外部狀態：
@@ -43,48 +76,7 @@ let consume = || { let s = name; };
 let add_one = |x: i32| x + 1;  // Fn
 ```
 
-第 2 集提到的「不捕捉變數的閉包可以轉成函數指標」也是因為這個原因——它連 struct 都不需要。
-
-## 範例程式碼
-
-```rust
-fn require_fn(f: impl Fn()) {
-    f();
-    f();
-}
-
-fn require_fn_mut(mut f: impl FnMut()) {
-    f();
-    f();
-}
-
-fn require_fn_once(f: impl FnOnce()) {
-    f();
-}
-
-fn main() {
-    let name = String::from("Rust");
-
-    // 只讀取 → Fn → 可以傳給所有三種
-    let read_only = || println!("Hello, {}!", name);
-    require_fn(&read_only);
-    require_fn_mut(&read_only);
-    require_fn_once(&read_only);
-
-    // 修改 → FnMut → 可以傳給 FnMut 和 FnOnce，但不能傳給 Fn
-    let mut count = 0;
-    let mut mutating = || { count += 1; println!("count = {}", count); };
-    // require_fn(&mutating);  // 編譯錯誤！FnMut 不是 Fn
-    require_fn_mut(&mut mutating);
-
-    // move → FnOnce → 只能傳給 FnOnce
-    let data = String::from("消耗我");
-    let consuming = || { let _s = data; };
-    // require_fn(&consuming);      // 編譯錯誤！
-    // require_fn_mut(&consuming);   // 編譯錯誤！
-    require_fn_once(consuming);
-}
-```
+第 2 集提到的「不捕捉變數的閉包可以轉成函數指標」也是因為這個原因——它連匿名 struct 都不需要。
 
 ## 重點整理
 - Rust 根據閉包體的內容自動推斷閉包的種類：move → FnOnce、修改 → FnMut、只讀 → Fn

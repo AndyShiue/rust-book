@@ -7,7 +7,9 @@
 
 ### 它們是 trait，不是型別
 
-前幾集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？
+前幾集我們一直說 FnOnce、FnMut、Fn，但還沒正式說明——它們其實是 **trait**。就像第五章學的 `Clone`、`Display` 一樣，Fn / FnMut / FnOnce 是定義在標準庫裡的 trait。每個閉包的匿名 struct 會自動 impl 對應的 trait（上一集講的推斷規則決定 impl 哪些）。
+
+那這些 trait 到底長什麼樣？
 
 - `FnOnce(Args) -> Ret`：可以被呼叫至少一次（可能會消耗自己）
 - `FnMut(Args) -> Ret`：可以被多次呼叫（可能會修改內部狀態）
@@ -28,7 +30,12 @@ Fn : FnMut : FnOnce
 - 所有實作 `FnMut` 的東西，自動也實作 `FnOnce`
 - 但 `FnOnce` 不一定有 `FnMut`，`FnMut` 不一定有 `Fn`
 
-這很直覺：如果一個閉包「只讀取就好」（Fn），那它當然也能「允許修改」（FnMut）地被使用，也能「只用一次」（FnOnce）地被使用。反過來就不行——一個會消耗自己的閉包（FnOnce）不能保證多次呼叫。
+為什麼是這個方向？
+
+- **Fn → FnMut**：如果一個閉包只需要 `&self` 就能執行，那給它 `&mut self` 當然也行（只是多給了它不需要的修改權限）。
+- **FnMut → FnOnce**：如果一個閉包用 `&mut self` 就能執行，那給它 `self`（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次。
+
+反過來就不行——一個需要消耗自己（FnOnce）的閉包，不能保證多次呼叫（FnMut）。
 
 ### 用 impl Trait 接受閉包
 
@@ -61,6 +68,8 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 3. 最後才用 `Fn` —— 如果你需要多次呼叫且不允許修改
 
 為什麼？因為 `FnOnce` 接受的範圍最廣（所有閉包都至少是 FnOnce），而 `Fn` 最窄（只有不修改狀態的閉包才行）。選最寬鬆的 bound，使用者的自由度最高。
+
+實務上 `Fn` 很少用到——大部分需要多次呼叫閉包的 API 用 `FnMut` 就夠了（FnMut 已經能接受 Fn 的閉包）。只有少數場景需要**保證閉包不修改狀態**時才會用 `Fn`。
 
 ### 函數指標也實作了這三個 trait
 
@@ -130,5 +139,5 @@ fn main() {
 - 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（Fn 最嚴格，FnOnce 最寬鬆）
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數
 - `FnMut` 的參數要加 `mut`
-- API 設計原則：**先選 FnOnce**，不夠再升級到 FnMut、Fn
+- API 設計原則：**先選 FnOnce**，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn
 - 普通函數和函數指標自動實作了 Fn + FnMut + FnOnce

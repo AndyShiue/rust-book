@@ -10322,51 +10322,38 @@ c 的總和：7
 </code></pre></div>
 
 <p>你不需要寫任何標記——Rust 看閉包體就知道了。</p>
-<h4 id="_636">如果沒有捕捉任何變數呢？</h4>
+<h4 id="_636">捕捉多個變數時怎麼辦？</h4>
+<p>一個閉包可能同時捕捉多個變數，而且對每個變數的用法不同：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">closure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">          </span><span class="c1">// 修改 count → 需要 &amp;mut</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span><span class="w"> </span><span class="c1">// 只讀取 name → 只需要 &amp;</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：<code>count</code>（需要 <code>&amp;mut</code>）和 <code>name</code>（只需要 <code>&amp;</code>）。但呼叫閉包時只有一個 <code>self</code>——所以整體取<strong>最嚴格的那個用法</strong>。<code>&amp;mut</code> 比 <code>&amp;</code> 嚴格，所以整個閉包是 FnMut（<code>&amp;mut self</code>）。在 <code>&amp;mut self</code> 裡面，你仍然可以對某些欄位只做 <code>&amp;</code> 的操作——就像一個 method 接收 <code>&amp;mut self</code>，但裡面不一定每個欄位都要改：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">increment_and_greet</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                     </span><span class="c1">// 修改 count</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span><span class="w">   </span><span class="c1">// 只讀取 name</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>閉包也是同樣的道理。</p>
+<p>同理，FnOnce 的 <code>self</code> 裡面的值當然也能取 <code>&amp;</code> 或 <code>&amp;mut</code>——擁有一個值就包含了可以借用它。</p>
+<h4 id="_637">如果沒有捕捉任何變數呢？</h4>
 <p>沒有捕捉變數的閉包自動是 Fn（最寬鬆的），因為它不需要存取任何外部狀態：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">add_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// Fn</span>
 </code></pre></div>
 
-<p>第 2 集提到的「不捕捉變數的閉包可以轉成函數指標」也是因為這個原因——它連 struct 都不需要。</p>
-<h3 id="_637">範例程式碼</h3>
-<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">require_fn</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">f</span><span class="p">();</span>
-<span class="w">    </span><span class="n">f</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">fn</span><span class="w"> </span><span class="nf">require_fn_mut</span><span class="p">(</span><span class="k">mut</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnMut</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">f</span><span class="p">();</span>
-<span class="w">    </span><span class="n">f</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">fn</span><span class="w"> </span><span class="nf">require_fn_once</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">f</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// 只讀取 → Fn → 可以傳給所有三種</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">read_only</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
-<span class="w">    </span><span class="n">require_fn</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
-<span class="w">    </span><span class="n">require_fn_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
-<span class="w">    </span><span class="n">require_fn_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">read_only</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// 修改 → FnMut → 可以傳給 FnMut 和 FnOnce，但不能傳給 Fn</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">mutating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;count = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
-<span class="w">    </span><span class="c1">// require_fn(&amp;mutating);  // 編譯錯誤！FnMut 不是 Fn</span>
-<span class="w">    </span><span class="n">require_fn_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">mutating</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// move → FnOnce → 只能傳給 FnOnce</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;消耗我&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">consuming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="n">_s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-<span class="w">    </span><span class="c1">// require_fn(&amp;consuming);      // 編譯錯誤！</span>
-<span class="w">    </span><span class="c1">// require_fn_mut(&amp;consuming);   // 編譯錯誤！</span>
-<span class="w">    </span><span class="n">require_fn_once</span><span class="p">(</span><span class="n">consuming</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<p>第 2 集提到的「不捕捉變數的閉包可以轉成函數指標」也是因為這個原因——它連匿名 struct 都不需要。</p>
 <h3 id="_638">重點整理</h3>
 <ul>
 <li>Rust 根據閉包體的內容自動推斷閉包的種類：move → FnOnce、修改 → FnMut、只讀 → Fn</li>
@@ -10380,7 +10367,8 @@ c 的總和：7
 <p>理解 Fn、FnMut、FnOnce 是 trait 而非型別，掌握它們的繼承關係，並學會在 API 設計中選擇正確的 bound。</p>
 <h3 id="_640">概念說明</h3>
 <h4 id="trait_8">它們是 trait，不是型別</h4>
-<p>前幾集我們看到閉包背後是匿名 struct + trait impl。那這些 trait 到底長什麼樣？</p>
+<p>前幾集我們一直說 FnOnce、FnMut、Fn，但還沒正式說明——它們其實是 <strong>trait</strong>。就像第五章學的 <code>Clone</code>、<code>Display</code> 一樣，Fn / FnMut / FnOnce 是定義在標準庫裡的 trait。每個閉包的匿名 struct 會自動 impl 對應的 trait（上一集講的推斷規則決定 impl 哪些）。</p>
+<p>那這些 trait 到底長什麼樣？</p>
 <ul>
 <li><code>FnOnce(Args) -&gt; Ret</code>：可以被呼叫至少一次（可能會消耗自己）</li>
 <li><code>FnMut(Args) -&gt; Ret</code>：可以被多次呼叫（可能會修改內部狀態）</li>
@@ -10398,7 +10386,12 @@ c 的總和：7
 <li>所有實作 <code>FnMut</code> 的東西，自動也實作 <code>FnOnce</code></li>
 <li>但 <code>FnOnce</code> 不一定有 <code>FnMut</code>，<code>FnMut</code> 不一定有 <code>Fn</code></li>
 </ul>
-<p>這很直覺：如果一個閉包「只讀取就好」（Fn），那它當然也能「允許修改」（FnMut）地被使用，也能「只用一次」（FnOnce）地被使用。反過來就不行——一個會消耗自己的閉包（FnOnce）不能保證多次呼叫。</p>
+<p>為什麼是這個方向？</p>
+<ul>
+<li><strong>Fn → FnMut</strong>：如果一個閉包只需要 <code>&amp;self</code> 就能執行，那給它 <code>&amp;mut self</code> 當然也行（只是多給了它不需要的修改權限）。</li>
+<li><strong>FnMut → FnOnce</strong>：如果一個閉包用 <code>&amp;mut self</code> 就能執行，那給它 <code>self</code>（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次。</li>
+</ul>
+<p>反過來就不行——一個需要消耗自己（FnOnce）的閉包，不能保證多次呼叫（FnMut）。</p>
 <h4 id="impl-trait_3">用 impl Trait 接受閉包</h4>
 <p>還記得第五章的 <code>impl Trait</code> 嗎？用它來接受閉包參數：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">call_once</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
@@ -10425,6 +10418,7 @@ c 的總和：7
 <li>最後才用 <code>Fn</code> —— 如果你需要多次呼叫且不允許修改</li>
 </ol>
 <p>為什麼？因為 <code>FnOnce</code> 接受的範圍最廣（所有閉包都至少是 FnOnce），而 <code>Fn</code> 最窄（只有不修改狀態的閉包才行）。選最寬鬆的 bound，使用者的自由度最高。</p>
+<p>實務上 <code>Fn</code> 很少用到——大部分需要多次呼叫閉包的 API 用 <code>FnMut</code> 就夠了（FnMut 已經能接受 Fn 的閉包）。只有少數場景需要<strong>保證閉包不修改狀態</strong>時才會用 <code>Fn</code>。</p>
 <h4 id="trait_9">函數指標也實作了這三個 trait</h4>
 <p>普通的函數（和函數指標 <code>fn</code>）自動實作了 <code>Fn</code>、<code>FnMut</code>、<code>FnOnce</code>。所以你可以把函數名稱傳給任何接受這三個 trait 的地方。</p>
 <h3 id="_642">範例程式碼</h3>
@@ -10490,7 +10484,7 @@ c 的總和：7
 <li>繼承關係：<code>Fn</code> ⊂ <code>FnMut</code> ⊂ <code>FnOnce</code>（Fn 最嚴格，FnOnce 最寬鬆）</li>
 <li>用 <code>impl FnOnce()</code> / <code>impl FnMut()</code> / <code>impl Fn()</code> 來接受閉包參數</li>
 <li><code>FnMut</code> 的參數要加 <code>mut</code></li>
-<li>API 設計原則：<strong>先選 FnOnce</strong>，不夠再升級到 FnMut、Fn</li>
+<li>API 設計原則：<strong>先選 FnOnce</strong>，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn</li>
 <li>普通函數和函數指標自動實作了 Fn + FnMut + FnOnce</li>
 </ul>
 <hr />
@@ -10513,7 +10507,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>為什麼錯？因為閉包預設用借用的方式捕捉 <code>name</code>（<code>&amp;name</code>），但 <code>name</code> 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了 dangling reference——第四章的老朋友。</p>
+<p>為什麼錯？因為閉包預設用借用的方式捕捉 <code>name</code>（<code>&amp;name</code>），但 <code>name</code> 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂引用——第四章的老朋友。</p>
 <h4 id="move_5">move 關鍵字</h4>
 <p>加上 <code>move</code> 就解決了：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">make_greeter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -10522,6 +10516,20 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>move</code> 告訴 Rust：「不要用借用，把所有捕捉的變數都<strong>搬進</strong>閉包裡。」這樣 <code>name</code> 就歸閉包所有了，不管原本的作用域怎麼結束，閉包都能繼續用 <code>name</code>。</p>
+<h4 id="move-struct">move 閉包的匿名 struct</h4>
+<p>回想第 3 集——閉包是匿名 struct。沒有 <code>move</code> 的時候，struct 的欄位可能是引用（<code>&amp;T</code> 或 <code>&amp;mut T</code>）；加了 <code>move</code> 之後，<strong>所有欄位都變成擁有的值</strong>（<code>T</code>）：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 沒有 move：閉包借用 name，struct 裡存的是引用</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="c1">// name 還能用，因為閉包只是借用</span>
+
+<span class="c1">// 有 move：name 被搬進 struct，閉包擁有它</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="c1">// name 不能再用了，已經被搬進閉包裡</span>
+</code></pre></div>
+
+<p>因為所有欄位都是 owned 的，這個 struct 不借用任何東西，所以沒有 lifetime 的問題——可以安全地從函數回傳、存進 struct。</p>
 <h4 id="move-fn-trait">move 不影響閉包是哪種 Fn trait</h4>
 <p>很多人會搞混：<code>move</code> 閉包不代表它是 <code>FnOnce</code>！</p>
 <p><code>move</code> 只影響<strong>怎麼捕捉</strong>（by value），不影響<strong>怎麼使用</strong>：</p>
@@ -10533,12 +10541,12 @@ c 的總和：7
 <span class="n">greet</span><span class="p">();</span>
 </code></pre></div>
 
-<h4 id="clone-copy">閉包自動實作 Clone / Copy</h4>
-<p>閉包是否能 Clone 或 Copy，取決於它捕捉的變數：</p>
+<h4 id="trait_10">閉包自動實作的 trait</h4>
+<p>閉包能不能 Clone 或 Copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 Copy，整體就能 Copy：</p>
 <ul>
-<li>如果所有捕捉的變數都是 Copy 的（像 <code>i32</code>、<code>bool</code>），閉包也是 Copy 的</li>
-<li>如果所有捕捉的變數都是 Clone 的，閉包也是 Clone 的</li>
-<li>如果有任何一個不是，閉包就不是</li>
+<li>所有捕捉的變數都是 Copy → 閉包也是 Copy</li>
+<li>所有捕捉的變數都是 Clone → 閉包也是 Clone</li>
+<li>其他某些 trait 也是同理</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">  </span><span class="c1">// x 是 i32（Copy），所以 f 也是 Copy</span>
@@ -10547,8 +10555,6 @@ c 的總和：7
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">());</span>
 </code></pre></div>
 
-<h4 id="send-sync">Send / Sync（預告）</h4>
-<p>類似地，閉包是否實作 <code>Send</code> 和 <code>Sync</code>，也取決於捕捉的變數。這兩個 trait 跟多執行緒有關——第九章會詳細介紹。現在只需要知道：<code>move</code> 閉包通常更容易滿足 <code>Send</code> 的要求，因為它擁有所有東西，不依賴外部的借用。</p>
 <h3 id="_648">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 回傳閉包時，通常需要 move</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">make_adder</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">(</span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
@@ -10603,10 +10609,10 @@ c 的總和：7
 <h3 id="_649">重點整理</h3>
 <ul>
 <li><code>move</code> 強制閉包以 by-value 方式捕捉所有外部變數</li>
-<li>回傳閉包時通常需要 <code>move</code>，避免 dangling reference</li>
+<li>回傳閉包時通常需要 <code>move</code>，避免懸垂引用</li>
 <li><code>move</code> <strong>不影響</strong>閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼<strong>使用</strong>捕捉的值</li>
 <li>閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy</li>
-<li><code>move</code> 閉包通常更容易滿足 Send（第九章會詳細介紹）</li>
+<li><code>move</code> 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景</li>
 </ul>
 <hr />
 <h2 id="7-option-result">第六章第 7 集：Option / Result 的閉包方法</h2>
@@ -10616,20 +10622,23 @@ c 的總和：7
 <p>第五章我們用 <code>match</code> 處理 <code>Option</code> 和 <code>Result</code>，每次都要展開兩個分支。現在學了閉包，很多操作可以一行搞定。</p>
 <h4 id="option_3">Option 的閉包方法</h4>
 <h5 id="map-some">map —— 轉換 Some 裡的值</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Option&lt;U&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Some(10)</span>
 </code></pre></div>
 
 <p>如果是 <code>None</code>，<code>map</code> 什麼都不做，直接回傳 <code>None</code>。不用寫 match。</p>
 <h5 id="and_then">and_then —— 鏈式操作（可能失敗）</h5>
 <p><code>map</code> 的閉包回傳普通值，但如果你的轉換本身也可能回傳 <code>None</code> 呢？用 <code>and_then</code>：</p>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Option&lt;U&gt;) -&gt; Option&lt;U&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">and_then</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">None</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div>
 
-<p><code>and_then</code> 的閉包回傳 <code>Option</code>，避免了 <code>Option&lt;Option&lt;T&gt;&gt;</code> 的巢狀問題。</p>
+<p><code>and_then</code> 的閉包回傳 <code>Option</code>，避免了 <code>Option&lt;Option&lt;T&gt;&gt;</code> 的巢狀問題。其實 <code>and_then</code> 就等於先 <code>map</code> 再 <code>flatten</code>——<code>map</code> 會產生 <code>Option&lt;Option&lt;U&gt;&gt;</code>，<code>flatten</code> 再把它攤平成 <code>Option&lt;U&gt;</code>。<code>and_then</code> 一步到位。</p>
 <h5 id="unwrap_or_else-default">unwrap_or_else —— 給一個計算 default 的閉包</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">None</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn unwrap_or_else(self, f: impl FnOnce() -&gt; T) -&gt; T</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">None</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;沒有值，計算預設值...&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="mi">42</span>
@@ -10638,7 +10647,8 @@ c 的總和：7
 
 <p>跟 <code>unwrap_or</code> 不同，<code>unwrap_or_else</code> 的預設值是<strong>懶惰計算</strong>的——只有在真的是 None 的時候才會執行閉包。</p>
 <h5 id="filter">filter —— 條件過濾</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn filter(self, predicate: impl FnOnce(&amp;T) -&gt; bool) -&gt; Option&lt;T&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// Some(4)，因為 4 是偶數</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// None，因為 4 不是奇數</span>
 </code></pre></div>
@@ -10646,17 +10656,21 @@ c 的總和：7
 <h4 id="result_1">Result 的閉包方法</h4>
 <p>Result 也有類似的一套方法。</p>
 <h5 id="map-ok">map —— 轉換 Ok 的值</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Result&lt;U, E&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">doubled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Ok(20)</span>
 </code></pre></div>
 
 <h5 id="map_err-err">map_err —— 轉換 Err 的值</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;not found&quot;</span><span class="p">));</span>
+<p>跟 <code>map</code> 相反——<code>map</code> 對 Ok 做事、Err 不動；<code>map_err</code> 對 Err 做事、Ok 不動。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn map_err&lt;F&gt;(self, f: impl FnOnce(E) -&gt; F) -&gt; Result&lt;T, F&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;not found&quot;</span><span class="p">));</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;錯誤：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">));</span>
 </code></pre></div>
 
 <h5 id="and_then_1">and_then —— 鏈式操作</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Result&lt;U, E&gt;) -&gt; Result&lt;U, E&gt;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">and_then</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
@@ -10666,8 +10680,10 @@ c 的總和：7
 <span class="p">});</span>
 </code></pre></div>
 
+<p>跟 Option 一樣，<code>and_then</code> 就等於 <code>map</code> 再 <code>flatten</code>。</p>
 <h5 id="unwrap_or_else-err-default">unwrap_or_else —— 從 Err 計算 default</h5>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;oops&quot;</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// fn unwrap_or_else(self, f: impl FnOnce(E) -&gt; T) -&gt; T</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;oops&quot;</span><span class="p">));</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;發生錯誤：{}，使用預設值&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
 <span class="w">    </span><span class="mi">0</span>
@@ -10702,7 +10718,12 @@ c 的總和：7
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">find_even</span><span class="p">(</span><span class="n">numbers</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">numbers</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">find</span><span class="p">(</span><span class="o">|&amp;&amp;</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">copied</span><span class="p">()</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="o">*</span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">None</span>
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -10753,7 +10774,7 @@ c 的總和：7
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find_even</span><span class="p">(</span><span class="o">&amp;</span><span class="n">numbers</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="o">*</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;找偶數 &gt; 5 再乘 10：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;找第一個偶數，&gt; 5 才乘 10：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -10765,6 +10786,7 @@ c 的總和：7
 <li><code>Option::filter</code> 根據條件決定保留 Some 或轉成 None</li>
 <li><code>Result::map_err</code> 可以轉換錯誤型別，方便錯誤處理鏈</li>
 <li>這些方法可以鏈式呼叫，比層層 match 更簡潔易讀</li>
+<li>你可能已經注意到：光看型別簽名就能猜出方法在做什麼（<code>map</code> 接受 <code>T -&gt; U</code>，回傳 <code>Option&lt;U&gt;</code>）。這是函數式程式設計的一大特色——型別本身就是文件</li>
 </ul>
 <hr />
 <h2 id="8-iterator-trait">第六章第 8 集：Iterator trait</h2>

@@ -24,7 +24,7 @@ fn make_greeter(name: String) -> impl Fn() {
 }
 ```
 
-為什麼錯？因為閉包預設用借用的方式捕捉 `name`（`&name`），但 `name` 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了 dangling reference——第四章的老朋友。
+為什麼錯？因為閉包預設用借用的方式捕捉 `name`（`&name`），但 `name` 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂引用——第四章的老朋友。
 
 ### move 關鍵字
 
@@ -37,6 +37,24 @@ fn make_greeter(name: String) -> impl Fn() {
 ```
 
 `move` 告訴 Rust：「不要用借用，把所有捕捉的變數都**搬進**閉包裡。」這樣 `name` 就歸閉包所有了，不管原本的作用域怎麼結束，閉包都能繼續用 `name`。
+
+### move 閉包的匿名 struct
+
+回想第 3 集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是引用（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
+
+```rust
+// 沒有 move：閉包借用 name，struct 裡存的是引用
+let name = String::from("Alice");
+let greet = || println!("{}", name);
+// name 還能用，因為閉包只是借用
+
+// 有 move：name 被搬進 struct，閉包擁有它
+let name = String::from("Alice");
+let greet = move || println!("{}", name);
+// name 不能再用了，已經被搬進閉包裡
+```
+
+因為所有欄位都是 owned 的，這個 struct 不借用任何東西，所以沒有 lifetime 的問題——可以安全地從函數回傳、存進 struct。
 
 ### move 不影響閉包是哪種 Fn trait
 
@@ -53,13 +71,13 @@ greet();
 greet();
 ```
 
-### 閉包自動實作 Clone / Copy
+### 閉包自動實作的 trait
 
-閉包是否能 Clone 或 Copy，取決於它捕捉的變數：
+閉包能不能 Clone 或 Copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 Copy，整體就能 Copy：
 
-- 如果所有捕捉的變數都是 Copy 的（像 `i32`、`bool`），閉包也是 Copy 的
-- 如果所有捕捉的變數都是 Clone 的，閉包也是 Clone 的
-- 如果有任何一個不是，閉包就不是
+- 所有捕捉的變數都是 Copy → 閉包也是 Copy
+- 所有捕捉的變數都是 Clone → 閉包也是 Clone
+- 其他某些 trait 也是同理
 
 ```rust
 let x = 42;
@@ -68,10 +86,6 @@ let g = f;  // Copy 了 f
 println!("{}", f());  // f 還能用
 println!("{}", g());
 ```
-
-### Send / Sync（預告）
-
-類似地，閉包是否實作 `Send` 和 `Sync`，也取決於捕捉的變數。這兩個 trait 跟多執行緒有關——第九章會詳細介紹。現在只需要知道：`move` 閉包通常更容易滿足 `Send` 的要求，因為它擁有所有東西，不依賴外部的借用。
 
 ## 範例程式碼
 
@@ -128,7 +142,7 @@ fn main() {
 
 ## 重點整理
 - `move` 強制閉包以 by-value 方式捕捉所有外部變數
-- 回傳閉包時通常需要 `move`，避免 dangling reference
+- 回傳閉包時通常需要 `move`，避免懸垂引用
 - `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼**使用**捕捉的值
 - 閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy
-- `move` 閉包通常更容易滿足 Send（第九章會詳細介紹）
+- `move` 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景
