@@ -1,4 +1,4 @@
-# 第三章第 26 集：associated function
+# 第三章第 27 集：associated function
 
 ## 本集目標
 學會用 `impl` 為 struct 或 enum 定義 associated function（關聯函數），以及用 `::` 呼叫。
