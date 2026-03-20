@@ -68,7 +68,7 @@ impl Iterator for Countdown {
 }
 ```
 
-只要實作了 `next()`，就能用 for 迴圈、用 `collect()`、用 `map()`——全部都行。
+只要實作了 `next()`，`map`、`filter`、`sum`、`collect` 等幾十個方法全部自動可用。這些方法接下來幾集會陸續學到。
 
 ### 標準庫的迭代器工廠
 
@@ -102,7 +102,7 @@ println!("{:?}", counter.next());  // Some(2)
 ```rust
 use std::iter;
 
-// 自訂迭代器：產生費氏數列
+// 自訂迭代器：費氏數列（無限！）
 struct Fibonacci {
     a: u64,
     b: u64,
@@ -122,12 +122,12 @@ impl Iterator for Fibonacci {
         let new_b = self.a + self.b;
         self.a = self.b;
         self.b = new_b;
-        Some(current)  // 費氏數列永遠不結束
+        Some(current)  // 永遠不回傳 None
     }
 }
 
 fn main() {
-    // 手動呼叫 next
+    // 手動呼叫 Vec 的 iter().next()
     let names = vec!["Alice", "Bob", "Charlie"];
     let mut name_iter = names.iter();
     println!("第一個：{:?}", name_iter.next());
@@ -135,43 +135,46 @@ fn main() {
     println!("第三個：{:?}", name_iter.next());
     println!("結束了：{:?}", name_iter.next());
 
-    // 自訂 Iterator：費氏數列（取前 10 個）
-    println!("\n費氏數列前 10 個：");
-    let fib = Fibonacci::new();
-    for n in fib.take(10) {
-        print!("{} ", n);
-    }
-    println!();
+    // 自訂 Iterator：費氏數列（手動呼叫 next）
+    println!("\n費氏數列：");
+    let mut fib = Fibonacci::new();
+    println!("{:?}", fib.next());  // Some(0)
+    println!("{:?}", fib.next());  // Some(1)
+    println!("{:?}", fib.next());  // Some(1)
+    println!("{:?}", fib.next());  // Some(2)
+    println!("{:?}", fib.next());  // Some(3)
+    println!("{:?}", fib.next());  // Some(5)
+    // 永遠不會 None——這是一個無限迭代器
 
-    // std::iter::repeat
-    let threes: Vec<i32> = iter::repeat(3).take(5).collect();
-    println!("\n重複 5 個 3：{:?}", threes);
+    // std::iter::repeat：無限重複
+    let mut threes = iter::repeat(3);
+    println!("\nrepeat(3)：");
+    println!("{:?}", threes.next());  // Some(3)
+    println!("{:?}", threes.next());  // Some(3)
+    println!("{:?}", threes.next());  // Some(3)（永遠不會 None）
 
-    // std::iter::from_fn
-    let mut count = 0;
-    let squares: Vec<i32> = iter::from_fn(|| {
-        count += 1;
-        if count <= 5 {
-            Some(count * count)
+    // std::iter::from_fn：用閉包控制產出
+    let mut n = 0;
+    let mut squares = iter::from_fn(|| {
+        n += 1;
+        if n <= 3 {
+            Some(n * n)
         } else {
             None
         }
-    }).collect();
-    println!("前 5 個平方數：{:?}", squares);
-
-    // 自訂 Iterator 自動獲得所有 default method
-    let fib_sum: u64 = Fibonacci::new().take(10).sum();
-    println!("\n費氏前 10 項的和：{}", fib_sum);
-
-    let fib_count = Fibonacci::new().take(20).filter(|n| n % 2 == 0).count();
-    println!("費氏前 20 項中偶數的個數：{}", fib_count);
+    });
+    println!("\nfrom_fn（前 3 個平方數）：");
+    println!("{:?}", squares.next());  // Some(1)
+    println!("{:?}", squares.next());  // Some(4)
+    println!("{:?}", squares.next());  // Some(9)
+    println!("{:?}", squares.next());  // None
 }
 ```
 
 ## 重點整理
 - `Iterator` trait 的核心是 `next(&mut self) -> Option<Self::Item>`
-- 只需實作 `next()`，就能免費獲得 `map`、`filter`、`sum`、`count` 等數十個方法（trait default method 的威力）
+- 只需實作 `next()`，就能免費獲得數十個 default method（接下來幾集會陸續學到）
 - 自訂 struct 實作 `Iterator` 很簡單——定義 `type Item` 和 `next()` 就好
 - `std::iter::repeat(value)` 建立無限重複的迭代器
 - `std::iter::from_fn(closure)` 用閉包來控制每次產出的值
-- 迭代器可以是無限的（永不回傳 None），用 `.take(n)` 取有限個
+- 迭代器可以是無限的（永不回傳 None）

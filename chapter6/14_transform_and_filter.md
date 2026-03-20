@@ -121,25 +121,13 @@ fn main() {
     let countdown: Vec<i32> = (1..=5).rev().collect();
     println!("\n倒數：{:?}", countdown);
 
-    // 鏈式組合：找出及格分數，由高到低排列，格式化輸出
+    // 鏈式組合
     println!("\n--- 鏈式組合 ---");
-    let mut passing_sorted: Vec<i32> = scores
-        .iter()
-        .copied()
-        .filter(|&s| s >= 60)
+    let long_words: Vec<&str> = vec!["hi", "hello", "hey", "howdy", "greetings"]
+        .into_iter()
+        .filter(|w| w.len() >= 4)
         .collect();
-    passing_sorted.sort();  // 先排序（小到大）
-
-    let report: Vec<String> = passing_sorted
-        .iter()
-        .rev()                  // 反轉成大到小
-        .enumerate()
-        .map(|(rank, &score)| format!("第 {} 名：{} 分", rank + 1, score))
-        .collect();
-
-    for line in &report {
-        println!("{}", line);
-    }
+    println!("4 字以上的：{:?}", long_words);
 
     // filter + map 組合
     let words = vec!["hello", "hi", "hey", "howdy", "greetings"];

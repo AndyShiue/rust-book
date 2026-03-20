@@ -12,8 +12,8 @@
 ### .count() —— 數有幾個
 
 ```rust
-let count = (1..=100).filter(|n| n % 3 == 0).count();
-// 100 以內 3 的倍數有幾個？33 個
+let names = vec!["Alice", "Bob", "Charlie"];
+let count = names.iter().count();  // 3
 ```
 
 ### .sum() 和 .product()
@@ -37,14 +37,39 @@ let largest = v.iter().max();   // Some(&9)
 
 ### .fold() —— 最通用的聚合
 
-`fold` 是所有聚合方法的「老大」。它接受一個初始值和一個閉包，每一步把「累積值」和「當前元素」組合起來：
+`fold` 是所有聚合方法的「老大」。它的型別：
+
+```rust
+fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B
+```
+
+接受一個初始值 `init`（型別 `B`）和一個閉包，每一步把「累積值」和「當前元素」組合成新的累積值：
 
 ```rust
 let sum = (1..=5).fold(0, |acc, x| acc + x);
 // 步驟：0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15
 ```
 
-`fold` 能做的事情遠比 sum 多。想把數字串成字串？想同時追蹤多個值？都可以：
+其實本集介紹的其他方法都能用 `fold` 實作：
+
+```rust
+// count = fold 從 0 開始，每次 +1
+let count = (1..=5).fold(0, |acc, _x| acc + 1);
+
+// sum = fold 從 0 開始，每次加上元素
+let sum = (1..=5).fold(0, |acc, x| acc + x);
+
+// product = fold 從 1 開始，每次乘上元素
+let product = (1..=5).fold(1, |acc, x| acc * x);
+
+// min = fold 追蹤最小值
+let min = (1..=5).fold(i32::MAX, |acc, x| if x < acc { x } else { acc });
+
+// max = fold 追蹤最大值
+let max = (1..=5).fold(i32::MIN, |acc, x| if x > acc { x } else { acc });
+```
+
+`fold` 還能做更靈活的事情。想把數字串成字串？想同時追蹤多個值？都可以：
 
 ```rust
 let text = (1..=5).fold(String::new(), |mut acc, x| {
@@ -114,10 +139,6 @@ fn main() {
         .iter()
         .reduce(|a, b| if a.len() >= b.len() { a } else { b });
     println!("\n最長的字：{:?}", longest);
-
-    // 及格人數
-    let pass_count = scores.iter().filter(|&&s| s >= 80).count();
-    println!("\n及格（≥80）人數：{}", pass_count);
 
     // .reduce() 回傳 Option（空迭代器的情況）
     let empty: Vec<i32> = vec![];

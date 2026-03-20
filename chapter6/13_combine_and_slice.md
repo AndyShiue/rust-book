@@ -25,7 +25,7 @@ let paired: Vec<_> = names.iter().zip(scores.iter()).collect();
 ```rust
 let first = vec![1, 2, 3];
 let second = vec![4, 5, 6];
-let all: Vec<i32> = first.iter().chain(second.iter()).copied().collect();
+let all: Vec<i32> = first.into_iter().chain(second.into_iter()).collect();
 // [1, 2, 3, 4, 5, 6]
 ```
 
@@ -135,12 +135,10 @@ fn main() {
     println!("\n--- zip + map ---");
     let prices = vec![100, 200, 300];
     let quantities = vec![2, 1, 4];
-    let totals: Vec<i32> = prices.iter()
+    let grand_total: i32 = prices.iter()
         .zip(quantities.iter())
         .map(|(p, q)| p * q)
-        .collect();
-    println!("各品項小計：{:?}", totals);
-    let grand_total: i32 = totals.iter().sum();
+        .sum();
     println!("總計：{}", grand_total);
 }
 ```

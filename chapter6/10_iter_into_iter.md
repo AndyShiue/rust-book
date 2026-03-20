@@ -39,7 +39,7 @@ for name in names.into_iter() {
 
 `.into_iter()` 把每個元素的所有權交出來。集合本身被消耗，之後不能再用。
 
-其實 `for name in names` 就等於 `for name in names.into_iter()`——`for` 迴圈預設呼叫 `into_iter()`。
+其實 `for name in names` 就等於 `for name in names.into_iter()`。
 
 ### .iter_mut() —— 借來改改
 
@@ -62,6 +62,33 @@ println!("{:?}", scores);  // [70, 80, 90]
 | `&T`（共享借用） | `.iter()` | `for x in &v` |
 | `T`（移動所有權） | `.into_iter()` | `for x in v` |
 | `&mut T`（可變借用） | `.iter_mut()` | `for x in &mut v` |
+
+### 背後的 IntoIterator
+
+上一集學到 `for x in something` 會呼叫 `IntoIterator::into_iter(something)`。那三種 for 語法糖是怎麼運作的？
+
+其實是因為 `Vec<T>`、`&Vec<T>`、`&mut Vec<T>` 分別實作了 `IntoIterator`：
+
+```rust
+impl<T> IntoIterator for Vec<T> {
+    type Item = T;
+    fn into_iter(self) -> ... { /* 消耗 Vec，產出 T */ }
+}
+
+impl<'a, T> IntoIterator for &'a Vec<T> {
+    type Item = &'a T;
+    fn into_iter(self) -> ... { /* 等同於 .iter()，產出 &T */ }
+}
+
+impl<'a, T> IntoIterator for &'a mut Vec<T> {
+    type Item = &'a mut T;
+    fn into_iter(self) -> ... { /* 等同於 .iter_mut()，產出 &mut T */ }
+}
+```
+
+所以 `for x in &v` 其實是對 `&v`（型別是 `&Vec<T>`）呼叫 `into_iter()`，走到 `&Vec<T>` 的那個 impl，最終拿到 `&T`。
+
+大部分集合型別（Vec、String、陣列等）都遵循這個模式——為自己、`&self`、`&mut self` 三種各實作一次 `IntoIterator`。
 
 ### 選哪一個？
 
@@ -103,11 +130,9 @@ fn main() {
         String::from("world"),
     ];
     println!("\n--- .into_iter()（消耗） ---");
-    let uppercased: Vec<String> = words
-        .into_iter()
-        .map(|w| w.to_uppercase())
-        .collect();
-    println!("大寫：{:?}", uppercased);
+    for word in words.into_iter() {
+        println!("拿到了：{}", word);  // word 是 String（擁有所有權）
+    }
     // println!("{:?}", words);  // 編譯錯誤！words 被消耗了
 
     // for 語法糖的對應

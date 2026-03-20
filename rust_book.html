@@ -10910,7 +10910,7 @@ name2 現在是：Bob!!!
 <span class="p">}</span>
 </code></pre></div>
 
-<p>只要實作了 <code>next()</code>，就能用 for 迴圈、用 <code>collect()</code>、用 <code>map()</code>——全部都行。</p>
+<p>只要實作了 <code>next()</code>，<code>map</code>、<code>filter</code>、<code>sum</code>、<code>collect</code> 等幾十個方法全部自動可用。這些方法接下來幾集會陸續學到。</p>
 <h4 id="_656">標準庫的迭代器工廠</h4>
 <p>標準庫提供了一些方便的函數來建立迭代器：</p>
 <ul>
@@ -10938,7 +10938,7 @@ name2 現在是：Bob!!!
 <h3 id="_657">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">iter</span><span class="p">;</span>
 
-<span class="c1">// 自訂迭代器：產生費氏數列</span>
+<span class="c1">// 自訂迭代器：費氏數列（無限！）</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Fibonacci</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span>
 <span class="w">    </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span>
@@ -10958,12 +10958,12 @@ name2 現在是：Bob!!!
 <span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">new_b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_b</span><span class="p">;</span>
-<span class="w">        </span><span class="nb">Some</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="w">  </span><span class="c1">// 費氏數列永遠不結束</span>
+<span class="w">        </span><span class="nb">Some</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="w">  </span><span class="c1">// 永遠不回傳 None</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 手動呼叫 next</span>
+<span class="w">    </span><span class="c1">// 手動呼叫 Vec 的 iter().next()</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">];</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">name_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span><span class="p">.</span><span class="n">iter</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第一個：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name_iter</span><span class="p">.</span><span class="n">next</span><span class="p">());</span>
@@ -10971,47 +10971,50 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第三個：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name_iter</span><span class="p">.</span><span class="n">next</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;結束了：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name_iter</span><span class="p">.</span><span class="n">next</span><span class="p">());</span>
 
-<span class="w">    </span><span class="c1">// 自訂 Iterator：費氏數列（取前 10 個）</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">費氏數列前 10 個：&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">fib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Fibonacci</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">print!</span><span class="p">(</span><span class="s">&quot;{} &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// 自訂 Iterator：費氏數列（手動呼叫 next）</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">費氏數列：&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">fib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Fibonacci</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(0)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(1)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(1)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(2)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(3)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(5)</span>
+<span class="w">    </span><span class="c1">// 永遠不會 None——這是一個無限迭代器</span>
 
-<span class="w">    </span><span class="c1">// std::iter::repeat</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">threes</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">重複 5 個 3：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">threes</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// std::iter::repeat：無限重複</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">threes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">repeat(3)：&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">threes</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(3)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">threes</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(3)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">threes</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(3)（永遠不會 None）</span>
 
-<span class="w">    </span><span class="c1">// std::iter::from_fn</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">squares</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">from_fn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nb">Some</span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">count</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">// std::iter::from_fn：用閉包控制產出</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">squares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">from_fn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nb">Some</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
 <span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="nb">None</span>
 <span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}).</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;前 5 個平方數：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">squares</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// 自訂 Iterator 自動獲得所有 default method</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">fib_sum</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Fibonacci</span><span class="p">::</span><span class="n">new</span><span class="p">().</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">).</span><span class="n">sum</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">費氏前 10 項的和：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib_sum</span><span class="p">);</span>
-
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">fib_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Fibonacci</span><span class="p">::</span><span class="n">new</span><span class="p">().</span><span class="n">take</span><span class="p">(</span><span class="mi">20</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;費氏前 20 項中偶數的個數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fib_count</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">from_fn（前 3 個平方數）：&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">squares</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(1)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">squares</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(4)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">squares</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(9)</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">squares</span><span class="p">.</span><span class="n">next</span><span class="p">());</span><span class="w">  </span><span class="c1">// None</span>
 <span class="p">}</span>
 </code></pre></div>
 
 <h3 id="_658">重點整理</h3>
 <ul>
 <li><code>Iterator</code> trait 的核心是 <code>next(&amp;mut self) -&gt; Option&lt;Self::Item&gt;</code></li>
-<li>只需實作 <code>next()</code>，就能免費獲得 <code>map</code>、<code>filter</code>、<code>sum</code>、<code>count</code> 等數十個方法（trait default method 的威力）</li>
+<li>只需實作 <code>next()</code>，就能免費獲得數十個 default method（接下來幾集會陸續學到）</li>
 <li>自訂 struct 實作 <code>Iterator</code> 很簡單——定義 <code>type Item</code> 和 <code>next()</code> 就好</li>
 <li><code>std::iter::repeat(value)</code> 建立無限重複的迭代器</li>
 <li><code>std::iter::from_fn(closure)</code> 用閉包來控制每次產出的值</li>
-<li>迭代器可以是無限的（永不回傳 None），用 <code>.take(n)</code> 取有限個</li>
+<li>迭代器可以是無限的（永不回傳 None）</li>
 </ul>
 <hr />
 <h2 id="9-for">第六章第 9 集：for 迴圈的真面目</h2>
@@ -11196,7 +11199,7 @@ name2 現在是：Bob!!!
 </code></pre></div>
 
 <p><code>.into_iter()</code> 把每個元素的所有權交出來。集合本身被消耗，之後不能再用。</p>
-<p>其實 <code>for name in names</code> 就等於 <code>for name in names.into_iter()</code>——<code>for</code> 迴圈預設呼叫 <code>into_iter()</code>。</p>
+<p>其實 <code>for name in names</code> 就等於 <code>for name in names.into_iter()</code>。</p>
 <h4 id="iter_mut">.iter_mut() —— 借來改改</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">];</span>
 <span class="k">for</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">iter_mut</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -11234,6 +11237,27 @@ name2 現在是：Bob!!!
 </tr>
 </tbody>
 </table>
+<h4 id="intoiterator">背後的 IntoIterator</h4>
+<p>上一集學到 <code>for x in something</code> 會呼叫 <code>IntoIterator::into_iter(something)</code>。那三種 for 語法糖是怎麼運作的？</p>
+<p>其實是因為 <code>Vec&lt;T&gt;</code>、<code>&amp;Vec&lt;T&gt;</code>、<code>&amp;mut Vec&lt;T&gt;</code> 分別實作了 <code>IntoIterator</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">into_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* 消耗 Vec，產出 T */</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="o">&amp;&#39;</span><span class="na">a</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;&#39;</span><span class="na">a</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">into_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* 等同於 .iter()，產出 &amp;T */</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="o">&amp;&#39;</span><span class="na">a</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;&#39;</span><span class="na">a</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">into_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* 等同於 .iter_mut()，產出 &amp;mut T */</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>所以 <code>for x in &amp;v</code> 其實是對 <code>&amp;v</code>（型別是 <code>&amp;Vec&lt;T&gt;</code>）呼叫 <code>into_iter()</code>，走到 <code>&amp;Vec&lt;T&gt;</code> 的那個 impl，最終拿到 <code>&amp;T</code>。</p>
+<p>大部分集合型別（Vec、String、陣列等）都遵循這個模式——為自己、<code>&amp;self</code>、<code>&amp;mut self</code> 三種各實作一次 <code>IntoIterator</code>。</p>
 <h4 id="_668">選哪一個？</h4>
 <ul>
 <li>只需要讀取 → <code>.iter()</code>（最常用）</li>
@@ -11271,11 +11295,9 @@ name2 現在是：Bob!!!
 <span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">),</span>
 <span class="w">    </span><span class="p">];</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- .into_iter()（消耗） ---&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">uppercased</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">words</span>
-<span class="w">        </span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">w</span><span class="o">|</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">to_uppercase</span><span class="p">())</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;大寫：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">uppercased</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">words</span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;拿到了：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">);</span><span class="w">  </span><span class="c1">// word 是 String（擁有所有權）</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="c1">// println!(&quot;{:?}&quot;, words);  // 編譯錯誤！words 被消耗了</span>
 
 <span class="w">    </span><span class="c1">// for 語法糖的對應</span>
@@ -11334,13 +11356,6 @@ name2 現在是：Bob!!!
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;Rust&quot;</span>
 </code></pre></div>
 
-<h4 id="result_2">收集 Result</h4>
-<p>一個很酷的用法：如果迭代器的元素是 <code>Result&lt;T, E&gt;</code>，你可以 collect 成 <code>Result&lt;Vec&lt;T&gt;, E&gt;</code>。只要有任何一個 <code>Err</code>，整個結果就是 <code>Err</code>：</p>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;three&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;4&quot;</span><span class="p">];</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">parsed</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputs</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()).</span><span class="n">collect</span><span class="p">();</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parsed</span><span class="p">);</span><span class="w">  </span><span class="c1">// Err(...)，因為 &quot;three&quot; 無法解析</span>
-</code></pre></div>
-
 <h4 id="last">.last() —— 取最後一個元素</h4>
 <p><code>.last()</code> 會消耗整個迭代器，回傳最後一個元素（<code>Option&lt;T&gt;</code>）：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">];</span>
@@ -11356,33 +11371,12 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;1 到 10：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">numbers</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// turbofish 語法</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">evens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">10</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">collect</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;偶數：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">evens</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">numbers2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;turbofish：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">numbers2</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// 收集成 String</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="sc">&#39;你&#39;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;好&#39;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;世&#39;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;界&#39;</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;字串：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">greeting</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// 用 map + collect 做轉換</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;charlie&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">uppercased</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">to_uppercase</span><span class="p">()).</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;大寫：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">uppercased</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// collect Result&lt;Vec&lt;T&gt;, E&gt; —— 全部成功</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">inputs_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;4&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">parsed_ok</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputs_ok</span>
-<span class="w">        </span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">())</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">全部成功：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parsed_ok</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// collect Result&lt;Vec&lt;T&gt;, E&gt; —— 有一個失敗</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">inputs_bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;two&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">parsed_bad</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputs_bad</span>
-<span class="w">        </span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">())</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;有失敗：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parsed_bad</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// .last()</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">last_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">100</span><span class="p">).</span><span class="n">last</span><span class="p">();</span>
@@ -11391,14 +11385,6 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">empty</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">last_empty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">empty</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">last</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;空 Vec 的 last：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">last_empty</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// 鏈式操作 + collect</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">sentence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello world foo bar&quot;</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">long_words</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sentence</span>
-<span class="w">        </span><span class="p">.</span><span class="n">split_whitespace</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">w</span><span class="o">|</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">超過 3 字母的單字：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">long_words</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -11406,8 +11392,7 @@ name2 現在是：Bob!!!
 <ul>
 <li><code>.collect()</code> 把迭代器的元素收集成目標集合型別</li>
 <li>用型別標註 <code>let v: Vec&lt;i32&gt;</code> 或 turbofish <code>.collect::&lt;Vec&lt;i32&gt;&gt;()</code> 告訴 Rust 目標型別</li>
-<li>可以收集成 <code>Vec</code>、<code>String</code>、<code>Result&lt;Vec&lt;T&gt;, E&gt;</code> 等多種型別</li>
-<li>收集 <code>Result</code> 時，任何一個 <code>Err</code> 就會讓整個結果變成 <code>Err</code></li>
+<li>可以收集成 <code>Vec</code>、<code>String</code> 等多種型別</li>
 <li><code>.last()</code> 消耗整個迭代器，回傳 <code>Option</code> 包裝的最後一個元素</li>
 </ul>
 <hr />
@@ -11418,8 +11403,8 @@ name2 現在是：Bob!!!
 <h4 id="_677">什麼是聚合？</h4>
 <p>前幾集我們學了怎麼建立迭代器、怎麼 collect 成集合。但有時候你不需要一個集合，你要的是一個<strong>單一的值</strong>——總和、最大值、個數⋯⋯這就是聚合（aggregation）。</p>
 <h4 id="count">.count() —— 數有幾個</h4>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">100</span><span class="p">).</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
-<span class="c1">// 100 以內 3 的倍數有幾個？33 個</span>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">];</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">count</span><span class="p">();</span><span class="w">  </span><span class="c1">// 3</span>
 </code></pre></div>
 
 <h4 id="sum-product">.sum() 和 .product()</h4>
@@ -11436,12 +11421,33 @@ name2 現在是：Bob!!!
 
 <p>回傳 <code>Option</code>，因為迭代器可能是空的（空的就回傳 None）。</p>
 <h4 id="fold">.fold() —— 最通用的聚合</h4>
-<p><code>fold</code> 是所有聚合方法的「老大」。它接受一個初始值和一個閉包，每一步把「累積值」和「當前元素」組合起來：</p>
+<p><code>fold</code> 是所有聚合方法的「老大」。它的型別：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">fold</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">init</span><span class="p">:</span><span class="w"> </span><span class="nc">B</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">FnMut</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">Item</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">B</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">B</span>
+</code></pre></div>
+
+<p>接受一個初始值 <code>init</code>（型別 <code>B</code>）和一個閉包，每一步把「累積值」和「當前元素」組合成新的累積值：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
 <span class="c1">// 步驟：0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15</span>
 </code></pre></div>
 
-<p><code>fold</code> 能做的事情遠比 sum 多。想把數字串成字串？想同時追蹤多個值？都可以：</p>
+<p>其實本集介紹的其他方法都能用 <code>fold</code> 實作：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// count = fold 從 0 開始，每次 +1</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">_x</span><span class="o">|</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// sum = fold 從 0 開始，每次加上元素</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+
+<span class="c1">// product = fold 從 1 開始，每次乘上元素</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+
+<span class="c1">// min = fold 追蹤最小值</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="kt">i32</span><span class="p">::</span><span class="n">MAX</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">});</span>
+
+<span class="c1">// max = fold 追蹤最大值</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="kt">i32</span><span class="p">::</span><span class="n">MIN</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+
+<p><code>fold</code> 還能做更靈活的事情。想把數字串成字串？想同時追蹤多個值？都可以：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">new</span><span class="p">(),</span><span class="w"> </span><span class="o">|</span><span class="k">mut</span><span class="w"> </span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="n">acc</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">acc</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="s">&quot;, &quot;</span><span class="p">);</span>
@@ -11504,10 +11510,6 @@ name2 現在是：Bob!!!
 <span class="w">        </span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">});</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">最長的字：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">longest</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// 及格人數</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">pass_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|&amp;&amp;</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">80</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">及格（≥80）人數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">pass_count</span><span class="p">);</span>
-
 <span class="w">    </span><span class="c1">// .reduce() 回傳 Option（空迭代器的情況）</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">empty</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">empty</span><span class="p">.</span><span class="n">into_iter</span><span class="p">().</span><span class="n">reduce</span><span class="p">(</span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
@@ -11542,7 +11544,7 @@ name2 現在是：Bob!!!
 <p><code>chain</code> 把兩個迭代器首尾相接：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">second</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">];</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">all</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">chain</span><span class="p">(</span><span class="n">second</span><span class="p">.</span><span class="n">iter</span><span class="p">()).</span><span class="n">copied</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">all</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first</span><span class="p">.</span><span class="n">into_iter</span><span class="p">().</span><span class="n">chain</span><span class="p">(</span><span class="n">second</span><span class="p">.</span><span class="n">into_iter</span><span class="p">()).</span><span class="n">collect</span><span class="p">();</span>
 <span class="c1">// [1, 2, 3, 4, 5, 6]</span>
 </code></pre></div>
 
@@ -11636,12 +11638,10 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- zip + map ---&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">prices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">];</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">quantities</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">totals</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">grand_total</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
 <span class="w">        </span><span class="p">.</span><span class="n">zip</span><span class="p">(</span><span class="n">quantities</span><span class="p">.</span><span class="n">iter</span><span class="p">())</span>
 <span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="o">|</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;各品項小計：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">totals</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">grand_total</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totals</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">();</span>
+<span class="w">        </span><span class="p">.</span><span class="n">sum</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;總計：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">grand_total</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -11752,25 +11752,13 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">countdown</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">rev</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">倒數：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">countdown</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// 鏈式組合：找出及格分數，由高到低排列，格式化輸出</span>
+<span class="w">    </span><span class="c1">// 鏈式組合</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- 鏈式組合 ---&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">passing_sorted</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scores</span>
-<span class="w">        </span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">copied</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|&amp;</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">60</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">long_words</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;hi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hey&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;howdy&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;greetings&quot;</span><span class="p">]</span>
+<span class="w">        </span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">w</span><span class="o">|</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
 <span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="n">passing_sorted</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span><span class="w">  </span><span class="c1">// 先排序（小到大）</span>
-
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">report</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">passing_sorted</span>
-<span class="w">        </span><span class="p">.</span><span class="n">iter</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">rev</span><span class="p">()</span><span class="w">                  </span><span class="c1">// 反轉成大到小</span>
-<span class="w">        </span><span class="p">.</span><span class="n">enumerate</span><span class="p">()</span>
-<span class="w">        </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">score</span><span class="p">)</span><span class="o">|</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;第 {} 名：{} 分&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">))</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">report</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;4 字以上的：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">long_words</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// filter + map 組合</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hi&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hey&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;howdy&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;greetings&quot;</span><span class="p">];</span>
@@ -11810,14 +11798,49 @@ name2 現在是：Bob!!!
 <p><code>map</code> 並沒有「跑過」每個元素。它只是建立了一個新的迭代器結構，記錄了「等下要做什麼」。直到有人呼叫 <code>collect()</code>、<code>for</code>、<code>sum()</code> 等「消費」方法時，才會一個一個元素地拉動。</p>
 <h4 id="_692">俄羅斯套娃</h4>
 <p>每次呼叫 <code>.map()</code> 或 <code>.filter()</code>，你其實是在迭代器外面「套一層」。就像俄羅斯套娃：</p>
-<div class="highlight"><pre><span></span><code><span class="n">v</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span><span class="w">                    </span><span class="c1">// 最內層：原始迭代器</span>
+<div class="highlight"><pre><span></span><code><span class="n">v</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span><span class="w">                   </span><span class="c1">// 最內層：原始迭代器</span>
 <span class="w">    </span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">   </span><span class="c1">// 第二層：Filter 結構，存著 inner + 閉包</span>
 <span class="w">    </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w">       </span><span class="c1">// 第三層：Map 結構，存著 inner + 閉包</span>
 </code></pre></div>
 
-<p>每一層都是一個 struct，裡面存著：
-1. 內層的迭代器（inner iterator）
-2. 自己的閉包</p>
+<p>每一層都是一個 struct，裡面存著內層的迭代器和自己的閉包。標準庫的 <code>Map</code> 和 <code>Filter</code> 大致長這樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Map</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="n">F</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">iter</span><span class="p">:</span><span class="w"> </span><span class="nc">I</span><span class="p">,</span><span class="w">    </span><span class="c1">// 內層迭代器</span>
+<span class="w">    </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">F</span><span class="p">,</span><span class="w">       </span><span class="c1">// 要套用的閉包</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Filter</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">iter</span><span class="p">:</span><span class="w"> </span><span class="nc">I</span><span class="p">,</span><span class="w">        </span><span class="c1">// 內層迭代器</span>
+<span class="w">    </span><span class="n">predicate</span><span class="p">:</span><span class="w"> </span><span class="nc">P</span><span class="p">,</span><span class="w">   </span><span class="c1">// 過濾條件的閉包</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>它們的 <code>next()</code> 實作也很直覺：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Map 的 next()：從內層拿一個元素，套用閉包</span>
+<span class="k">impl</span><span class="o">&lt;</span><span class="n">I</span><span class="p">:</span><span class="w"> </span><span class="nb">Iterator</span><span class="p">,</span><span class="w"> </span><span class="n">F</span><span class="p">:</span><span class="w"> </span><span class="nb">FnMut</span><span class="p">(</span><span class="n">I</span><span class="p">::</span><span class="n">Item</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">B</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">Iterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="n">F</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">iter</span><span class="p">.</span><span class="n">next</span><span class="p">()</span><span class="o">?</span><span class="p">;</span><span class="w">  </span><span class="c1">// 問內層要一個元素</span>
+<span class="w">        </span><span class="nb">Some</span><span class="p">((</span><span class="bp">self</span><span class="p">.</span><span class="n">f</span><span class="p">)(</span><span class="n">x</span><span class="p">))</span><span class="w">           </span><span class="c1">// 套用閉包回傳</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Filter 的 next()：不斷從內層拿，直到找到符合條件的</span>
+<span class="k">impl</span><span class="o">&lt;</span><span class="n">I</span><span class="p">:</span><span class="w"> </span><span class="nb">Iterator</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="p">:</span><span class="w"> </span><span class="nb">FnMut</span><span class="p">(</span><span class="o">&amp;</span><span class="n">I</span><span class="p">::</span><span class="n">Item</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">Iterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Filter</span><span class="o">&lt;</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I</span><span class="p">::</span><span class="n">Item</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="n">I</span><span class="p">::</span><span class="n">Item</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">iter</span><span class="p">.</span><span class="n">next</span><span class="p">()</span><span class="o">?</span><span class="p">;</span><span class="w">   </span><span class="c1">// 問內層要一個元素</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">predicate</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w">          </span><span class="c1">// 符合條件，回傳</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// 不符合，繼續問下一個</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>所以整條鏈就是一堆 struct 套在一起——呼叫最外層的 <code>next()</code>，它去問內層，內層再問更內層，一路拉到最底。</p>
 <h4 id="pull-based">Pull-based：一次只處理一個元素</h4>
 <p>當你呼叫 <code>.collect()</code> 或 <code>for</code> 迴圈時，最外層的迭代器開始「拉」：</p>
 <ol>
@@ -11892,18 +11915,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;結果：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">processed</span><span class="p">);</span>
 <span class="w">    </span><span class="c1">// 注意印出的順序！filter 和 map 是交替執行的</span>
 
-<span class="w">    </span><span class="c1">// 無限迭代器 + take</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- 無限迭代器 ---&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">powers_of_two</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u64</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="k">u64</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">scan</span><span class="p">(</span><span class="mi">1</span><span class="k">u64</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="o">*</span><span class="n">state</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
-<span class="w">            </span><span class="nb">Some</span><span class="p">(</span><span class="o">*</span><span class="n">state</span><span class="p">)</span>
-<span class="w">        </span><span class="p">})</span>
-<span class="w">        </span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="w">        </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;2 的次方：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">powers_of_two</span><span class="p">);</span>
-
-<span class="w">    </span><span class="c1">// from_fn 建立無限的質數檢查器（取前 10 個質數）</span>
+<span class="w">    </span><span class="c1">// from_fn 建立無限迭代器（取前 10 個質數）</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">candidate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">primes</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">::</span><span class="n">from_fn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>

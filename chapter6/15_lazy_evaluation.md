@@ -25,14 +25,53 @@ let iter = v.iter().map(|x| {
 每次呼叫 `.map()` 或 `.filter()`，你其實是在迭代器外面「套一層」。就像俄羅斯套娃：
 
 ```rust
-v.iter()                    // 最內層：原始迭代器
+v.iter()                   // 最內層：原始迭代器
     .filter(|x| **x > 2)   // 第二層：Filter 結構，存著 inner + 閉包
     .map(|x| x * 10)       // 第三層：Map 結構，存著 inner + 閉包
 ```
 
-每一層都是一個 struct，裡面存著：
-1. 內層的迭代器（inner iterator）
-2. 自己的閉包
+每一層都是一個 struct，裡面存著內層的迭代器和自己的閉包。標準庫的 `Map` 和 `Filter` 大致長這樣：
+
+```rust
+struct Map<I, F> {
+    iter: I,    // 內層迭代器
+    f: F,       // 要套用的閉包
+}
+
+struct Filter<I, P> {
+    iter: I,        // 內層迭代器
+    predicate: P,   // 過濾條件的閉包
+}
+```
+
+它們的 `next()` 實作也很直覺：
+
+```rust
+// Map 的 next()：從內層拿一個元素，套用閉包
+impl<I: Iterator, F: FnMut(I::Item) -> B> Iterator for Map<I, F> {
+    type Item = B;
+    fn next(&mut self) -> Option<B> {
+        let x = self.iter.next()?;  // 問內層要一個元素
+        Some((self.f)(x))           // 套用閉包回傳
+    }
+}
+
+// Filter 的 next()：不斷從內層拿，直到找到符合條件的
+impl<I: Iterator, P: FnMut(&I::Item) -> bool> Iterator for Filter<I, P> {
+    type Item = I::Item;
+    fn next(&mut self) -> Option<I::Item> {
+        loop {
+            let x = self.iter.next()?;   // 問內層要一個元素
+            if (self.predicate)(&x) {
+                return Some(x);          // 符合條件，回傳
+            }
+            // 不符合，繼續問下一個
+        }
+    }
+}
+```
+
+所以整條鏈就是一堆 struct 套在一起——呼叫最外層的 `next()`，它去問內層，內層再問更內層，一路拉到最底。
 
 ### Pull-based：一次只處理一個元素
 
@@ -124,18 +163,7 @@ fn main() {
     println!("結果：{:?}", processed);
     // 注意印出的順序！filter 和 map 是交替執行的
 
-    // 無限迭代器 + take
-    println!("\n--- 無限迭代器 ---");
-    let powers_of_two: Vec<u64> = iter::repeat(2u64)
-        .scan(1u64, |state, x| {
-            *state *= x;
-            Some(*state)
-        })
-        .take(10)
-        .collect();
-    println!("2 的次方：{:?}", powers_of_two);
-
-    // from_fn 建立無限的質數檢查器（取前 10 個質數）
+    // from_fn 建立無限迭代器（取前 10 個質數）
     let mut candidate = 1;
     let primes: Vec<i32> = iter::from_fn(move || {
         loop {
