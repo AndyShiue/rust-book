@@ -10121,50 +10121,75 @@ c 的總和：7
 <hr />
 <h2 id="3_2">第六章第 3 集：手動實作閉包</h2>
 <h3 id="_625">本集目標</h3>
-<p>透過手動把閉包拆解成 struct + 方法，理解閉包背後的運作原理以及 FnOnce / FnMut / Fn 的本質差別。</p>
+<p>透過手動把閉包拆解成 struct + 方法，理解編譯器在背後做了什麼事。你會看到三種閉包各自對應什麼樣的 struct，以及為什麼 <code>f()</code> 其實是在呼叫方法。</p>
 <h3 id="_626">概念說明</h3>
-<p>上一集我們用了閉包，看到它能捕捉外部變數。但閉包到底是怎麼「記住」外部變數的？其實很簡單——編譯器幫你把捕捉的變數收集進一個匿名的 struct 裡。</p>
-<p>我們今天來手動做一次，你就會完全懂了。</p>
-<h4 id="struct_3">把捕捉的變數放進 struct</h4>
-<p>假設我們有一個閉包，捕捉了一個 <code>String</code>，而且在呼叫時會把它 move 走：</p>
+<h4 id="struct_3">閉包 = 匿名 struct + 方法</h4>
+<p>上一集我們看到閉包可以捕捉外部變數。但它是怎麼「記住」這些變數的？</p>
+<p>答案很直接——編譯器幫你做了兩件事：</p>
+<ol>
+<li><strong>建立一個匿名 struct</strong>，把捕捉的變數存成欄位</li>
+<li><strong>在那個 struct 上 impl 一個方法</strong>，方法的內容就是你寫在 <code>||</code> 後面的閉包體</li>
+</ol>
+<p>換句話說，你寫的閉包體（<code>{ ... }</code> 裡面的程式碼）就是那個方法的實作。</p>
+<p>今天我們就來手動做一次編譯器做的事，把三種閉包分別模擬出來。</p>
+<h4 id="_627">閉包呼叫 = 方法呼叫</h4>
+<p>當你寫 <code>f()</code> 呼叫一個閉包，編譯器其實把它轉換成 struct 上的方法呼叫：</p>
+<ul>
+<li><strong>FnOnce</strong>：<code>f()</code> → <code>f.call_once()</code> — 傳 <code>self</code>，消耗整個 struct</li>
+<li><strong>FnMut</strong>：<code>f()</code> → <code>f.call_mut()</code> — 傳 <code>&amp;mut self</code>，可變借用 struct</li>
+<li><strong>Fn</strong>：<code>f()</code> → <code>f.call()</code> — 傳 <code>&amp;self</code>，唯讀借用 struct</li>
+</ul>
+<p>看出來了嗎？這就是第四章學的三種方法接收者：<code>self</code>、<code>&amp;mut self</code>、<code>&amp;self</code>。閉包的三種分類，本質上就是方法接收 <code>self</code> 的三種方式。</p>
+<p>上一集介紹了 FnOnce（消耗捕捉的值，只能呼叫一次）和 FnMut（修改捕捉的值，可多次呼叫）。<strong>Fn 在上一集沒有出現</strong>——它是第三種，最寬鬆的一種：只讀取捕捉的值，不消耗也不修改，可以呼叫任意多次。</p>
+<p>接下來我們分別用 struct 手動模擬這三種閉包。注意：<strong>三種閉包的 struct 欄位型別不同</strong>，不是同一個 struct 換三種方法。</p>
+<h4 id="fnoncestruct-self">FnOnce：struct 存擁有的值，方法接 <code>self</code></h4>
+<p>假設我們有這樣的閉包：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">  </span><span class="c1">// move name 進來</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span><span class="w">  </span><span class="c1">// 閉包體內把 name 移走了</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 <span class="p">};</span>
 <span class="n">greet</span><span class="p">();</span>
-<span class="c1">// greet();  // 編譯錯誤！name 已經被 move 走了，不能再呼叫</span>
+<span class="c1">// greet();  // 編譯錯誤！name 已經被移走，不能再呼叫</span>
 </code></pre></div>
 
-<p>跟上一集 <code>Result::map</code> 的例子一樣——閉包體裡面把捕捉的變數 move 走了，所以只能呼叫一次。編譯器在背後會把被捕捉的變數放進一個匿名的 struct 裡。我們手動來做一次：</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Greet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<p>編譯器會產生類似這樣的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">GreetOnce</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">  </span><span class="c1">// 擁有 name（owned）</span>
 <span class="p">}</span>
-</code></pre></div>
 
-<h4 id="_627">閉包呼叫的真面目</h4>
-<p>當你寫 <code>greet()</code> 呼叫一個閉包時，編譯器其實是在呼叫那個匿名 struct 上的方法。根據閉包的種類不同，呼叫方式也不同：</p>
-<ul>
-<li><strong>FnOnce</strong>：<code>greet.call_once()</code> — 傳 <code>self</code>，消耗 struct</li>
-<li><strong>FnMut</strong>：<code>greet.call_mut()</code> — 傳 <code>&amp;mut self</code>，借用但可修改</li>
-<li><strong>Fn</strong>：<code>greet.call()</code> — 傳 <code>&amp;self</code>，唯讀借用</li>
-</ul>
-<p>上一集介紹了 FnOnce（消耗捕捉的值，只能呼叫一次）和 FnMut（可以修改捕捉的值，多次呼叫）。Fn 是第三種——只讀取捕捉的值，不消耗也不修改，也可以多次呼叫。</p>
-<p>看到了嗎？這就是第四章學的 <code>self</code> / <code>&amp;mut self</code> / <code>&amp;self</code> 三種方法——閉包的呼叫就是在呼叫方法！接下來我們分別模擬這三種。</p>
-<h4 id="self-fnonce">self → FnOnce（只能呼叫一次）</h4>
-<p>如果方法接受 <code>self</code>（by value），那呼叫一次之後 struct 就被消耗了，不能再用：</p>
-<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="w">  </span><span class="c1">// name 被移出，struct 被消耗</span>
+<span class="c1">// 建立閉包 = 把捕捉的變數塞進 struct</span>
+<span class="c1">// let greet = GreetOnce { name };</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">GreetOnce</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 呼叫閉包 = 呼叫 struct 上的方法</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">;</span><span class="w">  </span><span class="c1">// 把 name 從 struct 裡移出來</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這就對應 <code>FnOnce</code>——<strong>只能呼叫一次</strong>。因為 <code>self.name</code> 被 move 走了，第二次就沒有東西可以 move 了。</p>
-<h4 id="mut-self-fnmut">&amp;mut self → FnMut（可以多次呼叫）</h4>
-<p>如果改成 <code>&amp;mut self</code>，struct 不會被消耗，可以多次呼叫：</p>
-<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
+<p>因為方法接收 <code>self</code>（by value），呼叫的時候整個 struct 被消耗掉了，所以只能呼叫一次。這就是 FnOnce。</p>
+<h4 id="fnmutstruct-mut-self">FnMut：struct 存可變借用，方法接 <code>&amp;mut self</code></h4>
+<p>假設閉包修改了捕捉的變數：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="n">greet</span><span class="p">();</span>
+<span class="n">greet</span><span class="p">();</span><span class="w">  </span><span class="c1">// 可以多次呼叫</span>
+</code></pre></div>
+
+<p>編譯器產生的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">GreetMut</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">  </span><span class="c1">// 可變借用 name</span>
+<span class="p">}</span>
+
+<span class="c1">// let mut greet = GreetMut { name: &amp;mut name };</span>
+
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GreetMut</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">);</span>
 <span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
@@ -10172,23 +10197,47 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>但注意，<code>&amp;mut self</code> 不能把 <code>self.name</code> move 走——你只是借用了它，不能搬走主人的東西。這就對應 <code>FnMut</code>——<strong>可以多次呼叫，可以修改捕捉的變數，但不能消耗它們</strong>。</p>
-<h4 id="self-fn">&amp;self → Fn（最寬鬆）</h4>
-<p>如果改成 <code>&amp;self</code>，連修改都不行，只能讀取：</p>
-<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Greet</span><span class="w"> </span><span class="p">{</span>
+<p><strong>為什麼 struct 存 <code>&amp;mut</code>，方法又接 <code>&amp;mut self</code>？</strong> 因為一個閉包可能捕捉多個變數。假設閉包同時修改了 <code>a</code>、<code>b</code>、<code>c</code> 三個變數，struct 裡就會有三個欄位：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">SomeClosure</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">c</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>方法用 <code>&amp;mut self</code> 而不是 <code>self</code>，因為用 <code>self</code> 的話呼叫一次就消耗掉了——那就變成 FnOnce 了。FnMut 需要多次呼叫，所以只能借用整個 struct。</p>
+<h4 id="fnstruct-self">Fn：struct 存唯讀借用，方法接 <code>&amp;self</code></h4>
+<p>如果閉包只是讀取捕捉的變數，完全不修改：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="n">greet</span><span class="p">();</span>
+<span class="n">greet</span><span class="p">();</span><span class="w">  </span><span class="c1">// 可以多次呼叫，完全沒問題</span>
+</code></pre></div>
+
+<p>編譯器產生的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">GreetRef</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">  </span><span class="c1">// 唯讀借用 name</span>
+<span class="p">}</span>
+
+<span class="c1">// let greet = GreetRef { name: &amp;name };</span>
+
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GreetRef</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_ref</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這對應 <code>Fn</code>——<strong>可以多次呼叫，不會修改也不會消耗任何東西</strong>。</p>
+<p>因為方法接收 <code>&amp;self</code>，struct 不會被消耗也不會被修改，所以可以呼叫任意多次。這就是 Fn。</p>
 <h4 id="_628">對照表</h4>
 <table>
 <thead>
 <tr>
 <th>self 類型</th>
 <th>對應 trait</th>
+<th>struct 欄位存什麼</th>
 <th>能做什麼</th>
 </tr>
 </thead>
@@ -10196,102 +10245,120 @@ c 的總和：7
 <tr>
 <td><code>self</code></td>
 <td>FnOnce</td>
+<td>擁有的值（如 <code>String</code>）</td>
 <td>消耗捕捉的值，只能呼叫一次</td>
 </tr>
 <tr>
 <td><code>&amp;mut self</code></td>
 <td>FnMut</td>
+<td>可變借用（如 <code>&amp;mut String</code>）</td>
 <td>修改捕捉的值，可以多次呼叫</td>
 </tr>
 <tr>
 <td><code>&amp;self</code></td>
 <td>Fn</td>
+<td>唯讀借用（如 <code>&amp;String</code>）</td>
 <td>只讀取，可以多次呼叫</td>
 </tr>
 </tbody>
 </table>
-<h4 id="_629">所以閉包到底是什麼？</h4>
-<p>閉包就是一個匿名 struct，裡面存著捕捉的變數，然後編譯器幫你 impl 了對應的 Fn / FnMut / FnOnce trait。而你寫在 <code>||</code> 後面的閉包體（<code>{ ... }</code> 裡的程式碼），就是那個方法的內部實作。當你寫 <code>f()</code> 呼叫一個閉包時，編譯器會根據閉包的種類，呼叫 struct 上對應的方法（<code>self</code> / <code>&amp;mut self</code> / <code>&amp;self</code>），執行你寫的閉包體。</p>
-<p>你每次寫 <code>|x| x + 1</code>，編譯器就在幕後幫你做了「建 struct + impl trait + 呼叫對應方法」這些事。</p>
+<h4 id="_629">小結：閉包到底是什麼？</h4>
+<p>把上面的東西串起來：</p>
+<ol>
+<li>編譯器幫你建一個匿名 struct，把捕捉的變數存進去</li>
+<li>你寫的閉包體就是那個 struct 上方法的實作</li>
+<li>當你寫 <code>f()</code> 的時候，編譯器根據閉包的種類，呼叫 struct 上的 <code>.call_once()</code> / <code>.call_mut()</code> / <code>.call()</code></li>
+</ol>
+<p>每次你寫一個閉包，編譯器就在幕後做了「建 struct → impl 方法 → 呼叫方法」這些事。</p>
 <h3 id="_630">範例程式碼</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// 模擬一個捕捉 String 的閉包</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">MyClosure</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">captured</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<p>以下的完整程式碼把三種閉包都手動模擬出來。每一個 struct 對應一種閉包，欄位型別和方法接收者都不同：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// === FnOnce 模擬 ===</span>
+<span class="c1">// struct 擁有值，方法接 self</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">GreetOnce</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">impl</span><span class="w"> </span><span class="n">MyClosure</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">MyClosure</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">MyClosure</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">captured</span><span class="p">:</span><span class="w"> </span><span class="nc">value</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// 類似 FnOnce：消耗 self，只能呼叫一次</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;消耗模式：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">captured</span><span class="p">);</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">captured</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// 模擬一個 FnMut 版本</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">MyCounter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="k">impl</span><span class="w"> </span><span class="n">MyCounter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">MyCounter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">MyCounter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="c1">// 類似 FnMut：可以多次呼叫，每次修改內部狀態</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">count</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">GreetOnce</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 閉包體：把 name 移走</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[FnOnce] Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// self 被消耗了，不能再用</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1">// 模擬一個 Fn 版本</span>
-<span class="k">struct</span><span class="w"> </span><span class="nc">MyGreeter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="c1">// === FnMut 模擬 ===</span>
+<span class="c1">// struct 存可變借用，方法接 &amp;mut self</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">GreetMut</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">impl</span><span class="w"> </span><span class="n">MyGreeter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">MyGreeter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">MyGreeter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">greeting</span><span class="w"> </span><span class="p">}</span>
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GreetMut</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_mut</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 閉包體：修改捕捉的變數</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[FnMut] Hello, {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 
-<span class="w">    </span><span class="c1">// 類似 Fn：只讀取，可以無限次呼叫</span>
-<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_ref</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;{}, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">greeting</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="c1">// === Fn 模擬 ===</span>
+<span class="c1">// struct 存唯讀借用，方法接 &amp;self</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">GreetRef</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GreetRef</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_ref</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 閉包體：只讀取，不修改</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[Fn] Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// FnOnce 模擬：呼叫一次就被消耗</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">closure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyClosure</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;珍貴資料&quot;</span><span class="p">));</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">closure</span><span class="p">.</span><span class="n">call_once</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;拿回來了：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
-<span class="w">    </span><span class="c1">// closure.call_once();  // 編譯錯誤！closure 已經被消耗了</span>
+<span class="w">    </span><span class="c1">// --- FnOnce：呼叫一次就消耗 ---</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">greet_once</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GreetOnce</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">name1</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="n">greet_once</span><span class="p">.</span><span class="n">call_once</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// greet_once.call_once();  // 編譯錯誤！struct 已經被消耗了</span>
 
-<span class="w">    </span><span class="c1">// FnMut 模擬：可以多次呼叫，每次修改狀態</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyCounter</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第 {} 次&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">call_mut</span><span class="p">());</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第 {} 次&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">call_mut</span><span class="p">());</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第 {} 次&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">call_mut</span><span class="p">());</span>
+<span class="w">    </span><span class="c1">// --- FnMut：可以多次呼叫，每次修改 ---</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">name2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">greet_mut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GreetMut</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">name2</span><span class="w"> </span><span class="p">};</span>
+<span class="w">        </span><span class="n">greet_mut</span><span class="p">.</span><span class="n">call_mut</span><span class="p">();</span><span class="w">  </span><span class="c1">// Bob!</span>
+<span class="w">        </span><span class="n">greet_mut</span><span class="p">.</span><span class="n">call_mut</span><span class="p">();</span><span class="w">  </span><span class="c1">// Bob!!</span>
+<span class="w">        </span><span class="n">greet_mut</span><span class="p">.</span><span class="n">call_mut</span><span class="p">();</span><span class="w">  </span><span class="c1">// Bob!!!</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="c1">// greet_mut 離開作用域，借用結束</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;name2 現在是：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name2</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Fn 模擬：只讀取，隨便呼叫幾次都行</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">greeter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyGreeter</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;你好&quot;</span><span class="p">));</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">greeter</span><span class="p">.</span><span class="n">call_ref</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">));</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">greeter</span><span class="p">.</span><span class="n">call_ref</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">));</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">greeter</span><span class="p">.</span><span class="n">call_ref</span><span class="p">(</span><span class="s">&quot;Charlie&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="c1">// --- Fn：只讀取，呼叫幾次都行 ---</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Charlie&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">greet_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GreetRef</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">name3</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="n">greet_ref</span><span class="p">.</span><span class="n">call_ref</span><span class="p">();</span>
+<span class="w">    </span><span class="n">greet_ref</span><span class="p">.</span><span class="n">call_ref</span><span class="p">();</span>
+<span class="w">    </span><span class="n">greet_ref</span><span class="p">.</span><span class="n">call_ref</span><span class="p">();</span>
 <span class="p">}</span>
+</code></pre></div>
+
+<p>執行結果：</p>
+<div class="highlight"><pre><span></span><code>[FnOnce] Hello, Alice!
+[FnMut] Hello, Bob!
+[FnMut] Hello, Bob!!
+[FnMut] Hello, Bob!!!
+name2 現在是：Bob!!!
+[Fn] Hello, Charlie!
+[Fn] Hello, Charlie!
+[Fn] Hello, Charlie!
 </code></pre></div>
 
 <h3 id="_631">重點整理</h3>
 <ul>
-<li>閉包背後其實是一個匿名 struct，捕捉的變數就是 struct 的欄位</li>
-<li>方法接受 <code>self</code>（by value）→ 對應 <code>FnOnce</code>，呼叫一次就消耗</li>
-<li>方法接受 <code>&amp;mut self</code> → 對應 <code>FnMut</code>，可以多次呼叫並修改狀態</li>
-<li>方法接受 <code>&amp;self</code> → 對應 <code>Fn</code>，只讀取，可以無限次呼叫</li>
-<li>每次你寫一個閉包，編譯器就在幕後做了「建 struct + impl trait」這些事</li>
+<li>閉包背後就是一個匿名 struct，捕捉的變數變成 struct 的欄位</li>
+<li><strong>三種閉包的差別在方法怎麼接收 self</strong>：<code>self</code>（FnOnce）、<code>&amp;mut self</code>（FnMut）、<code>&amp;self</code>（Fn）</li>
+<li>閉包體就是 struct 上方法的實作內容</li>
+<li><code>f()</code> 會被編譯器轉換成方法呼叫：<code>self.call_once()</code> / <code>self.call_mut()</code> / <code>self.call()</code></li>
+<li>Fn 是最寬鬆的一種：只讀取，不修改不消耗，可以無限次呼叫</li>
+<li>下一集會講編譯器是怎麼<strong>自動判斷</strong>一個閉包該歸類為 FnOnce、FnMut 還是 Fn</li>
 </ul>
 <hr />
 <h2 id="4_1">第六章第 4 集：閉包種類的推斷</h2>
@@ -10333,14 +10400,14 @@ c 的總和：7
 </code></pre></div>
 
 <p>想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：<code>count</code>（需要 <code>&amp;mut</code>）和 <code>name</code>（只需要 <code>&amp;</code>）。但呼叫閉包時只有一個 <code>self</code>——所以整體取<strong>最嚴格的那個用法</strong>。<code>&amp;mut</code> 比 <code>&amp;</code> 嚴格，所以整個閉包是 FnMut（<code>&amp;mut self</code>）。在 <code>&amp;mut self</code> 裡面，你仍然可以對某些欄位只做 <code>&amp;</code> 的操作——就像一個 method 接收 <code>&amp;mut self</code>，但裡面不一定每個欄位都要改：</p>
-<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Data</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
-<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Data</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">count</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">impl</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span>
+<span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Data</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">increment_and_greet</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                     </span><span class="c1">// 修改 count</span>
+<span class="w">        </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                    </span><span class="c1">// 修改 count</span>
 <span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">);</span><span class="w">   </span><span class="c1">// 只讀取 name</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
@@ -10517,7 +10584,7 @@ c 的總和：7
 
 <p><code>move</code> 告訴 Rust：「不要用借用，把所有捕捉的變數都<strong>搬進</strong>閉包裡。」這樣 <code>name</code> 就歸閉包所有了，不管原本的作用域怎麼結束，閉包都能繼續用 <code>name</code>。</p>
 <h4 id="move-struct">move 閉包的匿名 struct</h4>
-<p>回想第 3 集——閉包是匿名 struct。沒有 <code>move</code> 的時候，struct 的欄位可能是引用（<code>&amp;T</code> 或 <code>&amp;mut T</code>）；加了 <code>move</code> 之後，<strong>所有欄位都變成擁有的值</strong>（<code>T</code>）：</p>
+<p>回想前幾集——閉包是匿名 struct。沒有 <code>move</code> 的時候，struct 的欄位可能是引用（<code>&amp;T</code> 或 <code>&amp;mut T</code>）；加了 <code>move</code> 之後，<strong>所有欄位都變成擁有的值</strong>（<code>T</code>）：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 沒有 move：閉包借用 name，struct 裡存的是引用</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>

@@ -51,14 +51,14 @@ let closure = || {
 想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：`count`（需要 `&mut`）和 `name`（只需要 `&`）。但呼叫閉包時只有一個 `self`——所以整體取**最嚴格的那個用法**。`&mut` 比 `&` 嚴格，所以整個閉包是 FnMut（`&mut self`）。在 `&mut self` 裡面，你仍然可以對某些欄位只做 `&` 的操作——就像一個 method 接收 `&mut self`，但裡面不一定每個欄位都要改：
 
 ```rust
-struct Data {
-    count: i32,
-    name: String,
+struct Data<'a> {
+    count: &'a mut i32,
+    name: &'a String,
 }
 
-impl Data {
+impl<'a> Data<'a> {
     fn increment_and_greet(&mut self) {
-        self.count += 1;                     // 修改 count
+        *self.count += 1;                    // 修改 count
         println!("Hello, {}!", self.name);   // 只讀取 name
     }
 }

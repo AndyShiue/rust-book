@@ -40,7 +40,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 ### move 閉包的匿名 struct
 
-回想第 3 集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是引用（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
+回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是引用（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
 
 ```rust
 // 沒有 move：閉包借用 name，struct 裡存的是引用
