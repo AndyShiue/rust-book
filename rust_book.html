@@ -11350,6 +11350,7 @@ name2 現在是：Bob!!!
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
 </code></pre></div>
 
+<p>你可能注意到了——<code>1..=5</code> 是第一章學的 range 語法，它也實作了 <code>Iterator</code>！所以可以直接對它呼叫 <code>.collect()</code> 和其他迭代器方法。</p>
 <h4 id="turbofish_2">Turbofish 語法</h4>
 <p><code>.collect()</code> 的回傳型別取決於你要收集成什麼。Rust 通常需要你告訴它目標型別。有兩種方式：</p>
 <p><strong>方式一：型別標註</strong></p>
