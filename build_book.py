@@ -104,6 +104,18 @@ html = f"""<!DOCTYPE html>
     color: var(--text);
     line-height: 1.8;
     font-size: 17px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }}
+
+  code {{
+    overflow-wrap: break-word;
+    word-break: break-all;
+  }}
+
+  h1, h2, h3, h4, h5, h6 {{
+    overflow-wrap: break-word;
+    word-break: break-word;
   }}
 
   /* Drawer TOC */

@@ -59,15 +59,15 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 
 注意 `FnMut` 的參數要加 `mut`——因為呼叫 FnMut 閉包需要 `&mut self`，而 `f` 擁有這個閉包，所以 `f` 本身要是 `mut` 的。
 
-### API 設計原則：選最寬鬆的 bound
+### API 設計原則：選能接受最多種閉包的 bound
 
-當你設計一個接受閉包的函數時，應該選**最寬鬆**的 trait bound：
+當你設計一個接受閉包的函數時，應該選**能接受最多種閉包**的 trait bound：
 
 1. 先試 `FnOnce` —— 如果你只需要呼叫一次
 2. 不夠再用 `FnMut` —— 如果你需要多次呼叫
 3. 最後才用 `Fn` —— 如果你需要多次呼叫且不允許修改
 
-為什麼？因為 `FnOnce` 接受的範圍最廣（所有閉包都至少是 FnOnce），而 `Fn` 最窄（只有不修改狀態的閉包才行）。選最寬鬆的 bound，使用者的自由度最高。
+為什麼？因為 `FnOnce` 能接受所有閉包（所有閉包都至少是 FnOnce），而 `Fn` 只能接受不修改狀態的閉包。選能接受最多種的 bound，使用者傳入的自由度最高。
 
 實務上 `Fn` 很少用到——大部分需要多次呼叫閉包的 API 用 `FnMut` 就夠了（FnMut 已經能接受 Fn 的閉包）。只有少數場景需要**保證閉包不修改狀態**時才會用 `Fn`。
 
@@ -78,7 +78,7 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 ## 範例程式碼
 
 ```rust
-// 只需要呼叫一次 → 用 FnOnce（最寬鬆）
+// 只需要呼叫一次 → 用 FnOnce（能接受最多種閉包）
 fn consume_and_print(f: impl FnOnce() -> String) {
     let result = f();
     println!("結果：{}", result);
@@ -136,7 +136,7 @@ fn main() {
 
 ## 重點整理
 - `Fn`、`FnMut`、`FnOnce` 是 **trait**，不是型別；`fn` 才是函數指標型別
-- 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（Fn 最嚴格，FnOnce 最寬鬆）
+- 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（FnOnce 能接受所有閉包，Fn 只接受不修改的）
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數
 - `FnMut` 的參數要加 `mut`
 - API 設計原則：**先選 FnOnce**，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn

@@ -15,7 +15,7 @@ Rust 看的是**閉包體裡面對捕捉變數做了什麼**：
 2. **如果閉包體裡修改了捕捉的變數**（例如 `count += 1;`）→ 這個閉包是 **FnMut**，可以多次呼叫但需要 `&mut`
 3. **如果閉包體只讀取捕捉的變數**（例如 `println!("{}", name);`）→ 這個閉包是 **Fn**，只需要 `&self`
 
-Rust 會選**最寬鬆但足夠的那個**——如果只讀取，就給 Fn（最寬鬆，因為 Fn 的閉包也能當 FnMut 和 FnOnce 用）。如果有修改，升級到 FnMut。如果有 move，再升級到 FnOnce。
+Rust 會選**能接受最多種使用方式的那個**——如果只讀取，就給 Fn（因為 Fn 的閉包也能當 FnMut 和 FnOnce 用）。如果有修改，就變成 FnMut。如果有 move，就變成 FnOnce。
 
 ### 範例對照
 
@@ -43,12 +43,12 @@ let consume = || { let s = name; };
 let name = String::from("Alice");
 let mut count = 0;
 let closure = || {
-    count += 1;          // 修改 count → 需要 &mut
+    count += 1;           // 修改 count → 需要 &mut
     println!("{}", name); // 只讀取 name → 只需要 &
 };
 ```
 
-想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：`count`（需要 `&mut`）和 `name`（只需要 `&`）。但呼叫閉包時只有一個 `self`——所以整體取**最嚴格的那個用法**。`&mut` 比 `&` 嚴格，所以整個閉包是 FnMut（`&mut self`）。在 `&mut self` 裡面，你仍然可以對某些欄位只做 `&` 的操作——就像一個 method 接收 `&mut self`，但裡面不一定每個欄位都要改：
+想像成 struct 的話，這個閉包的匿名 struct 會有兩個欄位：`count`（需要 `&mut`）和 `name`（只需要 `&`）。但呼叫閉包時只有一個 `self`——而 `&mut self` 裡面可以做 `&` 的操作，反過來不行——所以整個閉包是 FnMut（`&mut self`）。在 `&mut self` 裡面，你仍然可以對某些欄位只做 `&` 的操作——就像一個 method 接收 `&mut self`，但裡面不一定每個欄位都要改：
 
 ```rust
 struct Data<'a> {
@@ -70,7 +70,7 @@ impl<'a> Data<'a> {
 
 ### 如果沒有捕捉任何變數呢？
 
-沒有捕捉變數的閉包自動是 Fn（最寬鬆的），因為它不需要存取任何外部狀態：
+沒有捕捉變數的閉包自動是 Fn，因為它不需要存取任何外部狀態：
 
 ```rust
 let add_one = |x: i32| x + 1;  // Fn
@@ -80,6 +80,6 @@ let add_one = |x: i32| x + 1;  // Fn
 
 ## 重點整理
 - Rust 根據閉包體的內容自動推斷閉包的種類：move → FnOnce、修改 → FnMut、只讀 → Fn
-- 不需要手動標記，編譯器會選最寬鬆但足夠的 trait
+- 不需要手動標記，編譯器會自動選擇能接受最多種使用方式的閉包
 - 沒有捕捉變數的閉包是 Fn，也可以轉成函數指標
 - Fn 的閉包可以傳給 FnMut 和 FnOnce；FnMut 可以傳給 FnOnce；反過來不行
