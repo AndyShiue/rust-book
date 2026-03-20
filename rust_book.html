@@ -11332,6 +11332,7 @@ name2 現在是：Bob!!!
 <h3 id="_671">本集目標</h3>
 <p>學會用 <code>.collect()</code> 把迭代器收集成各種集合型別，以及用 turbofish 語法指定目標型別。</p>
 <h3 id="_672">概念說明</h3>
+<p>平常我們不會花這麼多集數在介紹方法，但迭代器實在太重要了——它是 Rust 日常寫程式碼最常用的工具之一，所以接下來幾集會多花點時間。不過就算介紹了很多方法，一定還是會漏掉不少。有需要的話，請參考<a href="https://doc.rust-lang.org/std/iter/trait.Iterator.html">官方文件的 Iterator trait 頁面</a>。</p>
 <h4 id="collect">collect() —— 迭代器的終點站</h4>
 <p>前幾集我們建立了迭代器、做了轉換和過濾，但迭代器本身是<strong>惰性的</strong>（第 14 集會詳細講）——它不會真的執行，直到有人「拉動」它。<code>.collect()</code> 就是最常用的拉動方式：把迭代器的所有元素收集成一個集合。</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
@@ -11531,6 +11532,7 @@ name2 現在是：Bob!!!
 <h3 id="_680">本集目標</h3>
 <p>學會用 <code>.zip()</code>、<code>.chain()</code>、<code>.take()</code>、<code>.skip()</code>、<code>.flatten()</code>、<code>.flat_map()</code> 來組合和截取迭代器。</p>
 <h3 id="_681">概念說明</h3>
+<p>這集會用到下一集才正式介紹的 <code>.map()</code>，但對讀到這裡的你來說肯定不是難事吧～它就是「對每個元素做一個轉換」，看程式碼就懂了。</p>
 <h4 id="zip">.zip() —— 把兩個迭代器配對</h4>
 <p><code>zip</code> 把兩個迭代器「拉鍊式」地配對起來，產出 tuple：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">];</span>
@@ -11951,6 +11953,7 @@ note: iterators are lazy and do nothing unless consumed
 <li>用 <code>.take(n)</code> 從無限迭代器中取出有限個元素</li>
 <li>忘記消費迭代器的話，編譯器會發出警告提醒你</li>
 </ul>
+<p>恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、Crate 與模組系統——讓你的程式碼從單一檔案擴展到真正的專案結構！</p>
 <hr />
 </main>
 
