@@ -24,6 +24,7 @@ for title, folder in CHAPTERS:
         text = f.read_text(encoding="utf-8")
         # Insert blank line before list items that follow a line ending with fullwidth colon
         text = re.sub(r'(：\s*)\n(- )', r'\1\n\n\2', text)
+        text = re.sub(r'(：\s*)\n(\d+\. )', r'\1\n\n\2', text)
         # Demote all headings by one level so chapter title stays h1
         text = re.sub(r"^##### ", "###### ", text, flags=re.MULTILINE)
         text = re.sub(r"^#### ", "##### ", text, flags=re.MULTILINE)
