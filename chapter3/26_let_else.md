@@ -52,6 +52,7 @@ fn describe(color: Color) {
 ```
 
 意思是：
+
 1. 嘗試用 pattern 匹配 `color`
 2. 如果成功，`r`、`g`、`b` 被綁定，程式繼續往下
 3. 如果失敗，執行 `else` 裡面的程式碼

@@ -5448,10 +5448,12 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>意思是：
-1. 嘗試用 pattern 匹配 <code>color</code>
-2. 如果成功，<code>r</code>、<code>g</code>、<code>b</code> 被綁定，程式繼續往下
-3. 如果失敗，執行 <code>else</code> 裡面的程式碼</p>
+<p>意思是：</p>
+<ol>
+<li>嘗試用 pattern 匹配 <code>color</code></li>
+<li>如果成功，<code>r</code>、<code>g</code>、<code>b</code> 被綁定，程式繼續往下</li>
+<li>如果失敗，執行 <code>else</code> 裡面的程式碼</li>
+</ol>
 <h4 id="else">else 裡面必須離開</h4>
 <p><code>else</code> 區塊不能只是「做點事然後繼續」——它必須讓程式離開當前的流程。合法的寫法包括：</p>
 <ul>
