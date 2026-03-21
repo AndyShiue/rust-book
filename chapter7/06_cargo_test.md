@@ -1,0 +1,146 @@
+# 第七章第 6 集：cargo test
+
+## 本集目標
+學會用 `#[test]` 寫測試、用 `assert!` 系列巨集驗證結果、用 `cargo test` 跑測試。
+
+## 概念說明
+
+### 為什麼要寫測試？
+
+程式碼寫完之後，你怎麼確定它是對的？手動跑一遍？那下次改了程式碼又要再跑一遍。**自動化測試**讓你寫一次，之後隨時都能驗證——一個指令就知道有沒有東西壞掉。
+
+### 最簡單的測試
+
+在函數上面加 `#[test]`，它就變成測試函數：
+
+```rust
+#[test]
+fn it_works() {
+    assert_eq!(2 + 2, 4);
+}
+```
+
+跑 `cargo test`，Rust 會自動找出所有標了 `#[test]` 的函數並執行它們。
+
+### assert 系列巨集
+
+- `assert!(condition)` — 如果 `condition` 是 `false`，測試失敗
+- `assert_eq!(left, right)` — 如果 `left != right`，測試失敗
+- `assert_ne!(left, right)` — 如果 `left == right`，測試失敗
+
+`assert_eq!` 和 `assert_ne!` 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。
+
+### 測試 mod 的慣用結構
+
+上一集學了 `use super::*;`——測試最常這樣用。慣例是在檔案底部加一個測試 mod：
+
+```rust
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn multiply(a: i32, b: i32) -> i32 {
+    a * b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;  // 把父 mod 的所有東西引進來
+
+    #[test]
+    fn test_add() {
+        assert_eq!(add(2, 3), 5);
+    }
+
+    #[test]
+    fn test_multiply() {
+        assert_eq!(multiply(3, 4), 12);
+    }
+}
+```
+
+幾個重點：
+
+- `#[cfg(test)]` 告訴編譯器：這個 mod **只在跑測試時才編譯**。正式發布的程式不會包含測試程式碼。
+- `mod tests` 是一個普通的 mod，只是慣例叫 `tests`。
+- `use super::*;` 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 `add`、`multiply` 等函數。
+
+### cargo test
+
+```bash
+cargo test
+```
+
+這個指令會：
+1. 編譯你的程式碼（包含測試）
+2. 執行所有 `#[test]` 函數
+3. 報告哪些通過、哪些失敗
+
+### 測試私有函數
+
+因為 `mod tests` 是你程式碼的子 mod，而同一個 mod 裡的東西互相看得到——所以測試可以直接測試**私有函數**，不需要 `pub`。
+
+## 範例程式碼
+
+```rust
+fn is_even(n: i32) -> bool {
+    n % 2 == 0
+}
+
+fn abs(n: i32) -> i32 {
+    if n >= 0 { n } else { -n }
+}
+
+fn clamp(value: i32, min: i32, max: i32) -> i32 {
+    if value < min {
+        min
+    } else if value > max {
+        max
+    } else {
+        value
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_is_even() {
+        assert!(is_even(4));
+        assert!(!is_even(7));
+        assert!(is_even(0));
+    }
+
+    #[test]
+    fn test_abs() {
+        assert_eq!(abs(5), 5);
+        assert_eq!(abs(-3), 3);
+        assert_eq!(abs(0), 0);
+    }
+
+    #[test]
+    fn test_clamp() {
+        assert_eq!(clamp(5, 0, 10), 5);   // 在範圍內，不變
+        assert_eq!(clamp(-3, 0, 10), 0);   // 低於下限，變成 min
+        assert_eq!(clamp(15, 0, 10), 10);  // 超過上限，變成 max
+    }
+
+    #[test]
+    fn test_not_equal() {
+        assert_ne!(abs(-5), -5);  // abs(-5) 應該是 5，不是 -5
+    }
+}
+
+fn main() {
+    // main 裡可以不用寫什麼——測試透過 cargo test 跑
+    println!("用 cargo test 來跑測試！");
+}
+```
+
+## 重點整理
+- `#[test]` 標記測試函數，`cargo test` 自動找到並執行所有測試
+- `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果
+- `#[cfg(test)]` 讓測試 mod 只在測試時編譯
+- `use super::*;` 引入父 mod 的所有東西——測試最常用的寫法
+- 測試可以直接測試私有函數（因為測試 mod 是子 mod）
