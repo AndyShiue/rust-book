@@ -92,7 +92,7 @@ serde = { version = "1.0", features = ["derive"] }
 
 ```rust
 // 先執行：cargo add rand
-use rand::Rng;
+use rand::RngExt;
 
 fn main() {
     let mut rng = rand::rng();
