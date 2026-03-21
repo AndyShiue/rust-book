@@ -6603,6 +6603,8 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
+<h3 id="mut_6">呼叫時不用手動加 &amp; 或 &amp;mut</h3>
+<p>你可能注意到了——呼叫的時候我們只寫 <code>c.display()</code>、<code>c.increment()</code>，不用寫 <code>(&amp;c).display()</code> 或 <code>(&amp;mut c).increment()</code>。Rust 會根據 method 的 <code>self</code> 參數自動幫你加上 <code>&amp;</code> 或 <code>&amp;mut</code>。你當然也能寫 <code>(&amp;c).display()</code> 或 <code>(&amp;mut c).increment()</code>，但沒有必要。</p>
 <h3 id="_422">重點整理</h3>
 <ul>
 <li><code>&amp;self</code>：唯讀借用，最常用，呼叫後還能繼續用</li>
@@ -6610,6 +6612,7 @@ c 的總和：7
 <li><code>self</code>：消耗所有權，呼叫後變數就不能再用了</li>
 <li>選擇原則：<strong>只讀 → <code>&amp;self</code>，要改 → <code>&amp;mut self</code>，要消耗 → <code>self</code></strong></li>
 <li>一般函數參數也一樣：<strong>只讀 → <code>&amp;T</code>，要改 → <code>&amp;mut T</code>，要消耗 → <code>T</code></strong></li>
+<li>呼叫 method 時直接寫 <code>c.method()</code>，Rust 會自動加 <code>&amp;</code> 或 <code>&amp;mut</code></li>
 </ul>
 <hr />
 <h2 id="9-stack-heap">第四章第 9 集：stack 與 heap</h2>
@@ -8961,7 +8964,7 @@ c 的總和：7
 <h4 id="t-copy">T 必須是 Copy</h4>
 <p><code>Cell&lt;T&gt;</code> 的 <code>.get()</code> 會把值<strong>複製一份</strong>出來（不是借用）。所以 <code>T</code> 必須實作 Copy。</p>
 <p>你不能 <code>Cell&lt;String&gt;</code>，因為 String 不是 Copy。只能用 Copy 的型別（i32、f64、bool 等）。</p>
-<h4 id="mut_6">為什麼不用 mut？</h4>
+<h4 id="mut_7">為什麼不用 mut？</h4>
 <p>有些情況下你不方便拿到 <code>&amp;mut</code>。比如一個 struct 被多處共享引用（<code>&amp;self</code>），但你想修改裡面的某個計數器。Cell 就很適合這種場景。</p>
 <h4 id="rc-cell">Rc 就是用 Cell 實作的</h4>
 <p>上一集學的 <code>Rc&lt;T&gt;</code> 需要一個引用計數器——每次 clone 時計數 +1，drop 時計數 -1。但 Rc 對外只提供 <code>&amp;self</code>（不可變引用），計數器卻需要被修改。怎麼辦？答案就是用 Cell！Rc 內部的計數器就是 <code>Cell&lt;usize&gt;</code>，所以即使只有 <code>&amp;self</code> 也能更新計數。</p>
