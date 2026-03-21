@@ -108,9 +108,10 @@ fn main() {
     // 迭代器本身也可以放進 for
     println!("\n--- Iterator 直接用 for ---");
     let numbers = vec![10, 20, 30, 40, 50];
-    let even_iter = numbers.iter().filter(|&&n| n > 20);
-    for n in even_iter {
-        println!("大於 20 的：{}", n);
+    for n in numbers.iter() {
+        if *n > 20 {
+            println!("大於 20 的：{}", n);
+        }
     }
 
     // Range 也實作了 IntoIterator

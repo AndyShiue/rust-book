@@ -62,11 +62,7 @@ let sum = (1..=5).fold(0, |acc, x| acc + x);
 // product = fold 從 1 開始，每次乘上元素
 let product = (1..=5).fold(1, |acc, x| acc * x);
 
-// min = fold 追蹤最小值
-let min = (1..=5).fold(i32::MAX, |acc, x| if x < acc { x } else { acc });
-
-// max = fold 追蹤最大值
-let max = (1..=5).fold(i32::MIN, |acc, x| if x > acc { x } else { acc });
+// min/max 的實作留給底下的 reduce 做——用 fold 的話不太自然
 ```
 
 `fold` 還能做更靈活的事情。想把數字串成字串？想同時追蹤多個值？都可以：
@@ -92,6 +88,20 @@ let product = vec![2, 3, 4].into_iter().reduce(|acc, x| acc * x);
 ```
 
 因為可能沒有第一個元素（迭代器是空的），所以 `reduce` 回傳 `Option`。
+
+用 `reduce` 實作 min 和 max 就很自然：
+
+```rust
+let min = vec![3, 1, 4, 1, 5].into_iter()
+    .reduce(|a, b| if a < b { a } else { b });
+// Some(1)
+
+let max = vec![3, 1, 4, 1, 5].into_iter()
+    .reduce(|a, b| if a > b { a } else { b });
+// Some(5)
+```
+
+因為 `reduce` 本身就回傳 `Option`，空迭代器自動得到 `None`—— `fold` 需要特別處理空迭代器的情形。
 
 ## 範例程式碼
 

@@ -75,15 +75,17 @@ impl<'a> Excerpt<'a> {
 
 ### 帶 lifetime 的型別作為函數參數
 
-如果函數接收帶 lifetime 的型別，省略規則一樣適用：
+如果函數接收帶 lifetime 的型別，可以搭配 `'_` 讓編譯器推斷：
 
 ```rust
-fn into_text(e: Excerpt) -> &str {
+fn into_text(e: Excerpt<'_>) -> &str {
     e.text
 }
 ```
 
-這裡 `Excerpt` 需要一個生命週期參數，但我們沒寫。Rust 會自動補上——完整寫出來是：
+注意這裡不能直接寫 `Excerpt` 不加任何東西——`Excerpt` 有一個必要的生命週期參數，就像 `Vec` 有一個必要的型別參數一樣，不能省略。但我們可以用 `'_` 讓編譯器推斷。
+
+完整寫出來是：
 
 ```rust
 fn into_text<'a>(e: Excerpt<'a>) -> &'a str {
@@ -91,7 +93,7 @@ fn into_text<'a>(e: Excerpt<'a>) -> &'a str {
 }
 ```
 
-規則一看到 `Excerpt` 帶有一個生命週期，分配 `'a`；規則二看到只有一個 input lifetime（`'a`），就把回傳值的生命週期也設為 `'a`。
+省略規則看到 `Excerpt<'_>` 帶有一個 input lifetime，規則二把回傳值的生命週期也設為同一個。
 
 注意這裡 `e` 本身是 owned 的（不是引用），函數結束時 `e` 會被 drop。但回傳的 `&'a str` 不是借用 `e`，而是借用 `e` 裡面存的那段文字——那段文字的壽命是 `'a`，跟 `e` 本身的壽命無關。
 

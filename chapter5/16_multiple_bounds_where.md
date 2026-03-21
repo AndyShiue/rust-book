@@ -43,13 +43,14 @@ where
 `where` 子句的冒號前面不只能放 `T`，還能放更複雜的東西。比如一個 tuple 型別：
 
 ```rust
-fn process<T, U>(a: T, b: U)
+fn clone_pair<T, U>(a: &T, b: &U) -> (T, U)
 where
-    (T, U): Clone,  // 要求 (T, U) 這個 tuple 實作 Clone
+    // 編譯器知道 (T, U): Clone 代表 T: Clone 和 U: Clone
+    // 所以我們也能呼叫 a.clone() 和 b.clone()
+    (T, U): Clone,
 {
-    let pair = (a, b);
-    let cloned = pair.clone();
-    println!("{:?}", cloned);
+    let pair = (a.clone(), b.clone());
+    pair
 }
 ```
 

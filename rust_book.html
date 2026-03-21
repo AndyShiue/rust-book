@@ -4131,7 +4131,7 @@ c 的總和：7
 <li>建立值：<code>Shape::Circle { radius: 5.0 }</code></li>
 <li>同一個 enum 可以混搭：有的用 tuple 形式、有的用 struct 形式、有的不帶資料</li>
 <li>struct 形式的好處是欄位有名字，程式碼更容易讀懂</li>
-<li>取出欄位資料需要用 match（第 10 集會學）</li>
+<li>取出欄位資料需要用 match（第 12 集會學）</li>
 </ul>
 <hr />
 <h2 id="9-match-tuple-variant">第三章第 9 集：match 取出 tuple variant 資料</h2>
@@ -8355,13 +8355,14 @@ c 的總和：7
 <p>兩種寫法完全等價，只是 <code>where</code> 比較好讀。</p>
 <h4 id="where_1">where 比角括號更靈活</h4>
 <p><code>where</code> 子句的冒號前面不只能放 <code>T</code>，還能放更複雜的東西。比如一個 tuple 型別：</p>
-<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">process</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="nc">U</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">clone_pair</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">U</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="p">)</span>
 <span class="k">where</span>
-<span class="w">    </span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="p">):</span><span class="w"> </span><span class="nb">Clone</span><span class="p">,</span><span class="w">  </span><span class="c1">// 要求 (T, U) 這個 tuple 實作 Clone</span>
+<span class="w">    </span><span class="c1">// 編譯器知道 (T, U): Clone 代表 T: Clone 和 U: Clone</span>
+<span class="w">    </span><span class="c1">// 所以我們也能呼叫 a.clone() 和 b.clone()</span>
+<span class="w">    </span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">U</span><span class="p">):</span><span class="w"> </span><span class="nb">Clone</span><span class="p">,</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">cloned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pair</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cloned</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">clone</span><span class="p">(),</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pair</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -9410,19 +9411,20 @@ c 的總和：7
 <p>和泛型 struct 的 impl 一樣——<code>impl&lt;'a&gt;</code> 宣告生命週期參數，<code>Excerpt&lt;'a&gt;</code> 使用它。</p>
 <p>注意 <code>fn text(&amp;self) -&gt; &amp;str</code> 不需要寫任何生命週期標注——上一集學的省略規則第三條在這裡生效了：method 有 <code>&amp;self</code> 時，回傳值的生命週期自動等於 <code>self</code>。</p>
 <h4 id="lifetime">帶 lifetime 的型別作為函數參數</h4>
-<p>如果函數接收帶 lifetime 的型別，省略規則一樣適用：</p>
-<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">into_text</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="nc">Excerpt</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
+<p>如果函數接收帶 lifetime 的型別，可以搭配 <code>'_</code> 讓編譯器推斷：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">into_text</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="nc">Excerpt</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="n">text</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這裡 <code>Excerpt</code> 需要一個生命週期參數，但我們沒寫。Rust 會自動補上——完整寫出來是：</p>
+<p>注意這裡不能直接寫 <code>Excerpt</code> 不加任何東西——<code>Excerpt</code> 有一個必要的生命週期參數，就像 <code>Vec</code> 有一個必要的型別參數一樣，不能省略。但我們可以用 <code>'_</code> 讓編譯器推斷。</p>
+<p>完整寫出來是：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">into_text</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="nc">Excerpt</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="n">text</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>規則一看到 <code>Excerpt</code> 帶有一個生命週期，分配 <code>'a</code>；規則二看到只有一個 input lifetime（<code>'a</code>），就把回傳值的生命週期也設為 <code>'a</code>。</p>
+<p>省略規則看到 <code>Excerpt&lt;'_&gt;</code> 帶有一個 input lifetime，規則二把回傳值的生命週期也設為同一個。</p>
 <p>注意這裡 <code>e</code> 本身是 owned 的（不是引用），函數結束時 <code>e</code> 會被 drop。但回傳的 <code>&amp;'a str</code> 不是借用 <code>e</code>，而是借用 <code>e</code> 裡面存的那段文字——那段文字的壽命是 <code>'a</code>，跟 <code>e</code> 本身的壽命無關。</p>
 <h3 id="_584">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// struct 裡放引用，需要生命週期標注</span>
@@ -11231,9 +11233,10 @@ name2 現在是：Bob!!!
 <span class="w">    </span><span class="c1">// 迭代器本身也可以放進 for</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- Iterator 直接用 for ---&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">];</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">even_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|&amp;&amp;</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">even_iter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;大於 20 的：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">numbers</span><span class="p">.</span><span class="n">iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">*</span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;大於 20 的：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Range 也實作了 IntoIterator</span>
@@ -11570,11 +11573,7 @@ name2 現在是：Bob!!!
 <span class="c1">// product = fold 從 1 開始，每次乘上元素</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
 
-<span class="c1">// min = fold 追蹤最小值</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="kt">i32</span><span class="p">::</span><span class="n">MAX</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">});</span>
-
-<span class="c1">// max = fold 追蹤最大值</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">fold</span><span class="p">(</span><span class="kt">i32</span><span class="p">::</span><span class="n">MIN</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">});</span>
+<span class="c1">// min/max 的實作留給底下的 reduce 做——用 fold 的話不太自然</span>
 </code></pre></div>
 
 <p><code>fold</code> 還能做更靈活的事情。想把數字串成字串？想同時追蹤多個值？都可以：</p>
@@ -11595,6 +11594,17 @@ name2 現在是：Bob!!!
 </code></pre></div>
 
 <p>因為可能沒有第一個元素（迭代器是空的），所以 <code>reduce</code> 回傳 <code>Option</code>。</p>
+<p>用 <code>reduce</code> 實作 min 和 max 就很自然：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">].</span><span class="n">into_iter</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">});</span>
+<span class="c1">// Some(1)</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">].</span><span class="n">into_iter</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">});</span>
+<span class="c1">// Some(5)</span>
+</code></pre></div>
+
+<p>因為 <code>reduce</code> 本身就回傳 <code>Option</code>，空迭代器自動得到 <code>None</code>—— <code>fold</code> 需要特別處理空迭代器的情形。</p>
 <h3 id="_682">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">91</span><span class="p">];</span>
