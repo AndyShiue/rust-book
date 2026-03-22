@@ -8,8 +8,6 @@
 
 第 2 集提到 mod 裡的東西預設是私有的，這一集我們來把可見性規則講清楚。
 
-順帶一提——你可能注意到 `main.rs` 裡面直接寫的 `fn main()` 和其他函數並沒有被包在任何 `mod` 裡面。那是因為 `main.rs`（或 `lib.rs`）本身就是 crate 的**根 mod**，你寫在裡面的東西自動屬於這個根 mod，不用再額外包一層。
-
 ### 預設私有
 
 Rust 的哲學是**預設封閉**——所有東西一開始都是私有的，你必須明確地用 `pub` 開放。這跟有些語言預設 public 的設計完全相反。
@@ -102,7 +100,7 @@ fn main() {
 
 ### pub trait 和 impl
 
-trait 加 `pub` 後，它定義的方法都跟著公開（這也合理，trait 就是介面契約）：
+trait 加 `pub` 後，裡面的 fn **不用也不能**個別加 `pub`——它們的可見性自動跟著 trait 走。如果 trait 是公開的，裡面的 fn 就是公開的；如果 trait 是私有的，裡面的 fn 就是私有的。這很合理：trait 是一個「契約」，如果你公開了這個契約，契約裡的所有條款當然也要公開，不然別人怎麼實作？
 
 ```rust
 mod animal {
@@ -120,12 +118,13 @@ mod animal {
 }
 
 fn main() {
+    use animal::Speak;  // trait 要在作用域內才能呼叫它的方法
     let d = animal::Dog;
-    d.speak();  // Speak trait 定義在同一個 crate，方法可以直接呼叫
+    d.speak();
 }
 ```
 
-`impl` 區塊本身**不需要也不能加 `pub`**——方法的可見性由各自的 `pub` 決定：
+`impl` 區塊本身**不需要也不能加 `pub`**。對於 `impl Type`（不是 `impl Trait for Type`），裡面的 fn 各自用 `pub` 控制可見性：
 
 ```rust
 mod shapes {
@@ -178,6 +177,30 @@ mod database {
     }
 }
 
+// pub(in path) 的例子
+mod app {
+    pub mod api {
+        pub mod internal {
+            // 只有 app::api 能看到這個函數
+            pub(in crate::app::api) fn secret_key() -> &'static str {
+                "super-secret"
+            }
+        }
+
+        pub fn get_key() -> &'static str {
+            internal::secret_key()  // OK，我們在 app::api 裡
+        }
+    }
+}
+
+// app::api::internal::secret_key() 在這裡看不到
+// 因為 pub(in crate::app::api) 限制了只有 app::api 能存取
+
+// 注意：pub(in path) 的 path 必須是「包含你的」mod（從你往外數的某一層）。
+// 如果你寫了一個跟你無關的 mod 路徑，例如：
+//   pub(in crate::some_unrelated_mod) fn foo() {}
+// 編譯器會直接報錯——你不能對一個「不包含你」的 mod 開放可見性。
+
 fn main() {
     let conn = database::connect();          // OK，我們在同一個 crate
     let q = database::queries::safe_query(); // OK，pub
@@ -188,61 +211,7 @@ fn main() {
 
 ## 範例程式碼
 
-```rust
-mod game {
-    pub struct Player {
-        pub name: String,
-        hp: i32,              // 私有：不讓外部直接改血量
-        pub(crate) score: u32, // crate 內部可見
-    }
-
-    impl Player {
-        pub fn new(name: &str) -> Player {
-            Player {
-                name: String::from(name),
-                hp: 100,
-                score: 0,
-            }
-        }
-
-        pub fn hp(&self) -> i32 {
-            self.hp
-        }
-
-        pub fn take_damage(&mut self, damage: i32) {
-            self.hp -= damage;
-            if self.hp < 0 {
-                self.hp = 0;
-            }
-        }
-
-        pub fn is_alive(&self) -> bool {
-            self.hp > 0
-        }
-    }
-
-    pub enum GameEvent {
-        Start,
-        Hit(i32),
-        GameOver,
-    }
-}
-
-fn main() {
-    let mut player = game::Player::new("Andy");
-    println!("{} 的血量：{}", player.name, player.hp());
-
-    player.take_damage(30);
-    println!("受到 30 傷害後：{}", player.hp());
-
-    let event = game::GameEvent::Hit(30);
-    match event {
-        game::GameEvent::Start => println!("遊戲開始！"),
-        game::GameEvent::Hit(dmg) => println!("受到 {} 傷害！", dmg),
-        game::GameEvent::GameOver => println!("遊戲結束"),
-    }
-}
-```
+這一集的概念說明中已經包含了完整的程式碼範例，不另外重複。
 
 ## 重點整理
 

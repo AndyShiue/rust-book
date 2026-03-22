@@ -153,7 +153,7 @@ fn main() {
     println!("水的沸點：{}°C = {}°F", boiling.to_celsius(), boiling.to_fahrenheit());
 
     let body = Temperature::Fahrenheit(98.6);
-    println!("體溫：{}°F = {:.1}°C", body.to_fahrenheit(), body.to_celsius());
+    println!("體溫：{}°F = {}°C", body.to_fahrenheit(), body.to_celsius());
 }
 ```
 

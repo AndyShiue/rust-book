@@ -159,10 +159,8 @@ pub fn add(a: i32, b: i32) -> i32 {
 ```rust
 pub fn power(base: i32, exp: u32) -> i32 {
     let mut result = 1;
-    let mut i = 0;
-    while i < exp {
+    for _ in 0..exp {
         result *= base;
-        i += 1;
     }
     result
 }
@@ -174,8 +172,8 @@ pub fn power(base: i32, exp: u32) -> i32 {
 
 ## 重點整理
 
-- `mod math;`（分號結尾）告訴 Rust 去找 `math.rs` 或 `math/mod.rs`
+- `mod math;`（分號結尾）告訴 Rust 去找子 mod
 - 被拆出去的檔案裡**不需要**再寫 `mod math { ... }`，檔案本身就是 mod
 - 子 mod 可以用 `math/mod.rs`（傳統）或 `math.rs` + `math/` 資料夾（推薦）
 - `main.rs` 是 binary crate 的根，`lib.rs` 是 library crate 的根
-- 一個專案可以同時有 binary 和 library crate
+- 一個專案可以同時是 binary crate 和 library crate

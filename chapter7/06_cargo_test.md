@@ -30,6 +30,10 @@ fn it_works() {
 
 `assert_eq!` 和 `assert_ne!` 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。
 
+`assert!` 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。這時候就有一個值得注意的差別：`assert!` 在 debug 和 release 模式下**都會執行**，即使是正式發布的程式，失敗了一樣會 panic。如果你只想在 debug 模式檢查（release 時自動移除），可以用 `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!`——它們在 release 模式下會被編譯器完全忽略。
+
+不過在**測試**裡面，直接用 `assert!` 系列就好——反正測試不會被 release build 影響。
+
 ### 測試 mod 的慣用結構
 
 上一集學了 `use super::*;`——測試最常這樣用。慣例是在檔案底部加一個測試 mod：

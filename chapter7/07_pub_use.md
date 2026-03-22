@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-學會用 `pub use` 重新匯出內部項目，讓使用者不需要知道你的 mod 結構。
+學會用 `pub use` 重新匯出（re-export）內部項目，讓使用者不需要知道你的 mod 結構。
 
 ## 概念說明
 
@@ -28,7 +28,7 @@ use your_crate::math::advanced::power;
 
 ### pub use 的魔法
 
-`pub use` 把內部的東西「重新匯出」到當前 mod，讓外部可以用更短的路徑存取：
+`pub use` 把內部的東西「重新匯出（re-export）」到當前 mod，讓外部可以用更短的路徑存取：
 
 ```rust
 // lib.rs

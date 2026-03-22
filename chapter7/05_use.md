@@ -52,7 +52,7 @@ use rand::Rng;
 use std::collections::HashMap;
 ```
 
-`std` 是標準函式庫，不需要在 Cargo.toml 加 dependency，但使用時路徑規則一樣。
+`std` 是 Rust 的**標準函式庫（standard library）**——Rust 內建的一組工具，包含我們已經用過的 `Vec`、`String`、`Option`、`Result`、`println!` 等等，以及更多像是檔案操作、網路、集合等功能。你不需要在 Cargo.toml 加 dependency 就能用它，因為每個 Rust 程式都會自動連結 `std`。使用時路徑寫法跟外部 crate 一樣——`std::collections::HashMap`、`std::fmt::Display` 等。
 
 如果你想明確強調「這是外部 crate」，可以用 `::` 開頭：
 
@@ -81,7 +81,7 @@ mod outer {
 }
 ```
 
-### 巢狀匯入
+### 一次 use 多個東西
 
 匯入同一個路徑底下的多個東西，可以用大括號合併：
 
@@ -109,6 +109,42 @@ fn format_something() -> FmtResult {
 
 fn read_something() -> IoResult<()> {
     Ok(())
+}
+```
+
+### use 的名字衝突
+
+如果你 `use` 了兩個同名的東西到同一個作用域，Rust 會直接報錯：
+
+```rust
+mod a {
+    pub fn hello() -> &'static str { "from a" }
+}
+
+mod b {
+    pub fn hello() -> &'static str { "from b" }
+}
+
+use a::hello;
+use b::hello;  // 編譯錯誤！hello 已經被定義了
+```
+
+這時候就用 `as` 取別名來解決。
+
+但如果是**不同作用域**，內層的 `use` 會遮蔽（shadow）外層的——就像 `let` 的 shadowing：
+
+```rust
+use a::hello;
+
+fn main() {
+    println!("{}", hello());  // "from a"
+
+    {
+        use b::hello;          // 在這個作用域裡 shadow 了外面的 hello
+        println!("{}", hello());  // "from b"
+    }
+
+    println!("{}", hello());  // "from a"（回到外層）
 }
 ```
 
@@ -151,20 +187,16 @@ mod math {
     pub mod advanced {
         pub fn power(base: i32, exp: u32) -> i32 {
             let mut result = 1;
-            let mut i = 0;
-            while i < exp {
+            for _ in 0..exp {
                 result *= base;
-                i += 1;
             }
             result
         }
 
         pub fn factorial(n: u64) -> u64 {
             let mut result: u64 = 1;
-            let mut i: u64 = 1;
-            while i <= n {
+            for i in 1..=n {
                 result *= i;
-                i += 1;
             }
             result
         }
@@ -179,7 +211,7 @@ use math::advanced::{power, factorial};
 fn main() {
     println!("3 + 5 = {}", add(3, 5));
     println!("10 - 4 = {}", subtract(10, 4));
-    println!("2^10 = {}", power(2, 10));
+    println!("2 ^ 10 = {}", power(2, 10));
     println!("10! = {}", factorial(10));
 }
 ```
@@ -189,8 +221,10 @@ fn main() {
 - `use` 將路徑帶入作用域，讓你不必每次寫完整路徑
 - 絕對路徑用 `crate::` 開頭，相對路徑從當前 mod 位置開始
 - 外部 crate 直接用名稱開頭；加 `::` 前綴可以明確標記為外部 crate
+- `std` 是標準函式庫，不用加 dependency 就能用
 - `super::` 指向父 mod，`self::` 指向當前 mod
-- `use a::b::{X, Y, self};` 巢狀匯入多個項目
-- `use X as Alias;` 解決名稱衝突
+- `use a::b::{X, Y, self};` 一次 use 多個東西
+- `use X as Alias;` 取別名，解決名字衝突
+- 同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）
 - `use something::*;` 星號匯入——測試裡常用，正式程式碼少用
 - 常用型別如 `Vec`、`Option` 透過 prelude 自動可用，不需 `use`

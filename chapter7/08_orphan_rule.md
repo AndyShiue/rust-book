@@ -134,6 +134,20 @@ fn main() {
 }
 ```
 
+## 多參數 trait 的情況
+
+上面講的規則是最簡單的版本。對於多參數 trait（像第五章學的 `From<T>`），規則其實更複雜。簡單來說：
+
+```rust
+// OK：你的型別出現在參數裡
+impl From<MyType> for String { ... }
+
+// 不行：兩邊都是外部的
+impl From<String> for Vec<i32> { ... }
+```
+
+完整的規則涉及「covered type parameter」等概念，超出本教學的範圍。有興趣可以參考[官方文件](https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules)。
+
 ## 重點整理
 
 - **Orphan rule**：要 impl trait，trait 或型別至少有一個必須是你的 crate 定義的
@@ -142,3 +156,4 @@ fn main() {
 - 「外部型別 + 外部 trait」❌ 不合法
 - 這個規則是為了防止不同 crate 之間的 impl 衝突
 - **Newtype pattern**：用 `struct MyWrapper(OriginalType)` 把外部型別包起來，就變成你的型別了
+- 多參數 trait 的 orphan rule 遠比上面講的更複雜，詳見官方文件
