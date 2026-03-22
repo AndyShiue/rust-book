@@ -17,10 +17,10 @@
 3. 在終端機執行：
 
 ```bash
-cargo login <你的 API Token>
+cargo login
 ```
 
-這會把 token 存在本機，之後 publish 時自動使用。
+按 Enter 後，終端機會提示你貼上 Token——貼上後再按 Enter 就完成了。Token 會被存在本機，之後 publish 時自動使用。
 
 ### 準備 Cargo.toml
 
@@ -30,7 +30,7 @@ cargo login <你的 API Token>
 [package]
 name = "my-awesome-lib"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "一個很棒的數學運算 library"
 license = "MIT"
 repository = "https://github.com/yourname/my-awesome-lib"
@@ -39,17 +39,17 @@ keywords = ["math", "utility"]
 categories = ["mathematics"]
 ```
 
-必填欄位：
-- `name`：套件名稱（在 crates.io 上必須唯一）
-- `version`：遵循 [SemVer](https://semver.org/)（語意化版本號）
-- `description`：一行簡短描述
-- `license`：開源授權條款（如 `MIT`、`Apache-2.0`、`MIT OR Apache-2.0`）
+根據[官方文件](https://doc.rust-lang.org/cargo/reference/publishing.html)，發布前應填寫：
 
-建議填寫：
+- `license`（或 `license-file`）：開源授權條款（如 `MIT`、`Apache-2.0`、`MIT OR Apache-2.0`）
+- `description`：一行簡短描述
+- `homepage`：專案首頁網址
 - `repository`：原始碼倉庫網址
 - `readme`：README 檔案路徑
-- `keywords`：最多 5 個搜尋關鍵字
-- `categories`：分類（要符合 crates.io 的分類列表）
+
+另外建議但非必須：
+- `keywords`：搜尋用的關鍵字（最多 5 個）
+- `categories`：分類（需符合 crates.io 的分類清單）
 
 ### 發布前檢查
 
@@ -95,9 +95,9 @@ cargo yank --version 0.1.0
 ### 發布前最好做的事
 
 - 寫好 `README.md`（這會顯示在 crates.io 套件頁面上）
+- 跑過 `cargo test` 確認所有測試通過
 - 用 `///` 寫好文件註解（上一集學的）
 - 確保有範例程式碼
-- 跑過 `cargo test` 確認所有測試通過
 - 用 `cargo doc --open` 檢查文件看起來沒問題
 
 ## 範例程式碼
@@ -118,10 +118,14 @@ my-math-lib/
 [package]
 name = "my-math-lib"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 description = "Simple math utility functions"
 license = "MIT"
+homepage = "https://example.com/my-math-lib"
 repository = "https://github.com/example/my-math-lib"
+readme = "README.md"
+keywords = ["math", "utility"]
+categories = ["mathematics"]
 ```
 
 **src/lib.rs：**
@@ -226,7 +230,7 @@ cargo publish        # 正式發布！
 ## 重點整理
 
 - 在 crates.io 用 GitHub 登入，產生 API Token 後用 `cargo login` 設定
-- `Cargo.toml` 必須有 `description` 和 `license` 才能發布
+- `Cargo.toml` 發布前應填寫 `license`、`description`、`homepage`、`repository`、`readme`
 - `cargo package` 可以在發布前檢查問題
 - `cargo publish` 正式發布到 crates.io
 - 更新版本時修改 `version` 欄位，遵循 SemVer（語意化版本號）

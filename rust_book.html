@@ -13299,7 +13299,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="sd">///</span>
 <span class="sd">/// ```</span>
 <span class="sd">/// let f = celsius_to_fahrenheit(100.0);</span>
-<span class="sd">/// assert_eq!(f, 212.0);</span>
+<span class="sd">/// assert!((f - 212.0).abs() &lt; 0.001);</span>
 <span class="sd">/// ```</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">celsius_to_fahrenheit</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">5.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">32.0</span>
@@ -13315,7 +13315,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="sd">///</span>
 <span class="sd">/// ```</span>
 <span class="sd">/// let c = fahrenheit_to_celsius(32.0);</span>
-<span class="sd">/// assert_eq!(c, 0.0);</span>
+<span class="sd">/// assert!((c - 0.0).abs() &lt; 0.001);</span>
 <span class="sd">/// ```</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">fahrenheit_to_celsius</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">32.0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">5.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">9.0</span>
@@ -13380,16 +13380,16 @@ note: iterators are lazy and do nothing unless consumed
 <li>到帳號設定頁面，產生一個 <strong>API Token</strong></li>
 <li>在終端機執行：</li>
 </ol>
-<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>login<span class="w"> </span>&lt;你的<span class="w"> </span>API<span class="w"> </span>Token&gt;
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>login
 </code></pre></div>
 
-<p>這會把 token 存在本機，之後 publish 時自動使用。</p>
+<p>按 Enter 後，終端機會提示你貼上 Token——貼上後再按 Enter 就完成了。Token 會被存在本機，之後 publish 時自動使用。</p>
 <h4 id="cargotoml_1">準備 Cargo.toml</h4>
 <p>發布前，<code>Cargo.toml</code> 需要補上一些必要的 metadata：</p>
 <div class="highlight"><pre><span></span><code><span class="k">[package]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-awesome-lib&quot;</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
-<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2021&quot;</span>
+<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2024&quot;</span>
 <span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;一個很棒的數學運算 library&quot;</span>
 <span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span>
 <span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/yourname/my-awesome-lib&quot;</span>
@@ -13398,19 +13398,18 @@ note: iterators are lazy and do nothing unless consumed
 <span class="n">categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mathematics&quot;</span><span class="p">]</span>
 </code></pre></div>
 
-<p>必填欄位：</p>
+<p>根據<a href="https://doc.rust-lang.org/cargo/reference/publishing.html">官方文件</a>，發布前應填寫：</p>
 <ul>
-<li><code>name</code>：套件名稱（在 crates.io 上必須唯一）</li>
-<li><code>version</code>：遵循 <a href="https://semver.org/">SemVer</a>（語意化版本號）</li>
+<li><code>license</code>（或 <code>license-file</code>）：開源授權條款（如 <code>MIT</code>、<code>Apache-2.0</code>、<code>MIT OR Apache-2.0</code>）</li>
 <li><code>description</code>：一行簡短描述</li>
-<li><code>license</code>：開源授權條款（如 <code>MIT</code>、<code>Apache-2.0</code>、<code>MIT OR Apache-2.0</code>）</li>
-</ul>
-<p>建議填寫：</p>
-<ul>
+<li><code>homepage</code>：專案首頁網址</li>
 <li><code>repository</code>：原始碼倉庫網址</li>
 <li><code>readme</code>：README 檔案路徑</li>
-<li><code>keywords</code>：最多 5 個搜尋關鍵字</li>
-<li><code>categories</code>：分類（要符合 crates.io 的分類列表）</li>
+</ul>
+<p>另外建議但非必須：</p>
+<ul>
+<li><code>keywords</code>：搜尋用的關鍵字（最多 5 個）</li>
+<li><code>categories</code>：分類（需符合 crates.io 的分類清單）</li>
 </ul>
 <h4 id="_752">發布前檢查</h4>
 <p>發布前可以先用 <code>cargo package</code> 檢查有沒有問題：</p>
@@ -13446,9 +13445,9 @@ note: iterators are lazy and do nothing unless consumed
 <h4 id="_755">發布前最好做的事</h4>
 <ul>
 <li>寫好 <code>README.md</code>（這會顯示在 crates.io 套件頁面上）</li>
+<li>跑過 <code>cargo test</code> 確認所有測試通過</li>
 <li>用 <code>///</code> 寫好文件註解（上一集學的）</li>
 <li>確保有範例程式碼</li>
-<li>跑過 <code>cargo test</code> 確認所有測試通過</li>
 <li>用 <code>cargo doc --open</code> 檢查文件看起來沒問題</li>
 </ul>
 <h3 id="_756">範例程式碼</h3>
@@ -13464,10 +13463,14 @@ note: iterators are lazy and do nothing unless consumed
 <div class="highlight"><pre><span></span><code><span class="k">[package]</span>
 <span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-math-lib&quot;</span>
 <span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
-<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2021&quot;</span>
+<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2024&quot;</span>
 <span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Simple math utility functions&quot;</span>
 <span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span>
+<span class="n">homepage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://example.com/my-math-lib&quot;</span>
 <span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/example/my-math-lib&quot;</span>
+<span class="n">readme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;README.md&quot;</span>
+<span class="n">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;math&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utility&quot;</span><span class="p">]</span>
+<span class="n">categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mathematics&quot;</span><span class="p">]</span>
 </code></pre></div>
 
 <p><strong>src/lib.rs：</strong></p>
@@ -13568,7 +13571,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_757">重點整理</h3>
 <ul>
 <li>在 crates.io 用 GitHub 登入，產生 API Token 後用 <code>cargo login</code> 設定</li>
-<li><code>Cargo.toml</code> 必須有 <code>description</code> 和 <code>license</code> 才能發布</li>
+<li><code>Cargo.toml</code> 發布前應填寫 <code>license</code>、<code>description</code>、<code>homepage</code>、<code>repository</code>、<code>readme</code></li>
 <li><code>cargo package</code> 可以在發布前檢查問題</li>
 <li><code>cargo publish</code> 正式發布到 crates.io</li>
 <li>更新版本時修改 <code>version</code> 欄位，遵循 SemVer（語意化版本號）</li>

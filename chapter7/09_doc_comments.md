@@ -98,7 +98,7 @@ cargo doc --open
 ///
 /// ```
 /// let f = celsius_to_fahrenheit(100.0);
-/// assert_eq!(f, 212.0);
+/// assert!((f - 212.0).abs() < 0.001);
 /// ```
 pub fn celsius_to_fahrenheit(c: f64) -> f64 {
     c * 9.0 / 5.0 + 32.0
@@ -114,7 +114,7 @@ pub fn celsius_to_fahrenheit(c: f64) -> f64 {
 ///
 /// ```
 /// let c = fahrenheit_to_celsius(32.0);
-/// assert_eq!(c, 0.0);
+/// assert!((c - 0.0).abs() < 0.001);
 /// ```
 pub fn fahrenheit_to_celsius(f: f64) -> f64 {
     (f - 32.0) * 5.0 / 9.0
