@@ -1,4 +1,4 @@
-# 第七章第 8 集：Orphan Rule
+# 第七章第 8 集：orphan rule
 
 ## 本集目標
 

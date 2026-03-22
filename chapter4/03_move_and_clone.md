@@ -1,4 +1,4 @@
-# 第四章第 3 集：Move 與 Clone
+# 第四章第 3 集：move 與 Clone
 
 ## 本集目標
 理解 Rust 的 move 語意——賦值和傳入函數都會轉移所有權——以及用 Clone 來複製資料。

@@ -1,4 +1,4 @@
-# 第三章第 7 集：enum 攜帶資料（tuple 形式）
+# 第三章第 7 集：enum 攜帶 tuple variant
 
 ## 本集目標
 學會讓 enum 的 variant 攜帶額外的資料，像 tuple 一樣。

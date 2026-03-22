@@ -1,4 +1,4 @@
-# 第三章第 13 集：slice Pattern
+# 第三章第 13 集：slice pattern
 
 ## 本集目標
 學會在 match 裡解構陣列和切片，用 slice pattern 取出元素。

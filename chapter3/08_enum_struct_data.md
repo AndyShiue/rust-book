@@ -1,4 +1,4 @@
-# 第三章第 8 集：enum 攜帶資料（struct 形式）
+# 第三章第 8 集：enum 攜帶 struct variant
 
 ## 本集目標
 學會讓 enum 的 variant 用類似 struct 的方式攜帶有名字的欄位。
