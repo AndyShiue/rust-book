@@ -144,7 +144,8 @@ fn main() {
 
 ## 重點整理
 - `#[test]` 標記測試函數，`cargo test` 自動找到並執行所有測試
-- `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果
+- `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果（debug 和 release 都會執行）
+- `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!` 只在 debug 模式執行，release 時會被忽略
 - `#[cfg(test)]` 讓測試 mod 只在測試時編譯
 - `use super::*;` 引入父 mod 的所有東西——測試最常用的寫法
 - 測試可以直接測試私有函數（因為測試 mod 是子 mod）

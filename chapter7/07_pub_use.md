@@ -48,6 +48,8 @@ use your_crate::power;
 
 乾淨多了。
 
+注意：`pub use` 只能匯出**本來就是 pub 的東西**。如果你試圖 `pub use` 一個 private 的 item，編譯器會報錯——你不能把別人藏起來的東西公開出去。
+
 ### re-export 其他 crate 的東西
 
 `pub use` 不只能匯出自己 mod 的內容，也能匯出**其他 crate** 的東西：
@@ -78,9 +80,8 @@ pub use advanced::power;
 
 ### re-export 的好處
 
-1. **簡化公開 API**：使用者不需要知道你的內部結構
+1. **簡化公開 API**：使用者不需要知道你的內部結構，用更短的路徑存取
 2. **自由重構**：你可以隨意改內部的 mod 結構，只要 `pub use` 保持不變，使用者的程式碼不會壞
-3. **選擇性公開**：只 re-export 你想讓外部用的東西
 
 ### 實際案例
 

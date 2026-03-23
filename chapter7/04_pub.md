@@ -124,6 +124,14 @@ fn main() {
 }
 ```
 
+注意 `use animal::Speak;` 這行——即使 `Dog` 已經實作了 `Speak`，你還是要把 `Speak` trait 引入作用域才能呼叫它的方法。如果拿掉這行，`d.speak()` 會編譯錯誤。這是 Rust 的規則：**trait 的方法只有在 trait 被 use 進來之後才能呼叫。**
+
+```rust
+// 沒有 use animal::Speak;
+// let d = animal::Dog;
+// d.speak();  // 編譯錯誤！Speak 不在作用域內
+```
+
 `impl` 區塊本身**不需要也不能加 `pub`**。對於 `impl Type`（不是 `impl Trait for Type`），裡面的 fn 各自用 `pub` 控制可見性：
 
 ```rust
@@ -217,9 +225,9 @@ fn main() {
 
 - Rust **預設一切私有**，必須明確加 `pub` 才公開
 - `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`
+- 有私有欄位的 struct 無法從外部直接建構，必須提供建構函式
 - `pub enum` 的所有 variants **自動公開**
 - `impl Trait for T` 裡的 fn 可見性跟著 trait 走，不加 `pub`；`impl T` 裡的 fn 各自用 `pub` 控制
 - `pub(crate)`：crate 內部可見，外部不可見
 - `pub(super)`：只有父 mod 可見
 - `pub(in path)`：只對指定的 mod 路徑可見
-- 有私有欄位的 struct 無法從外部直接建構，必須提供建構函式

@@ -109,7 +109,7 @@ my-math-lib/
 ├── Cargo.toml
 ├── README.md
 ├── src/
-│   └── lib.rs
+    └── lib.rs
 ```
 
 **Cargo.toml：**

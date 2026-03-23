@@ -138,7 +138,7 @@ fn main() {
     println!("10 + 20 = {}", sum);
 
     let p = math::advanced::power(2, 8);
-    println!("2^8 = {}", p);
+    println!("2 ^ 8 = {}", p);
 }
 ```
 

@@ -318,7 +318,7 @@
 <li><a href="#12_1">第二章第 12 集：陣列走訪</a></li>
 <li><a href="#13-t">第二章第 13 集：切片 &amp;[T]</a></li>
 <li><a href="#14_1">第二章第 14 集：函數 + 切片參數</a></li>
-<li><a href="#15-str">第二章第 15 集：&amp;str</a></li>
+<li><a href="#15-str">第二章第 15 集：字串切片 &amp;str</a></li>
 </ul>
 </li>
 <li><a href="#structenum-pattern-matching">第三章：Struct、Enum 與 Pattern Matching</a><ul>
@@ -328,13 +328,13 @@
 <li><a href="#4-match-c-style-enum">第三章第 4 集：match C-style enum</a></li>
 <li><a href="#5-match">第三章第 5 集：match 當表達式</a></li>
 <li><a href="#6-block">第三章第 6 集：block 表達式</a></li>
-<li><a href="#7-enum-tuple">第三章第 7 集：enum 攜帶資料（tuple 形式）</a></li>
-<li><a href="#8-enum-struct">第三章第 8 集：enum 攜帶資料（struct 形式）</a></li>
+<li><a href="#7-enum-tuple-variant">第三章第 7 集：enum 攜帶 tuple variant</a></li>
+<li><a href="#8-enum-struct-variant">第三章第 8 集：enum 攜帶 struct variant</a></li>
 <li><a href="#9-match-tuple-variant">第三章第 9 集：match 取出 tuple variant 資料</a></li>
 <li><a href="#10-match-struct-variant">第三章第 10 集：match 取出 struct variant 資料</a></li>
 <li><a href="#11-field-shorthand">第三章第 11 集：field shorthand</a></li>
 <li><a href="#12-tuple-pattern">第三章第 12 集：tuple pattern</a></li>
-<li><a href="#13-slice-pattern">第三章第 13 集：slice Pattern</a></li>
+<li><a href="#13-slice-pattern">第三章第 13 集：slice pattern</a></li>
 <li><a href="#14-pattern-matching">第三章第 14 集：巢狀 pattern matching</a></li>
 <li><a href="#15-_-wildcard">第三章第 15 集：_ wildcard</a></li>
 <li><a href="#16">第三章第 16 集：.. 忽略多個值</a></li>
@@ -356,7 +356,7 @@
 <li><a href="#_379">第四章：所有權與借用</a><ul>
 <li><a href="#1">第四章第 1 集：所有權（鑰匙圈比喻）</a></li>
 <li><a href="#2-trait">第四章第 2 集：trait 簡介</a></li>
-<li><a href="#3-move-clone">第四章第 3 集：Move 與 Clone</a></li>
+<li><a href="#3-move-clone">第四章第 3 集：move 與 Clone</a></li>
 <li><a href="#4-copy">第四章第 4 集：Copy</a></li>
 <li><a href="#5_1">第四章第 5 集：借用 &amp;</a></li>
 <li><a href="#6-mut">第四章第 6 集：可變借用 &amp;mut</a></li>
@@ -376,7 +376,7 @@
 <li><a href="#4-turbofish">第五章第 4 集：Turbofish 語法</a></li>
 <li><a href="#5-placeholder-type-_">第五章第 5 集：placeholder type _</a></li>
 <li><a href="#6_2">第五章第 6 集：型別別名</a></li>
-<li><a href="#7-impl">第五章第 7 集：impl 泛型</a></li>
+<li><a href="#7-impl">第五章第 7 集：泛型 impl</a></li>
 <li><a href="#8-option">第五章第 8 集：Option</a></li>
 <li><a href="#9-option">第五章第 9 集：Option 常用方法</a></li>
 <li><a href="#10-result">第五章第 10 集：Result</a></li>
@@ -405,7 +405,7 @@
 </ul>
 </li>
 <li><a href="#_611">第六章：閉包與迭代器</a><ul>
-<li><a href="#1-function-pointer">第六章第 1 集：Function Pointer</a></li>
+<li><a href="#1-function-pointer">第六章第 1 集：function pointer</a></li>
 <li><a href="#2_1">第六章第 2 集：閉包用法展示</a></li>
 <li><a href="#3_2">第六章第 3 集：手動實作閉包</a></li>
 <li><a href="#4_1">第六章第 4 集：閉包種類的推斷</a></li>
@@ -420,6 +420,19 @@
 <li><a href="#13">第六章第 13 集：組合與截取</a></li>
 <li><a href="#14_2">第六章第 14 集：轉換與過濾</a></li>
 <li><a href="#15">第六章第 15 集：惰性求值</a></li>
+</ul>
+</li>
+<li><a href="#cargocrate-mod">第七章：Cargo、Crate 與 Mod 系統</a><ul>
+<li><a href="#1-cargo-cratesio">第七章第 1 集：Cargo 與 crates.io</a></li>
+<li><a href="#2-mod">第七章第 2 集：mod</a></li>
+<li><a href="#3-mod">第七章第 3 集：檔案 mod</a></li>
+<li><a href="#4-pub">第七章第 4 集：pub 可見性</a></li>
+<li><a href="#5-use">第七章第 5 集：use</a></li>
+<li><a href="#6-cargo-test">第七章第 6 集：cargo test</a></li>
+<li><a href="#7-pub-use">第七章第 7 集：pub use</a></li>
+<li><a href="#8-orphan-rule">第七章第 8 集：orphan rule</a></li>
+<li><a href="#9_1">第七章第 9 集：文件註解</a></li>
+<li><a href="#10-cargo-publish">第七章第 10 集：cargo publish</a></li>
 </ul>
 </li>
 </ul>
@@ -3554,7 +3567,7 @@ c 的總和：7
 <li>這是 Rust 實務中最常見的寫法</li>
 </ul>
 <hr />
-<h2 id="15-str">第二章第 15 集：&amp;str</h2>
+<h2 id="15-str">第二章第 15 集：字串切片 &amp;str</h2>
 <h3 id="_251">本集目標</h3>
 <p>認識 <code>&amp;str</code> 這個型別，原來我們一直在用的字串就是切片！</p>
 <h3 id="_252">正文</h3>
@@ -4022,7 +4035,7 @@ c 的總和：7
 <li>block 表達式在 Rust 裡非常常見，是很重要的基礎概念</li>
 </ul>
 <hr />
-<h2 id="7-enum-tuple">第三章第 7 集：enum 攜帶資料（tuple 形式）</h2>
+<h2 id="7-enum-tuple-variant">第三章第 7 集：enum 攜帶 tuple variant</h2>
 <h3 id="_282">本集目標</h3>
 <p>學會讓 enum 的 variant 攜帶額外的資料，像 tuple 一樣。</p>
 <h3 id="_283">概念說明</h3>
@@ -4079,7 +4092,7 @@ c 的總和：7
 <li>要取出 variant 裡的資料，需要用 match（第 9 集會學）</li>
 </ul>
 <hr />
-<h2 id="8-enum-struct">第三章第 8 集：enum 攜帶資料（struct 形式）</h2>
+<h2 id="8-enum-struct-variant">第三章第 8 集：enum 攜帶 struct variant</h2>
 <h3 id="_286">本集目標</h3>
 <p>學會讓 enum 的 variant 用類似 struct 的方式攜帶有名字的欄位。</p>
 <h3 id="_287">概念說明</h3>
@@ -4407,7 +4420,7 @@ c 的總和：7
 <li>tuple struct 也能用同樣的方式解構，只是前面要加型別名稱：<code>Point(x, y)</code></li>
 </ul>
 <hr />
-<h2 id="13-slice-pattern">第三章第 13 集：slice Pattern</h2>
+<h2 id="13-slice-pattern">第三章第 13 集：slice pattern</h2>
 <h3 id="_306">本集目標</h3>
 <p>學會在 match 裡解構陣列和切片，用 slice pattern 取出元素。</p>
 <h3 id="_307">概念說明</h3>
@@ -5928,7 +5941,7 @@ c 的總和：7
 <li>加了 <code>#[derive(Debug)]</code> 之後，就可以用 <code>{:?}</code> 來印出自訂的 struct/enum</li>
 </ul>
 <hr />
-<h2 id="3-move-clone">第四章第 3 集：Move 與 Clone</h2>
+<h2 id="3-move-clone">第四章第 3 集：move 與 Clone</h2>
 <h3 id="_389">本集目標</h3>
 <p>理解 Rust 的 move 語意——賦值和傳入函數都會轉移所有權——以及用 Clone 來複製資料。</p>
 <h3 id="_390">概念說明</h3>
@@ -7543,7 +7556,7 @@ c 的總和：7
 <li>別名和原型別完全等價，可以互換使用</li>
 </ul>
 <hr />
-<h2 id="7-impl">第五章第 7 集：impl 泛型</h2>
+<h2 id="7-impl">第五章第 7 集：泛型 impl</h2>
 <h3 id="_480">本集目標</h3>
 <p>學會為泛型 struct 實作方法，理解 <code>impl&lt;T&gt;</code> 語法中兩個 <code>T</code> 的含義。</p>
 <h3 id="_481">概念說明</h3>
@@ -10016,7 +10029,7 @@ c 的總和：7
 <p>恭喜你完成了第五章！🎉 這一章的內容非常紮實——從泛型、trait bound、生命週期，到 Box、Rc、Cell、RefCell 等智慧指標，再到 Display、Associated Type、Cow。這些是 Rust 型別系統最強大的武器，也是讀懂標準庫原始碼的基礎。下一章我們將進入閉包與迭代器——Rust 最優雅的函數式程式設計風格！</p>
 <hr />
 <h1 id="_611">第六章：閉包與迭代器</h1>
-<h2 id="1-function-pointer">第六章第 1 集：Function Pointer</h2>
+<h2 id="1-function-pointer">第六章第 1 集：function pointer</h2>
 <h3 id="_612">本集目標</h3>
 <p>認識函數指標（function pointer）型別，學會把函數名稱當成值來傳遞和儲存。</p>
 <h3 id="_613">概念說明</h3>
@@ -12096,6 +12109,1481 @@ note: iterators are lazy and do nothing unless consumed
 <li>忘記消費迭代器的話，編譯器會發出警告提醒你</li>
 </ul>
 <p>恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、Crate 與模組系統——讓你的程式碼從單一檔案擴展到真正的專案結構！</p>
+<hr />
+<h1 id="cargocrate-mod">第七章：Cargo、Crate 與 Mod 系統</h1>
+<h2 id="1-cargo-cratesio">第七章第 1 集：Cargo 與 crates.io</h2>
+<h3 id="_701">本集目標</h3>
+<p>認識 Cargo 的完整功能以及如何透過 crates.io 使用社群套件。</p>
+<h3 id="_702">概念說明</h3>
+<p>我們從第一章開始就在用 <code>cargo new</code> 和 <code>cargo run</code>。其實 <code>cargo run</code> 背後做了兩件事：先<strong>編譯</strong>你的程式碼，再<strong>執行</strong>編譯出來的執行檔。如果你只想編譯但不執行，可以用 <code>cargo build</code>——它只會產生執行檔，放在 <code>target/debug/</code> 資料夾裡。</p>
+<p>這一集我們要把 Cargo 的全貌攤開來看，特別是怎麼引入外部套件。</p>
+<h4 id="dev-build-vs-release-build">dev build vs release build</h4>
+<p><code>cargo build</code> 和 <code>cargo run</code> 預設跑的是 <strong>debug 模式</strong>——編譯快但執行慢（沒有最佳化）。當你要發布程式的時候，加上 <code>--release</code>：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>build<span class="w"> </span>--release
+</code></pre></div>
+
+<p>這會產生最佳化過的執行檔，放在 <code>target/release/</code> 而不是 <code>target/debug/</code>。差異可以非常大——有些程式 release 版本跑起來快好幾倍。</p>
+<h4 id="cargotoml">Cargo.toml</h4>
+<p>每個 Rust 專案的根目錄都有 <code>Cargo.toml</code>。TOML 是一種設定檔格式，設計得讓人好讀好寫。</p>
+<p>一個典型的 <code>Cargo.toml</code> 長這樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">[package]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_project&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2024&quot;</span>
+
+<span class="k">[dependencies]</span>
+</code></pre></div>
+
+<ul>
+<li><code>[package]</code>：專案的基本資訊（名稱、版本、Rust edition）</li>
+<li><code>[dependencies]</code>：這個專案用到的外部套件</li>
+</ul>
+<p>其中 <code>edition</code> 是 Rust 的<strong>版本號</strong>——但不是 Rust 編譯器的版本，而是<strong>語言規格的版本</strong>。Rust 每隔幾年會發布一個新的 edition（2015、2018、2021、2024），每次可能會微調一些語法或預設行為。不同 edition 的 crate 可以互相搭配使用，所以不用擔心相容性問題。<code>cargo new</code> 會自動幫你設成最新的 edition。</p>
+<h4 id="_703">加入外部套件</h4>
+<p>想用別人寫好的套件？最簡單的方式：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>add<span class="w"> </span>rand
+</code></pre></div>
+
+<p>這會自動在 <code>Cargo.toml</code> 的 <code>[dependencies]</code> 加上類似這樣的一行：</p>
+<div class="highlight"><pre><span></span><code><span class="k">[dependencies]</span>
+<span class="n">rand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.10&quot;</span>
+</code></pre></div>
+
+<p>實際加上的版本號取決於你執行 <code>cargo add</code> 時的最新版本，不一定和這裡寫的一樣。</p>
+<h4 id="cratesio">crates.io</h4>
+<p><a href="https://crates.io">crates.io</a> 是 Rust 的官方套件庫。你可以在上面搜尋套件、看下載數、閱讀文件。每個套件頁面都會有：</p>
+<ul>
+<li>使用說明和版本歷史</li>
+<li>連結到 <a href="https://docs.rs">docs.rs</a> 的自動產生文件</li>
+<li>下載數（可以當作套件熱門程度的參考）</li>
+</ul>
+<h4 id="_704">依賴的版本語意</h4>
+<p>在 <code>[dependencies]</code> 裡指定外部套件的版本時，有不同的寫法：</p>
+<ul>
+<li><code>"^1.0"</code>（或直接寫 <code>"1.0"</code>）：相容 <code>1.x.y</code> 的任何版本，但不會升到 <code>2.0</code></li>
+<li><code>"=1.0.0"</code>：鎖定<strong>剛好</strong>這個版本</li>
+<li><code>"&gt;=1.2, &lt;1.5"</code>：指定範圍</li>
+</ul>
+<p>大多數時候用預設的 <code>^</code> 就好，Cargo 會幫你選合適的版本。更多細節可以參考<a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html">官方文件</a>。</p>
+<h4 id="cargo-features">Cargo features</h4>
+<p>有些套件提供可選功能，用 <code>features</code> 開啟：</p>
+<div class="highlight"><pre><span></span><code><span class="k">[dependencies]</span>
+<span class="n">serde</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">features</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;derive&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>這樣就能用 <code>serde</code> 的 <code>#[derive(Serialize, Deserialize)]</code>，而不需要的功能不會被編譯進來。</p>
+<h3 id="_705">範例程式碼</h3>
+<p>用 <code>rand</code> 套件產生隨機數：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 先執行：cargo add rand</span>
+<span class="k">use</span><span class="w"> </span><span class="n">rand</span><span class="p">::</span><span class="n">RngExt</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">rng</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">::</span><span class="n">rng</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rng</span><span class="p">.</span><span class="n">random_range</span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">100</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;隨機數字：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">coin</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rng</span><span class="p">.</span><span class="n">random</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">coin</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;正面！&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;反面！&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_706">重點整理</h3>
+<ul>
+<li><code>cargo build --release</code> 產生最佳化的執行檔，適合發布</li>
+<li><code>Cargo.toml</code> 用 TOML 格式，<code>[package]</code> 記專案資訊，<code>[dependencies]</code> 記外部套件</li>
+<li><code>edition</code> 是 Rust 語言規格的版本（2015、2018、2021、2024），不同 edition 的 crate 可以互相搭配</li>
+<li><code>cargo add &lt;套件名&gt;</code> 是加入外部套件最快的方式</li>
+<li>crates.io 是 Rust 的官方套件庫，docs.rs 提供自動產生的文件</li>
+<li>版本號 <code>"1.0"</code> 等同 <code>"^1.0"</code>，允許相容升級；<code>"=1.0.0"</code> 鎖定精確版本</li>
+<li><code>features</code> 可以開啟套件的可選功能</li>
+</ul>
+<hr />
+<h2 id="2-mod">第七章第 2 集：mod</h2>
+<h3 id="_707">本集目標</h3>
+<p>學會用 mod 將程式碼組織成有層次的結構。</p>
+<h3 id="_708">概念說明</h3>
+<p>當程式越寫越長，全部塞在一個 <code>main.rs</code> 裡面會變得很難維護。這時候我們需要把相關的函式、struct、enum 分組——在 Rust 裡，這個分組機制就是 <strong>mod</strong>。</p>
+<h4 id="mod">在同一個檔案裡定義 mod</h4>
+<p>最簡單的用法：直接在檔案裡用 <code>mod</code> 關鍵字建立一個區塊。</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>要呼叫 mod 裡的函式，用 <code>::</code> 路徑語法：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+</code></pre></div>
+
+<p>注意那個 <code>pub</code>——mod 裡的東西<strong>預設是私有的</strong>。如果不加 <code>pub</code>，外面就看不到、用不了。關於 <code>pub</code> 的完整規則我們在第 4 集會詳細講，這裡先記住：想讓外面用，就加 <code>pub</code>。</p>
+<h4 id="mod_1">巢狀 mod</h4>
+<p>mod 可以一層一層巢狀：</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="n">base</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">exp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">result</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>呼叫的時候就用完整路徑：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+</code></pre></div>
+
+<p>這就像檔案系統的資料夾結構一樣——<code>math</code> 底下有 <code>basic</code> 和 <code>advanced</code> 兩個子 mod。</p>
+<h4 id="mod_2">mod 的預設可見性</h4>
+<p>一個很重要的觀念：<strong>mod 裡的所有項目預設都是私有的</strong>。同一個 mod 內部的程式碼可以互相存取，但外部看不到。這是 Rust 用來保護封裝性的設計。我們第 4 集會深入探討。</p>
+<h3 id="_709">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">geometry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">height</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">impl</span><span class="w"> </span><span class="n">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Rectangle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">height</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">utils</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">describe_shape</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">area</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{} 的面積是 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">area</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">rect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">geometry</span><span class="p">::</span><span class="n">Rectangle</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rect</span><span class="p">.</span><span class="n">area</span><span class="p">();</span>
+<span class="w">    </span><span class="n">geometry</span><span class="p">::</span><span class="n">utils</span><span class="p">::</span><span class="n">describe_shape</span><span class="p">(</span><span class="s">&quot;長方形&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">area</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_710">重點整理</h3>
+<ul>
+<li><code>mod name { ... }</code> 在同一個檔案裡建立 mod</li>
+<li>mod 裡的東西用 <code>mod_name::item</code> 的路徑語法呼叫</li>
+<li>mod 可以巢狀，路徑就越來越長：<code>a::b::c::func()</code></li>
+<li>mod 內的所有項目<strong>預設是私有的</strong>，要讓外部使用需加 <code>pub</code></li>
+<li>mod 是 Rust 組織程式碼的基本單位，就像資料夾組織檔案一樣</li>
+</ul>
+<hr />
+<h2 id="3-mod">第七章第 3 集：檔案 mod</h2>
+<h3 id="_711">本集目標</h3>
+<p>學會將 mod 拆分到不同檔案，理解 Rust 的檔案與 mod 對應規則。</p>
+<h3 id="_712">概念說明</h3>
+<p>上一集我們把 mod 寫在同一個檔案裡，但實際專案不可能全部塞在一起。Rust 提供了一套規則，讓你把 mod 拆到獨立的檔案中。</p>
+<h4 id="mod_3">基本拆分：mod + 獨立檔案</h4>
+<p>假設你有一個 <code>math</code> mod，想把它搬到自己的檔案。做法很簡單：</p>
+<ol>
+<li>在 <code>main.rs</code>（或 <code>lib.rs</code>）裡寫 <code>mod math;</code>（注意是分號，不是大括號）</li>
+<li>建立 <code>math.rs</code>，把 mod 的內容放進去</li>
+</ol>
+<div class="highlight"><pre><span></span><code>src/
+├── main.rs
+└── math.rs
+</code></pre></div>
+
+<p><strong>main.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;3 + 5 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>math.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>注意 <code>math.rs</code> 裡面<strong>不需要再寫 <code>mod math { ... }</code></strong>——檔案本身就代表那個 mod。</p>
+<h4 id="mod_4">子 mod 的資料夾結構</h4>
+<p>如果 <code>math</code> mod 底下還有子 mod，有兩種組織方式：</p>
+<p><strong>方式一：用 <code>mod.rs</code>（傳統風格）</strong></p>
+<div class="highlight"><pre><span></span><code>src/
+├── main.rs
+└── math/
+    ├── mod.rs
+    ├── basic.rs
+    └── advanced.rs
+</code></pre></div>
+
+<p><code>math/mod.rs</code> 就是 <code>math</code> mod 的入口，裡面聲明子 mod：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// math/mod.rs</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="p">;</span>
+</code></pre></div>
+
+<p><strong>方式二：同名檔案 + 資料夾（推薦）</strong></p>
+<div class="highlight"><pre><span></span><code>src/
+├── main.rs
+├── math.rs          ← math mod 的入口
+└── math/
+    ├── basic.rs
+    └── advanced.rs
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="c1">// math.rs</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="p">;</span>
+</code></pre></div>
+
+<p>兩種方式效果完全一樣，選你喜歡的就好。比較新的專案傾向用方式二，因為不會有一堆檔案都叫 <code>mod.rs</code>，在編輯器裡比較好辨認。</p>
+<h4 id="librs-vs-mainrs">lib.rs vs main.rs</h4>
+<p>一個 Rust 專案（crate）有兩種類型：</p>
+<ul>
+<li><strong>binary crate</strong>：有 <code>src/main.rs</code>，會編譯成可執行檔</li>
+<li><strong>library crate</strong>：有 <code>src/lib.rs</code>，給別人使用的程式庫</li>
+</ul>
+<p>一個專案可以<strong>同時</strong>有 <code>main.rs</code> 和 <code>lib.rs</code>。<code>main.rs</code> 是 binary crate 的根，<code>lib.rs</code> 是 library crate 的根。</p>
+<div class="highlight"><pre><span></span><code>src/
+├── main.rs    ← binary crate root
+├── lib.rs     ← library crate root
+├── math.rs
+└── math/
+    ├── basic.rs
+    └── advanced.rs
+</code></pre></div>
+
+<p>在 <code>main.rs</code> 裡可以用 crate 名稱引用 <code>lib.rs</code> 裡的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// main.rs</span>
+<span class="c1">// 假設 Cargo.toml 的 [package] name = &quot;my_project&quot;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">my_project</span><span class="p">::</span><span class="n">math</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="_713">完整的多檔案範例</h4>
+<div class="highlight"><pre><span></span><code>src/
+├── main.rs
+├── math.rs
+└── math/
+    ├── basic.rs
+    └── advanced.rs
+</code></pre></div>
+
+<p><strong>main.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;10 + 20 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;2 ^ 8 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>math.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="p">;</span>
+</code></pre></div>
+
+<p><strong>math/basic.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>math/advanced.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="n">base</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">exp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">result</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">result</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_714">範例程式碼</h3>
+<p>由於檔案 mod 涉及多個檔案，無法用單一檔案示範。請參考上方的完整多檔案範例，建立對應的檔案結構後用 <code>cargo run</code> 執行。</p>
+<h3 id="_715">重點整理</h3>
+<ul>
+<li><code>mod math;</code>（分號結尾）告訴 Rust 去找子 mod</li>
+<li>被拆出去的檔案裡<strong>不需要</strong>再寫 <code>mod math { ... }</code>，檔案本身就是 mod</li>
+<li>子 mod 可以用 <code>math/mod.rs</code>（傳統）或 <code>math.rs</code> + <code>math/</code> 資料夾（推薦）</li>
+<li><code>main.rs</code> 是 binary crate 的根，<code>lib.rs</code> 是 library crate 的根</li>
+<li>一個專案可以同時是 binary crate 和 library crate</li>
+</ul>
+<hr />
+<h2 id="4-pub">第七章第 4 集：pub 可見性</h2>
+<h3 id="_716">本集目標</h3>
+<p>完整理解 Rust 的可見性規則，掌握 <code>pub</code> 的各種用法。</p>
+<h3 id="_717">概念說明</h3>
+<p>第 2 集提到 mod 裡的東西預設是私有的，這一集我們來把可見性規則講清楚。</p>
+<h4 id="_718">預設私有</h4>
+<p>Rust 的哲學是<strong>預設封閉</strong>——所有東西一開始都是私有的，你必須明確地用 <code>pub</code> 開放。這跟有些語言預設 public 的設計完全相反。</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">secrets</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">hidden</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 外面看不到我</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">visible</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 外面可以呼叫我</span>
+<span class="w">        </span><span class="n">hidden</span><span class="p">();</span><span class="w"> </span><span class="c1">// 同 mod 內可以互相呼叫</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">secrets</span><span class="p">::</span><span class="n">visible</span><span class="p">();</span><span class="w">  </span><span class="c1">// OK</span>
+<span class="w">    </span><span class="c1">// secrets::hidden(); // 編譯錯誤！hidden 是私有的</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>你可能會好奇：<code>fn main()</code> 和 <code>mod secrets</code> 都沒加 <code>pub</code>，為什麼 <code>main</code> 能看到 <code>secrets</code>？因為它們都定義在根 mod 裡——同一個 mod 的成員互相看得到，不需要 <code>pub</code>。<code>pub</code> 是用來讓<strong>其他 mod</strong> 看到你的東西的。</p>
+<h4 id="pub-fn">pub fn</h4>
+<p>函式加 <code>pub</code> 就對外公開，沒什麼好說的。</p>
+<h4 id="pub-struct">pub struct —— 欄位要個別標記</h4>
+<p>struct 加 <code>pub</code> 只是讓這個<strong>型別</strong>公開，欄位還是私有的！每個欄位要<strong>個別</strong>加 <code>pub</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">user</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Profile</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">     </span><span class="c1">// 外部可讀寫</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">    </span><span class="c1">// 外部可讀寫</span>
+<span class="w">        </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">,</span><span class="w">             </span><span class="c1">// 私有！外部看不到</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">impl</span><span class="w"> </span><span class="n">Profile</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Profile</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Profile</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">age</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">u32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">age</span><span class="w">  </span><span class="c1">// 透過方法公開唯讀存取</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">::</span><span class="n">Profile</span><span class="p">::</span><span class="n">new</span><span class="p">(</span>
+<span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Yaju&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;yaju@senpai.com&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="mi">24</span><span class="p">,</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;名字：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">name</span><span class="p">);</span><span class="w">      </span><span class="c1">// OK，name 是 pub</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;年齡：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">age</span><span class="p">());</span><span class="w">      </span><span class="c1">// OK，透過方法存取</span>
+<span class="w">    </span><span class="c1">// println!(&quot;{}&quot;, p.age);           // 編譯錯誤！age 欄位是私有的</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 <code>StructName { ... }</code> 建構，必須透過你提供的建構函式。</p>
+<h4 id="pub-enum-variants">pub enum —— variants 自動公開</h4>
+<p>enum 跟 struct 不一樣：只要 enum 本身是 <code>pub</code>，所有 variants 都<strong>自動公開</strong>。</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">status</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Color</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Red</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Green</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Blue</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">status</span><span class="p">::</span><span class="n">Color</span><span class="p">::</span><span class="n">Red</span><span class="p">;</span><span class="w">  </span><span class="c1">// 所有 variant 都可用</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">status</span><span class="p">::</span><span class="n">Color</span><span class="p">::</span><span class="n">Red</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;紅色&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">status</span><span class="p">::</span><span class="n">Color</span><span class="p">::</span><span class="n">Green</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;綠色&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">status</span><span class="p">::</span><span class="n">Color</span><span class="p">::</span><span class="n">Blue</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;藍色&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>這很合理——如果你公開了一個 enum 但藏了某些 variant，別人根本沒辦法正確 match，那還不如不公開。</p>
+<h4 id="pub-trait-impl">pub trait 和 impl</h4>
+<p>trait 加 <code>pub</code> 後，裡面的 fn <strong>不用也不能</strong>個別加 <code>pub</code>——它們的可見性自動跟著 trait 走。如果 trait 是公開的，裡面的 fn 就是公開的；如果 trait 是私有的，裡面的 fn 就是私有的。這很合理：trait 是一個「契約」，如果你公開了這個契約，契約裡的所有條款當然也要公開，不然別人怎麼實作？</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">animal</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="n">Speak</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">fn</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">);</span><span class="w">  </span><span class="c1">// 不用加 pub，跟著 trait 走</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Dog</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">impl</span><span class="w"> </span><span class="n">Speak</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Dog</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">fn</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;汪！&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="n">animal</span><span class="p">::</span><span class="n">Speak</span><span class="p">;</span><span class="w">  </span><span class="c1">// trait 要在作用域內才能呼叫它的方法</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">animal</span><span class="p">::</span><span class="n">Dog</span><span class="p">;</span>
+<span class="w">    </span><span class="n">d</span><span class="p">.</span><span class="n">speak</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>注意 <code>use animal::Speak;</code> 這行——即使 <code>Dog</code> 已經實作了 <code>Speak</code>，你還是要把 <code>Speak</code> trait 引入作用域才能呼叫它的方法。如果拿掉這行，<code>d.speak()</code> 會編譯錯誤。這是 Rust 的規則：<strong>trait 的方法只有在 trait 被 use 進來之後才能呼叫。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 沒有 use animal::Speak;</span>
+<span class="c1">// let d = animal::Dog;</span>
+<span class="c1">// d.speak();  // 編譯錯誤！Speak 不在作用域內</span>
+</code></pre></div>
+
+<p><code>impl</code> 區塊本身<strong>不需要也不能加 <code>pub</code></strong>。對於 <code>impl Type</code>（不是 <code>impl Trait for Type</code>），裡面的 fn 各自用 <code>pub</code> 控制可見性：</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">shapes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">radius</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">impl</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">std</span><span class="p">::</span><span class="kt">f64</span><span class="p">::</span><span class="n">consts</span><span class="p">::</span><span class="n">PI</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">radius</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">radius</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 這是私有方法，只有 mod 內部能用</span>
+<span class="w">        </span><span class="k">fn</span><span class="w"> </span><span class="nf">internal_check</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">radius</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="pubcratepubsuperpubin-path">pub(crate)、pub(super)、pub(in path)</h4>
+<p>有時候你不想完全公開，但又想讓 crate 內部的其他 mod 使用。Rust 提供了精細的控制：</p>
+<ul>
+<li><code>pub(crate)</code>：整個 crate 內部可見，但外部（別的 crate）看不到</li>
+<li><code>pub(super)</code>：只有父 mod 可見</li>
+<li><code>pub(in crate::some::path)</code>：只對指定的 mod 路徑可見——最精細的控制</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">database</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">connect</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 整個 crate 內部都能呼叫，但如果這是 library，</span>
+<span class="w">        </span><span class="c1">// 使用你 library 的人看不到這個函式</span>
+<span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;connected&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 注意 queries 本身是 pub——如果這個 mod 不是 pub，</span>
+<span class="w">    </span><span class="c1">// 那裡面的東西即使標了 pub(super) 也沒用，</span>
+<span class="w">    </span><span class="c1">// 因為外面根本看不到這個 mod，更別說裡面的東西了。</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">queries</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="p">(</span><span class="k">super</span><span class="p">)</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">raw_query</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 只有 database mod（父 mod）能看到</span>
+<span class="w">            </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;SELECT * FROM users&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">safe_query</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">raw_query</span><span class="p">();</span><span class="w">  </span><span class="c1">// 同 mod 內可以呼叫</span>
+<span class="w">            </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;SAFE: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">raw</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// pub(in path) 的例子</span>
+<span class="k">mod</span><span class="w"> </span><span class="nn">app</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">api</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">internal</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 只有 app::api 能看到這個函數</span>
+<span class="w">            </span><span class="k">pub</span><span class="p">(</span><span class="k">in</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">app</span><span class="p">::</span><span class="n">api</span><span class="p">)</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">secret_key</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="s">&quot;super-secret&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">get_key</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">internal</span><span class="p">::</span><span class="n">secret_key</span><span class="p">()</span><span class="w">  </span><span class="c1">// OK，我們在 app::api 裡</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// app::api::internal::secret_key() 在這裡看不到</span>
+<span class="c1">// 因為 pub(in crate::app::api) 限制了只有 app::api 能存取</span>
+
+<span class="c1">// 注意：pub(in path) 的 path 必須是「包含你的」mod（從你往外數的某一層）。</span>
+<span class="c1">// 如果你寫了一個跟你無關的 mod 路徑，例如：</span>
+<span class="c1">//   pub(in crate::some_unrelated_mod) fn foo() {}</span>
+<span class="c1">// 編譯器會直接報錯——你不能對一個「不包含你」的 mod 開放可見性。</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">conn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">::</span><span class="n">connect</span><span class="p">();</span><span class="w">          </span><span class="c1">// OK，我們在同一個 crate</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">database</span><span class="p">::</span><span class="n">queries</span><span class="p">::</span><span class="n">safe_query</span><span class="p">();</span><span class="w"> </span><span class="c1">// OK，pub</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}, {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">conn</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// database::queries::raw_query();       // 編譯錯誤！pub(super) 只給父 mod</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_719">範例程式碼</h3>
+<p>這一集的概念說明中已經包含了完整的程式碼範例，不另外重複。</p>
+<h3 id="_720">重點整理</h3>
+<ul>
+<li>Rust <strong>預設一切私有</strong>，必須明確加 <code>pub</code> 才公開</li>
+<li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code></li>
+<li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函式</li>
+<li><code>pub enum</code> 的所有 variants <strong>自動公開</strong></li>
+<li><code>impl Trait for T</code> 裡的 fn 可見性跟著 trait 走，不加 <code>pub</code>；<code>impl T</code> 裡的 fn 各自用 <code>pub</code> 控制</li>
+<li><code>pub(crate)</code>：crate 內部可見，外部不可見</li>
+<li><code>pub(super)</code>：只有父 mod 可見</li>
+<li><code>pub(in path)</code>：只對指定的 mod 路徑可見</li>
+</ul>
+<hr />
+<h2 id="5-use">第七章第 5 集：use</h2>
+<h3 id="_721">本集目標</h3>
+<p>學會用 <code>use</code> 簡化路徑，理解 Rust 的路徑解析規則和各種匯入方式。</p>
+<h3 id="_722">概念說明</h3>
+<p>在前面我們已經初步接觸過 <code>use</code>，這裡要把所有用法和路徑規則講完整。</p>
+<h4 id="use_2">為什麼需要 use</h4>
+<p>每次呼叫都寫完整路徑很累：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">subtract</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div>
+
+<p>用 <code>use</code> 把路徑帶進來，之後就能直接用短名稱：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">subtract</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">diff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subtract</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div>
+
+<h4 id="vs_3">絕對路徑 vs 相對路徑</h4>
+<p>Rust 有兩種路徑起點：</p>
+<p><strong>絕對路徑</strong>——從 crate root 開始：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="k">crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">add</span><span class="p">;</span><span class="w">     </span><span class="c1">// 自己這個 crate 裡的 math mod</span>
+</code></pre></div>
+
+<p><strong>相對路徑</strong>——從當前 mod 的位置開始：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">add</span><span class="p">;</span><span class="w">             </span><span class="c1">// 當前 mod 底下的 math 子 mod</span>
+</code></pre></div>
+
+<h4 id="crate">外部 crate 的路徑</h4>
+<p>在 Cargo.toml 加了外部 crate 後，直接用 crate 名稱作為路徑開頭：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">rand</span><span class="p">::</span><span class="n">Rng</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+</code></pre></div>
+
+<p><code>std</code> 是 Rust 的<strong>標準函式庫（standard library）</strong>——Rust 內建的一組工具，包含我們已經用過的 <code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code>、<code>println!</code> 等等，以及更多像是檔案操作、網路、集合等功能。你不需要在 Cargo.toml 加 dependency 就能用它，因為每個 Rust 程式都會自動連結 <code>std</code>。使用時路徑寫法跟外部 crate 一樣——<code>std::collections::HashMap</code>、<code>std::fmt::Display</code> 等。</p>
+<p>如果你想明確強調「這是外部 crate」，可以用 <code>::</code> 開頭：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="p">::</span><span class="n">rand</span><span class="p">::</span><span class="n">Rng</span><span class="p">;</span><span class="w">  </span><span class="c1">// 明確表示 rand 是外部 crate，不是本地 mod</span>
+</code></pre></div>
+
+<p>這在你的 crate 裡也有一個叫 <code>rand</code> 的 mod 時特別有用，可以避免歧義。</p>
+<h4 id="super-self">super:: 和 self::</h4>
+<ul>
+<li><code>super::</code>：往上一層，指向<strong>父 mod</strong></li>
+<li><code>self::</code>：指向<strong>當前 mod</strong>（通常省略，但有時在 <code>use</code> 中有用）</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">outer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">greet</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Hello from outer&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">inner</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">call_parent</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">super</span><span class="p">::</span><span class="n">greet</span><span class="p">()</span><span class="w">  </span><span class="c1">// 呼叫父 mod 的 greet</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="use_3">一次 use 多個東西</h4>
+<p>匯入同一個路徑底下的多個東西，可以用大括號合併：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::{</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">Read</span><span class="p">,</span><span class="w"> </span><span class="n">Write</span><span class="p">};</span>
+<span class="c1">// 等同於：</span>
+<span class="c1">// use std::io;</span>
+<span class="c1">// use std::io::Read;</span>
+<span class="c1">// use std::io::Write;</span>
+</code></pre></div>
+
+<p><code>self</code> 在這裡代表 <code>std::io</code> 本身，所以你既匯入了 <code>io</code> 這個 mod，也匯入了裡面的 <code>Read</code> 和 <code>Write</code>。</p>
+<h4 id="use-as">use ... as（別名）</h4>
+<p>如果兩個不同地方有同名的東西，可以用 <code>as</code> 取別名：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">FmtResult</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">IoResult</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">format_something</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FmtResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_something</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">IoResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="use_4">use 的名字衝突</h4>
+<p>如果你 <code>use</code> 了兩個同名的東西到同一個作用域，Rust 會直接報錯：</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">a</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">hello</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;from a&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">mod</span><span class="w"> </span><span class="nn">b</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">hello</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;from b&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">use</span><span class="w"> </span><span class="n">a</span><span class="p">::</span><span class="n">hello</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">b</span><span class="p">::</span><span class="n">hello</span><span class="p">;</span><span class="w">  </span><span class="c1">// 編譯錯誤！hello 已經被定義了</span>
+</code></pre></div>
+
+<p>這時候就用 <code>as</code> 取別名來解決。</p>
+<p>但如果是<strong>不同作用域</strong>，內層的 <code>use</code> 會遮蔽（shadow）外層的——就像 <code>let</code> 的 shadowing：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">a</span><span class="p">::</span><span class="n">hello</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hello</span><span class="p">());</span><span class="w">  </span><span class="c1">// &quot;from a&quot;</span>
+
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">use</span><span class="w"> </span><span class="n">b</span><span class="p">::</span><span class="n">hello</span><span class="p">;</span><span class="w">          </span><span class="c1">// 在這個作用域裡 shadow 了外面的 hello</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hello</span><span class="p">());</span><span class="w">  </span><span class="c1">// &quot;from b&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hello</span><span class="p">());</span><span class="w">  </span><span class="c1">// &quot;from a&quot;（回到外層）</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="glob-import">glob import（星號匯入）</h4>
+<p><code>*</code> 會把 mod 底下所有 pub 的東西全部帶進來：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="o">*</span><span class="p">;</span><span class="w">  </span><span class="c1">// HashMap, BTreeMap, HashSet... 全部可用</span>
+</code></pre></div>
+
+<p><strong>一般不推薦</strong>在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在<strong>測試</strong>裡很常見——<code>use super::*;</code> 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 <code>cargo test</code> 寫測試，到時候就會看到這個用法。</p>
+<h4 id="prelude-use">Prelude：為什麼有些東西不需要 use</h4>
+<p>你有沒有注意到，<code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code>、<code>println!</code> 這些東西從來不需要 <code>use</code>？</p>
+<p>因為 Rust 有一個 <strong>prelude</strong>——一組「預設已經 use 進來」的常用型別和 trait。每個 Rust 檔案開頭都隱含了類似這樣的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">prelude</span><span class="p">::</span><span class="o">*</span><span class="p">;</span><span class="w">  </span><span class="c1">// 實際的路徑會隨 Rust edition 不同而變</span>
+</code></pre></div>
+
+<p>這就是為什麼 <code>Vec</code>、<code>Option</code>、<code>Some</code>、<code>None</code>、<code>Ok</code>、<code>Err</code>、<code>String</code>、<code>Clone</code>、<code>Copy</code> 等等可以直接使用。不同的 edition（2021、2024 等）prelude 裡包含的東西可能略有不同。</p>
+<h3 id="_723">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">subtract</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">b</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="n">base</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">exp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">result</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">1</span><span class="o">..=</span><span class="n">n</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">result</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 各種 use 的方式</span>
+<span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">subtract</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::{</span><span class="n">power</span><span class="p">,</span><span class="w"> </span><span class="n">factorial</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;3 + 5 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;10 - 4 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">subtract</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;2 ^ 10 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;10! = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">factorial</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_724">重點整理</h3>
+<ul>
+<li><code>use</code> 將路徑帶入作用域，讓你不必每次寫完整路徑</li>
+<li>絕對路徑用 <code>crate::</code> 開頭，相對路徑從當前 mod 位置開始</li>
+<li>外部 crate 直接用名稱開頭；加 <code>::</code> 前綴可以明確標記為外部 crate</li>
+<li><code>std</code> 是標準函式庫，不用加 dependency 就能用</li>
+<li><code>super::</code> 指向父 mod，<code>self::</code> 指向當前 mod</li>
+<li><code>use a::b::{X, Y, self};</code> 一次 use 多個東西</li>
+<li><code>use X as Alias;</code> 取別名，解決名字衝突</li>
+<li>同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）</li>
+<li><code>use something::*;</code> 星號匯入——測試裡常用，正式程式碼少用</li>
+<li>常用型別如 <code>Vec</code>、<code>Option</code> 透過 prelude 自動可用，不需 <code>use</code></li>
+</ul>
+<hr />
+<h2 id="6-cargo-test">第七章第 6 集：cargo test</h2>
+<h3 id="_725">本集目標</h3>
+<p>學會用 <code>#[test]</code> 寫測試、用 <code>assert!</code> 系列巨集驗證結果、用 <code>cargo test</code> 跑測試。</p>
+<h3 id="_726">概念說明</h3>
+<h4 id="_727">為什麼要寫測試？</h4>
+<p>程式碼寫完之後，你怎麼確定它是對的？手動跑一遍？那下次改了程式碼又要再跑一遍。<strong>自動化測試</strong>讓你寫一次，之後隨時都能驗證——一個指令就知道有沒有東西壞掉。</p>
+<h4 id="_728">最簡單的測試</h4>
+<p>在函數上面加 <code>#[test]</code>，它就變成測試函數：</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#[test]</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">it_works</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>跑 <code>cargo test</code>，Rust 會自動找出所有標了 <code>#[test]</code> 的函數並執行它們。</p>
+<h4 id="assert">assert 系列巨集</h4>
+<ul>
+<li><code>assert!(condition)</code> — 如果 <code>condition</code> 是 <code>false</code>，測試失敗</li>
+<li><code>assert_eq!(left, right)</code> — 如果 <code>left != right</code>，測試失敗</li>
+<li><code>assert_ne!(left, right)</code> — 如果 <code>left == right</code>，測試失敗</li>
+</ul>
+<p><code>assert_eq!</code> 和 <code>assert_ne!</code> 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。</p>
+<p><code>assert!</code> 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。這時候就有一個值得注意的差別：<code>assert!</code> 在 debug 和 release 模式下<strong>都會執行</strong>，即使是正式發布的程式，失敗了一樣會 panic。如果你只想在 debug 模式檢查（release 時自動移除），可以用 <code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code>——它們在 release 模式下會被編譯器完全忽略。</p>
+<p>不過在<strong>測試</strong>裡面，直接用 <code>assert!</code> 系列就好——反正測試不會被 release build 影響。</p>
+<h4 id="mod_5">測試 mod 的慣用結構</h4>
+<p>上一集學了 <code>use super::*;</code>——測試最常這樣用。慣例是在檔案底部加一個測試 mod：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">multiply</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+
+<span class="cp">#[cfg(test)]</span>
+<span class="k">mod</span><span class="w"> </span><span class="nn">tests</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span><span class="p">::</span><span class="o">*</span><span class="p">;</span><span class="w">  </span><span class="c1">// 把父 mod 的所有東西引進來</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_add</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_multiply</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">multiply</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="mi">12</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>幾個重點：</p>
+<ul>
+<li><code>#[cfg(test)]</code> 告訴編譯器：這個 mod <strong>只在跑測試時才編譯</strong>。正式發布的程式不會包含測試程式碼。</li>
+<li><code>mod tests</code> 是一個普通的 mod，只是慣例叫 <code>tests</code>。</li>
+<li><code>use super::*;</code> 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 <code>add</code>、<code>multiply</code> 等函數。</li>
+</ul>
+<h4 id="cargo-test">cargo test</h4>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+
+<p>這個指令會：</p>
+<ol>
+<li>編譯你的程式碼（包含測試）</li>
+<li>執行所有 <code>#[test]</code> 函數</li>
+<li>報告哪些通過、哪些失敗</li>
+</ol>
+<h4 id="_729">測試私有函數</h4>
+<p>因為 <code>mod tests</code> 是你程式碼的子 mod，而同一個 mod 裡的東西互相看得到——所以測試可以直接測試<strong>私有函數</strong>，不需要 <code>pub</code>。</p>
+<h3 id="_730">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">is_even</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">-</span><span class="n">n</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">clamp</span><span class="p">(</span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">min</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">min</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">max</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">value</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[cfg(test)]</span>
+<span class="k">mod</span><span class="w"> </span><span class="nn">tests</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_is_even</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">is_even</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="o">!</span><span class="n">is_even</span><span class="p">(</span><span class="mi">7</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">is_even</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_abs</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_clamp</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">clamp</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span><span class="w">   </span><span class="c1">// 在範圍內，不變</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">   </span><span class="c1">// 低於下限，變成 min</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">clamp</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span><span class="w">  </span><span class="c1">// 超過上限，變成 max</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_not_equal</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_ne!</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="o">-</span><span class="mi">5</span><span class="p">);</span><span class="w">  </span><span class="c1">// abs(-5) 應該是 5，不是 -5</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// main 裡可以不用寫什麼——測試透過 cargo test 跑</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;用 cargo test 來跑測試！&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_731">重點整理</h3>
+<ul>
+<li><code>#[test]</code> 標記測試函數，<code>cargo test</code> 自動找到並執行所有測試</li>
+<li><code>assert!(condition)</code>、<code>assert_eq!(a, b)</code>、<code>assert_ne!(a, b)</code> 驗證結果（debug 和 release 都會執行）</li>
+<li><code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code> 只在 debug 模式執行，release 時會被忽略</li>
+<li><code>#[cfg(test)]</code> 讓測試 mod 只在測試時編譯</li>
+<li><code>use super::*;</code> 引入父 mod 的所有東西——測試最常用的寫法</li>
+<li>測試可以直接測試私有函數（因為測試 mod 是子 mod）</li>
+</ul>
+<hr />
+<h2 id="7-pub-use">第七章第 7 集：pub use</h2>
+<h3 id="_732">本集目標</h3>
+<p>學會用 <code>pub use</code> 重新匯出（re-export）內部項目，讓使用者不需要知道你的 mod 結構。</p>
+<h3 id="_733">概念說明</h3>
+<p>假設你寫了一個 library，內部結構長這樣：</p>
+<div class="highlight"><pre><span></span><code>src/
+├── lib.rs
+├── math.rs
+└── math/
+    ├── basic.rs
+    └── advanced.rs
+</code></pre></div>
+
+<p>如果不做任何處理，使用你 library 的人得寫：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">your_crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">your_crate</span><span class="p">::</span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">;</span>
+</code></pre></div>
+
+<p>這很麻煩——使用者根本不在意你內部怎麼分資料夾，他只想用 <code>add</code> 和 <code>power</code>。</p>
+<h4 id="pub-use">pub use 的魔法</h4>
+<p><code>pub use</code> 把內部的東西「重新匯出（re-export）」到當前 mod，讓外部可以用更短的路徑存取：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib.rs</span>
+<span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="p">;</span>
+
+<span class="c1">// 重新匯出，讓使用者不需要知道 math::basic:: 的路徑</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">;</span>
+</code></pre></div>
+
+<p>現在使用你 library 的人只需要：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">your_crate</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">your_crate</span><span class="p">::</span><span class="n">power</span><span class="p">;</span>
+</code></pre></div>
+
+<p>乾淨多了。</p>
+<p>注意：<code>pub use</code> 只能匯出<strong>本來就是 pub 的東西</strong>。如果你試圖 <code>pub use</code> 一個 private 的 item，編譯器會報錯——你不能把別人藏起來的東西公開出去。</p>
+<h4 id="re-export-crate">re-export 其他 crate 的東西</h4>
+<p><code>pub use</code> 不只能匯出自己 mod 的內容，也能匯出<strong>其他 crate</strong> 的東西：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib.rs</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">rand</span><span class="p">::</span><span class="n">Rng</span><span class="p">;</span><span class="w">  </span><span class="c1">// 使用者 use your_crate::Rng 就好，不用自己加 rand 依賴</span>
+</code></pre></div>
+
+<p>這在 library 設計裡很常見——你的 library 依賴了某個 crate，但你想讓使用者透過你的 crate 就能用到那些型別，不用自己在 <code>Cargo.toml</code> 加依賴。</p>
+<h4 id="re-export">分層 re-export</h4>
+<p>你也可以在中間層的 mod 做 re-export，建立更有層次的公開 API：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// math.rs</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="p">;</span>
+
+<span class="c1">// 把常用的函式提升到 math 層級</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">basic</span><span class="p">::</span><span class="n">subtract</span><span class="p">;</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">;</span>
+</code></pre></div>
+
+<p>這樣外部可以用 <code>your_crate::math::add</code>，不需要知道 <code>basic</code> 這一層。</p>
+<h4 id="re-export_1">re-export 的好處</h4>
+<ol>
+<li><strong>簡化公開 API</strong>：使用者不需要知道你的內部結構，用更短的路徑存取</li>
+<li><strong>自由重構</strong>：你可以隨意改內部的 mod 結構，只要 <code>pub use</code> 保持不變，使用者的程式碼不會壞</li>
+</ol>
+<h4 id="_734">實際案例</h4>
+<p>很多知名的 Rust library 都大量使用 re-export。比如你寫 <code>use std::io::Read;</code>，其實 <code>Read</code> 可能定義在更深層的地方，只是被 re-export 到 <code>std::io</code> 了。</p>
+<h3 id="_735">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">shapes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="n">radius</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">impl</span><span class="w"> </span><span class="n">Circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Circle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Circle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">radius</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">std</span><span class="p">::</span><span class="kt">f64</span><span class="p">::</span><span class="n">consts</span><span class="p">::</span><span class="n">PI</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">radius</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">radius</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="n">height</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">impl</span><span class="w"> </span><span class="n">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">(</span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Rectangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Rectangle</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">area</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">height</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 重新匯出：使用者不需要知道 circle 和 rectangle 這兩個子 mod</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">circle</span><span class="p">::</span><span class="n">Circle</span><span class="p">;</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">rectangle</span><span class="p">::</span><span class="n">Rectangle</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 直接從 shapes 拿，不需要 shapes::circle::Circle</span>
+<span class="k">use</span><span class="w"> </span><span class="n">shapes</span><span class="p">::{</span><span class="n">Circle</span><span class="p">,</span><span class="w"> </span><span class="n">Rectangle</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Circle</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;圓形面積：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">area</span><span class="p">());</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rectangle</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">6.0</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;長方形面積：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">area</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_736">重點整理</h3>
+<ul>
+<li><code>pub use path::Item;</code> 把內部的東西重新匯出，讓外部用更短的路徑存取</li>
+<li>使用者不需要知道你內部的 mod 結構——你可以自由重構而不影響外部</li>
+<li>可以匯出自己 mod 的內容，也可以匯出其他 crate 的東西</li>
+<li>library 的 <code>lib.rs</code> 常用 <code>pub use</code> 把重要型別提升到 crate 頂層</li>
+</ul>
+<hr />
+<h2 id="8-orphan-rule">第七章第 8 集：orphan rule</h2>
+<h3 id="_737">本集目標</h3>
+<p>理解 Rust 的 orphan rule（孤兒規則），以及當你想為外部型別實作外部 trait 時該怎麼辦。</p>
+<h3 id="_738">概念說明</h3>
+<p>在第五章我們學過 trait——你可以為自己的型別實作任何 trait。但你有沒有試過這樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;my vec&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>編譯器會直接拒絕你。為什麼？</p>
+<h4 id="orphan-rule">Orphan Rule（孤兒規則）</h4>
+<p>Rust 有一條規則：</p>
+<p>&gt; <strong>要 impl 一個 trait，trait 或型別至少有一個必須是你這個 crate 定義的。</strong></p>
+<p>換句話說：<strong>trait 是你的，或型別是你的</strong>，至少要符合一個。</p>
+<p>上面的例子裡，<code>Display</code> 是標準函式庫定義的，<code>Vec&lt;i32&gt;</code> 也是——兩個都不是你的，所以不行。</p>
+<h4 id="_739">為什麼要有這個限制</h4>
+<p>想像一下如果沒有 orphan rule：</p>
+<ul>
+<li>Crate A 為 <code>Vec&lt;i32&gt;</code> 實作了 <code>Display</code>，印出 <code>[1, 2, 3]</code></li>
+<li>Crate B 也為 <code>Vec&lt;i32&gt;</code> 實作了 <code>Display</code>，印出 <code>1 | 2 | 3</code></li>
+<li>你的程式同時用了 A 和 B……編譯器要用哪一個？</li>
+</ul>
+<p>這就是衝突。Orphan rule 從根本上避免了這個問題。</p>
+<h4 id="_740">合法的情況</h4>
+<p>以下這些都是合法的：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 情況 1：你的型別 + 外部 trait</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MyPoint</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyPoint</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;({}, {})&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 情況 2：外部型別 + 你的 trait</span>
+<span class="k">trait</span><span class="w"> </span><span class="n">Describable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">Describable</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;一個有 {} 個元素的 Vec&quot;</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">len</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="newtype-pattern">Newtype Pattern（繞過限制的方法）</h4>
+<p>如果你真的需要為外部型別實作外部 trait，可以用 <strong>newtype pattern</strong>——建立一個 tuple struct 把外部型別包起來：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MyVec</span><span class="p">(</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">);</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">MyVec</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">items</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="mf">0.</span><span class="n">iter</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
+<span class="w">        </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;[{}]&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">items</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;, &quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>MyVec</code> 是你定義的型別，所以可以為它實作 <code>Display</code>。<code>self.0</code> 存取內部的 <code>Vec&lt;i32&gt;</code>。</p>
+<h3 id="_741">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
+
+<span class="c1">// Newtype pattern：用自己的 struct 包住外部型別</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Scores</span><span class="p">(</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">);</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">Scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">new</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Scores</span><span class="p">(</span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="mf">0.</span><span class="n">push</span><span class="p">(</span><span class="n">score</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">total</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="mf">0.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 現在可以為「你的型別」實作 Display</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">items</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="mf">0.</span><span class="n">iter</span><span class="p">()</span>
+<span class="w">            </span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="w">            </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
+<span class="w">        </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;成績：[{}]，總分：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">items</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;, &quot;</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">total</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Scores</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">85</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">92</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">78</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="mi">95</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 因為實作了 Display，可以直接 println</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="trait_11">多參數 trait 的情況</h3>
+<p>上面講的規則是最簡單的版本。對於多參數 trait（像第五章學的 <code>From&lt;T&gt;</code>），規則其實更複雜。簡單來說：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// OK：你的型別出現在參數裡</span>
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;</span><span class="n">MyType</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
+
+<span class="c1">// 不行：兩邊都是外部的</span>
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+
+<p>完整的規則涉及「covered type parameter」等概念，超出本教學的範圍。有興趣可以參考<a href="https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules">官方文件</a>。</p>
+<h3 id="_742">重點整理</h3>
+<ul>
+<li><strong>Orphan rule</strong>：要 impl trait，trait 或型別至少有一個必須是你的 crate 定義的</li>
+<li>「你的型別 + 外部 trait」✅ 合法</li>
+<li>「外部型別 + 你的 trait」✅ 合法</li>
+<li>「外部型別 + 外部 trait」❌ 不合法</li>
+<li>這個規則是為了防止不同 crate 之間的 impl 衝突</li>
+<li><strong>Newtype pattern</strong>：用 <code>struct MyWrapper(OriginalType)</code> 把外部型別包起來，就變成你的型別了</li>
+<li>多參數 trait 的 orphan rule 遠比上面講的更複雜，詳見官方文件</li>
+</ul>
+<hr />
+<h2 id="9_1">第七章第 9 集：文件註解</h2>
+<h3 id="_743">本集目標</h3>
+<p>學會撰寫文件註解，用 <code>cargo doc</code> 產生專業的 HTML 文件。</p>
+<h3 id="_744">概念說明</h3>
+<p>Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來的，而是內建在語法裡的。</p>
+<h4 id="_745"><code>///</code> 項目文件註解</h4>
+<p>三個斜線 <code>///</code> 是用來為<strong>接下來的項目</strong>（函式、struct、enum、trait 等）寫文件：</p>
+<div class="highlight"><pre><span></span><code><span class="sd">/// 計算兩個整數的最大公因數。</span>
+<span class="sd">///</span>
+<span class="sd">/// 使用歐幾里得演算法，效率為 O(log(min(a, b)))。</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// let result = gcd(12, 8);</span>
+<span class="sd">/// assert_eq!(result, 4);</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">gcd</span><span class="p">(</span><span class="k">mut</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">a</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>///</code> 裡面支援完整的 <strong>Markdown 語法</strong>——標題、粗體、程式碼區塊、列表，全部都能用。</p>
+<h4 id="modcrate"><code>//!</code> mod/crate 層級文件</h4>
+<p>兩個斜線加驚嘆號 <code>//!</code> 是為<strong>包含它的項目</strong>寫文件，通常放在檔案最頂端：</p>
+<div class="highlight"><pre><span></span><code><span class="sd">//! # Math Library</span>
+<span class="sd">//!</span>
+<span class="sd">//! 這個 library 提供基本的數學運算函式。</span>
+<span class="sd">//!</span>
+<span class="sd">//! ## 功能</span>
+<span class="sd">//!</span>
+<span class="sd">//! - 基本算術運算</span>
+<span class="sd">//! - 最大公因數計算</span>
+<span class="sd">//! - 次方運算</span>
+
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>放在 <code>lib.rs</code> 頂端就是整個 crate 的文件，放在某個 mod 檔案頂端就是那個 mod 的文件。</p>
+<h4 id="_746">常用的文件段落</h4>
+<p>Rust 社群有一些約定俗成的文件段落名稱：</p>
+<ul>
+<li><code># Examples</code> — 使用範例（最重要的一個！）</li>
+<li><code># Panics</code> — 什麼情況下會 panic</li>
+<li><code># Errors</code> — 如果回傳 <code>Result</code>，什麼情況下會是 <code>Err</code></li>
+</ul>
+<h4 id="cargo-doc">cargo doc</h4>
+<p>寫好文件註解後，一行指令就能產生漂亮的 HTML 文件：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>doc<span class="w"> </span>--open
+</code></pre></div>
+
+<p>這會：</p>
+<ol>
+<li>編譯你的 crate（不執行）</li>
+<li>從所有 <code>///</code> 和 <code>//!</code> 產生 HTML 文件</li>
+<li>自動在瀏覽器打開</li>
+</ol>
+<p>生成的文件就跟你在 docs.rs 上看到的一模一樣。</p>
+<h3 id="_747">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="sd">//! # 溫度轉換工具</span>
+<span class="sd">//!</span>
+<span class="sd">//! 提供攝氏和華氏之間的轉換函式。</span>
+
+<span class="sd">/// 攝氏轉華氏。</span>
+<span class="sd">///</span>
+<span class="sd">/// # 公式</span>
+<span class="sd">///</span>
+<span class="sd">/// `F = C × 9/5 + 32`</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// let f = celsius_to_fahrenheit(100.0);</span>
+<span class="sd">/// assert!((f - 212.0).abs() &lt; 0.001);</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">celsius_to_fahrenheit</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">9.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">5.0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">32.0</span>
+<span class="p">}</span>
+
+<span class="sd">/// 華氏轉攝氏。</span>
+<span class="sd">///</span>
+<span class="sd">/// # 公式</span>
+<span class="sd">///</span>
+<span class="sd">/// `C = (F - 32) × 5/9`</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// let c = fahrenheit_to_celsius(32.0);</span>
+<span class="sd">/// assert!((c - 0.0).abs() &lt; 0.001);</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">fahrenheit_to_celsius</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">32.0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">5.0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">9.0</span>
+<span class="p">}</span>
+
+<span class="sd">/// 溫度的表示方式。</span>
+<span class="sd">///</span>
+<span class="sd">/// 支援攝氏和華氏兩種單位。</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Temperature</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 攝氏溫度</span>
+<span class="w">    </span><span class="n">Celsius</span><span class="p">(</span><span class="kt">f64</span><span class="p">),</span>
+<span class="w">    </span><span class="sd">/// 華氏溫度</span>
+<span class="w">    </span><span class="n">Fahrenheit</span><span class="p">(</span><span class="kt">f64</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">Temperature</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 將任何溫度轉換為攝氏。</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_celsius</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Celsius</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Fahrenheit</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">fahrenheit_to_celsius</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="sd">/// 將任何溫度轉換為華氏。</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">to_fahrenheit</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Celsius</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">celsius_to_fahrenheit</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">),</span>
+<span class="w">            </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Fahrenheit</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">boiling</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Celsius</span><span class="p">(</span><span class="mf">100.0</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;水的沸點：{}°C = {}°F&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">boiling</span><span class="p">.</span><span class="n">to_celsius</span><span class="p">(),</span><span class="w"> </span><span class="n">boiling</span><span class="p">.</span><span class="n">to_fahrenheit</span><span class="p">());</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Temperature</span><span class="p">::</span><span class="n">Fahrenheit</span><span class="p">(</span><span class="mf">98.6</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;體溫：{}°F = {}°C&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">.</span><span class="n">to_fahrenheit</span><span class="p">(),</span><span class="w"> </span><span class="n">body</span><span class="p">.</span><span class="n">to_celsius</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_748">重點整理</h3>
+<ul>
+<li><code>///</code> 為接下來的項目（fn、struct、enum 等）撰寫文件</li>
+<li><code>//!</code> 為包含它的項目（mod、crate）撰寫文件，通常放在檔案最頂端</li>
+<li>文件註解支援完整的 Markdown 語法</li>
+<li><code># Examples</code> 是最重要的文件段落——好的範例勝過千言萬語</li>
+<li><code>cargo doc --open</code> 一鍵產生並打開 HTML 文件</li>
+<li>你在 docs.rs 上看到的文件，就是用同樣的機制產生的</li>
+</ul>
+<hr />
+<h2 id="10-cargo-publish">第七章第 10 集：cargo publish</h2>
+<h3 id="_749">本集目標</h3>
+<p>學會將你的 library 發布到 crates.io，讓全世界的 Rust 開發者都能使用。</p>
+<h3 id="_750">概念說明</h3>
+<p>到目前為止，我們學會了怎麼組織程式碼、寫文件、使用別人的套件。這一集要反過來——把你自己的套件發布出去。</p>
+<h4 id="_751">帳號設定</h4>
+<p>首先，你需要一個 crates.io 的帳號：</p>
+<ol>
+<li>到 <a href="https://crates.io">crates.io</a> 用 GitHub 帳號登入</li>
+<li>到帳號設定頁面，產生一個 <strong>API Token</strong></li>
+<li>在終端機執行：</li>
+</ol>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>login
+</code></pre></div>
+
+<p>按 Enter 後，終端機會提示你貼上 Token——貼上後再按 Enter 就完成了。Token 會被存在本機，之後 publish 時自動使用。</p>
+<h4 id="cargotoml_1">準備 Cargo.toml</h4>
+<p>發布前，<code>Cargo.toml</code> 需要補上一些必要的 metadata：</p>
+<div class="highlight"><pre><span></span><code><span class="k">[package]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-awesome-lib&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2024&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;一個很棒的數學運算 library&quot;</span>
+<span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span>
+<span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/yourname/my-awesome-lib&quot;</span>
+<span class="n">readme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;README.md&quot;</span>
+<span class="n">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;math&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utility&quot;</span><span class="p">]</span>
+<span class="n">categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mathematics&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p>根據<a href="https://doc.rust-lang.org/cargo/reference/publishing.html">官方文件</a>，發布前應填寫：</p>
+<ul>
+<li><code>license</code>（或 <code>license-file</code>）：開源授權條款（如 <code>MIT</code>、<code>Apache-2.0</code>、<code>MIT OR Apache-2.0</code>）</li>
+<li><code>description</code>：一行簡短描述</li>
+<li><code>homepage</code>：專案首頁網址</li>
+<li><code>repository</code>：原始碼倉庫網址</li>
+<li><code>readme</code>：README 檔案路徑</li>
+</ul>
+<p>另外建議但非必須：</p>
+<ul>
+<li><code>keywords</code>：搜尋用的關鍵字（最多 5 個）</li>
+<li><code>categories</code>：分類（需符合 crates.io 的分類清單）</li>
+</ul>
+<h4 id="_752">發布前檢查</h4>
+<p>發布前可以先用 <code>cargo package</code> 檢查有沒有問題：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>package
+</code></pre></div>
+
+<p>這會模擬打包過程，檢查有沒有缺少必要欄位或其他問題。</p>
+<h4 id="_753">發布！</h4>
+<p>一切準備好後：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>publish
+</code></pre></div>
+
+<p>完成！你的套件現在在 crates.io 上了，任何人都可以 <code>cargo add my-awesome-lib</code> 來使用。</p>
+<h4 id="_754">版本更新流程</h4>
+<p>套件發布後，如果要更新：</p>
+<ol>
+<li>修改程式碼</li>
+<li>更新 <code>Cargo.toml</code> 裡的 <code>version</code>，遵循 <a href="https://semver.org/">SemVer（語意化版本號）</a></li>
+<li>再次 <code>cargo publish</code></li>
+</ol>
+<p>SemVer 的規則：</p>
+<ul>
+<li><strong>1.0 之前</strong>（<code>0.x.y</code>）：整個 API 都被視為不穩定，任何版本都可能有破壞性變更</li>
+<li><strong>1.0 之後</strong>：</li>
+<li>bug 修復：<code>1.0.0</code> → <code>1.0.1</code>（patch）</li>
+<li>新增功能（向下相容）：<code>1.0.1</code> → <code>1.1.0</code>（minor）</li>
+<li>破壞性變更：<code>1.1.0</code> → <code>2.0.0</code>（major）——改第一個數字</li>
+</ul>
+<p><strong>注意</strong>：已發布的版本<strong>無法刪除或覆蓋</strong>。如果發現某個版本有嚴重問題，可以用 <code>cargo yank</code> 標記它為不建議使用，但已經在用的人不會受影響：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>yank<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.1.0
+</code></pre></div>
+
+<h4 id="_755">發布前最好做的事</h4>
+<ul>
+<li>寫好 <code>README.md</code>（這會顯示在 crates.io 套件頁面上）</li>
+<li>跑過 <code>cargo test</code> 確認所有測試通過</li>
+<li>用 <code>///</code> 寫好文件註解（上一集學的）</li>
+<li>確保有範例程式碼</li>
+<li>用 <code>cargo doc --open</code> 檢查文件看起來沒問題</li>
+</ul>
+<h3 id="_756">範例程式碼</h3>
+<p>一個準備好發布的小 library 的完整結構：</p>
+<div class="highlight"><pre><span></span><code>my-math-lib/
+├── Cargo.toml
+├── README.md
+├── src/
+    └── lib.rs
+</code></pre></div>
+
+<p><strong>Cargo.toml：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">[package]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-math-lib&quot;</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0.1.0&quot;</span>
+<span class="n">edition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;2024&quot;</span>
+<span class="n">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Simple math utility functions&quot;</span>
+<span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;MIT&quot;</span>
+<span class="n">homepage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://example.com/my-math-lib&quot;</span>
+<span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://github.com/example/my-math-lib&quot;</span>
+<span class="n">readme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;README.md&quot;</span>
+<span class="n">keywords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;math&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;utility&quot;</span><span class="p">]</span>
+<span class="n">categories</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;mathematics&quot;</span><span class="p">]</span>
+</code></pre></div>
+
+<p><strong>src/lib.rs：</strong></p>
+<div class="highlight"><pre><span></span><code><span class="sd">//! # My Math Lib</span>
+<span class="sd">//!</span>
+<span class="sd">//! 提供簡單好用的數學函式。</span>
+
+<span class="sd">/// 計算最大公因數。</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// use my_math_lib::gcd;</span>
+<span class="sd">/// assert_eq!(gcd(12, 8), 4);</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">gcd</span><span class="p">(</span><span class="k">mut</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">temp</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">a</span>
+<span class="p">}</span>
+
+<span class="sd">/// 計算最小公倍數。</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// use my_math_lib::lcm;</span>
+<span class="sd">/// assert_eq!(lcm(4, 6), 12);</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">lcm</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">b</span>
+<span class="p">}</span>
+
+<span class="sd">/// 判斷一個數是否為質數。</span>
+<span class="sd">///</span>
+<span class="sd">/// # Examples</span>
+<span class="sd">///</span>
+<span class="sd">/// ```</span>
+<span class="sd">/// use my_math_lib::is_prime;</span>
+<span class="sd">/// assert!(is_prime(7));</span>
+<span class="sd">/// assert!(!is_prime(4));</span>
+<span class="sd">/// ```</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">is_prime</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">i</span><span class="p">:</span><span class="w"> </span><span class="kt">u64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="cp">#[cfg(test)]</span>
+<span class="k">mod</span><span class="w"> </span><span class="nn">tests</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="k">super</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_gcd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">gcd</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">),</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">gcd</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">gcd</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_lcm</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">lcm</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="mi">12</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">assert_eq!</span><span class="p">(</span><span class="n">lcm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_is_prime</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="o">!</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="o">!</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">17</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span><span class="o">!</span><span class="n">is_prime</span><span class="p">(</span><span class="mi">15</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>發布指令流程：</p>
+<div class="highlight"><pre><span></span><code>cargo<span class="w"> </span><span class="nb">test</span><span class="w">           </span><span class="c1"># 確認測試通過</span>
+cargo<span class="w"> </span>doc<span class="w"> </span>--open<span class="w">     </span><span class="c1"># 檢查文件</span>
+cargo<span class="w"> </span>package<span class="w">        </span><span class="c1"># 模擬打包</span>
+cargo<span class="w"> </span>publish<span class="w">        </span><span class="c1"># 正式發布！</span>
+</code></pre></div>
+
+<h3 id="_757">重點整理</h3>
+<ul>
+<li>在 crates.io 用 GitHub 登入，產生 API Token 後用 <code>cargo login</code> 設定</li>
+<li><code>Cargo.toml</code> 發布前應填寫 <code>license</code>、<code>description</code>、<code>homepage</code>、<code>repository</code>、<code>readme</code></li>
+<li><code>cargo package</code> 可以在發布前檢查問題</li>
+<li><code>cargo publish</code> 正式發布到 crates.io</li>
+<li>更新版本時修改 <code>version</code> 欄位，遵循 SemVer（語意化版本號）</li>
+<li>已發布的版本無法刪除，只能用 <code>cargo yank</code> 標記為不建議使用</li>
+<li>發布前寫好 README、文件註解、測試，是對使用者的基本尊重</li>
+</ul>
+<p>恭喜你完成了第七章！🎉 到這裡為止，我們已經教完了 Rust 的主要觀念——所有權、借用、泛型、trait、生命週期、閉包、迭代器，以及模組系統和套件管理。你現在已經可以獨當一面了。如果你腦中有什麼點子，現在就是動手實作的好時機！</p>
+<p>即便如此，Rust 還有很多獨特而強大的功能。後面的章節會繼續介紹進階主題，希望能帶給你對 Rust 更完整、更全面的認識。</p>
 <hr />
 </main>
 

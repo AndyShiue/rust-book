@@ -64,7 +64,6 @@ Rust 社群有一些約定俗成的文件段落名稱：
 - `# Examples` — 使用範例（最重要的一個！）
 - `# Panics` — 什麼情況下會 panic
 - `# Errors` — 如果回傳 `Result`，什麼情況下會是 `Err`
-- `# Safety` — 如果是 `unsafe` 函式，使用者需要保證什麼
 
 ### cargo doc
 

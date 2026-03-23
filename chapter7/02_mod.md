@@ -47,10 +47,8 @@ mod math {
     pub mod advanced {
         pub fn power(base: i32, exp: u32) -> i32 {
             let mut result = 1;
-            let mut i = 0;
-            while i < exp {
+            for _ in 0..exp {
                 result *= base;
-                i += 1;
             }
             result
         }

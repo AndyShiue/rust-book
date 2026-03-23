@@ -12238,10 +12238,8 @@ note: iterators are lazy and do nothing unless consumed
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">power</span><span class="p">(</span><span class="n">base</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">exp</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">exp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">exp</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="n">result</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
-<span class="w">                </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="n">result</span>
 <span class="w">        </span><span class="p">}</span>
@@ -12409,7 +12407,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;10 + 20 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
 
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;2^8 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;2 ^ 8 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -12549,6 +12547,12 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
+<p>注意 <code>use animal::Speak;</code> 這行——即使 <code>Dog</code> 已經實作了 <code>Speak</code>，你還是要把 <code>Speak</code> trait 引入作用域才能呼叫它的方法。如果拿掉這行，<code>d.speak()</code> 會編譯錯誤。這是 Rust 的規則：<strong>trait 的方法只有在 trait 被 use 進來之後才能呼叫。</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 沒有 use animal::Speak;</span>
+<span class="c1">// let d = animal::Dog;</span>
+<span class="c1">// d.speak();  // 編譯錯誤！Speak 不在作用域內</span>
+</code></pre></div>
+
 <p><code>impl</code> 區塊本身<strong>不需要也不能加 <code>pub</code></strong>。對於 <code>impl Type</code>（不是 <code>impl Trait for Type</code>），裡面的 fn 各自用 <code>pub</code> 控制可見性：</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">shapes</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Circle</span><span class="w"> </span><span class="p">{</span>
@@ -12636,12 +12640,12 @@ note: iterators are lazy and do nothing unless consumed
 <ul>
 <li>Rust <strong>預設一切私有</strong>，必須明確加 <code>pub</code> 才公開</li>
 <li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code></li>
+<li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函式</li>
 <li><code>pub enum</code> 的所有 variants <strong>自動公開</strong></li>
 <li><code>impl Trait for T</code> 裡的 fn 可見性跟著 trait 走，不加 <code>pub</code>；<code>impl T</code> 裡的 fn 各自用 <code>pub</code> 控制</li>
 <li><code>pub(crate)</code>：crate 內部可見，外部不可見</li>
 <li><code>pub(super)</code>：只有父 mod 可見</li>
 <li><code>pub(in path)</code>：只對指定的 mod 路徑可見</li>
-<li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函式</li>
 </ul>
 <hr />
 <h2 id="5-use">第七章第 5 集：use</h2>
@@ -12955,7 +12959,8 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_731">重點整理</h3>
 <ul>
 <li><code>#[test]</code> 標記測試函數，<code>cargo test</code> 自動找到並執行所有測試</li>
-<li><code>assert!(condition)</code>、<code>assert_eq!(a, b)</code>、<code>assert_ne!(a, b)</code> 驗證結果</li>
+<li><code>assert!(condition)</code>、<code>assert_eq!(a, b)</code>、<code>assert_ne!(a, b)</code> 驗證結果（debug 和 release 都會執行）</li>
+<li><code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code> 只在 debug 模式執行，release 時會被忽略</li>
 <li><code>#[cfg(test)]</code> 讓測試 mod 只在測試時編譯</li>
 <li><code>use super::*;</code> 引入父 mod 的所有東西——測試最常用的寫法</li>
 <li>測試可以直接測試私有函數（因為測試 mod 是子 mod）</li>
@@ -12996,6 +13001,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>乾淨多了。</p>
+<p>注意：<code>pub use</code> 只能匯出<strong>本來就是 pub 的東西</strong>。如果你試圖 <code>pub use</code> 一個 private 的 item，編譯器會報錯——你不能把別人藏起來的東西公開出去。</p>
 <h4 id="re-export-crate">re-export 其他 crate 的東西</h4>
 <p><code>pub use</code> 不只能匯出自己 mod 的內容，也能匯出<strong>其他 crate</strong> 的東西：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// lib.rs</span>
@@ -13018,9 +13024,8 @@ note: iterators are lazy and do nothing unless consumed
 <p>這樣外部可以用 <code>your_crate::math::add</code>，不需要知道 <code>basic</code> 這一層。</p>
 <h4 id="re-export_1">re-export 的好處</h4>
 <ol>
-<li><strong>簡化公開 API</strong>：使用者不需要知道你的內部結構</li>
+<li><strong>簡化公開 API</strong>：使用者不需要知道你的內部結構，用更短的路徑存取</li>
 <li><strong>自由重構</strong>：你可以隨意改內部的 mod 結構，只要 <code>pub use</code> 保持不變，使用者的程式碼不會壞</li>
-<li><strong>選擇性公開</strong>：只 re-export 你想讓外部用的東西</li>
 </ol>
 <h4 id="_734">實際案例</h4>
 <p>很多知名的 Rust library 都大量使用 re-export。比如你寫 <code>use std::io::Read;</code>，其實 <code>Read</code> 可能定義在更深層的地方，只是被 re-export 到 <code>std::io</code> 了。</p>
@@ -13270,7 +13275,6 @@ note: iterators are lazy and do nothing unless consumed
 <li><code># Examples</code> — 使用範例（最重要的一個！）</li>
 <li><code># Panics</code> — 什麼情況下會 panic</li>
 <li><code># Errors</code> — 如果回傳 <code>Result</code>，什麼情況下會是 <code>Err</code></li>
-<li><code># Safety</code> — 如果是 <code>unsafe</code> 函式，使用者需要保證什麼</li>
 </ul>
 <h4 id="cargo-doc">cargo doc</h4>
 <p>寫好文件註解後，一行指令就能產生漂亮的 HTML 文件：</p>
@@ -13456,7 +13460,7 @@ note: iterators are lazy and do nothing unless consumed
 ├── Cargo.toml
 ├── README.md
 ├── src/
-│   └── lib.rs
+    └── lib.rs
 </code></pre></div>
 
 <p><strong>Cargo.toml：</strong></p>
