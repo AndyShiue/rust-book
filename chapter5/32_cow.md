@@ -18,7 +18,7 @@
 `Cow` 的全名是 **Clone on Write**（寫入時才複製）。它定義在 `std::borrow` 模組裡。來看它的定義（省略了一些我們還沒學的部分）：
 
 ```rust
-pub enum Cow<'a, B>
+enum Cow<'a, B>
 where
     B: 'a + ToOwned,
 {

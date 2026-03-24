@@ -14,6 +14,7 @@ CHAPTERS = [
     ("第五章：泛型、Trait Bound 與生命週期", "chapter5"),
     ("第六章：閉包與迭代器", "chapter6"),
     ("第七章：Cargo、Crate 與 Mod 系統", "chapter7"),
+    ("附錄：補充主題", "appendix1"),
 ]
 
 parts = []

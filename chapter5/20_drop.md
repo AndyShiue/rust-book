@@ -23,15 +23,15 @@ Rust 會在值離開作用域時**自動呼叫** `drop`。你不能手動呼叫 
 
 ### 手動提前釋放
 
-如果你想提前釋放一個值，用 `std::mem::drop()`：
+如果你想提前釋放一個值，用 `drop()`：
 
 ```rust
 let x = MyType { name: String::from("小明") };
-std::mem::drop(x); // 提前丟棄
+drop(x); // 提前丟棄
 // x 不能再用了
 ```
 
-`std::mem::drop` 是一個函數（不是 method），它會取走值的所有權，然後讓值離開作用域，觸發 Drop。
+`drop` 是一個函數（不是 method），它會取走值的所有權，然後讓值離開作用域，觸發 Drop。
 
 ### 有 Drop 的型別不能部分 move
 
@@ -75,7 +75,7 @@ fn main() {
     println!("建立了兩個資源");
 
     // 手動提前釋放 a
-    std::mem::drop(a);
+    drop(a);
     println!("a 已經被提前釋放了");
 
     // a 不能再用了
@@ -96,5 +96,5 @@ fn main() {
 ## 重點整理
 - `Drop` trait 讓你自訂值離開作用域時的清理行為
 - Rust 在值離開作用域時**自動呼叫** drop，不能手動呼叫 `.drop()`
-- 想提前釋放，用 `std::mem::drop(value)`
+- 想提前釋放，用 `drop(value)`
 - **有 Drop 的型別不能部分 move**——因為 drop 需要完整的 self
