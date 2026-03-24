@@ -16,7 +16,7 @@
 
 ### &String 會自動轉成 &str
 
-當你有一個 String，想把它的引用傳給接受 `&str` 的函數時，Rust 會自動幫你轉換：
+當你有一個 String，想把它的參考傳給接受 `&str` 的函數時，Rust 會自動幫你轉換：
 
 ```rust
 fn greet(name: &str) {

@@ -30,7 +30,7 @@ where
 一行一行看：
 
 - **`'a`**：生命週期參數，代表借用資料的壽命
-- **`B: 'a`**：lifetime bound（上一集學的），B 裡面的引用必須活得過 `'a`
+- **`B: 'a`**：lifetime bound（上一集學的），B 裡面的參考必須活得過 `'a`
 - **`B: ToOwned`**：trait bound，B 必須實作 `ToOwned`
 - **`Borrowed(&'a B)`**：借用的版本，存一個 `&'a B`
 - **`Owned(...)`**：擁有的版本，型別由 `ToOwned` 的 associated type `Owned` 決定
@@ -49,7 +49,7 @@ where
 
 ### 常用方法
 
-- **`to_mut()`**：如果是 Borrowed，先 clone 成 Owned，然後回傳可變引用。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。
+- **`to_mut()`**：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。
 - **`into_owned()`**：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走。
 
 ## 範例程式碼
@@ -109,7 +109,7 @@ fn main() {
 ## 重點整理
 - `Cow<'a, str>` 可以是借用（`&str`）或擁有（`String`），視情況而定
 - Cow 利用 `ToOwned` trait 的 associated type 來決定擁有版本的型別（`str` → `String`、`[T]` → `Vec<T>`）
-- `to_mut()`：寫入時才複製（Borrowed → clone 成 Owned → 回傳可變引用）
+- `to_mut()`：寫入時才複製（Borrowed → clone 成 Owned → 回傳可變參考）
 - `into_owned()`：不管哪種都轉成擁有的值
 - 適合用在「大部分時候不修改，偶爾需要修改」的場景
 

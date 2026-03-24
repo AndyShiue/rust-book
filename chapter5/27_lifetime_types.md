@@ -1,13 +1,13 @@
 # 第五章第 27 集：型別上的生命週期
 
 ## 本集目標
-學會為包含引用的 struct 和 enum 標注生命週期，以及用 `'_` 匿名生命週期簡化標注。
+學會為包含參考的 struct 和 enum 標注生命週期，以及用 `'_` 匿名生命週期簡化標注。
 
 ## 概念說明
 
 到目前為止，我們的 struct 和 enum 都擁有自己的資料（String、i32 等）。但有時候你想讓它們借用別人的資料——例如存一個 `&str` 而不是 `String`。
 
-### 型別裡放引用
+### 型別裡放參考
 
 ```rust
 struct Excerpt {
@@ -15,7 +15,7 @@ struct Excerpt {
 }
 ```
 
-這會報錯。因為 Rust 需要知道：「這個 `&str` 能活多久？」如果借來的資料被釋放了，struct 裡的引用就變成懸垂引用。
+這會報錯。因為 Rust 需要知道：「這個 `&str` 能活多久？」如果借來的資料被釋放了，struct 裡的參考就變成懸垂參考。
 
 解法是加上生命週期參數：
 
@@ -27,7 +27,7 @@ struct Excerpt<'a> {
 
 `'a` 告訴 Rust：「這個 struct 的壽命不能超過它借用的資料。」
 
-Enum 也一樣——如果 variant 攜帶引用，就需要生命週期：
+Enum 也一樣——如果 variant 攜帶參考，就需要生命週期：
 
 ```rust
 enum Token<'a> {
@@ -95,12 +95,12 @@ fn into_text<'a>(e: Excerpt<'a>) -> &'a str {
 
 省略規則看到 `Excerpt<'_>` 帶有一個 input lifetime，規則二把回傳值的生命週期也設為同一個。
 
-注意這裡 `e` 本身是 owned 的（不是引用），函數結束時 `e` 會被 drop。但回傳的 `&'a str` 不是借用 `e`，而是借用 `e` 裡面存的那段文字——那段文字的壽命是 `'a`，跟 `e` 本身的壽命無關。
+注意這裡 `e` 本身是 owned 的（不是參考），函數結束時 `e` 會被 drop。但回傳的 `&'a str` 不是借用 `e`，而是借用 `e` 裡面存的那段文字——那段文字的壽命是 `'a`，跟 `e` 本身的壽命無關。
 
 ## 範例程式碼
 
 ```rust
-// struct 裡放引用，需要生命週期標注
+// struct 裡放參考，需要生命週期標注
 struct Excerpt<'a> {
     text: &'a str,
     page: i32,
@@ -147,7 +147,7 @@ fn main() {
 ```
 
 ## 重點整理
-- struct 裡放引用時，必須標注生命週期：`struct Excerpt<'a> { text: &'a str }`
+- struct 裡放參考時，必須標注生命週期：`struct Excerpt<'a> { text: &'a str }`
 - 生命週期保證 struct 不會活得比借用的資料更久
 - `'_` 是匿名生命週期，讓編譯器自己推斷（生命週期版的 `_`）
 - impl 帶生命週期的 struct：`impl<'a> Excerpt<'a> { ... }`

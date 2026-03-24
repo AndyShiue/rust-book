@@ -24,7 +24,7 @@ fn make_greeter(name: String) -> impl Fn() {
 }
 ```
 
-為什麼錯？因為閉包預設用借用的方式捕捉 `name`（`&name`），但 `name` 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂引用——第四章的老朋友。
+為什麼錯？因為閉包預設用借用的方式捕捉 `name`（`&name`），但 `name` 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂參考——第四章的老朋友。
 
 ### move 關鍵字
 
@@ -40,10 +40,10 @@ fn make_greeter(name: String) -> impl Fn() {
 
 ### move 閉包的匿名 struct
 
-回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是引用（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
+回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
 
 ```rust
-// 沒有 move：閉包借用 name，struct 裡存的是引用
+// 沒有 move：閉包借用 name，struct 裡存的是參考
 let name = String::from("Alice");
 let greet = || println!("{}", name);
 // name 還能用，因為閉包只是借用
@@ -142,7 +142,7 @@ fn main() {
 
 ## 重點整理
 - `move` 強制閉包以 by-value 方式捕捉所有外部變數
-- 回傳閉包時通常需要 `move`，避免懸垂引用
+- 回傳閉包時通常需要 `move`，避免懸垂參考
 - `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼**使用**捕捉的值
 - 閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy
 - `move` 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景

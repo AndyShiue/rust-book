@@ -47,7 +47,7 @@ enum List {
 
 ```rust
 let x = Box::new(42);
-println!("{}", x); // 可以直接用，Rust 會自動解引用
+println!("{}", x); // 可以直接用，Rust 會自動解參考
 ```
 
 `Box::new(value)` 把值搬到 heap 上。Box 擁有裡面的值，離開作用域時會自動釋放（因為 Box 實作了 Drop）。

@@ -48,9 +48,9 @@ match maybe_value {
 
 ### 零成本的秘密：Niche Optimization
 
-一個有趣的小知識：`Option<&T>` 和普通的引用 `&T` 佔用一樣大的記憶體！
+一個有趣的小知識：`Option<&T>` 和普通的參考 `&T` 佔用一樣大的記憶體！
 
-因為引用 `&T` 不可能是零（null pointer），所以 Rust 在記憶體中聰明地用 null pointer 來代表 `None`，不需要額外的空間。這叫做 **niche optimization**——利用型別中「不可能出現的值」來塞額外的資訊。
+因為參考 `&T` 不可能是零（null pointer），所以 Rust 在記憶體中聰明地用 null pointer 來代表 `None`，不需要額外的空間。這叫做 **niche optimization**——利用型別中「不可能出現的值」來塞額外的資訊。
 
 ## 範例程式碼
 

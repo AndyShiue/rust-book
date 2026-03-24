@@ -6239,14 +6239,14 @@ c 的總和：7
 </code></pre></div>
 
 <p>用 <code>for x in nums</code> 就能走訪切片裡的每個元素，跟之前走訪陣列的方式一樣。函數只是借用了陣列的一段切片，不會把整個陣列 move 走。</p>
-<h4 id="_402">* 解引用</h4>
-<p><code>&amp;</code> 是「借」，反過來 <code>*</code> 就是「順著借用找到原本的值」，叫做<strong>解引用（dereference）</strong>：</p>
+<h4 id="_402">* 解參考</h4>
+<p><code>&amp;</code> 是「借」，反過來 <code>*</code> 就是「順著借用找到原本的值」，叫做<strong>解參考（dereference）</strong>：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">);</span><span class="w"> </span><span class="c1">// 42，和 x 一樣</span>
 </code></pre></div>
 
-<p>不過大部分情況下你不需要手動寫 <code>*</code>——Rust 在用 <code>.</code> 存取欄位、呼叫 method、或 <code>println!</code> 的時候都會自動幫你解引用。所以目前知道有這個東西就好，下一集會用到它。</p>
+<p>不過大部分情況下你不需要手動寫 <code>*</code>——Rust 在用 <code>.</code> 存取欄位、呼叫 method、或 <code>println!</code> 的時候都會自動幫你解參考。所以目前知道有這個東西就好，下一集會用到它。</p>
 <h4 id="_403">借用是唯讀的</h4>
 <p>用 <code>&amp;</code> 借用的時候，你<strong>只能讀，不能改</strong>。如果你想借來改，那是下一集的內容。</p>
 <h3 id="_404">範例程式碼</h3>
@@ -6316,7 +6316,7 @@ c 的總和：7
 <ol>
 <li>原本的變數必須是 <code>let mut</code>（因為你要改它）</li>
 <li>借用時寫 <code>&amp;mut x</code></li>
-<li>要透過借用去修改值，要寫 <code>*r</code>（上一集學的解引用——順著借用找到原本的值）</li>
+<li>要透過借用去修改值，要寫 <code>*r</code>（上一集學的解參考——順著借用找到原本的值）</li>
 </ol>
 <h4 id="mut_3">函數參數用 &amp;mut</h4>
 <p>更常見的用法是在函數裡：</p>
@@ -6337,7 +6337,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>注意：修改 struct 的欄位時，不需要寫 <code>(*p).x += 1</code>，直接寫 <code>p.x += 1</code> 就好——上一集提過 Rust 會自動解引用。</p>
+<p>注意：修改 struct 的欄位時，不需要寫 <code>(*p).x += 1</code>，直接寫 <code>p.x += 1</code> 就好——上一集提過 Rust 會自動解參考。</p>
 <h3 id="_409">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
@@ -6387,14 +6387,14 @@ c 的總和：7
 <ul>
 <li><code>&amp;mut</code> 是<strong>可變借用</strong>，借來之後可以修改原本的值</li>
 <li>原本的變數必須是 <code>let mut</code></li>
-<li>修改基本型別要用 <code>*r</code> 解引用，修改 struct 欄位可以直接 <code>r.field</code>（自動解引用）</li>
+<li>修改基本型別要用 <code>*r</code> 解參考，修改 struct 欄位可以直接 <code>r.field</code>（自動解參考）</li>
 <li>函數參數寫 <code>&amp;mut Type</code>，呼叫時傳 <code>&amp;mut value</code></li>
 <li>下一集會學到可變借用的重要限制規則</li>
 </ul>
 <hr />
 <h2 id="7_2">第四章第 7 集：借用規則</h2>
 <h3 id="_411">本集目標</h3>
-<p>理解 Rust 的借用規則：同時只能有一個 <code>&amp;mut</code> 或多個 <code>&amp;</code>，以及懸垂引用的問題。</p>
+<p>理解 Rust 的借用規則：同時只能有一個 <code>&amp;mut</code> 或多個 <code>&amp;</code>，以及懸垂參考的問題。</p>
 <h3 id="_412">概念說明</h3>
 <h4 id="_413">為什麼需要規則？</h4>
 <p>上一集我們學了 <code>&amp;mut</code> 可變借用。但如果 Rust 允許你同時有多個可變借用，會怎樣？</p>
@@ -6430,17 +6430,17 @@ c 的總和：7
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{} {} {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r1</span><span class="p">,</span><span class="w"> </span><span class="n">r2</span><span class="p">,</span><span class="w"> </span><span class="n">r3</span><span class="p">);</span><span class="w"> </span><span class="c1">// 完全OK</span>
 </code></pre></div>
 
-<h4 id="dangling-reference">懸垂引用（Dangling Reference）</h4>
-<p>還有一個重要的規則：<strong>你不能回傳一個區域變數的引用</strong>。</p>
+<h4 id="dangling-reference">懸垂參考（Dangling Reference）</h4>
+<p>還有一個重要的規則：<strong>你不能回傳一個區域變數的參考</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 這段程式碼不會通過編譯！</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">bad</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
-<span class="w">    </span><span class="o">&amp;</span><span class="n">x</span><span class="w"> </span><span class="c1">// x 在函數結束時就被丟棄了，引用會指向一個已經不存在的值</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">x</span><span class="w"> </span><span class="c1">// x 在函數結束時就被丟棄了，參考會指向一個已經不存在的值</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這叫做<strong>懸垂引用</strong>——引用指向的資料已經消失了，如果 Rust 允許這樣做，你就會讀到垃圾資料。Rust 的編譯器會在編譯時就阻止這種事情發生。</p>
-<p>至於 Rust 是怎麼追蹤「引用還有沒有效」的，那就是之後會學到的<strong>生命週期（lifetime）</strong>概念了。這裡先知道「不能回傳區域變數的引用」就好。</p>
+<p>這叫做<strong>懸垂參考</strong>——參考指向的資料已經消失了，如果 Rust 允許這樣做，你就會讀到垃圾資料。Rust 的編譯器會在編譯時就阻止這種事情發生。</p>
+<p>至於 Rust 是怎麼追蹤「參考還有沒有效」的，那就是之後會學到的<strong>生命週期（lifetime）</strong>概念了。這裡先知道「不能回傳區域變數的參考」就好。</p>
 <h3 id="_415">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
@@ -6481,8 +6481,8 @@ c 的總和：7
 <li><strong>同一時間只能有一個 <code>&amp;mut</code></strong>，不能同時有兩個可變借用</li>
 <li><strong><code>&amp;</code> 和 <code>&amp;mut</code> 不能同時存在</strong>——要嘛大家都只讀，要嘛只有一個人在改</li>
 <li><strong>多個 <code>&amp;</code> 可以同時存在</strong>，多人同時讀沒問題</li>
-<li><strong>懸垂引用</strong>：不能回傳區域變數的引用（值消失了，引用就無效了）</li>
-<li>Rust 靠這些規則在編譯時就防止資料競爭，之後會學到生命週期來更精確地追蹤引用的有效期</li>
+<li><strong>懸垂參考</strong>：不能回傳區域變數的參考（值消失了，參考就無效了）</li>
+<li>Rust 靠這些規則在編譯時就防止資料競爭，之後會學到生命週期來更精確地追蹤參考的有效期</li>
 </ul>
 <hr />
 <h2 id="8-self-vs-self-vs-mut-self">第四章第 8 集：self vs &amp;self vs &amp;mut self</h2>
@@ -6852,7 +6852,7 @@ c 的總和：7
 </tbody>
 </table>
 <h4 id="string-str">&amp;String 會自動轉成 &amp;str</h4>
-<p>當你有一個 String，想把它的引用傳給接受 <code>&amp;str</code> 的函數時，Rust 會自動幫你轉換：</p>
+<p>當你有一個 String，想把它的參考傳給接受 <code>&amp;str</code> 的函數時，Rust 會自動幫你轉換：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;你好，{}！&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
 <span class="p">}</span>
@@ -7696,8 +7696,8 @@ c 的總和：7
 <h4 id="option_1">Option 不用寫完整路徑</h4>
 <p>因為 <code>Option</code>、<code>Some</code>、<code>None</code> 實在太常用了，Rust 預設就把它們引入到每個檔案裡。所以你不需要寫 <code>Option::Some(42)</code>，直接寫 <code>Some(42)</code> 就好。</p>
 <h4 id="niche-optimization">零成本的秘密：Niche Optimization</h4>
-<p>一個有趣的小知識：<code>Option&lt;&amp;T&gt;</code> 和普通的引用 <code>&amp;T</code> 佔用一樣大的記憶體！</p>
-<p>因為引用 <code>&amp;T</code> 不可能是零（null pointer），所以 Rust 在記憶體中聰明地用 null pointer 來代表 <code>None</code>，不需要額外的空間。這叫做 <strong>niche optimization</strong>——利用型別中「不可能出現的值」來塞額外的資訊。</p>
+<p>一個有趣的小知識：<code>Option&lt;&amp;T&gt;</code> 和普通的參考 <code>&amp;T</code> 佔用一樣大的記憶體！</p>
+<p>因為參考 <code>&amp;T</code> 不可能是零（null pointer），所以 Rust 在記憶體中聰明地用 null pointer 來代表 <code>None</code>，不需要額外的空間。這叫做 <strong>niche optimization</strong>——利用型別中「不可能出現的值」來塞額外的資訊。</p>
 <h3 id="_486">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 在切片中找到第一個偶數，找不到就回傳 None</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">find_even</span><span class="p">(</span><span class="n">numbers</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -8844,7 +8844,7 @@ c 的總和：7
 <p><code>Box&lt;List&gt;</code> 的大小是固定的（就是一個指標的大小），問題就解決了。</p>
 <h4 id="box_1">Box 的使用</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="c1">// 可以直接用，Rust 會自動解引用</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="c1">// 可以直接用，Rust 會自動解參考</span>
 </code></pre></div>
 
 <p><code>Box::new(value)</code> 把值搬到 heap 上。Box 擁有裡面的值，離開作用域時會自動釋放（因為 Box 實作了 Drop）。</p>
@@ -8900,7 +8900,7 @@ c 的總和：7
 <hr />
 <h2 id="22-rct">第五章第 22 集：Rc&lt;T&gt;</h2>
 <h3 id="_549">本集目標</h3>
-<p>學會用 <code>Rc&lt;T&gt;</code> 讓多個擁有者共享同一份資料，理解引用計數的原理。</p>
+<p>學會用 <code>Rc&lt;T&gt;</code> 讓多個擁有者共享同一份資料，理解參考計數的原理。</p>
 <h3 id="_550">概念說明</h3>
 <p>上一集學了 <code>Box&lt;T&gt;</code>——一個保險箱只有一把鑰匙，一個擁有者。但有時候你需要<strong>多個擁有者</strong>共享同一份資料。</p>
 <h4 id="_551">問題：一個值只能有一個擁有者</h4>
@@ -8916,7 +8916,7 @@ c 的總和：7
 
 <p>這確實能讓 <code>a</code> 和 <code>b</code> 都能用。但問題是——<code>clone</code> 是真的把 heap 上的資料<strong>完整複製</strong>了一份。如果資料很大（比如一個很長的 Vec），每次 clone 都是一筆不小的開銷。而且 <code>a</code> 和 <code>b</code> 指向的是<strong>兩份獨立的資料</strong>，改了 <code>a</code> 不會影響 <code>b</code>。</p>
 <p>如果你需要的是「多個人共享<strong>同一份</strong>資料」，clone 就不是正確的工具了。</p>
-<h4 id="rc">Rc：引用計數</h4>
+<h4 id="rc">Rc：參考計數</h4>
 <p>還記得第四章的保險箱比喻嗎？Rust 預設的規則是「一個保險箱只有一把鑰匙」——這就是所有權。但 <code>Rc&lt;T&gt;</code> 打破了這個預設：它讓你<strong>配好幾把鑰匙，都能打開同一個保險箱</strong>。</p>
 <p><code>Rc&lt;T&gt;</code>（Reference Counting）用一個「計數器」來追蹤目前有幾把鑰匙：</p>
 <ul>
@@ -8926,7 +8926,7 @@ c 的總和：7
 <li>計數歸零時，資料才會被真正釋放</li>
 </ul>
 <h4 id="rc-clone">Rc 的 .clone() 不是深度複製</h4>
-<p>對 Rc 呼叫 <code>.clone()</code> 和我們之前學的 <code>.clone()</code> 不一樣——它不會複製裡面的資料，只是增加引用計數。所以速度很快，成本很低。</p>
+<p>對 Rc 呼叫 <code>.clone()</code> 和我們之前學的 <code>.clone()</code> 不一樣——它不會複製裡面的資料，只是增加參考計數。所以速度很快，成本很低。</p>
 <p>Rc 的 Clone 不是用 <code>#[derive(Clone)]</code> 產生的，而是標準庫自己手動實作的。如果用 derive，它會深度複製裡面的資料；但 Rc 的 clone 只是增加計數器，行為完全不同。</p>
 <h4 id="rc_1">Rc 是唯讀的</h4>
 <p><code>Rc&lt;T&gt;</code> 只提供不可變的存取——所有擁有者都只能讀，不能改。如果需要可以改，之後會學 <code>RefCell</code>。</p>
@@ -8972,20 +8972,20 @@ c 的總和：7
 
 <h3 id="_554">重點整理</h3>
 <ul>
-<li><code>Rc&lt;T&gt;</code> 用引用計數讓多個擁有者共享同一份資料</li>
+<li><code>Rc&lt;T&gt;</code> 用參考計數讓多個擁有者共享同一份資料</li>
 <li>Rc 的 <code>.clone()</code> 只增加計數，不複製資料——成本很低</li>
 <li>某個 Rc 離開作用域時計數 -1，歸零時才釋放資料</li>
 <li>Rc 是<strong>唯讀的</strong>——所有擁有者只能讀，不能改</li>
-<li>用 <code>Rc::strong_count(&amp;x)</code> 查看目前的引用計數</li>
+<li>用 <code>Rc::strong_count(&amp;x)</code> 查看目前的參考計數</li>
 </ul>
 <hr />
 <h2 id="23-cellt">第五章第 23 集：Cell&lt;T&gt;</h2>
 <h3 id="_555">本集目標</h3>
-<p>學會用 <code>Cell&lt;T&gt;</code> 在不可變引用的情況下修改值，理解它的限制。</p>
+<p>學會用 <code>Cell&lt;T&gt;</code> 在不可變參考的情況下修改值，理解它的限制。</p>
 <h3 id="_556">概念說明</h3>
-<p>第四章學了借用規則：要嘛一個 <code>&amp;mut</code>，要嘛多個 <code>&amp;</code>，不能同時。這很安全，但有時候你在只有 <code>&amp;</code>（不可變引用）的情況下，還是想修改值。</p>
+<p>第四章學了借用規則：要嘛一個 <code>&amp;mut</code>，要嘛多個 <code>&amp;</code>，不能同時。這很安全，但有時候你在只有 <code>&amp;</code>（不可變參考）的情況下，還是想修改值。</p>
 <h4 id="cell">Cell 的概念</h4>
-<p><code>Cell&lt;T&gt;</code> 提供一種「繞過借用規則」的方式——它用 <code>.get()</code> 取值、<code>.set()</code> 設值，<strong>不需要可變引用</strong>。</p>
+<p><code>Cell&lt;T&gt;</code> 提供一種「繞過借用規則」的方式——它用 <code>.get()</code> 取值、<code>.set()</code> 設值，<strong>不需要可變參考</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">Cell</span><span class="p">;</span>
 
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cell</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
@@ -8998,9 +8998,9 @@ c 的總和：7
 <p><code>Cell&lt;T&gt;</code> 的 <code>.get()</code> 會把值<strong>複製一份</strong>出來（不是借用）。所以 <code>T</code> 必須實作 Copy。</p>
 <p>你不能 <code>Cell&lt;String&gt;</code>，因為 String 不是 Copy。只能用 Copy 的型別（i32、f64、bool 等）。</p>
 <h4 id="mut_7">為什麼不用 mut？</h4>
-<p>有些情況下你不方便拿到 <code>&amp;mut</code>。比如一個 struct 被多處共享引用（<code>&amp;self</code>），但你想修改裡面的某個計數器。Cell 就很適合這種場景。</p>
+<p>有些情況下你不方便拿到 <code>&amp;mut</code>。比如一個 struct 被多處共享參考（<code>&amp;self</code>），但你想修改裡面的某個計數器。Cell 就很適合這種場景。</p>
 <h4 id="rc-cell">Rc 就是用 Cell 實作的</h4>
-<p>上一集學的 <code>Rc&lt;T&gt;</code> 需要一個引用計數器——每次 clone 時計數 +1，drop 時計數 -1。但 Rc 對外只提供 <code>&amp;self</code>（不可變引用），計數器卻需要被修改。怎麼辦？答案就是用 Cell！Rc 內部的計數器就是 <code>Cell&lt;usize&gt;</code>，所以即使只有 <code>&amp;self</code> 也能更新計數。</p>
+<p>上一集學的 <code>Rc&lt;T&gt;</code> 需要一個參考計數器——每次 clone 時計數 +1，drop 時計數 -1。但 Rc 對外只提供 <code>&amp;self</code>（不可變參考），計數器卻需要被修改。怎麼辦？答案就是用 Cell！Rc 內部的計數器就是 <code>Cell&lt;usize&gt;</code>，所以即使只有 <code>&amp;self</code> 也能更新計數。</p>
 <h3 id="_557">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">Cell</span><span class="p">;</span>
 
@@ -9039,7 +9039,7 @@ c 的總和：7
 <span class="w">    </span><span class="c1">// 在 struct 裡使用 Cell</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Counter</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;訪問次數&quot;</span><span class="p">));</span>
 
-<span class="w">    </span><span class="c1">// 只有 &amp;counter（不可變引用），但可以修改 count</span>
+<span class="w">    </span><span class="c1">// 只有 &amp;counter（不可變參考），但可以修改 count</span>
 <span class="w">    </span><span class="n">counter</span><span class="p">.</span><span class="n">increment</span><span class="p">();</span>
 <span class="w">    </span><span class="n">counter</span><span class="p">.</span><span class="n">increment</span><span class="p">();</span>
 <span class="w">    </span><span class="n">counter</span><span class="p">.</span><span class="n">increment</span><span class="p">();</span>
@@ -9065,7 +9065,7 @@ c 的總和：7
 <p><code>RefCell&lt;T&gt;</code> 和 Cell 類似——讓你在不需要 <code>&amp;mut</code> 的情況下修改值。差別在於：</p>
 <ul>
 <li><code>Cell&lt;T&gt;</code>：用 get/set，T 必須 Copy，<strong>零成本</strong>（編譯後和直接存取沒有差別）</li>
-<li><code>RefCell&lt;T&gt;</code>：用 <code>.borrow()</code> 和 <code>.borrow_mut()</code> 取得引用，T <strong>不需要</strong> Copy，但<strong>有執行期成本</strong>（每次借用都要檢查有沒有違反規則）</li>
+<li><code>RefCell&lt;T&gt;</code>：用 <code>.borrow()</code> 和 <code>.borrow_mut()</code> 取得參考，T <strong>不需要</strong> Copy，但<strong>有執行期成本</strong>（每次借用都要檢查有沒有違反規則）</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
 
@@ -9143,7 +9143,7 @@ c 的總和：7
 <h3 id="_563">重點整理</h3>
 <ul>
 <li><code>RefCell&lt;T&gt;</code> 把借用規則的檢查從編譯時移到執行時</li>
-<li><code>.borrow()</code> 取得不可變引用，<code>.borrow_mut()</code> 取得可變引用</li>
+<li><code>.borrow()</code> 取得不可變參考，<code>.borrow_mut()</code> 取得可變參考</li>
 <li>T <strong>不需要</strong> Copy（和 Cell 的差別）</li>
 <li>Cell 是零成本的，但 RefCell 每次借用都有執行期檢查的開銷</li>
 <li>違反借用規則時會 <strong>panic</strong>（不是編譯錯誤）</li>
@@ -9154,16 +9154,16 @@ c 的總和：7
 <h3 id="_564">本集目標</h3>
 <p>理解為什麼需要生命週期標注 <code>'a</code>，學會在函數回傳借用時標注生命週期。</p>
 <h3 id="_565">概念說明</h3>
-<p>第四章講借用的時候，我們留了一個伏筆：「不能回傳區域變數的引用。」現在來正式面對這個問題。</p>
-<h4 id="_566">問題一：回傳區域變數的引用</h4>
+<p>第四章講借用的時候，我們留了一個伏筆：「不能回傳區域變數的參考。」現在來正式面對這個問題。</p>
+<h4 id="_566">問題一：回傳區域變數的參考</h4>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">make_greeting</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;哈囉&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="o">&amp;</span><span class="n">s</span><span class="w"> </span><span class="c1">// 編譯錯誤！</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// s 在這裡被釋放了，回傳的引用指向一塊已經不存在的記憶體</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// s 在這裡被釋放了，回傳的參考指向一塊已經不存在的記憶體</span>
 </code></pre></div>
 
-<p>這個比較好理解——<code>s</code> 離開函數就沒了，回傳它的引用毫無意義。Rust 直接擋掉。</p>
-<h4 id="_567">問題二：多個引用，回傳哪一個？</h4>
+<p>這個比較好理解——<code>s</code> 離開函數就沒了，回傳它的參考毫無意義。Rust 直接擋掉。</p>
+<h4 id="_567">問題二：多個參考，回傳哪一個？</h4>
 <p>但這個情況就比較複雜了：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">longer</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -9174,8 +9174,8 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這段程式碼也會編譯失敗。<code>a</code> 和 <code>b</code> 都是外面傳進來的引用，不會在函數結束時消失，那為什麼不行？</p>
-<p>因為 Rust 在檢查<strong>呼叫端</strong>的時候，需要知道回傳值的引用能「活多久」。看這個例子：</p>
+<p>這段程式碼也會編譯失敗。<code>a</code> 和 <code>b</code> 都是外面傳進來的參考，不會在函數結束時消失，那為什麼不行？</p>
+<p>因為 Rust 在檢查<strong>呼叫端</strong>的時候，需要知道回傳值的參考能「活多久」。看這個例子：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello world&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
 <span class="p">{</span>
@@ -9185,7 +9185,7 @@ c 的總和：7
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w"> </span><span class="c1">// result 到底還能不能用？</span>
 </code></pre></div>
 
-<p>如果 <code>longer</code> 回傳了 <code>a</code>（也就是 <code>&amp;s1</code>），<code>result</code> 是安全的，因為 <code>s1</code> 還活著。但如果回傳了 <code>b</code>（也就是 <code>&amp;s2</code>），<code>result</code> 就是懸垂引用——<code>s2</code> 已經被釋放了。</p>
+<p>如果 <code>longer</code> 回傳了 <code>a</code>（也就是 <code>&amp;s1</code>），<code>result</code> 是安全的，因為 <code>s1</code> 還活著。但如果回傳了 <code>b</code>（也就是 <code>&amp;s2</code>），<code>result</code> 就是懸垂參考——<code>s2</code> 已經被釋放了。</p>
 <p>問題是：<strong>編譯器在檢查 <code>longer</code> 的呼叫端時，不會去看 <code>longer</code> 的函數體</strong>。它只看函數簽名。而簽名上寫 <code>-&gt; &amp;str</code>，沒有任何資訊告訴它回傳值和哪個參數的壽命有關。</p>
 <h4 id="a">生命週期標注 <code>'a</code></h4>
 <p>解法是用生命週期標注，明確描述回傳值和參數的關係：</p>
@@ -9214,7 +9214,7 @@ c 的總和：7
 
 <p><code>'a</code> 被推斷為 <code>s2</code> 的壽命（較短的那個），所以 <code>result</code> 只能在 <code>s2</code> 還活著的範圍內使用。</p>
 <h4 id="a-mut-t"><code>&amp;'a mut T</code></h4>
-<p>可變引用也可以加生命週期標注，寫成 <code>&amp;'a mut T</code>——就是把 <code>'a</code> 放在 <code>&amp;</code> 和 <code>mut</code> 之間。<code>'a</code> 一樣描述這個引用能活多久。</p>
+<p>可變參考也可以加生命週期標注，寫成 <code>&amp;'a mut T</code>——就是把 <code>'a</code> 放在 <code>&amp;</code> 和 <code>mut</code> 之間。<code>'a</code> 一樣描述這個參考能活多久。</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">replace</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">target</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">mut</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="n">new_value</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
 <span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">push_str</span><span class="p">(</span><span class="n">new_value</span><span class="p">);</span>
@@ -9222,9 +9222,9 @@ c 的總和：7
 </code></pre></div>
 
 <h4 id="_569">生命週期不改變壽命</h4>
-<p><strong>重要觀念</strong>：生命週期標注不會讓任何引用活得更久或更短。它只是<strong>描述</strong>已有的關係，幫助編譯器做檢查。就像型別標注不會改變值的內容一樣。</p>
+<p><strong>重要觀念</strong>：生命週期標注不會讓任何參考活得更久或更短。它只是<strong>描述</strong>已有的關係，幫助編譯器做檢查。就像型別標注不會改變值的內容一樣。</p>
 <h4 id="_570">不是所有函數都要標</h4>
-<p>如果函數只有一個引用參數，Rust 能自動推斷（下一集會詳細講）：</p>
+<p>如果函數只有一個參考參數，Rust 能自動推斷（下一集會詳細講）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">first_char</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="o">..</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="c1">// 回傳值的壽命顯然和 s 一樣，不用手動標</span>
 <span class="p">}</span>
@@ -9283,7 +9283,7 @@ c 的總和：7
 <h3 id="_572">重點整理</h3>
 <ul>
 <li>當函數回傳借用時，Rust 需要知道回傳值能活多久——這就是生命週期標注的目的</li>
-<li><code>'a</code> 是生命週期參數，描述引用之間的壽命關係</li>
+<li><code>'a</code> 是生命週期參數，描述參考之間的壽命關係</li>
 <li>多個參數共用同一個 <code>'a</code> 時，Rust 取交集（較短的那個）</li>
 <li>生命週期標注<strong>不改變壽命</strong>，只是描述已有的關係</li>
 <li><code>'static</code> 表示「活到程式結束」——字串字面值的型別是 <code>&amp;'static str</code></li>
@@ -9293,11 +9293,11 @@ c 的總和：7
 <h3 id="_573">本集目標</h3>
 <p>理解 Rust 的生命週期省略規則，知道為什麼大部分時候不需要手動寫生命週期標注。</p>
 <h3 id="_574">概念說明</h3>
-<p>上一集學了生命週期標注，你可能會擔心：「每個有引用的函數都要寫 <code>'a</code> 嗎？好麻煩！」</p>
+<p>上一集學了生命週期標注，你可能會擔心：「每個有參考的函數都要寫 <code>'a</code> 嗎？好麻煩！」</p>
 <p>好消息是：大部分時候不用。Rust 有一套<strong>省略規則（elision rules）</strong>，會自動幫你補上生命週期標注。</p>
 <h4 id="_575">三條省略規則</h4>
 <p>Rust 編譯器按照這三條規則嘗試推斷生命週期：</p>
-<p><strong>規則一：每個引用參數各自獲得獨立的生命週期</strong></p>
+<p><strong>規則一：每個參數的 lifetime 各自獲得獨立的生命週期</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span>
 <span class="c1">// 編譯器看成：fn foo&lt;&#39;a, &#39;b&gt;(a: &amp;&#39;a str, b: &amp;&#39;b str)</span>
 </code></pre></div>
@@ -9309,7 +9309,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>這就是為什麼上面的 <code>first_word</code> 不用寫 <code>'a</code>——只有一個 input lifetime，規則二自動搞定。</p>
-<p>注意這裡說的是「input lifetime」而不是「引用參數」。一個參數可能帶有多個 input lifetime——比如 <code>&amp;'a &amp;'b T</code>（引用的引用）就有兩個（<code>'a</code> 和 <code>'b</code>）。如果有兩個以上的 input lifetime，規則二就不適用了。</p>
+<p>注意這裡說的是「input lifetime」而不是「參考參數」。一個參數可能帶有多個 input lifetime——比如 <code>&amp;'a &amp;'b T</code>（參考的參考）就有兩個（<code>'a</code> 和 <code>'b</code>）。如果有兩個以上的 input lifetime，規則二就不適用了。</p>
 <p><strong>規則三：如果有 <code>&amp;self</code> 或 <code>&amp;mut self</code> 參數，回傳值的生命週期就等於 self 的</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">MyStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
@@ -9318,15 +9318,15 @@ c 的總和：7
 </code></pre></div>
 
 <h4 id="_576">什麼時候規則不夠用？</h4>
-<p>當有多個引用參數、但回傳值的生命週期不確定跟哪個綁定時——就是上一集 <code>longer</code> 函數的情況。這時候就必須手動標注。</p>
+<p>當有多個參考參數、但回傳值的生命週期不確定跟哪個綁定時——就是上一集 <code>longer</code> 函數的情況。這時候就必須手動標注。</p>
 <h4 id="_577">總結</h4>
 <ul>
-<li>一個引用參數 → 幾乎不用寫</li>
+<li>一個參考參數 → 幾乎不用寫</li>
 <li>method 回傳 <code>&amp;self</code> 的一部分 → 不用寫</li>
-<li>多個引用參數且回傳引用 → 可能要寫</li>
+<li>多個參考參數且回傳參考 → 可能要寫</li>
 </ul>
 <h3 id="_578">範例程式碼</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// 規則二：一個引用參數，自動推斷</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// 規則二：一個 input lifetime，自動推斷</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">trim_hello</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="o">&amp;</span><span class="n">s</span><span class="p">[</span><span class="mi">5</span><span class="o">..</span><span class="p">]</span>
@@ -9355,7 +9355,7 @@ c 的總和：7
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1">// 多個引用參數 + 回傳引用 → 需要手動標注</span>
+<span class="c1">// 多個參考參數 + 回傳參考 → 需要手動標注</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">pick_longer</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">a</span>
@@ -9378,7 +9378,7 @@ c 的總和：7
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;標題：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">article</span><span class="p">.</span><span class="n">title</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;摘要：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">article</span><span class="p">.</span><span class="n">summary</span><span class="p">());</span>
 
-<span class="w">    </span><span class="c1">// 多個引用參數：需要手動標注</span>
+<span class="w">    </span><span class="c1">// 多個參考參數：需要手動標注</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pick_longer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
@@ -9389,24 +9389,24 @@ c 的總和：7
 <h3 id="_579">重點整理</h3>
 <ul>
 <li>Rust 有三條<strong>省略規則</strong>，大部分時候會自動補上生命週期標注</li>
-<li>規則一：每個引用參數都會自動獲得獨立的生命週期參數</li>
+<li>規則一：每個參數的 lifetime 都會自動獲得獨立的生命週期參數</li>
 <li>規則二：只有一個 input lifetime → 回傳值的生命週期自動等於它</li>
 <li>規則三：method 有 <code>&amp;self</code> → 回傳值的生命週期自動等於 self</li>
-<li>只有多個引用參數且回傳引用時，才需要手動標注</li>
+<li>有多個 input lifetime 且回傳型別有 lifetime 時，才需要手動標注</li>
 </ul>
 <hr />
 <h2 id="27">第五章第 27 集：型別上的生命週期</h2>
 <h3 id="_580">本集目標</h3>
-<p>學會為包含引用的 struct 和 enum 標注生命週期，以及用 <code>'_</code> 匿名生命週期簡化標注。</p>
+<p>學會為包含參考的 struct 和 enum 標注生命週期，以及用 <code>'_</code> 匿名生命週期簡化標注。</p>
 <h3 id="_581">概念說明</h3>
 <p>到目前為止，我們的 struct 和 enum 都擁有自己的資料（String、i32 等）。但有時候你想讓它們借用別人的資料——例如存一個 <code>&amp;str</code> 而不是 <code>String</code>。</p>
-<h4 id="_582">型別裡放引用</h4>
+<h4 id="_582">型別裡放參考</h4>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Excerpt</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">text</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="c1">// 編譯錯誤！</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這會報錯。因為 Rust 需要知道：「這個 <code>&amp;str</code> 能活多久？」如果借來的資料被釋放了，struct 裡的引用就變成懸垂引用。</p>
+<p>這會報錯。因為 Rust 需要知道：「這個 <code>&amp;str</code> 能活多久？」如果借來的資料被釋放了，struct 裡的參考就變成懸垂參考。</p>
 <p>解法是加上生命週期參數：</p>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Excerpt</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">text</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">,</span>
@@ -9414,7 +9414,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>'a</code> 告訴 Rust：「這個 struct 的壽命不能超過它借用的資料。」</p>
-<p>Enum 也一樣——如果 variant 攜帶引用，就需要生命週期：</p>
+<p>Enum 也一樣——如果 variant 攜帶參考，就需要生命週期：</p>
 <div class="highlight"><pre><span></span><code><span class="k">enum</span><span class="w"> </span><span class="nc">Token</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Word</span><span class="p">(</span><span class="o">&amp;&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">),</span>
 <span class="w">    </span><span class="n">Number</span><span class="p">(</span><span class="kt">i32</span><span class="p">),</span>
@@ -9461,9 +9461,9 @@ c 的總和：7
 </code></pre></div>
 
 <p>省略規則看到 <code>Excerpt&lt;'_&gt;</code> 帶有一個 input lifetime，規則二把回傳值的生命週期也設為同一個。</p>
-<p>注意這裡 <code>e</code> 本身是 owned 的（不是引用），函數結束時 <code>e</code> 會被 drop。但回傳的 <code>&amp;'a str</code> 不是借用 <code>e</code>，而是借用 <code>e</code> 裡面存的那段文字——那段文字的壽命是 <code>'a</code>，跟 <code>e</code> 本身的壽命無關。</p>
+<p>注意這裡 <code>e</code> 本身是 owned 的（不是參考），函數結束時 <code>e</code> 會被 drop。但回傳的 <code>&amp;'a str</code> 不是借用 <code>e</code>，而是借用 <code>e</code> 裡面存的那段文字——那段文字的壽命是 <code>'a</code>，跟 <code>e</code> 本身的壽命無關。</p>
 <h3 id="_584">範例程式碼</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// struct 裡放引用，需要生命週期標注</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// struct 裡放參考，需要生命週期標注</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Excerpt</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">text</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">,</span>
 <span class="w">    </span><span class="n">page</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
@@ -9511,7 +9511,7 @@ c 的總和：7
 
 <h3 id="_585">重點整理</h3>
 <ul>
-<li>struct 裡放引用時，必須標注生命週期：<code>struct Excerpt&lt;'a&gt; { text: &amp;'a str }</code></li>
+<li>struct 裡放參考時，必須標注生命週期：<code>struct Excerpt&lt;'a&gt; { text: &amp;'a str }</code></li>
 <li>生命週期保證 struct 不會活得比借用的資料更久</li>
 <li><code>'_</code> 是匿名生命週期，讓編譯器自己推斷（生命週期版的 <code>_</code>）</li>
 <li>impl 帶生命週期的 struct：<code>impl&lt;'a&gt; Excerpt&lt;'a&gt; { ... }</code></li>
@@ -9519,20 +9519,20 @@ c 的總和：7
 <hr />
 <h2 id="28-lifetime-bound">第五章第 28 集：lifetime bound</h2>
 <h3 id="_586">本集目標</h3>
-<p>學會 <code>T: 'a</code> 這種 lifetime bound，理解為什麼 <code>&amp;'a T</code> 需要 T 裡面的引用都活得過 <code>'a</code>。</p>
+<p>學會 <code>T: 'a</code> 這種 lifetime bound，理解為什麼 <code>&amp;'a T</code> 需要 T 裡面的參考都活得過 <code>'a</code>。</p>
 <h3 id="_587">概念說明</h3>
-<h4 id="t_1">問題：T 裡面可能有引用</h4>
-<p>到目前為止，我們的泛型函數大多處理 <code>i32</code>、<code>String</code> 這些擁有自己資料的型別。但 <code>T</code> 也可能是 <code>&amp;str</code> 或其他包含引用的型別。</p>
+<h4 id="t_1">問題：T 裡面可能有參考</h4>
+<p>到目前為止，我們的泛型函數大多處理 <code>i32</code>、<code>String</code> 這些擁有自己資料的型別。但 <code>T</code> 也可能是 <code>&amp;str</code> 或其他包含參考的型別。</p>
 <p>看這個 struct：</p>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>如果 <code>T</code> 是 <code>&amp;'x str</code>，那 <code>value</code> 就是 <code>&amp;'a &amp;'x str</code>——一個引用指向另一個引用。這時候 <code>'x</code> 必須活得至少和 <code>'a</code> 一樣長，否則外層的 <code>&amp;'a</code> 還活著的時候，裡面的 <code>&amp;'x str</code> 可能已經失效了。</p>
+<p>如果 <code>T</code> 是 <code>&amp;'x str</code>，那 <code>value</code> 就是 <code>&amp;'a &amp;'x str</code>——一個參考指向另一個參考。這時候 <code>'x</code> 必須活得至少和 <code>'a</code> 一樣長，否則外層的 <code>&amp;'a</code> 還活著的時候，裡面的 <code>&amp;'x str</code> 可能已經失效了。</p>
 <h4 id="t-a"><code>T: 'a</code> 的意思</h4>
-<p><code>T: 'a</code> 是一個 <strong>lifetime bound</strong>，表示「<code>T</code> 裡面的所有引用都活得過 <code>'a</code>」。</p>
-<p>如果 <code>T</code> 是 <code>i32</code>（沒有引用），<code>T: 'a</code> 自動滿足。
+<p><code>T: 'a</code> 是一個 <strong>lifetime bound</strong>，表示「<code>T</code> 裡面的所有參考都活得過 <code>'a</code>」。</p>
+<p>如果 <code>T</code> 是 <code>i32</code>（沒有參考），<code>T: 'a</code> 自動滿足。
 如果 <code>T</code> 是 <code>&amp;'x str</code>，那 <code>T: 'a</code> 就要求 <code>'x</code> 至少活得和 <code>'a</code> 一樣長。</p>
 <h4 id="_588">什麼時候要寫？</h4>
 <p>在很多情況下，編譯器看到 <code>&amp;'a T</code> 就知道需要 <code>T: 'a</code>，會自動幫你加上。但在某些 trait 定義或比較複雜的泛型結構裡，你可能需要手動寫：</p>
@@ -9542,15 +9542,15 @@ c 的總和：7
 </code></pre></div>
 
 <p>這裡的 <code>T: 'a</code> 其實是多餘的（編譯器能從 <code>&amp;'a T</code> 推出來），但手動寫出來也不會錯，而且讓意圖更清楚。</p>
-<h4 id="_589">引用帶生命週期的型別</h4>
-<p>同樣的道理推廣到任何帶生命週期的型別。如果你有 <code>&amp;'b A&lt;'a&gt;</code>——一個活 <code>'b</code> 那麼久的引用，指向一個 <code>A&lt;'a&gt;</code>——那 <code>A&lt;'a&gt;</code> 整體必須在 <code>'b</code> 的期間都是有效的。這意味著 <code>A</code> 裡面借用的資料必須活得過 <code>'b</code>，也就是 <code>'a</code> 必須至少和 <code>'b</code> 一樣長。</p>
-<p>原因很直覺：你持有一個引用 <code>&amp;'b</code>，透過它可以存取 <code>A</code> 裡面所有借用的資料。如果 <code>A</code> 借用的資料比你持有引用的時間更早失效，你就能存取到已經被回收的記憶體。所以 Rust 要求 <code>'a</code> 至少活得和 <code>'b</code> 一樣長。</p>
+<h4 id="_589">參考帶生命週期的型別</h4>
+<p>同樣的道理推廣到任何帶生命週期的型別。如果你有 <code>&amp;'b A&lt;'a&gt;</code>——一個活 <code>'b</code> 那麼久的參考，指向一個 <code>A&lt;'a&gt;</code>——那 <code>A&lt;'a&gt;</code> 整體必須在 <code>'b</code> 的期間都是有效的。這意味著 <code>A</code> 裡面借用的資料必須活得過 <code>'b</code>，也就是 <code>'a</code> 必須至少和 <code>'b</code> 一樣長。</p>
+<p>原因很直覺：你持有一個參考 <code>&amp;'b</code>，透過它可以存取 <code>A</code> 裡面所有借用的資料。如果 <code>A</code> 借用的資料比你持有參考的時間更早失效，你就能存取到已經被回收的記憶體。所以 Rust 要求 <code>'a</code> 至少活得和 <code>'b</code> 一樣長。</p>
 <h3 id="_590">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Excerpt</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">text</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="kt">str</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="c1">// T: &#39;a 確保 T 裡的引用活得過 &#39;a</span>
+<span class="c1">// T: &#39;a 確保 T 裡的參考活得過 &#39;a</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="o">&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">value</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="na">a</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span>
 <span class="p">}</span>
@@ -9566,12 +9566,12 @@ c 的總和：7
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// T = i32（沒有引用，T: &#39;a 自動滿足）</span>
+<span class="w">    </span><span class="c1">// T = i32（沒有參考，T: &#39;a 自動滿足）</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ref</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">num</span><span class="p">);</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Ref&lt;i32&gt;: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
 
-<span class="w">    </span><span class="c1">// T = &amp;str（T 本身就是引用）</span>
+<span class="w">    </span><span class="c1">// T = &amp;str（T 本身就是參考）</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">slice</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">text</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ref</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">slice</span><span class="p">);</span>
@@ -9583,9 +9583,9 @@ c 的總和：7
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">excerpt</span><span class="p">;</span><span class="w"> </span><span class="c1">// &amp;&#39;b Excerpt&lt;&#39;a&gt;</span>
 <span class="w">    </span><span class="c1">// 這裡 &#39;a 是 novel 的壽命，&#39;b 是 r3 借用 excerpt 的時間</span>
 <span class="w">    </span><span class="c1">// novel 活得比 r3 久，所以 &#39;a 活得過 &#39;b，條件滿足</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;透過引用讀取：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r3</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;透過參考讀取：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r3</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// T = String（擁有資料，沒有引用，T: &#39;a 自動滿足）</span>
+<span class="w">    </span><span class="c1">// T = String（擁有資料，沒有參考，T: &#39;a 自動滿足）</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ref</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Ref&lt;String&gt;: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r3</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
@@ -9594,8 +9594,8 @@ c 的總和：7
 
 <h3 id="_591">重點整理</h3>
 <ul>
-<li><code>T: 'a</code> 表示 T 裡面的所有引用都活得過 <code>'a</code></li>
-<li>如果 T 沒有引用（如 <code>i32</code>、<code>String</code>），<code>T: 'a</code> 自動滿足</li>
+<li><code>T: 'a</code> 表示 T 裡面的所有參考都活得過 <code>'a</code></li>
+<li>如果 T 沒有參考（如 <code>i32</code>、<code>String</code>），<code>T: 'a</code> 自動滿足</li>
 <li><code>&amp;'a T</code> 要合法就需要 <code>T: 'a</code>——大部分情況編譯器能自動推斷</li>
 <li>理解 lifetime bound 才能讀懂標準庫裡比較複雜的泛型簽名</li>
 </ul>
@@ -9964,7 +9964,7 @@ c 的總和：7
 <p>一行一行看：</p>
 <ul>
 <li><strong><code>'a</code></strong>：生命週期參數，代表借用資料的壽命</li>
-<li><strong><code>B: 'a</code></strong>：lifetime bound（上一集學的），B 裡面的引用必須活得過 <code>'a</code></li>
+<li><strong><code>B: 'a</code></strong>：lifetime bound（上一集學的），B 裡面的參考必須活得過 <code>'a</code></li>
 <li><strong><code>B: ToOwned</code></strong>：trait bound，B 必須實作 <code>ToOwned</code></li>
 <li><strong><code>Borrowed(&amp;'a B)</code></strong>：借用的版本，存一個 <code>&amp;'a B</code></li>
 <li><strong><code>Owned(...)</code></strong>：擁有的版本，型別由 <code>ToOwned</code> 的 associated type <code>Owned</code> 決定</li>
@@ -9983,7 +9983,7 @@ c 的總和：7
 <p>不管是哪種，<code>Cow&lt;str&gt;</code> 都可以當 <code>&amp;str</code> 來用。</p>
 <h4 id="_608">常用方法</h4>
 <ul>
-<li><strong><code>to_mut()</code></strong>：如果是 Borrowed，先 clone 成 Owned，然後回傳可變引用。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。</li>
+<li><strong><code>to_mut()</code></strong>：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。</li>
 <li><strong><code>into_owned()</code></strong>：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走。</li>
 </ul>
 <h3 id="_609">範例程式碼</h3>
@@ -10042,7 +10042,7 @@ c 的總和：7
 <ul>
 <li><code>Cow&lt;'a, str&gt;</code> 可以是借用（<code>&amp;str</code>）或擁有（<code>String</code>），視情況而定</li>
 <li>Cow 利用 <code>ToOwned</code> trait 的 associated type 來決定擁有版本的型別（<code>str</code> → <code>String</code>、<code>[T]</code> → <code>Vec&lt;T&gt;</code>）</li>
-<li><code>to_mut()</code>：寫入時才複製（Borrowed → clone 成 Owned → 回傳可變引用）</li>
+<li><code>to_mut()</code>：寫入時才複製（Borrowed → clone 成 Owned → 回傳可變參考）</li>
 <li><code>into_owned()</code>：不管哪種都轉成擁有的值</li>
 <li>適合用在「大部分時候不修改，偶爾需要修改」的場景</li>
 </ul>
@@ -10196,7 +10196,7 @@ c 的總和：7
 
 <p>這個閉包把 <code>prefix</code> move 進來了，呼叫一次之後 <code>prefix</code> 就沒了。但沒關係，<code>map</code> 本來就只呼叫接收的函數一次。</p>
 <h4 id="vecretain-fnmut">Vec::retain —— FnMut 的例子</h4>
-<p><code>Vec&lt;T&gt;</code> 的 <code>retain</code> 方法會保留符合條件的元素，移除不符合的。它接受一個閉包，這個閉包接收 <code>&amp;T</code>（每個元素的引用）、回傳 <code>bool</code>（true 保留、false 移除）。因為 <code>retain</code> 要對每個元素都呼叫一次，所以它要求 <code>FnMut</code>——「可以多次呼叫」。</p>
+<p><code>Vec&lt;T&gt;</code> 的 <code>retain</code> 方法會保留符合條件的元素，移除不符合的。它接受一個閉包，這個閉包接收 <code>&amp;T</code>（每個元素的參考）、回傳 <code>bool</code>（true 保留、false 移除）。因為 <code>retain</code> 要對每個元素都呼叫一次，所以它要求 <code>FnMut</code>——「可以多次呼叫」。</p>
 <p>你可以傳一個<strong>會修改捕捉到的變數</strong>的閉包：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">numbers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">removed_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -10738,7 +10738,7 @@ name2 現在是：Bob!!!
 <span class="p">}</span>
 </code></pre></div>
 
-<p>為什麼錯？因為閉包預設用借用的方式捕捉 <code>name</code>（<code>&amp;name</code>），但 <code>name</code> 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂引用——第四章的老朋友。</p>
+<p>為什麼錯？因為閉包預設用借用的方式捕捉 <code>name</code>（<code>&amp;name</code>），但 <code>name</code> 是函數的局部變數，函數結束後就被丟掉了。閉包裡的借用就變成了懸垂參考——第四章的老朋友。</p>
 <h4 id="move_5">move 關鍵字</h4>
 <p>加上 <code>move</code> 就解決了：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">make_greeter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">Fn</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -10748,8 +10748,8 @@ name2 現在是：Bob!!!
 
 <p><code>move</code> 告訴 Rust：「不要用借用，把所有捕捉的變數都<strong>搬進</strong>閉包裡。」這樣 <code>name</code> 就歸閉包所有了，不管原本的作用域怎麼結束，閉包都能繼續用 <code>name</code>。</p>
 <h4 id="move-struct">move 閉包的匿名 struct</h4>
-<p>回想前幾集——閉包是匿名 struct。沒有 <code>move</code> 的時候，struct 的欄位可能是引用（<code>&amp;T</code> 或 <code>&amp;mut T</code>）；加了 <code>move</code> 之後，<strong>所有欄位都變成擁有的值</strong>（<code>T</code>）：</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// 沒有 move：閉包借用 name，struct 裡存的是引用</span>
+<p>回想前幾集——閉包是匿名 struct。沒有 <code>move</code> 的時候，struct 的欄位可能是參考（<code>&amp;T</code> 或 <code>&amp;mut T</code>）；加了 <code>move</code> 之後，<strong>所有欄位都變成擁有的值</strong>（<code>T</code>）：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 沒有 move：閉包借用 name，struct 裡存的是參考</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
 <span class="c1">// name 還能用，因為閉包只是借用</span>
@@ -10840,7 +10840,7 @@ name2 現在是：Bob!!!
 <h3 id="_653">重點整理</h3>
 <ul>
 <li><code>move</code> 強制閉包以 by-value 方式捕捉所有外部變數</li>
-<li>回傳閉包時通常需要 <code>move</code>，避免懸垂引用</li>
+<li>回傳閉包時通常需要 <code>move</code>，避免懸垂參考</li>
 <li><code>move</code> <strong>不影響</strong>閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼<strong>使用</strong>捕捉的值</li>
 <li>閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy</li>
 <li><code>move</code> 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景</li>
@@ -14158,7 +14158,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_803">概念說明</h3>
 <p>這集要講一個你可能在舊程式碼裡看過、但在現代 Rust 中幾乎用不到的語法：<code>ref</code>。理解它的存在和原理，有助於你讀懂別人的程式碼。</p>
 <h4 id="ref"><code>ref</code> 是什麼？</h4>
-<p>在模式中，<code>ref</code> 會把綁定的變數變成一個引用，而不是取得所有權：</p>
+<p>在模式中，<code>ref</code> 會把綁定的變數變成一個參考，而不是取得所有權：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">  </span><span class="c1">// r 的型別是 &amp;String</span>
 <span class="c1">// 等同於：let r = &amp;val;</span>
@@ -14177,7 +14177,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>如果不寫 <code>ref</code>，<code>s</code> 會拿走 <code>String</code> 的所有權，之後就不能再用 <code>opt</code> 了。</p>
 <h4 id="match-ergonomicsrust-126">Match ergonomics（Rust 1.26+）</h4>
-<p>從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個<strong>引用</strong>的時候，裡面的綁定會自動變成引用：</p>
+<p>從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個<strong>參考</strong>的時候，裡面的綁定會自動變成參考：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">opt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
 <span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opt</span><span class="w"> </span><span class="p">{</span><span class="w">          </span><span class="c1">// 注意這裡是 &amp;opt</span>
 <span class="w">    </span><span class="nb">Some</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="c1">// s 自動是 &amp;String，不需要寫 ref</span>
@@ -14188,9 +14188,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// opt 還能用！</span>
 </code></pre></div>
 
-<p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個引用（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
+<p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個參考（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
 <h4 id="ref_1">所以現在還需要寫 <code>ref</code> 嗎？</h4>
-<p>幾乎不需要了。99% 的情況你只要 match 引用（<code>match &amp;value</code>），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 <code>ref</code>。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
+<p>幾乎不需要了。99% 的情況你只要 match 參考（<code>match &amp;value</code>），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 <code>ref</code>。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
 <h3 id="_804">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// ===== ref 基本用法 =====</span>
@@ -14211,7 +14211,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="c1">// ===== 新寫法：match ergonomics =====</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;新世界&quot;</span><span class="p">));</span>
 
-<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data2</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="c1">// match 引用</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data2</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="c1">// match 參考</span>
 <span class="w">        </span><span class="nb">Some</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">     </span><span class="c1">// s 自動是 &amp;String</span>
 <span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;新寫法借用：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
@@ -14239,9 +14239,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><code>let ref x = val;</code> 等同於 <code>let x = &amp;val;</code>——在 <code>let</code> 中兩者完全一樣</li>
 <li>在 match 中，<code>Some(ref x)</code> 會借用而不是 move 內部的值</li>
-<li><strong>Match ergonomics（Rust 1.26+）</strong>：match 一個引用時，模式中的變數自動變成引用</li>
+<li><strong>Match ergonomics（Rust 1.26+）</strong>：match 一個參考時，模式中的變數自動變成參考</li>
 <li>現代 Rust 幾乎不需要手動寫 <code>ref</code>，用 <code>match &amp;value</code> 就好</li>
-<li><code>for (k, v) in &amp;collection</code> 也受 match ergonomics 影響，<code>k</code> 和 <code>v</code> 自動是引用</li>
+<li><code>for (k, v) in &amp;collection</code> 也受 match ergonomics 影響，<code>k</code> 和 <code>v</code> 自動是參考</li>
 <li>認識 <code>ref</code> 主要是為了讀懂舊程式碼</li>
 </ul>
 <hr />
@@ -14381,14 +14381,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <hr />
 <h2 id="i-rc-weak">附錄第 i 集：Rc 迴圈與 Weak</h2>
 <h3 id="_811">本集目標</h3>
-<p>理解 <code>Rc</code> 引用迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
+<p>理解 <code>Rc</code> 參考迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
 <h3 id="_812">概念說明</h3>
-<p>還記得第五章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過引用計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
-<p>聽起來很完美，但有一個致命弱點：<strong>引用迴圈（reference cycle）</strong>。</p>
-<h4 id="_813">什麼是引用迴圈？</h4>
+<p>還記得第五章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過參考計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
+<p>聽起來很完美，但有一個致命弱點：<strong>參考迴圈（reference cycle）</strong>。</p>
+<h4 id="_813">什麼是參考迴圈？</h4>
 <p>想像 A 持有 <code>Rc</code> 指向 B，B 也持有 <code>Rc</code> 指向 A。當我們不再需要它們的時候：</p>
 <ol>
 <li>A 的 <code>Rc</code> 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放</li>
@@ -14396,7 +14396,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ol>
 <p>結果：A 和 B <strong>永遠不會被釋放</strong>，這就是記憶體洩漏。</p>
 <h4 id="weak">Weak 救場</h4>
-<p><code>Weak&lt;T&gt;</code> 是一種「弱引用」——它指向同一筆資料，但<strong>不會增加強引用計數（strong count）</strong>。這意味著 <code>Weak</code> 不會阻止資料被釋放。</p>
+<p><code>Weak&lt;T&gt;</code> 是一種「弱參考」——它指向同一筆資料，但<strong>不會增加強參考計數（strong count）</strong>。這意味著 <code>Weak</code> 不會阻止資料被釋放。</p>
 <p>用法：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
 
@@ -14440,7 +14440,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">        </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;已被釋放&quot;</span><span class="p">),</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="c1">// drop 強引用</span>
+<span class="w">    </span><span class="c1">// drop 強參考</span>
 <span class="w">    </span><span class="nb">drop</span><span class="p">(</span><span class="n">strong</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// 再次 upgrade</span>
@@ -14463,7 +14463,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h3 id="_815">重點整理</h3>
 <ul>
-<li><code>Rc</code> 的引用迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放</li>
+<li><code>Rc</code> 的參考迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放</li>
 <li><code>Rc::downgrade(&amp;rc)</code> 建立 <code>Weak&lt;T&gt;</code>，<strong>不增加 strong count</strong></li>
 <li><code>weak.upgrade()</code> 回傳 <code>Option&lt;Rc&lt;T&gt;&gt;</code>——資料還在就給你 <code>Some(rc)</code>，被釋放了就是 <code>None</code></li>
 <li>用 <code>Weak</code> 打破迴圈的常見模式：強方向用 <code>Rc</code>，反向用 <code>Weak</code></li>
@@ -14611,7 +14611,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_825">怎麼用？靠指標！</h4>
 <p>DST 必須藏在某種指標後面：</p>
 <ul>
-<li><code>&amp;str</code>、<code>&amp;[T]</code> — 引用</li>
+<li><code>&amp;str</code>、<code>&amp;[T]</code> — 參考</li>
 <li><code>Box&lt;str&gt;</code>、<code>Box&lt;[T]&gt;</code> — 堆積上的指標</li>
 </ul>
 <p>這些指標是所謂的<strong>胖指標（fat pointer）</strong>——它們不只存一個位址，還多存了一個長度資訊：</p>
@@ -14632,10 +14632,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="sized"><code>?Sized</code>：放寬限制</h4>
 <p>有時候你希望泛型參數可以接受 DST，這時候用 <code>?Sized</code> 來放寬限制：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_it</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
-<span class="c1">//                     ^^^^^^^ 注意：必須透過引用</span>
+<span class="c1">//                     ^^^^^^^ 注意：必須透過參考</span>
 </code></pre></div>
 
-<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你只能透過引用或指標來使用 <code>T</code>。</p>
+<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你只能透過參考或指標來使用 <code>T</code>。</p>
 <h4 id="cow_1">回頭看第五章的 Cow</h4>
 <p>第五章最後一集教 <code>Cow</code> 的時候，我們用的是簡化版的定義：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 第五章提供的簡化版</span>
@@ -14659,9 +14659,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<p><code>Borrowed(&amp;'a B)</code> 裡的 <code>B</code> 已經在引用後面，所以即使 <code>B</code> 是 DST 也沒問題——胖指標會幫你搞定。</p>
+<p><code>Borrowed(&amp;'a B)</code> 裡的 <code>B</code> 已經在參考後面，所以即使 <code>B</code> 是 DST 也沒問題——胖指標會幫你搞定。</p>
 <h4 id="mut-t-mut-str"><code>&amp;mut [T]</code> 與 <code>&amp;mut str</code></h4>
-<p>DST 也可以拿可變引用。<code>&amp;mut [T]</code> 很實用——你可以修改切片裡的元素：</p>
+<p>DST 也可以拿可變參考。<code>&amp;mut [T]</code> 很實用——你可以修改切片裡的元素：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">arr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">slice</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">4</span><span class="p">];</span>
 <span class="n">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99</span><span class="p">;</span><span class="w">  </span><span class="c1">// arr 變成 [1, 99, 3, 4, 5]</span>
@@ -14683,7 +14683,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Sized 值：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="c1">// 放寬：T 可以是 DST，但必須透過引用</span>
+<span class="c1">// 放寬：T 可以是 DST，但必須透過參考</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">print_unsized</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Display</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">?</span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;可能是 DST：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
 <span class="p">}</span>
@@ -14717,7 +14717,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="c1">// let s: str = *&quot;hello&quot;;    // 編譯錯誤！</span>
 <span class="w">    </span><span class="c1">// let a: [i32] = *&amp;[1,2,3]; // 編譯錯誤！</span>
 
-<span class="w">    </span><span class="c1">// 但透過引用就沒問題</span>
+<span class="w">    </span><span class="c1">// 但透過參考就沒問題</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&amp;str = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
@@ -14735,7 +14735,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>DST 不能直接當值使用，必須透過指標：<code>&amp;str</code>、<code>&amp;[T]</code>、<code>Box&lt;str&gt;</code> 等</li>
 <li>指向 DST 的指標是<strong>胖指標（fat pointer）</strong>：位址 + 長度，佔 16 bytes</li>
 <li><strong><code>Sized</code></strong>：表示型別大小在編譯期已知；泛型參數預設有 <code>T: Sized</code> bound</li>
-<li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過引用使用）</li>
+<li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）</li>
 <li><code>Cow&lt;'a, B&gt;</code> 中的 <code>B: ?Sized</code> 就是為了讓 <code>B</code> 可以是 <code>str</code> 等 DST</li>
 </ul>
 <hr />

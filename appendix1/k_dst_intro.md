@@ -28,7 +28,7 @@
 
 DST 必須藏在某種指標後面：
 
-- `&str`、`&[T]` — 引用
+- `&str`、`&[T]` — 參考
 - `Box<str>`、`Box<[T]>` — 堆積上的指標
 
 這些指標是所謂的**胖指標（fat pointer）**——它們不只存一個位址，還多存了一個長度資訊：
@@ -60,10 +60,10 @@ fn print_it<T: Sized>(val: T) { ... }
 
 ```rust
 fn print_it<T: ?Sized>(val: &T) { ... }
-//                     ^^^^^^^ 注意：必須透過引用
+//                     ^^^^^^^ 注意：必須透過參考
 ```
 
-`?Sized` 的意思是「`T` 可以是 `Sized`，也可以不是」。但因為大小可能未知，你只能透過引用或指標來使用 `T`。
+`?Sized` 的意思是「`T` 可以是 `Sized`，也可以不是」。但因為大小可能未知，你只能透過參考或指標來使用 `T`。
 
 ### 回頭看第五章的 Cow
 
@@ -94,11 +94,11 @@ where
 }
 ```
 
-`Borrowed(&'a B)` 裡的 `B` 已經在引用後面，所以即使 `B` 是 DST 也沒問題——胖指標會幫你搞定。
+`Borrowed(&'a B)` 裡的 `B` 已經在參考後面，所以即使 `B` 是 DST 也沒問題——胖指標會幫你搞定。
 
 ### `&mut [T]` 與 `&mut str`
 
-DST 也可以拿可變引用。`&mut [T]` 很實用——你可以修改切片裡的元素：
+DST 也可以拿可變參考。`&mut [T]` 很實用——你可以修改切片裡的元素：
 
 ```rust
 let mut arr = [1, 2, 3, 4, 5];
@@ -126,7 +126,7 @@ fn print_sized<T: Display>(val: T) {
     println!("Sized 值：{}", val);
 }
 
-// 放寬：T 可以是 DST，但必須透過引用
+// 放寬：T 可以是 DST，但必須透過參考
 fn print_unsized<T: Display + ?Sized>(val: &T) {
     println!("可能是 DST：{}", val);
 }
@@ -160,7 +160,7 @@ fn main() {
     // let s: str = *"hello";    // 編譯錯誤！
     // let a: [i32] = *&[1,2,3]; // 編譯錯誤！
 
-    // 但透過引用就沒問題
+    // 但透過參考就沒問題
     let s: &str = "hello";
     let a: &[i32] = &[1, 2, 3];
     println!("\n&str = {}", s);
@@ -178,5 +178,5 @@ fn main() {
 - DST 不能直接當值使用，必須透過指標：`&str`、`&[T]`、`Box<str>` 等
 - 指向 DST 的指標是**胖指標（fat pointer）**：位址 + 長度，佔 16 bytes
 - **`Sized`**：表示型別大小在編譯期已知；泛型參數預設有 `T: Sized` bound
-- **`?Sized`**：放寬限制，讓泛型參數可以接受 DST（但必須透過引用使用）
+- **`?Sized`**：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）
 - `Cow<'a, B>` 中的 `B: ?Sized` 就是為了讓 `B` 可以是 `str` 等 DST
