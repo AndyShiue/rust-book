@@ -52,7 +52,14 @@ def escape_angles_outside_code(text):
         if in_code_block:
             result.append(line)
             continue
-        # Outside code block: escape < > but preserve inline code
+        # Outside code block: escape < > but preserve inline code and blockquotes
+        # Preserve > at start of line (markdown blockquote)
+        blockquote_prefix = ''
+        stripped = line.lstrip()
+        if stripped.startswith('>'):
+            indent = len(line) - len(stripped)
+            blockquote_prefix = line[:indent] + '>'
+            line = stripped[1:]  # remove the leading >
         parts_line = re.split(r'(`[^`]+`)', line)
         escaped_parts = []
         for part in parts_line:
@@ -60,7 +67,7 @@ def escape_angles_outside_code(text):
                 escaped_parts.append(part)  # inline code, keep as-is
             else:
                 escaped_parts.append(part.replace('<', '&lt;').replace('>', '&gt;'))
-        result.append(''.join(escaped_parts))
+        result.append(blockquote_prefix + ''.join(escaped_parts))
     return '\n'.join(result)
 
 merged = escape_angles_outside_code(merged)

@@ -999,7 +999,9 @@
 <p>這次印出「大」，因為 8 大於 5，條件成立，走 <code>if</code> 那邊。</p>
 <h4 id="_63">白話文</h4>
 <p>你可以把 <code>if...else</code> 想成：</p>
-<p>&gt; <strong>如果</strong>條件成立，就做這個；<strong>否則</strong>，就做那個。</p>
+<blockquote>
+<p><strong>如果</strong>條件成立，就做這個；<strong>否則</strong>，就做那個。</p>
+</blockquote>
 <p>一定會走其中一邊，不會兩邊都走，也不會兩邊都不走。</p>
 <h3 id="_64">重點整理</h3>
 <ul>
@@ -1542,7 +1544,9 @@ Andy
 
 <p>有看出差別嗎？<code>while</code> 把「條件判斷」和「迴圈」合在一起了。不需要自己寫 <code>if</code> 和 <code>break</code>，只要告訴 <code>while</code>：「只要這個條件成立，就繼續跑。」</p>
 <h4 id="while_1">while 的白話文</h4>
-<p>&gt; <strong>當</strong>條件成立的時候，就一直做大括號裡的事。</p>
+<blockquote>
+<p><strong>當</strong>條件成立的時候，就一直做大括號裡的事。</p>
+</blockquote>
 <p><code>while count &gt; 0</code> → 只要 count 大於 0，就繼續跑。count 一旦變成 0，條件不成立了，就自動停下來。</p>
 <h4 id="loop-while">什麼時候用 loop，什麼時候用 while？</h4>
 <ul>
@@ -5835,7 +5839,9 @@ c 的總和：7
 <p>今天我們不寫程式，先來聊一個 Rust 最重要的概念：<strong>所有權（ownership）</strong>。</p>
 <h4 id="_382">鑰匙圈比喻</h4>
 <p>想像你有一個鑰匙圈。鑰匙圈上可能掛著一些小裝飾（很輕、隨身帶著），也可能掛著一把鑰匙，這把鑰匙可以打開一個保險箱。規則很簡單：</p>
-<p>&gt; <strong>每個鑰匙圈只能在一個人手上。</strong></p>
+<blockquote>
+<p><strong>每個鑰匙圈只能在一個人手上。</strong></p>
+</blockquote>
 <p>這就是 Rust 的所有權規則。你手上拿著鑰匙圈，上面的裝飾和鑰匙都是你的。</p>
 <h4 id="move">移轉（Move）= 交出去就沒了</h4>
 <p>如果有人跟你說：「把你的鑰匙圈給我。」你把整個鑰匙圈交給對方之後，你手上就什麼都沒了。你不能再用那把鑰匙去開保險箱，因為鑰匙已經不在你手上了。</p>
@@ -13120,7 +13126,9 @@ note: iterators are lazy and do nothing unless consumed
 <p>編譯器會直接拒絕你。為什麼？</p>
 <h4 id="orphan-rule">Orphan Rule（孤兒規則）</h4>
 <p>Rust 有一條規則：</p>
-<p>&gt; <strong>要 impl 一個 trait，trait 或型別至少有一個必須是你這個 crate 定義的。</strong></p>
+<blockquote>
+<p><strong>要 impl 一個 trait，trait 或型別至少有一個必須是你這個 crate 定義的。</strong></p>
+</blockquote>
 <p>換句話說：<strong>trait 是你的，或型別是你的</strong>，至少要符合一個。</p>
 <p>上面的例子裡，<code>Display</code> 是標準函式庫定義的，<code>Vec&lt;i32&gt;</code> 也是——兩個都不是你的，所以不行。</p>
 <h4 id="_739">為什麼要有這個限制</h4>
@@ -13603,7 +13611,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="a_1">附錄第 a 集：數字字面值格式</h2>
 <h3 id="_759">本集目標</h3>
 <p>學會用底線分隔、不同進位制、型別後綴，以及浮點數字面值的各種寫法。</p>
-<p>&gt; 本集是<strong>第一章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第一章</strong>的補充。</p>
+</blockquote>
 <h3 id="_760">概念說明</h3>
 <p>第一章我們學了基本的數字寫法，像 <code>42</code>、<code>3.14</code>。但 Rust 的數字字面值其實有很多寫法，讓你寫出來的數字更好讀、更精確。</p>
 <h4 id="_761">底線分隔符</h4>
@@ -13685,7 +13695,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="b">附錄第 b 集：格式化字串進階</h2>
 <h3 id="_767">本集目標</h3>
 <p>學會 <code>println!</code> 的各種格式化技巧，包括變數捕獲簡寫、寬度、對齊、精度控制和進位制顯示。</p>
-<p>&gt; 本集是<strong>第一章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第一章</strong>的補充。</p>
+</blockquote>
 <h3 id="_768">概念說明</h3>
 <p>我們之前一直用 <code>println!("{}", x)</code> 來印東西，但其實 Rust 的格式化字串功能強大得多。這集介紹最常用的技巧，但不會涵蓋所有用法——完整的格式化語法請參考<a href="https://doc.rust-lang.org/std/fmt/">官方文件</a>。</p>
 <h4 id="_769">變數捕獲簡寫</h4>
@@ -13796,7 +13808,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="c-break">附錄第 c 集：break 回傳值</h2>
 <h3 id="_778">本集目標</h3>
 <p>學會用 <code>break</code> 從 <code>loop</code> 迴圈中回傳值，把迴圈當作表達式使用。</p>
-<p>&gt; 本集是<strong>第一章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第一章</strong>的補充。</p>
+</blockquote>
 <h3 id="_779">概念說明</h3>
 <p>還記得 Rust 裡「幾乎所有東西都是表達式」嗎？<code>loop</code> 迴圈也不例外——你可以透過 <code>break</code> 帶一個值出來，讓整個 <code>loop</code> 變成一個表達式。</p>
 <h4 id="_780">基本語法</h4>
@@ -13853,7 +13867,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="d-raw-string-literal">附錄第 d 集：多行字串 &amp; raw string literal</h2>
 <h3 id="_784">本集目標</h3>
 <p>學會在 Rust 中撰寫多行字串、行接續符號、以及不需要跳脫字元的 raw string。</p>
-<p>&gt; 本集是<strong>第一章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第一章</strong>的補充。</p>
+</blockquote>
 <h3 id="_785">概念說明</h3>
 <p>寫程式的時候，我們常常需要處理多行文字、檔案路徑、或是包含特殊字元的字串。Rust 提供了幾種好用的語法來應對這些情況。</p>
 <h4 id="_786">多行字串</h4>
@@ -13945,7 +13961,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="e-structenum-main">附錄第 e 集：struct/enum 放在 main 裡面</h2>
 <h3 id="_790">本集目標</h3>
 <p>了解 struct、enum、fn 等「項目」可以定義在函式內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
-<p>&gt; 本集是<strong>第三章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第三章</strong>的補充。</p>
+</blockquote>
 <h3 id="_791">概念說明</h3>
 <p>你可能習慣了把 <code>struct</code> 和 <code>enum</code> 定義在 <code>fn main()</code> 的外面，但其實把它們放在裡面也完全合法：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -14035,7 +14053,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="f-struct-update-syntax">附錄第 f 集：Struct update syntax</h2>
 <h3 id="_797">本集目標</h3>
 <p>學會用 <code>..</code> 語法從既有的 struct 實例快速建立新實例，並理解 Copy 與 move 欄位的差異。</p>
-<p>&gt; 本集是<strong>第三章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第三章</strong>的補充。</p>
+</blockquote>
 <h3 id="_798">概念說明</h3>
 <p>還記得建立 struct 的時候，每個欄位都要寫出來嗎？如果你只想改一兩個欄位，其他照舊，每次都全部寫一遍很煩。Rust 提供了 <strong>struct update syntax</strong>，用 <code>..</code> 來「填入剩下的欄位」。</p>
 <h4 id="_799">基本語法</h4>
@@ -14132,7 +14152,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="g-ref-pattern-match-ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</h2>
 <h3 id="_802">本集目標</h3>
 <p>了解 <code>ref</code> 關鍵字在模式匹配中的作用，以及為什麼在現代 Rust 中幾乎不需要手動寫 <code>ref</code>。</p>
-<p>&gt; 本集是<strong>第三章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第三章</strong>的補充。</p>
+</blockquote>
 <h3 id="_803">概念說明</h3>
 <p>這集要講一個你可能在舊程式碼裡看過、但在現代 Rust 中幾乎用不到的語法：<code>ref</code>。理解它的存在和原理，有助於你讀懂別人的程式碼。</p>
 <h4 id="ref"><code>ref</code> 是什麼？</h4>
@@ -14226,7 +14248,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="h-panic-todo-unimplemented-unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</h2>
 <h3 id="_806">本集目標</h3>
 <p>認識四種會讓程式立即終止的巨集，以及它們各自的使用時機。</p>
-<p>&gt; 本集是通用補充，不特定屬於哪一章。</p>
+<blockquote>
+<p>本集是通用補充，不特定屬於哪一章。</p>
+</blockquote>
 <h3 id="_807">概念說明</h3>
 <p>Rust 有四個常用的「讓程式直接掛掉」的巨集。它們都會造成 panic（程式中止），但語義不同，傳達給讀程式碼的人的訊息也不同。</p>
 <h4 id="panic_1"><code>panic!("訊息")</code></h4>
@@ -14358,7 +14382,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="i-rc-weak">附錄第 i 集：Rc 迴圈與 Weak</h2>
 <h3 id="_811">本集目標</h3>
 <p>理解 <code>Rc</code> 參考迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
-<p>&gt; 本集是<strong>第五章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第五章</strong>的補充。</p>
+</blockquote>
 <h3 id="_812">概念說明</h3>
 <p>還記得第七章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過參考計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
 <p>聽起來很完美，但有一個致命弱點：<strong>參考迴圈（reference cycle）</strong>。</p>
@@ -14448,7 +14474,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="j-fully-qualified-syntax">附錄第 j 集：Fully qualified syntax</h2>
 <h3 id="_816">本集目標</h3>
 <p>學會三種不同層級的方法呼叫語法，以及在 trait 方法名稱衝突時如何消歧義。</p>
-<p>&gt; 本集是<strong>第五章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第五章</strong>的補充。</p>
+</blockquote>
 <h3 id="_817">概念說明</h3>
 <p>在 Rust 裡，呼叫一個方法其實有三種寫法，從簡單到完整：</p>
 <h4 id="_818">第一種：方法語法</h4>
@@ -14564,7 +14592,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h2 id="k-dst">附錄第 k 集：DST 簡介</h2>
 <h3 id="_823">本集目標</h3>
 <p>理解什麼是動態大小型別（DST），以及 <code>Sized</code>、<code>?Sized</code> 在泛型中的意義。</p>
-<p>&gt; 本集是<strong>第五章</strong>的補充。</p>
+<blockquote>
+<p>本集是<strong>第五章</strong>的補充。</p>
+</blockquote>
 <h3 id="_824">概念說明</h3>
 <p>在 Rust 的型別系統裡，大部分型別的大小在編譯期就已知——<code>i32</code> 是 4 bytes、<code>bool</code> 是 1 byte、<code>(i32, i32)</code> 是 8 bytes。但有些型別的大小<strong>在編譯期是未知的</strong>，這就是 <strong>DST（Dynamically Sized Types）</strong>，動態大小型別。</p>
 <h4 id="dst">常見的 DST</h4>
