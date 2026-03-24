@@ -14158,7 +14158,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_803">概念說明</h3>
 <p>這集要講一個你可能在舊程式碼裡看過、但在現代 Rust 中幾乎用不到的語法：<code>ref</code>。理解它的存在和原理，有助於你讀懂別人的程式碼。</p>
 <h4 id="ref"><code>ref</code> 是什麼？</h4>
-<p>在模式中，<code>ref</code> 會把綁定的變數變成一個參考，而不是取得所有權：</p>
+<p>在模式中，<code>ref</code> 會把綁定的變數變成一個引用，而不是取得所有權：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">;</span><span class="w">  </span><span class="c1">// r 的型別是 &amp;String</span>
 <span class="c1">// 等同於：let r = &amp;val;</span>
@@ -14177,7 +14177,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>如果不寫 <code>ref</code>，<code>s</code> 會拿走 <code>String</code> 的所有權，之後就不能再用 <code>opt</code> 了。</p>
 <h4 id="match-ergonomicsrust-126">Match ergonomics（Rust 1.26+）</h4>
-<p>從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個<strong>參考</strong>的時候，裡面的綁定會自動變成參考：</p>
+<p>從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個<strong>引用</strong>的時候，裡面的綁定會自動變成引用：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">opt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
 <span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opt</span><span class="w"> </span><span class="p">{</span><span class="w">          </span><span class="c1">// 注意這裡是 &amp;opt</span>
 <span class="w">    </span><span class="nb">Some</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="c1">// s 自動是 &amp;String，不需要寫 ref</span>
@@ -14188,9 +14188,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// opt 還能用！</span>
 </code></pre></div>
 
-<p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個參考（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
+<p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個引用（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
 <h4 id="ref_1">所以現在還需要寫 <code>ref</code> 嗎？</h4>
-<p>幾乎不需要了。99% 的情況你只要 match 參考（<code>match &amp;value</code>），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 <code>ref</code>。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
+<p>幾乎不需要了。99% 的情況你只要 match 引用（<code>match &amp;value</code>），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 <code>ref</code>。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
 <h3 id="_804">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// ===== ref 基本用法 =====</span>
@@ -14211,7 +14211,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="c1">// ===== 新寫法：match ergonomics =====</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;新世界&quot;</span><span class="p">));</span>
 
-<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data2</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="c1">// match 參考</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data2</span><span class="w"> </span><span class="p">{</span><span class="w">       </span><span class="c1">// match 引用</span>
 <span class="w">        </span><span class="nb">Some</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">     </span><span class="c1">// s 自動是 &amp;String</span>
 <span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;新寫法借用：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
@@ -14239,9 +14239,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><code>let ref x = val;</code> 等同於 <code>let x = &amp;val;</code>——在 <code>let</code> 中兩者完全一樣</li>
 <li>在 match 中，<code>Some(ref x)</code> 會借用而不是 move 內部的值</li>
-<li><strong>Match ergonomics（Rust 1.26+）</strong>：match 一個參考時，模式中的變數自動變成參考</li>
+<li><strong>Match ergonomics（Rust 1.26+）</strong>：match 一個引用時，模式中的變數自動變成引用</li>
 <li>現代 Rust 幾乎不需要手動寫 <code>ref</code>，用 <code>match &amp;value</code> 就好</li>
-<li><code>for (k, v) in &amp;collection</code> 也受 match ergonomics 影響，<code>k</code> 和 <code>v</code> 自動是參考</li>
+<li><code>for (k, v) in &amp;collection</code> 也受 match ergonomics 影響，<code>k</code> 和 <code>v</code> 自動是引用</li>
 <li>認識 <code>ref</code> 主要是為了讀懂舊程式碼</li>
 </ul>
 <hr />
@@ -14381,14 +14381,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <hr />
 <h2 id="i-rc-weak">附錄第 i 集：Rc 迴圈與 Weak</h2>
 <h3 id="_811">本集目標</h3>
-<p>理解 <code>Rc</code> 參考迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
+<p>理解 <code>Rc</code> 引用迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
 <h3 id="_812">概念說明</h3>
-<p>還記得第七章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過參考計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
-<p>聽起來很完美，但有一個致命弱點：<strong>參考迴圈（reference cycle）</strong>。</p>
-<h4 id="_813">什麼是參考迴圈？</h4>
+<p>還記得第五章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過引用計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
+<p>聽起來很完美，但有一個致命弱點：<strong>引用迴圈（reference cycle）</strong>。</p>
+<h4 id="_813">什麼是引用迴圈？</h4>
 <p>想像 A 持有 <code>Rc</code> 指向 B，B 也持有 <code>Rc</code> 指向 A。當我們不再需要它們的時候：</p>
 <ol>
 <li>A 的 <code>Rc</code> 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放</li>
@@ -14396,7 +14396,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ol>
 <p>結果：A 和 B <strong>永遠不會被釋放</strong>，這就是記憶體洩漏。</p>
 <h4 id="weak">Weak 救場</h4>
-<p><code>Weak&lt;T&gt;</code> 是一種「弱參考」——它指向同一筆資料，但<strong>不會增加強參考計數（strong count）</strong>。這意味著 <code>Weak</code> 不會阻止資料被釋放。</p>
+<p><code>Weak&lt;T&gt;</code> 是一種「弱引用」——它指向同一筆資料，但<strong>不會增加強引用計數（strong count）</strong>。這意味著 <code>Weak</code> 不會阻止資料被釋放。</p>
 <p>用法：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
 
@@ -14440,7 +14440,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">        </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;已被釋放&quot;</span><span class="p">),</span>
 <span class="w">    </span><span class="p">}</span>
 
-<span class="w">    </span><span class="c1">// drop 強參考</span>
+<span class="w">    </span><span class="c1">// drop 強引用</span>
 <span class="w">    </span><span class="nb">drop</span><span class="p">(</span><span class="n">strong</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// 再次 upgrade</span>
@@ -14463,7 +14463,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h3 id="_815">重點整理</h3>
 <ul>
-<li><code>Rc</code> 的參考迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放</li>
+<li><code>Rc</code> 的引用迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放</li>
 <li><code>Rc::downgrade(&amp;rc)</code> 建立 <code>Weak&lt;T&gt;</code>，<strong>不增加 strong count</strong></li>
 <li><code>weak.upgrade()</code> 回傳 <code>Option&lt;Rc&lt;T&gt;&gt;</code>——資料還在就給你 <code>Some(rc)</code>，被釋放了就是 <code>None</code></li>
 <li>用 <code>Weak</code> 打破迴圈的常見模式：強方向用 <code>Rc</code>，反向用 <code>Weak</code></li>
@@ -14584,7 +14584,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>方法呼叫有三種層級：<code>obj.method()</code> → <code>Trait::method(&amp;obj)</code> → <code>&lt;Type as Trait&gt;::method(&amp;obj)</code></li>
 <li>通常用最簡單的就好，有衝突時才升級</li>
 <li>當多個 trait 定義同名方法時，需要指定要呼叫哪個 trait 的版本</li>
-<li>型別本身的方法（inherent method）優先於 trait 方法</li>
+<li>型別本身的方法優先於 trait 方法</li>
 <li><strong>關聯函式</strong>（沒有 <code>self</code>）因為沒有接收者，更常需要完全限定語法</li>
 <li>完全限定語法的格式：<code>&lt;Type as Trait&gt;::function(args)</code></li>
 </ul>
@@ -14611,7 +14611,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_825">怎麼用？靠指標！</h4>
 <p>DST 必須藏在某種指標後面：</p>
 <ul>
-<li><code>&amp;str</code>、<code>&amp;[T]</code> — 參考</li>
+<li><code>&amp;str</code>、<code>&amp;[T]</code> — 引用</li>
 <li><code>Box&lt;str&gt;</code>、<code>Box&lt;[T]&gt;</code> — 堆積上的指標</li>
 </ul>
 <p>這些指標是所謂的<strong>胖指標（fat pointer）</strong>——它們不只存一個位址，還多存了一個長度資訊：</p>
@@ -14632,10 +14632,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="sized"><code>?Sized</code>：放寬限制</h4>
 <p>有時候你希望泛型參數可以接受 DST，這時候用 <code>?Sized</code> 來放寬限制：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_it</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
-<span class="c1">//                     ^^^^^^^ 注意：必須透過參考</span>
+<span class="c1">//                     ^^^^^^^ 注意：必須透過引用</span>
 </code></pre></div>
 
-<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你只能透過參考或指標來使用 <code>T</code>。</p>
+<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你只能透過引用或指標來使用 <code>T</code>。</p>
 <h4 id="cow_1">回頭看第五章的 Cow</h4>
 <p>第五章最後一集教 <code>Cow</code> 的時候，我們用的是簡化版的定義：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 第五章提供的簡化版</span>
@@ -14659,9 +14659,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<p><code>Borrowed(&amp;'a B)</code> 裡的 <code>B</code> 已經在參考後面，所以即使 <code>B</code> 是 DST 也沒問題——胖指標會幫你搞定。</p>
+<p><code>Borrowed(&amp;'a B)</code> 裡的 <code>B</code> 已經在引用後面，所以即使 <code>B</code> 是 DST 也沒問題——胖指標會幫你搞定。</p>
 <h4 id="mut-t-mut-str"><code>&amp;mut [T]</code> 與 <code>&amp;mut str</code></h4>
-<p>DST 也可以拿可變參考。<code>&amp;mut [T]</code> 很實用——你可以修改切片裡的元素：</p>
+<p>DST 也可以拿可變引用。<code>&amp;mut [T]</code> 很實用——你可以修改切片裡的元素：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">arr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">slice</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">4</span><span class="p">];</span>
 <span class="n">slice</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">99</span><span class="p">;</span><span class="w">  </span><span class="c1">// arr 變成 [1, 99, 3, 4, 5]</span>
@@ -14683,7 +14683,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Sized 值：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="c1">// 放寬：T 可以是 DST，但必須透過參考</span>
+<span class="c1">// 放寬：T 可以是 DST，但必須透過引用</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">print_unsized</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Display</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">?</span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;可能是 DST：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
 <span class="p">}</span>
@@ -14717,7 +14717,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="c1">// let s: str = *&quot;hello&quot;;    // 編譯錯誤！</span>
 <span class="w">    </span><span class="c1">// let a: [i32] = *&amp;[1,2,3]; // 編譯錯誤！</span>
 
-<span class="w">    </span><span class="c1">// 但透過參考就沒問題</span>
+<span class="w">    </span><span class="c1">// 但透過引用就沒問題</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&amp;str = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
@@ -14735,7 +14735,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>DST 不能直接當值使用，必須透過指標：<code>&amp;str</code>、<code>&amp;[T]</code>、<code>Box&lt;str&gt;</code> 等</li>
 <li>指向 DST 的指標是<strong>胖指標（fat pointer）</strong>：位址 + 長度，佔 16 bytes</li>
 <li><strong><code>Sized</code></strong>：表示型別大小在編譯期已知；泛型參數預設有 <code>T: Sized</code> bound</li>
-<li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）</li>
+<li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過引用使用）</li>
 <li><code>Cow&lt;'a, B&gt;</code> 中的 <code>B: ?Sized</code> 就是為了讓 <code>B</code> 可以是 <code>str</code> 等 DST</li>
 </ul>
 <hr />
