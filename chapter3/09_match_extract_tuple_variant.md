@@ -67,5 +67,5 @@ enum Action {
 - 在 match 模式裡，可以用變數名接住 tuple variant 的資料
 - `Shape::Circle(r)` → 把 Circle 裡的值取出來叫做 `r`
 - `Shape::Rectangle(w, h)` → 把 Rectangle 裡的兩個值分別叫做 `w` 和 `h`
-- 變數名可以自己取，不需要和定義時一樣
+- 變數名可以自己取
 - match 依然要窮舉所有 variant

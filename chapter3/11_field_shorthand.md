@@ -70,4 +70,4 @@ fn main() {
 - 這個簡寫叫做 **field shorthand**
 - 建立 struct / enum variant 時可以用
 - match 模式裡也可以用
-- 這是一個很常見的寫法，實際寫 Rust 時幾乎都會用簡寫
+- 這是一個很常見的寫法，實際寫 Rust 時常常用簡寫

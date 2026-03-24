@@ -1,7 +1,7 @@
 # 第三章第 12 集：tuple pattern
 
 ## 本集目標
-學會在 match 裡解構一般的 tuple（不只是 enum，普通 tuple 也可以）。
+學會在 match 裡解構一般的 tuple 與 tuple struct。
 
 ## 概念說明
 

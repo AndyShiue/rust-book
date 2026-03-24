@@ -3684,7 +3684,7 @@ c 的總和：7
 <h3 id="_257">本集目標</h3>
 <p>學會用 struct 把多個相關的值組合在一起，形成一個自訂型別。</p>
 <h3 id="_258">概念說明</h3>
-<p>到目前為止，我們用過的型別都是 Rust 內建的：<code>i32</code>、<code>f64</code>、<code>bool</code>、<code>char</code>、<code>&amp;str</code>，還有 tuple 和陣列。但實際寫程式的時候，你會需要<strong>自己定義新的型別</strong>。</p>
+<p>到目前為止，我們用過的型別都是 Rust 內建的：<code>i32</code>、<code>f64</code>、<code>bool</code>、<code>char</code>，還有 tuple、陣列和切片。但實際寫程式的時候，你會需要<strong>自己定義新的型別</strong>。</p>
 <p><code>struct</code> 就是 Rust 讓你定義新型別的方式之一。定義一個 struct，就是在告訴 Rust：「我要一個新的型別，它裡面包含這些欄位。」</p>
 <p>比如說，一個「點」有 x 座標和 y 座標。我們可以用 tuple <code>(i32, i32)</code> 來表示，但 tuple 只能用 <code>.0</code>、<code>.1</code> 取值，看不出哪個是 x、哪個是 y。用 struct 就能幫每個欄位取名字。</p>
 <p>定義 struct 的語法是：</p>
@@ -3694,7 +3694,8 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>建立一個 struct 的值時，要用 <code>型別名 { 欄位名: 值 }</code> 的寫法。取值的時候用 <code>.欄位名</code>。</p>
+<p>struct 定義一般放在 <code>fn main()</code> 外面，這樣其他函數也能用到。放在上面或下面都可以（和函數一樣，不受定義順序限制）。</p>
+<p>建立一個 struct 的值時，要用 <code>型別名 { 欄位名: 值 }</code> 的寫法。取值的時候用 <code>.欄位名</code>。如果要修改 struct 的欄位，變數必須加 <code>mut</code>。</p>
 <h3 id="_259">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
@@ -3731,9 +3732,9 @@ c 的總和：7
 <h3 id="_260">重點整理</h3>
 <ul>
 <li><code>struct</code> 讓你定義一個有名字欄位的自訂型別</li>
+<li>struct 定義一般放在 <code>fn main()</code> 外面，上面或下面都可以（和函數一樣）</li>
 <li>建立 struct 值的語法：<code>Point { x: 1, y: 2 }</code></li>
 <li>用 <code>.欄位名</code> 取得欄位的值，例如 <code>p.x</code></li>
-<li>struct 定義一般放在 <code>fn main()</code> 外面，上面或下面都可以（和函數一樣）</li>
 <li>如果要修改 struct 的欄位，變數必須加 <code>mut</code></li>
 <li>最後一個欄位後面的逗號（trailing comma）可加可不加，慣例是加</li>
 </ul>
@@ -3747,7 +3748,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>建立值的時候用 <code>Point(3, 7)</code>——注意，這裡的 <code>Point</code> 既是<strong>型別的名字</strong>，也是<strong>建立值時使用的名字</strong>。取值用 <code>.0</code>、<code>.1</code>，就像 tuple 一樣。</p>
-<p>上一集的 named field struct 也是同樣的道理：<code>Point</code> 既是型別名，也是建立值時寫 <code>Point { x: 1, y: 2 }</code> 用的名字。在 Rust 裡，型別名和建立值的名字永遠是同一個。</p>
+<p>上一集的 named field struct 也是同樣的道理：<code>Point</code> 既是型別名，也是建立值時寫 <code>Point { x: 1, y: 2 }</code> 用的名字。</p>
 <p>另外還有一種更極端的情況：struct 完全沒有欄位，叫做 <strong>unit struct</strong>。它通常用來當作一個「標記」，表示某種身份或角色，但本身不帶任何資料。</p>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Marker</span><span class="p">;</span>
 </code></pre></div>
@@ -3887,7 +3888,7 @@ c 的總和：7
 <li>每個分支用 <code>=&gt;</code> 分隔模式和要執行的程式碼</li>
 <li><strong>match 必須窮舉所有 variant</strong>——少一個就編譯失敗</li>
 <li>分支從上到下比對，第一個符合的就會執行</li>
-<li>match 是 Rust 處理 enum 最常用的方式</li>
+<li>match 是 Rust 處理 enum 最基本的方式</li>
 </ul>
 <hr />
 <h2 id="5-match">第三章第 5 集：match 當表達式</h2>
@@ -4119,7 +4120,7 @@ c 的總和：7
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Shape</span><span class="p">::</span><span class="n">Dot</span><span class="p">;</span>
 
 <span class="w">    </span><span class="c1">// 目前還不能直接取出裡面的欄位</span>
-<span class="w">    </span><span class="c1">// 第 12 集會學怎麼用 match 取出 struct variant 的資料</span>
+<span class="w">    </span><span class="c1">// 第 10 集會學怎麼用 match 取出 struct variant 的資料</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;三種形狀都建立好了！&quot;</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// 一個更生活化的例子</span>
@@ -4140,7 +4141,7 @@ c 的總和：7
 <li>建立值：<code>Shape::Circle { radius: 5.0 }</code></li>
 <li>同一個 enum 可以混搭：有的用 tuple 形式、有的用 struct 形式、有的不帶資料</li>
 <li>struct 形式的好處是欄位有名字，程式碼更容易讀懂</li>
-<li>取出欄位資料需要用 match（第 12 集會學）</li>
+<li>取出欄位資料需要用 match（第 10 集會學）</li>
 </ul>
 <hr />
 <h2 id="9-match-tuple-variant">第三章第 9 集：match 取出 tuple variant 資料</h2>
@@ -4203,7 +4204,7 @@ c 的總和：7
 <li>在 match 模式裡，可以用變數名接住 tuple variant 的資料</li>
 <li><code>Shape::Circle(r)</code> → 把 Circle 裡的值取出來叫做 <code>r</code></li>
 <li><code>Shape::Rectangle(w, h)</code> → 把 Rectangle 裡的兩個值分別叫做 <code>w</code> 和 <code>h</code></li>
-<li>變數名可以自己取，不需要和定義時一樣</li>
+<li>變數名可以自己取</li>
 <li>match 依然要窮舉所有 variant</li>
 </ul>
 <hr />
@@ -4339,12 +4340,12 @@ c 的總和：7
 <li>這個簡寫叫做 <strong>field shorthand</strong></li>
 <li>建立 struct / enum variant 時可以用</li>
 <li>match 模式裡也可以用</li>
-<li>這是一個很常見的寫法，實際寫 Rust 時幾乎都會用簡寫</li>
+<li>這是一個很常見的寫法，實際寫 Rust 時常常用簡寫</li>
 </ul>
 <hr />
 <h2 id="12-tuple-pattern">第三章第 12 集：tuple pattern</h2>
 <h3 id="_301">本集目標</h3>
-<p>學會在 match 裡解構一般的 tuple（不只是 enum，普通 tuple 也可以）。</p>
+<p>學會在 match 裡解構一般的 tuple 與 tuple struct。</p>
 <h3 id="_302">概念說明</h3>
 <p>第 9 集學了怎麼在 match 裡取出 enum variant 的資料。其實不只 enum，一般的 <strong>tuple</strong> 也可以拿來 match！</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">);</span>
@@ -4640,13 +4641,12 @@ c 的總和：7
 <li><code>_</code> 是 wildcard，匹配任何值但不綁定變數</li>
 <li><code>_ =&gt; ...</code> 放在 match 最後面當「預設分支」，處理所有未列出的情況</li>
 <li>在 tuple 或 enum 模式裡用 <code>_</code> 忽略不需要的欄位</li>
-<li><code>_</code> 和之前學過的底線變數 <code>_x</code> 不同：<code>_</code> 完全不綁定，<code>_x</code> 會綁定但告訴編譯器「我知道沒用到」</li>
 <li>有了 <code>_</code>，match 就不用每個 variant 都寫出來了</li>
 </ul>
 <hr />
 <h2 id="16">第三章第 16 集：<code>..</code> 忽略多個值</h2>
 <h3 id="_319">本集目標</h3>
-<p>學會用 <code>..</code> 一次忽略 struct 或 tuple 中多個不關心的欄位。</p>
+<p>學會用 <code>..</code> 一次忽略 struct 或 tuple 中多個不關心的值。</p>
 <h3 id="_320">概念說明</h3>
 <p>上一集學了用 <code>_</code> 忽略一個值。但如果一個 struct 有很多欄位，而你只關心其中一兩個呢？每個不要的都寫 <code>_</code> 太麻煩了。</p>
 <p>Rust 提供了 <code>..</code>（兩個點），意思是「剩下的我都不要了」：</p>
