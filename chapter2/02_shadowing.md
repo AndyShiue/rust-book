@@ -98,7 +98,7 @@ input + 1 = 43
 fn main() {
     let x = 1;
     {
-        let x = 2;  // 在這個區塊裡，x 被遮蔽為 2
+        let x = 2;  // 在這個區塊這行之後，x 被遮蔽為 2
         println!("區塊內 x = {}", x);  // 2
     }
     println!("區塊外 x = {}", x);  // 1

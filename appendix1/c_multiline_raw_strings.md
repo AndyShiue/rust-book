@@ -1,4 +1,4 @@
-# 附錄第 d 集：多行字串 & raw string literal
+# 附錄第 c 集：多行字串 & raw string literal
 
 ## 本集目標
 
