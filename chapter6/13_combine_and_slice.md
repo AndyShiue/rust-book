@@ -75,7 +75,7 @@ let chars: Vec<char> = words.iter().flat_map(|s| s.chars()).collect();
 // ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', ' ', 'f', 'o', 'o', ' ', 'b', 'a', 'r']
 ```
 
-還記得第 6 集的 `Option::and_then` 和 `Result::and_then` 嗎？`flat_map` 在迭代器上做的事情本質上一樣——「轉換，但如果轉換結果本身是容器，就攤平它」。
+還記得第 6 集 `Option` 和 `Result` 的 `and_then` 嗎？`flat_map` 在迭代器上做的事情本質上一樣——「轉換，但因為轉換結果本身也是容器那就攤平」。
 
 ## 範例程式碼
 

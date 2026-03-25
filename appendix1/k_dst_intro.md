@@ -36,9 +36,10 @@ DST 必須藏在某種指標後面：
 ```
 一般指標：[位址]           （8 bytes）
 胖指標：  [位址][長度]      （16 bytes）
+（假設電腦是 64 位元）
 ```
 
-所以 `&str` 實際上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。
+所以 `&str` 實際上在 64 位元電腦上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。
 
 ### `Sized` trait
 
@@ -131,7 +132,7 @@ fn print_unsized<T: Display + ?Sized>(val: &T) {
     println!("可能是 DST：{}", val);
 }
 
-// 展示胖指標大小
+// 展示 64 位元電腦上的胖指標大小
 fn show_pointer_sizes() {
     use std::mem::size_of;
 
@@ -176,7 +177,7 @@ fn main() {
 
 - **DST（Dynamically Sized Types）**：大小在編譯期未知的型別，如 `str`、`[T]`
 - DST 不能直接當值使用，必須透過指標：`&str`、`&[T]`、`Box<str>` 等
-- 指向 DST 的指標是**胖指標（fat pointer）**：位址 + 長度，佔 16 bytes
+- 指向 DST 的指標是**胖指標（fat pointer）**：位址 + 長度，在 64 位元電腦上佔 16 bytes
 - **`Sized`**：表示型別大小在編譯期已知；泛型參數預設有 `T: Sized` bound
 - **`?Sized`**：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）
 - `Cow<'a, B>` 中的 `B: ?Sized` 就是為了讓 `B` 可以是 `str` 等 DST

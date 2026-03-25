@@ -158,6 +158,24 @@ use std::collections::*;  // HashMap, BTreeMap, HashSet... 全部可用
 
 **一般不推薦**在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在**測試**裡很常見——`use super::*;` 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 `cargo test` 寫測試，到時候就會看到這個用法。
 
+### use enum variant 和 associated function
+
+`use` 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：
+
+```rust
+use std::cmp::Ordering::{Less, Equal, Greater};
+
+fn compare(a: i32, b: i32) {
+    match a.cmp(&b) {
+        Less => println!("小於"),
+        Equal => println!("相等"),
+        Greater => println!("大於"),
+    }
+}
+```
+
+不用每次都寫 `Ordering::Less`，直接用 `Less` 就好。這在 match 很多 variant 的時候特別方便。
+
 ## 範例程式碼
 
 ```rust
@@ -209,9 +227,10 @@ fn main() {
 - `use` 將路徑帶入作用域，讓你不必每次寫完整路徑
 - 絕對路徑用 `crate::` 開頭，相對路徑從當前 mod 位置開始
 - 外部 crate 直接用名稱開頭；加 `::` 前綴可以明確標記為外部 crate
-- `std` 是標準函式庫，不用加 dependency 就能用
+- `std` 是標準函式庫，不用加 dependency 就能用，prelude 也在裡面
 - `super::` 指向父 mod，`self::` 指向當前 mod
-- `use a::b::{X, Y, self};` 一次 use 多個東西
+- `use a::b::{self, X, Y};` 一次 use 多個東西
 - `use X as Alias;` 取別名，解決名字衝突
 - 同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）
 - `use something::*;` 星號匯入——測試裡常用，正式程式碼少用
+- enum 的 variant 也可以被 `use`

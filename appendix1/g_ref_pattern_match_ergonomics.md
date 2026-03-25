@@ -56,7 +56,7 @@ match &opt {          // 注意這裡是 &opt
 
 ### 所以現在還需要寫 `ref` 嗎？
 
-幾乎不需要了。99% 的情況你只要 match 參考（`match &value`），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 `ref`。但讀舊程式碼的時候，看到 `ref` 至少要知道它在做什麼。
+幾乎不需要了。99% 的情況你只要 match 參考（`match &value`），編譯器就會自動處理。但讀舊程式碼的時候，看到 `ref` 至少要知道它在做什麼。
 
 ## 範例程式碼
 
@@ -108,7 +108,7 @@ fn main() {
 
 - `let ref x = val;` 等同於 `let x = &val;`——在 `let` 中兩者完全一樣
 - 在 match 中，`Some(ref x)` 會借用而不是 move 內部的值
-- **Match ergonomics（Rust 1.26+）**：match 一個參考時，模式中的變數自動變成參考
+- **match ergonomics（Rust 1.26+）**：match 一個參考時，模式中的變數自動變成參考
 - 現代 Rust 幾乎不需要手動寫 `ref`，用 `match &value` 就好
 - `for (k, v) in &collection` 也受 match ergonomics 影響，`k` 和 `v` 自動是參考
 - 認識 `ref` 主要是為了讀懂舊程式碼

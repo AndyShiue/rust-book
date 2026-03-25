@@ -134,5 +134,5 @@ fn main() {
 - 通常用最簡單的就好，有衝突時才升級
 - 當多個 trait 定義同名方法時，需要指定要呼叫哪個 trait 的版本
 - 型別本身的方法優先於 trait 方法
-- **關聯函式**（沒有 `self`）因為沒有接收者，更常需要完全限定語法
+- **associated function**（沒有 `self`）更常需要完全限定語法
 - 完全限定語法的格式：`<Type as Trait>::function(args)`

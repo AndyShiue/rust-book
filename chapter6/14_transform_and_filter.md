@@ -14,7 +14,7 @@ let doubled: Vec<i32> = vec![1, 2, 3].iter().map(|x| x * 2).collect();
 // [2, 4, 6]
 ```
 
-注意！`.iter()` 產出 `&T`，所以閉包的參數是 `&i32`。如果不想處理引用，可以搭配 `.copied()`（等等會講）。
+注意！`.iter()` 產出 `&T`，所以閉包的參數是 `&i32`。如果不想處理參考，可以搭配 `.copied()`（等等會講）。
 
 ### .filter() —— 過濾元素
 
@@ -40,7 +40,7 @@ for (i, name) in names.iter().enumerate() {
 
 ### .copied() 和 .cloned()
 
-當迭代器產出引用（`&T`）但你想要值（`T`）時：
+當迭代器產出參考（`&T`）但你想要值（`T`）時：
 
 - `.copied()` —— 要求 T: Copy，用 Copy 語意取值
 - `.cloned()` —— 要求 T: Clone，用 Clone 語意取值

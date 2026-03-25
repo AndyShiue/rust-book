@@ -61,24 +61,6 @@ for x in iter {       // Iterator 也實作了 IntoIterator
 }
 ```
 
-### Vec 的三種 IntoIterator
-
-`Vec<T>` 其實有三種 `IntoIterator` 的實作：
-
-- `Vec<T>` 的 `into_iter()` → 產出 `T`（消耗 Vec）
-- `&Vec<T>` 的 `into_iter()` → 產出 `&T`（借用）
-- `&mut Vec<T>` 的 `into_iter()` → 產出 `&mut T`（可變借用）
-
-這就是為什麼以下三種寫法都可以：
-
-```rust
-for x in v { ... }       // 消耗 v，x 是 T
-for x in &v { ... }      // 借用 v，x 是 &T
-for x in &mut v { ... }  // 可變借用 v，x 是 &mut T
-```
-
-下一集會更深入探討這三種模式。
-
 ## 範例程式碼
 
 ```rust
@@ -147,4 +129,4 @@ impl Iterator for Countdown {
 - `IntoIterator` trait 定義了「如何把自己轉成迭代器」
 - 任何實作了 `IntoIterator` 的型別都能用 `for` 迴圈
 - 每個 `Iterator` 自動實作了 `IntoIterator`
-- `for x in v` / `for x in &v` / `for x in &mut v` 分別對應消耗、借用、可變借用
+- 之所以能寫 `for i in 1..5` 或 `for i in 1..=5`，就是因為 range 實作了 `IntoIterator`

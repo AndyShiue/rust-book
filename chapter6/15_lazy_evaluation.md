@@ -73,7 +73,7 @@ impl<I: Iterator, P: FnMut(&I::Item) -> bool> Iterator for Filter<I, P> {
 
 所以整條鏈就是一堆 struct 套在一起——呼叫最外層的 `next()`，它去問內層，內層再問更內層，一路拉到最底。
 
-### Pull-based：一次只處理一個元素
+### pull-based：一次只處理一個元素
 
 當你呼叫 `.collect()` 或 `for` 迴圈時，最外層的迭代器開始「拉」：
 
@@ -146,7 +146,7 @@ fn main() {
     let result: Vec<i32> = iter.collect();
     println!("結果：{:?}", result);
 
-    // Pull-based：filter + map 一次處理一個元素
+    // pull-based：filter + map 一次處理一個元素
     println!("\n--- Pull-based 示範 ---");
     let data = vec![1, 2, 3, 4, 5, 6];
     let processed: Vec<i32> = data
@@ -192,10 +192,10 @@ fn main() {
 ## 重點整理
 - 迭代器的 `.map()` / `.filter()` 等方法是**惰性的**，不會立刻執行
 - 每次呼叫轉換方法都是在外面「套一層」struct（俄羅斯套娃）
-- 消費方法（`.collect()`、`for`、`.sum()` 等）才會觸發執行
+- 消費（`.collect()`、`for`、`.sum()` 等）才會觸發執行
 - 執行方式是 **pull-based**——一次拉一個元素，完整通過所有層，不需要中間 Vec
 - 因為惰性，迭代器可以是**無限的**——`repeat`、`from_fn` 永不回傳 None
 - 用 `.take(n)` 從無限迭代器中取出有限個元素
 - 忘記消費迭代器的話，編譯器會發出警告提醒你
 
-恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、Crate 與模組系統——讓你的程式碼從單一檔案擴展到真正的專案結構！
+恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、crate 與 mod 系統——讓你的程式碼從單一檔案擴展到真正的專案結構！

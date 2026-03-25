@@ -11214,20 +11214,6 @@ name2 現在是：Bob!!!
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="vec-intoiterator">Vec 的三種 IntoIterator</h4>
-<p><code>Vec&lt;T&gt;</code> 其實有三種 <code>IntoIterator</code> 的實作：</p>
-<ul>
-<li><code>Vec&lt;T&gt;</code> 的 <code>into_iter()</code> → 產出 <code>T</code>（消耗 Vec）</li>
-<li><code>&amp;Vec&lt;T&gt;</code> 的 <code>into_iter()</code> → 產出 <code>&amp;T</code>（借用）</li>
-<li><code>&amp;mut Vec&lt;T&gt;</code> 的 <code>into_iter()</code> → 產出 <code>&amp;mut T</code>（可變借用）</li>
-</ul>
-<p>這就是為什麼以下三種寫法都可以：</p>
-<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span><span class="w">       </span><span class="c1">// 消耗 v，x 是 T</span>
-<span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span><span class="w">      </span><span class="c1">// 借用 v，x 是 &amp;T</span>
-<span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// 可變借用 v，x 是 &amp;mut T</span>
-</code></pre></div>
-
-<p>下一集會更深入探討這三種模式。</p>
 <h3 id="_665">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 正常的 for 迴圈</span>
@@ -11295,7 +11281,7 @@ name2 現在是：Bob!!!
 <li><code>IntoIterator</code> trait 定義了「如何把自己轉成迭代器」</li>
 <li>任何實作了 <code>IntoIterator</code> 的型別都能用 <code>for</code> 迴圈</li>
 <li>每個 <code>Iterator</code> 自動實作了 <code>IntoIterator</code></li>
-<li><code>for x in v</code> / <code>for x in &amp;v</code> / <code>for x in &amp;mut v</code> 分別對應消耗、借用、可變借用</li>
+<li>之所以能寫 <code>for i in 1..5</code> 或 <code>for i in 1..=5</code>，就是因為 range 實作了 <code>IntoIterator</code></li>
 </ul>
 <hr />
 <h2 id="10-iter-into_iter-iter_mut">第六章第 10 集：iter / into_iter / iter_mut</h2>
@@ -11303,7 +11289,7 @@ name2 現在是：Bob!!!
 <p>搞懂三種迭代模式的差別——借用、消耗、可變借用——以及它們和所有權系統的關係。</p>
 <h3 id="_668">概念說明</h3>
 <h4 id="_669">三種迭代方式</h4>
-<p>上一集提到 <code>for x in &amp;v</code> 和 <code>for x in v</code> 的差別。今天來正式介紹 Vec 提供的三個方法：</p>
+<p>前面提到過 <code>for x in &amp;v</code> 和 <code>for x in v</code> 的差別。今天來正式介紹 Vec 提供的三個方法：</p>
 <table>
 <thead>
 <tr>
@@ -11487,7 +11473,7 @@ name2 現在是：Bob!!!
 <h3 id="_675">概念說明</h3>
 <p>平常我們不會花這麼多集數在介紹方法，但迭代器實在太重要了——它是 Rust 日常寫程式碼最常用的工具之一，所以接下來幾集會多花點時間。不過就算介紹了很多方法，一定還是會漏掉不少。有需要的話，請參考<a href="https://doc.rust-lang.org/std/iter/trait.Iterator.html">官方文件的 Iterator trait 頁面</a>。</p>
 <h4 id="collect">collect() —— 迭代器的終點站</h4>
-<p>前幾集我們建立了迭代器、做了轉換和過濾，但迭代器本身是<strong>惰性的</strong>（第 14 集會詳細講）——它不會真的執行，直到有人「拉動」它。<code>.collect()</code> 就是最常用的拉動方式：把迭代器的所有元素收集成一個集合。</p>
+<p>前幾集我們建立了迭代器、做了轉換和過濾，但迭代器本身是<strong>惰性的</strong>（第 15 集會詳細講）——它不會真的執行，直到有人「拉動」它。<code>.collect()</code> 就是最常用的拉動方式：把迭代器的所有元素收集成一個集合。</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
 </code></pre></div>
 
@@ -11502,7 +11488,6 @@ name2 現在是：Bob!!!
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="o">..=</span><span class="mi">5</span><span class="p">).</span><span class="n">collect</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">();</span>
 </code></pre></div>
 
-<p>Turbofish（<code>::&lt;&gt;</code>）是直接在方法呼叫上標註泛型參數，寫在方法名和括號之間。看起來像一隻魚：<code>::&lt;&gt;</code>。</p>
 <p>兩種寫法效果一樣，看個人偏好。鏈式呼叫的時候 turbofish 比較方便，因為不用另外宣告變數。</p>
 <h4 id="string_4">收集成 String</h4>
 <p><code>collect()</code> 不只能收集成 Vec。如果迭代器產出的是 <code>char</code> 或 <code>&amp;str</code>，可以直接收集成 <code>String</code>：</p>
@@ -11742,7 +11727,7 @@ name2 現在是：Bob!!!
 <span class="c1">// [&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;, &#39; &#39;, &#39;w&#39;, &#39;o&#39;, &#39;r&#39;, &#39;l&#39;, &#39;d&#39;, &#39; &#39;, &#39;f&#39;, &#39;o&#39;, &#39;o&#39;, &#39; &#39;, &#39;b&#39;, &#39;a&#39;, &#39;r&#39;]</span>
 </code></pre></div>
 
-<p>還記得第 6 集的 <code>Option::and_then</code> 和 <code>Result::and_then</code> 嗎？<code>flat_map</code> 在迭代器上做的事情本質上一樣——「轉換，但如果轉換結果本身是容器，就攤平它」。</p>
+<p>還記得第 6 集 <code>Option</code> 和 <code>Result</code> 的 <code>and_then</code> 嗎？<code>flat_map</code> 在迭代器上做的事情本質上一樣——「轉換，但因為轉換結果本身也是容器那就攤平」。</p>
 <h3 id="_685">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// .zip() —— 名字和分數配對</span>
@@ -11829,7 +11814,7 @@ name2 現在是：Bob!!!
 <span class="c1">// [2, 4, 6]</span>
 </code></pre></div>
 
-<p>注意！<code>.iter()</code> 產出 <code>&amp;T</code>，所以閉包的參數是 <code>&amp;i32</code>。如果不想處理引用，可以搭配 <code>.copied()</code>（等等會講）。</p>
+<p>注意！<code>.iter()</code> 產出 <code>&amp;T</code>，所以閉包的參數是 <code>&amp;i32</code>。如果不想處理參考，可以搭配 <code>.copied()</code>（等等會講）。</p>
 <h4 id="filter_1">.filter() —— 過濾元素</h4>
 <p><code>filter</code> 只保留閉包回傳 <code>true</code> 的元素：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">evens</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">].</span><span class="n">iter</span><span class="p">().</span><span class="n">filter</span><span class="p">(</span><span class="o">|&amp;&amp;</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
@@ -11846,7 +11831,7 @@ name2 現在是：Bob!!!
 
 <p><code>enumerate</code> 把每個元素包成 <code>(index, element)</code> 的 tuple，索引從 0 開始。</p>
 <h4 id="copied-cloned">.copied() 和 .cloned()</h4>
-<p>當迭代器產出引用（<code>&amp;T</code>）但你想要值（<code>T</code>）時：</p>
+<p>當迭代器產出參考（<code>&amp;T</code>）但你想要值（<code>T</code>）時：</p>
 <ul>
 <li><code>.copied()</code> —— 要求 T: Copy，用 Copy 語意取值</li>
 <li><code>.cloned()</code> —— 要求 T: Clone，用 Clone 語意取值</li>
@@ -12004,7 +11989,7 @@ name2 現在是：Bob!!!
 </code></pre></div>
 
 <p>所以整條鏈就是一堆 struct 套在一起——呼叫最外層的 <code>next()</code>，它去問內層，內層再問更內層，一路拉到最底。</p>
-<h4 id="pull-based">Pull-based：一次只處理一個元素</h4>
+<h4 id="pull-based">pull-based：一次只處理一個元素</h4>
 <p>當你呼叫 <code>.collect()</code> 或 <code>for</code> 迴圈時，最外層的迭代器開始「拉」：</p>
 <ol>
 <li>最外層（Map）問第二層（Filter）：「給我下一個元素」</li>
@@ -12061,7 +12046,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;結果：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Pull-based：filter + map 一次處理一個元素</span>
+<span class="w">    </span><span class="c1">// pull-based：filter + map 一次處理一個元素</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- Pull-based 示範 ---&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">];</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">processed</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span>
@@ -12108,13 +12093,13 @@ note: iterators are lazy and do nothing unless consumed
 <ul>
 <li>迭代器的 <code>.map()</code> / <code>.filter()</code> 等方法是<strong>惰性的</strong>，不會立刻執行</li>
 <li>每次呼叫轉換方法都是在外面「套一層」struct（俄羅斯套娃）</li>
-<li>消費方法（<code>.collect()</code>、<code>for</code>、<code>.sum()</code> 等）才會觸發執行</li>
+<li>消費（<code>.collect()</code>、<code>for</code>、<code>.sum()</code> 等）才會觸發執行</li>
 <li>執行方式是 <strong>pull-based</strong>——一次拉一個元素，完整通過所有層，不需要中間 Vec</li>
 <li>因為惰性，迭代器可以是<strong>無限的</strong>——<code>repeat</code>、<code>from_fn</code> 永不回傳 None</li>
 <li>用 <code>.take(n)</code> 從無限迭代器中取出有限個元素</li>
 <li>忘記消費迭代器的話，編譯器會發出警告提醒你</li>
 </ul>
-<p>恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、Crate 與模組系統——讓你的程式碼從單一檔案擴展到真正的專案結構！</p>
+<p>恭喜你完成了第六章！🎉 從函數指標到閉包的三種 Fn trait，再到迭代器的惰性求值——這一章結合了所有權、trait、泛型等前面學過的概念，展現了 Rust 函數式程式設計的威力。你現在已經能寫出簡潔、高效、不需要中間暫存的資料處理管道了。下一章我們將學習 Cargo、crate 與 mod 系統——讓你的程式碼從單一檔案擴展到真正的專案結構！</p>
 <hr />
 <h1 id="cargocrate-mod">第七章：Cargo、Crate 與 Mod 系統</h1>
 <h2 id="1-cargo-cratesio">第七章第 1 集：Cargo 與 crates.io</h2>
@@ -12773,6 +12758,20 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p><strong>一般不推薦</strong>在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在<strong>測試</strong>裡很常見——<code>use super::*;</code> 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 <code>cargo test</code> 寫測試，到時候就會看到這個用法。</p>
+<h4 id="use-enum-variant-associated-function">use enum variant 和 associated function</h4>
+<p><code>use</code> 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">::</span><span class="n">Ordering</span><span class="p">::{</span><span class="n">Less</span><span class="p">,</span><span class="w"> </span><span class="n">Equal</span><span class="p">,</span><span class="w"> </span><span class="n">Greater</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">compare</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">cmp</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Less</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;小於&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Equal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;相等&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Greater</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;大於&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>不用每次都寫 <code>Ordering::Less</code>，直接用 <code>Less</code> 就好。這在 match 很多 variant 的時候特別方便。</p>
 <h3 id="_722">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="w"> </span><span class="p">{</span>
@@ -12822,12 +12821,13 @@ note: iterators are lazy and do nothing unless consumed
 <li><code>use</code> 將路徑帶入作用域，讓你不必每次寫完整路徑</li>
 <li>絕對路徑用 <code>crate::</code> 開頭，相對路徑從當前 mod 位置開始</li>
 <li>外部 crate 直接用名稱開頭；加 <code>::</code> 前綴可以明確標記為外部 crate</li>
-<li><code>std</code> 是標準函式庫，不用加 dependency 就能用</li>
+<li><code>std</code> 是標準函式庫，不用加 dependency 就能用，prelude 也在裡面</li>
 <li><code>super::</code> 指向父 mod，<code>self::</code> 指向當前 mod</li>
-<li><code>use a::b::{X, Y, self};</code> 一次 use 多個東西</li>
+<li><code>use a::b::{self, X, Y};</code> 一次 use 多個東西</li>
 <li><code>use X as Alias;</code> 取別名，解決名字衝突</li>
 <li>同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）</li>
 <li><code>use something::*;</code> 星號匯入——測試裡常用，正式程式碼少用</li>
+<li>enum 的 variant 也可以被 <code>use</code></li>
 </ul>
 <hr />
 <h2 id="6-cargo-test">第七章第 6 集：cargo test</h2>
@@ -13957,7 +13957,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_791">限制：只在該函式內可見</h4>
 <p>放在函式內的型別定義，只有那個函式看得到。其他函式無法使用它。所以慣例上，我們還是會把型別定義放在外面——除非你確定這個型別只在一個函式裡面用到。</p>
 <h4 id="_792">重要差異：項目不受順序限制</h4>
-<p>這裡有一個很多初學者不知道的重點。在 Rust 裡，<strong>項目（items）</strong>——包括 <code>struct</code>、<code>enum</code>、<code>fn</code>、<code>trait</code>、<code>impl</code> 等——<strong>不受定義順序影響</strong>。你可以先使用，後定義：</p>
+<p>這裡有一個很多人不知道的重點。在 Rust 裡，<strong>項目（items）</strong>——包括 <code>struct</code>、<code>enum</code>、<code>fn</code>、<code>trait</code>、<code>impl</code> 等——<strong>不受定義順序影響</strong>。你可以先使用，後定義：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">};</span><span class="w">  </span><span class="c1">// 先使用</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
@@ -14167,7 +14167,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個參考（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
 <h4 id="ref_1">所以現在還需要寫 <code>ref</code> 嗎？</h4>
-<p>幾乎不需要了。99% 的情況你只要 match 參考（<code>match &amp;value</code>），編譯器就會自動處理。只有極少數特殊場景才需要手動寫 <code>ref</code>。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
+<p>幾乎不需要了。99% 的情況你只要 match 參考（<code>match &amp;value</code>），編譯器就會自動處理。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
 <h3 id="_803">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// ===== ref 基本用法 =====</span>
@@ -14216,7 +14216,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><code>let ref x = val;</code> 等同於 <code>let x = &amp;val;</code>——在 <code>let</code> 中兩者完全一樣</li>
 <li>在 match 中，<code>Some(ref x)</code> 會借用而不是 move 內部的值</li>
-<li><strong>Match ergonomics（Rust 1.26+）</strong>：match 一個參考時，模式中的變數自動變成參考</li>
+<li><strong>match ergonomics（Rust 1.26+）</strong>：match 一個參考時，模式中的變數自動變成參考</li>
 <li>現代 Rust 幾乎不需要手動寫 <code>ref</code>，用 <code>match &amp;value</code> 就好</li>
 <li><code>for (k, v) in &amp;collection</code> 也受 match ergonomics 影響，<code>k</code> 和 <code>v</code> 自動是參考</li>
 <li>認識 <code>ref</code> 主要是為了讀懂舊程式碼</li>
@@ -14352,7 +14352,6 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>todo!()</code> 是開發佔位符，明確表示「之後會實作」</li>
 <li><code>unimplemented!()</code> 表示「沒有實作」，不保證之後會做——可能是沒需求、可能是 trait 要求但對該型別沒意義</li>
 <li><code>unreachable!()</code> 標記邏輯上不可能到達的程式碼路徑</li>
-<li>四者的回傳型別都是 <code>!</code>（never type），所以可以出現在任何需要回傳值的地方</li>
 <li>它們都會造成 panic，差別在於傳達的<strong>意圖</strong>不同——選對的那個，讓程式碼更有表達力</li>
 </ul>
 <hr />
@@ -14562,7 +14561,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>通常用最簡單的就好，有衝突時才升級</li>
 <li>當多個 trait 定義同名方法時，需要指定要呼叫哪個 trait 的版本</li>
 <li>型別本身的方法優先於 trait 方法</li>
-<li><strong>關聯函式</strong>（沒有 <code>self</code>）因為沒有接收者，更常需要完全限定語法</li>
+<li><strong>associated function</strong>（沒有 <code>self</code>）更常需要完全限定語法</li>
 <li>完全限定語法的格式：<code>&lt;Type as Trait&gt;::function(args)</code></li>
 </ul>
 <hr />
@@ -14594,9 +14593,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>這些指標是所謂的<strong>胖指標（fat pointer）</strong>——它們不只存一個位址，還多存了一個長度資訊：</p>
 <div class="highlight"><pre><span></span><code>一般指標：[位址]           （8 bytes）
 胖指標：  [位址][長度]      （16 bytes）
+（假設電腦是 64 位元）
 </code></pre></div>
 
-<p>所以 <code>&amp;str</code> 實際上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。</p>
+<p>所以 <code>&amp;str</code> 實際上在 64 位元電腦上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。</p>
 <h4 id="sized-trait"><code>Sized</code> trait</h4>
 <p>Rust 有一個特殊的 trait 叫 <code>Sized</code>，表示「這個型別的大小在編譯期已知」。<strong>絕大多數型別都自動實作了 <code>Sized</code></strong>。</p>
 <p>而且——這是很多人不知道的——<strong>泛型參數預設有 <code>Sized</code> bound</strong>：</p>
@@ -14665,7 +14665,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;可能是 DST：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="c1">// 展示胖指標大小</span>
+<span class="c1">// 展示 64 位元電腦上的胖指標大小</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">show_pointer_sizes</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
@@ -14710,7 +14710,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><strong>DST（Dynamically Sized Types）</strong>：大小在編譯期未知的型別，如 <code>str</code>、<code>[T]</code></li>
 <li>DST 不能直接當值使用，必須透過指標：<code>&amp;str</code>、<code>&amp;[T]</code>、<code>Box&lt;str&gt;</code> 等</li>
-<li>指向 DST 的指標是<strong>胖指標（fat pointer）</strong>：位址 + 長度，佔 16 bytes</li>
+<li>指向 DST 的指標是<strong>胖指標（fat pointer）</strong>：位址 + 長度，在 64 位元電腦上佔 16 bytes</li>
 <li><strong><code>Sized</code></strong>：表示型別大小在編譯期已知；泛型參數預設有 <code>T: Sized</code> bound</li>
 <li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）</li>
 <li><code>Cow&lt;'a, B&gt;</code> 中的 <code>B: ?Sized</code> 就是為了讓 <code>B</code> 可以是 <code>str</code> 等 DST</li>
