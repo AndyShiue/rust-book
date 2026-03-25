@@ -96,5 +96,4 @@ let Point { x, y } = p;          // OK
 - 語法是 `模式: 型別`，模式在前，型別在後
 - tuple 和 struct 都可以在參數位置解構
 - 呼叫時和平常一樣傳值，解構是函數內部的事
-- 當函數只需要 struct/tuple 裡的某些欄位時，參數解構很方便
 - `let` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 不行

@@ -50,7 +50,7 @@ println!("{:?}", arr);   // OK！
 
 ### 自己的型別也可以加 Copy
 
-如果你的 struct 裡面所有欄位都是 Copy 的型別，那你的 struct 也可以加上 `#[derive(Copy, Clone)]`：
+如果你的型別裡面所有值都是 Copy 的型別，那你的型別也可以加上 `#[derive(Copy, Clone)]`：
 
 ```rust
 #[derive(Debug, Copy, Clone)]
@@ -137,9 +137,9 @@ fn main() {
 ## 重點整理
 - **Copy** 是一個 trait，讓型別在賦值和傳入函數時自動複製，而不是 move
 - `i32`、`f64`、`bool`、`char` 等基本型別天生就有 Copy
+- tuple 和陣列如果所有元素都是 Copy，整體也是 Copy
+- tuple 對很多 trait（Copy、Clone 等）都有同樣的行為：所有元素都有實作 → tuple 就有實作
 - 自訂 struct 可以加 `#[derive(Copy, Clone)]`，但所有欄位都必須是 Copy 的型別
 - Copy 一定要搭配 Clone 一起 derive
-- tuple 和陣列如果所有元素都是 Copy，整體也是 Copy
 - **Copy = 自動複製，Clone = 手動複製（`.clone()`）**
 - 不要隨便加 Copy——未來拿掉會讓所有依賴自動複製的程式碼壞掉。不確定就只加 Clone
-- tuple 對很多 trait（Copy、Clone 等）都有同樣的行為：所有元素都有實作 → tuple 就有實作

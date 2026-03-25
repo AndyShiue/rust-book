@@ -24,7 +24,7 @@ let p = Point::new(3, 7);
 let s = p.sum();  // 用 . 呼叫 method
 ```
 
-注意：呼叫 `p.sum()` 的時候，**不需要傳入 `self`**。`.` 前面的 `p` 會自動變成方法裡的 `self`。所以雖然定義時寫了 `fn sum(self)`，呼叫時只要寫 `p.sum()` 而不是 `p.sum(p)`。
+注意：呼叫 `p.sum()` 的時候，**不需要再手動傳入 `self`**。`.` 前面的 `p` 會自動變成方法裡的 `self`。所以雖然定義時寫了 `fn sum(self)`，呼叫時只要寫 `p.sum()` 而不是 `p.sum(p)`。
 
 ### associated function vs method 的差別：
 - associated function：沒有 `self`，用 `::` 呼叫 → `Point::new(3, 7)`
@@ -93,6 +93,4 @@ fn main() {
 ## 重點整理
 - method 的第一個參數是 `self`，代表值本身
 - method 用 `.` 呼叫：`p.sum()`，`.` 前面的值自動成為 `self`，不需要手動傳入
-- associated function 用 `::` 呼叫：`Point::new()`
-- 在 method 裡用 `self.x`、`self.y` 存取欄位
 - struct 和 enum 都可以有 method

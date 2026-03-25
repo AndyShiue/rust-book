@@ -38,8 +38,8 @@ fn main() {
 
     match point {
         (x, y) if x == y => println!("在對角線上：({}, {})", x, y),
-        (x, y) if x + y > 10 => println!("({}, {}) 離原點很遠", x, y),
-        (x, y) => println!("普通的點 ({}, {})", x, y),
+        (x, y) if x > 0 && y > 0 => println!("({}, {}) 在第一象限", x, y),
+        (x, y) => println!("其他的點 ({}, {})", x, y),
     }
 
     // 搭配 enum 使用
