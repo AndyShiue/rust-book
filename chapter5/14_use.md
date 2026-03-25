@@ -44,5 +44,5 @@ fn main() {
 ## 重點整理
 - `use std::fmt::Display;` 把長路徑縮短，之後直接寫 `Display`
 - `use` 只是路徑的簡寫，不引入新功能
-- **Prelude** 是 Rust 預設引入的常用型別和 trait（Vec、String、Option、Clone 等）
+- **prelude** 是 Rust 預設引入的常用型別和 trait（Vec、String、Option、Clone 等）
 - 不在 prelude 裡的東西（如 Display）需要寫完整路徑或用 `use` 引入
