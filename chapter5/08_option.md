@@ -7,7 +7,7 @@
 
 ### null 的問題
 
-在很多程式語言裡，任何變數都可能是 `null`（空值）。這導致一個經典問題：你以為變數有值，用了它，結果 runtime 炸掉——「Null Pointer Exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
+在某些程式語言裡，任何變數都可能是 `null`（空值）。這導致一個經典問題：你以為變數有值，用了它，結果 runtime 炸掉——「null pointer exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
 
 Rust 的解法很簡單：**沒有 null。**
 
@@ -50,7 +50,7 @@ match maybe_value {
 
 一個有趣的小知識：`Option<&T>` 和普通的參考 `&T` 佔用一樣大的記憶體！
 
-因為參考 `&T` 不可能是零（null pointer），所以 Rust 在記憶體中聰明地用 null pointer 來代表 `None`，不需要額外的空間。這叫做 **niche optimization**——利用型別中「不可能出現的值」來塞額外的資訊。
+因為參考 `&T` 不可能是 null，所以 Rust 在記憶體中聰明地用 null 來代表 `None`，不需要額外的空間。這叫做 **niche optimization**——利用型別中「不可能出現的值」來塞額外的資訊。
 
 ## 範例程式碼
 
@@ -88,6 +88,6 @@ fn main() {
 ## 重點整理
 - `Option<T>` 是 Rust 用來表達「可能沒有值」的泛型 enum，取代了其他語言的 null
 - `Some(T)` 表示有值，`None` 表示沒有值
-- 編譯器強制你處理 `None` 的情況，不會有 runtime null crash
+- 編譯器強制你處理 `None` 的情況，runtime 不會有 null pointer exception
 - `Option`、`Some`、`None` 太常用，Rust 預設就引入了，不需要額外路徑
 - Niche optimization：`Option<&T>` 和 `&T` 大小相同，零額外成本

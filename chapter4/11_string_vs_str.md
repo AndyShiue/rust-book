@@ -109,6 +109,6 @@ fn main() {
 ## 重點整理
 - **String** 擁有資料（heap 上），可以修改，會 move
 - **&str** 是借用，不擁有資料，不能修改，不會 move
-- `&String` 會自動轉成 `&str`（Deref，之後會學）
+- `&String` 會自動轉成 `&str`
 - 函數參數偏好用 `&str`——接受範圍更廣（`&str` 和 `&String` 都能傳）
 - 需要擁有或修改字串時才用 `String`

@@ -1,7 +1,7 @@
 # 第五章第 11 集：`?` 運算子
 
 ## 本集目標
-學會用 `?` 運算子簡化錯誤傳播，避免層層巢狀的 match。
+學會用 `?` 運算子簡化錯誤傳播，避免一次又一次的 match。
 
 ## 概念說明
 
@@ -90,7 +90,6 @@ fn main() -> Result<(), String> {
         Err(e) => println!("錯誤：{}", e),
     }
 
-    // ? 用在 Option
     let nums = [3, 7, 2];
     match first_is_positive(&nums) {
         Some(true) => println!("第一個元素是正數"),

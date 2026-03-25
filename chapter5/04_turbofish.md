@@ -17,9 +17,7 @@ let num = input.trim().parse::<i32>().expect("請輸入數字");
 
 當時我們把 `::<i32>` 當黑盒子照抄。現在學了泛型，終於可以理解它了！
 
-`.parse()` 是一個泛型方法——它的定義大概長這樣（簡化版）：
-
-它是一個泛型方法，有一個型別參數 `T`，代表「你想把字串轉成什麼型別」。但光看 `input.trim().parse()` 這段程式碼，編譯器不知道你想轉成 `i32` 還是 `f64` 還是其他東西。
+`.parse()` 是一個泛型方法，有一個型別參數 `T`，代表「你想把字串轉成什麼型別」。但光看 `input.trim().parse()` 這段程式碼，編譯器不知道你想轉成 `i32` 還是 `f64` 還是其他東西。
 
 所以我們用 `::<i32>` 手動指定 `T = i32`。這個 `::<>` 語法就叫做 **turbofish**（因為 `::<>` 看起來像一條魚 🐟）。
 
@@ -30,13 +28,13 @@ Turbofish 就是「手動填入泛型定義裡角括號的型別參數」：
 - 泛型定義：`fn parse<T>(...)`——這裡的 `<T>` 是宣告
 - Turbofish：`.parse::<i32>()`——這裡的 `::<i32>` 是填入
 
-函數、方法、struct 的 associated function 都可以用 turbofish：
+函數、方法、型別都可以用 turbofish：
 
 ```rust
 // 函數的 turbofish
 func::<i32>(arg);
 
-// associated function 的 turbofish
+// 型別的 turbofish
 Vec::<i32>::new();
 ```
 

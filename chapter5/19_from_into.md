@@ -90,8 +90,6 @@ fn main() {
     // 自訂的 From
     let boiling = Celsius { value: 100.0 };
     println!("攝氏：{}", boiling);
-
-    // 用 From
     let f = Fahrenheit::from(Celsius { value: 100.0 });
     println!("華氏：{}", f);
 

@@ -95,6 +95,6 @@ fn main() {
 ## 重點整理
 - `Result<T, E>` 表示「成功（Ok）或失敗（Err）」，比 Option 多了錯誤資訊
 - `Ok(T)` 對應成功，`Err(E)` 對應失敗
-- `Result`、`Ok`、`Err` 和 Option 一樣，是 Rust 預設就引入的
+- `Result`、`Ok`、`Err` 和 Option 一樣，是 Rust 預設就引入每個檔案的
 - `unwrap()`、`expect()`、`unwrap_or()` 的用法和 Option 完全對稱
 - 第一章的 `.parse().expect(...)` 就是在用 Result——現在我們完全理解了

@@ -52,7 +52,7 @@ use rand::Rng;
 use std::collections::HashMap;
 ```
 
-`std` 是 Rust 的**標準函式庫（standard library）**——Rust 內建的一組工具，包含我們已經用過的 `Vec`、`String`、`Option`、`Result`、`println!` 等等，以及更多像是檔案操作、網路、集合等功能。你不需要在 Cargo.toml 加 dependency 就能用它，因為每個 Rust 程式都會自動連結 `std`。使用時路徑寫法跟外部 crate 一樣——`std::collections::HashMap`、`std::fmt::Display` 等。
+`std` 是 Rust 的**標準函式庫（standard library）**——Rust 內建的一組工具，包含我們已經用過的 `Vec`、`String`、`Option`、`Result`、`println!` 等等，以及更多像是檔案操作、網路、集合等功能。你不需要在 Cargo.toml 加 dependency 就能用它，因為每個 Rust 程式都會自動連結 `std`。使用時路徑寫法跟外部 crate 一樣——`std::collections::HashMap`、`std::fmt::Display` 等。不只 `std` 會被自動連結，`std` 中的 **prelude** 更會被自動引入——也就是說，`Vec`、`String`、`Option`、`Result`、`Clone`、`Copy` 等最常用的型別和 trait，不用寫 `use` 就能直接用。這就是為什麼我們在最前面好幾章沒寫 `use` 也能用這些東西。
 
 如果你想明確強調「這是外部 crate」，可以用 `::` 開頭：
 
@@ -158,18 +158,6 @@ use std::collections::*;  // HashMap, BTreeMap, HashSet... 全部可用
 
 **一般不推薦**在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在**測試**裡很常見——`use super::*;` 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 `cargo test` 寫測試，到時候就會看到這個用法。
 
-### Prelude：為什麼有些東西不需要 use
-
-你有沒有注意到，`Vec`、`String`、`Option`、`Result`、`println!` 這些東西從來不需要 `use`？
-
-因為 Rust 有一個 **prelude**——一組「預設已經 use 進來」的常用型別和 trait。每個 Rust 檔案開頭都隱含了類似這樣的東西：
-
-```rust
-use std::prelude::*;  // 實際的路徑會隨 Rust edition 不同而變
-```
-
-這就是為什麼 `Vec`、`Option`、`Some`、`None`、`Ok`、`Err`、`String`、`Clone`、`Copy` 等等可以直接使用。不同的 edition（2021、2024 等）prelude 裡包含的東西可能略有不同。
-
 ## 範例程式碼
 
 ```rust
@@ -227,4 +215,3 @@ fn main() {
 - `use X as Alias;` 取別名，解決名字衝突
 - 同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）
 - `use something::*;` 星號匯入——測試裡常用，正式程式碼少用
-- 常用型別如 `Vec`、`Option` 透過 prelude 自動可用，不需 `use`

@@ -1,4 +1,4 @@
-# 附錄第 j 集：Fully qualified syntax
+# 附錄第 j 集：fully qualified syntax
 
 ## 本集目標
 

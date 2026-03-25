@@ -11,7 +11,7 @@
 
 如果我們需要一個**大小可以變化**的集合呢？比如：使用者一筆一筆輸入資料，或者程式在執行過程中不斷累積結果。
 
-這就需要 **Vec**（vector，向量）。Vec 就像一個**可以伸縮的陣列**，資料存在 heap 上。
+這就需要 **Vec**。Vec 就像一個**可以伸縮的陣列**，資料存在 heap 上。
 
 ### 建立 Vec
 
@@ -26,7 +26,7 @@ let nums = vec![1, 2, 3, 4, 5];
 你也可以建立空的 Vec，然後一個一個加：
 
 ```rust
-let mut nums = vec![];
+let mut nums = Vec::new();
 nums.push(10);
 nums.push(20);
 ```
@@ -56,7 +56,7 @@ for n in &nums {
 ### push：加入新元素
 
 ```rust
-let mut fruits = vec![];
+let mut fruits = Vec::new();
 fruits.push("蘋果");
 fruits.push("香蕉");
 fruits.push("櫻桃");
@@ -83,7 +83,7 @@ fn main() {
     println!("共 {} 筆", scores.len());
 
     // 空的 Vec，用 push 加入
-    let mut names = vec![];
+    let mut names = Vec::new();
     names.push("小明");
     names.push("小花");
     names.push("阿旺");
@@ -104,7 +104,7 @@ fn main() {
     println!("總和 = {}", total);
 
     // Vec 可以一直 push
-    let mut growing = vec![];
+    let mut growing = Vec::new();
     for i in 0..5 {
         growing.push(i * 10);
     }
@@ -114,7 +114,8 @@ fn main() {
 
 ## 重點整理
 - **Vec** 是可以動態增長的陣列，資料存在 heap 上
-- `vec![1, 2, 3]` 建立 Vec，Rust 自動推斷型別
+- `vec![1, 2, 3]` 建立有初始值的 Vec，Rust 自動推斷型別
+- `Vec::new()` 建立空的 Vec
 - `push` 在最後面加入元素（需要 `let mut`）
 - 索引用 `v[0]`、`v[1]` 等，長度用 `v.len()`（method，回傳元素個數）
 - 走訪用 `for x in &v`（借用，不 move）

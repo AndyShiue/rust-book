@@ -36,7 +36,7 @@ enum Token<'a> {
 }
 ```
 
-`Token::Word` 借用了一段文字，所以 `Token` 的壽命不能超過那段文字。`Token::Number` 不借用任何東西，但因為 enum 整體有 `'a`，所有 variant 都帶著這個參數。
+`Token::Word` 借用了一段文字，所以 `Token` 的壽命不能超過那段文字。`Token::Number` 本身不包含任何參考，但因為它和 `Word` 是同一個 enum，建立 `Token::Number(42)` 時仍然需要指定 `'a`——只是這個 `'a` 對 `Number` 來說不起實際作用。
 
 ### 使用帶生命週期的型別
 

@@ -13,7 +13,7 @@
 
 Rust 編譯器按照這三條規則嘗試推斷生命週期：
 
-**規則一：每個參數的 lifetime 各自獲得獨立的生命週期**
+**規則一：每個參數能放生命週期的位置各自獲得獨立的生命週期**
 
 ```rust
 fn foo(a: &str, b: &str)
@@ -30,7 +30,7 @@ fn first_word(s: &str) -> &str
 
 這就是為什麼上面的 `first_word` 不用寫 `'a`——只有一個 input lifetime，規則二自動搞定。
 
-注意這裡說的是「input lifetime」而不是「參考參數」。一個參數可能帶有多個 input lifetime——比如 `&'a &'b T`（參考的參考）就有兩個（`'a` 和 `'b`）。如果有兩個以上的 input lifetime，規則二就不適用了。
+注意一個參數可能帶有多個 input lifetime——比如 `&'a &'b T`（參考的參考）就有兩個（`'a` 和 `'b`）。如果有兩個以上的 input lifetime，規則二就不適用了。
 
 **規則三：如果有 `&self` 或 `&mut self` 參數，回傳值的生命週期就等於 self 的**
 
@@ -49,7 +49,7 @@ impl MyStruct {
 
 - 一個參考參數 → 幾乎不用寫
 - method 回傳 `&self` 的一部分 → 不用寫
-- 多個參考參數且回傳參考 → 可能要寫
+- 多個參考參數且回傳參考 → 要寫
 
 ## 範例程式碼
 
@@ -116,7 +116,7 @@ fn main() {
 
 ## 重點整理
 - Rust 有三條**省略規則**，大部分時候會自動補上生命週期標注
-- 規則一：每個參數的 lifetime 都會自動獲得獨立的生命週期參數
+- 規則一：每個參數能放生命週期的位置各自獲得獨立的生命週期
 - 規則二：只有一個 input lifetime → 回傳值的生命週期自動等於它
-- 規則三：method 有 `&self` → 回傳值的生命週期自動等於 self
+- 規則三：method 有 `&self` 或 `&mut self` → 回傳值的生命週期自動等於 self
 - 有多個 input lifetime 且回傳型別有 lifetime 時，才需要手動標注

@@ -100,4 +100,4 @@ fn main() {
 - `Box<T>` 把資料放在 heap 上，stack 上只留一個指標（保險箱比喻的「鑰匙」）
 - 最重要的用途：**遞迴型別**（如連結串列）需要 Box 來打破無限大小的問題
 - `Box::new(value)` 建立 Box，離開作用域時自動釋放
-- Box 是唯一擁有者，move 語義和其他 owned type 一樣
+- Box 是唯一擁有者，move 語義和其他非 Copy 的 type 一樣

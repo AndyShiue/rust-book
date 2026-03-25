@@ -142,22 +142,23 @@ fn main() {
 
     // 例子二：兩個參數壽命不同
     let s3 = String::from("hello world");
+    let r;
     {
         let s4 = String::from("hi");
-        let r = longer(&s3, &s4);
+        r = longer(&s3, &s4);
         println!("在作用域內：{}", r); // ✓ s3 和 s4 都還活著
     }
-    // r 在這裡就不能用了，因為 s4 已經被釋放
+    // println!("{}", r);  // ✗ 編譯錯誤！s4 已經被釋放，r 的生命週期不夠長
 
     // 例子三：回傳值只借用其中一個參數
     let s5 = String::from("我會被回傳");
+    let r2;
     {
         let s6 = String::from("我不會");
-        let r2 = always_first(&s5, &s6);
-        println!("{}", r2);
+        r2 = always_first(&s5, &s6);
     }
     // r2 只借用 s5，所以即使 s6 被釋放也沒關係
-    // 但因為 r2 的作用域已經結束，這裡也用不到了
+    println!("{}", r2);  // ✓ s5 還活著，r2 可以用
 
     // 'static 生命週期
     let s: &'static str = "我是靜態字串，活到程式結束";

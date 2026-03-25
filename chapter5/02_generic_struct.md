@@ -64,6 +64,9 @@ fn main() {
     let str_pair = Pair { first: "hello", second: "world" };
     println!("{:?}", str_pair);
 
+    // Pair<T> 的兩個欄位必須同型別，以下會編譯錯誤：
+    // let bad = Pair { first: 42, second: "oops" };
+
     let mixed = MixedPair { first: 42, second: "answer" };
     println!("{:?}", mixed);
 }

@@ -1,11 +1,11 @@
 # 第五章第 30 集：常見的 derive trait
 
 ## 本集目標
-學會 `PartialEq`、`Eq`、`PartialOrd`、`Ord`、`Hash` 等常見 derive trait 的用途和差別。
+學會 `PartialEq`、`Eq`、`PartialOrd`、`Ord` 等常見 derive trait 的用途和差別。
 
 ## 概念說明
 
-第四章我們學了 `Debug`、`Clone`、`Copy`。Rust 標準庫還有很多可以 derive 的 trait，今天來認識最常用的幾個。
+第四章我們學了 `Debug`、`Clone`、`Copy`。Rust 標準庫還有其他可以 derive 的 trait，今天來認識最常用的幾個。
 
 ### PartialEq 和 Eq
 
@@ -63,14 +63,10 @@ pub trait Ord: PartialOrd + Eq { ... }
 
 這就是為什麼 `f64` 只能走一邊（`PartialEq` + `PartialOrd`），無法走到另一邊（`Eq` + `Ord`）。
 
-### Hash
-
-`Hash` 讓你的型別可以被雜湊——之後學 `HashMap` 和 `HashSet` 的時候會用到。
-
 ## 範例程式碼
 
 ```rust
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
 struct Student {
     grade: i32,
     name: String,
@@ -118,6 +114,5 @@ fn main() {
 ## 重點整理
 - `PartialEq`：`==`、`!=` 比較；`Eq`：保證自反性（NAN 是例外）
 - `PartialOrd`：`<`、`>`、`<=`、`>=` 比較；`Ord`：保證完整排序
-- `Hash`：讓型別可以被雜湊（HashMap/HashSet 用）
 - `f64` 因為 NAN 的存在，只有 Partial 版本，沒有完整版
 - derive 的 Ord 按欄位宣告順序逐一比較

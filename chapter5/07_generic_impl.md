@@ -5,9 +5,9 @@
 
 ## 概念說明
 
-第二集我們定義了泛型 struct `Pair<T>`。現在要幫它加上方法。
+第二集我們定義了泛型 struct `Pair<T>`。這集要幫它 impl。
 
-回想第三章，幫 struct 加方法是這樣寫的：
+回想第三章，impl struct 是這樣寫的：
 
 ```rust
 impl Point {

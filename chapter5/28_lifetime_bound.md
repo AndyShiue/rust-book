@@ -83,7 +83,7 @@ fn main() {
     let excerpt = Excerpt { text: &novel };
     let r3 = &excerpt; // &'b Excerpt<'a>
     // 這裡 'a 是 novel 的壽命，'b 是 r3 借用 excerpt 的時間
-    // novel 活得比 r3 久，所以 'a 活得過 'b，條件滿足
+    // novel 至少活得和 r3 一樣久，所以 'a 活得過 'b，條件滿足
     println!("透過參考讀取：{}", r3.text);
 
     // T = String（擁有資料，沒有參考，T: 'a 自動滿足）
