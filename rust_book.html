@@ -8246,7 +8246,7 @@ c 的總和：7
 <ul>
 <li><code>use std::fmt::Display;</code> 把長路徑縮短，之後直接寫 <code>Display</code></li>
 <li><code>use</code> 只是路徑的簡寫，不引入新功能</li>
-<li><strong>Prelude</strong> 是 Rust 預設引入的常用型別和 trait（Vec、String、Option、Clone 等）</li>
+<li><strong>prelude</strong> 是 Rust 預設引入的常用型別和 trait（Vec、String、Option、Clone 等）</li>
 <li>不在 prelude 裡的東西（如 Display）需要寫完整路徑或用 <code>use</code> 引入</li>
 </ul>
 <hr />
@@ -10635,7 +10635,7 @@ name2 現在是：Bob!!!
 <li>最後才用 <code>Fn</code> —— 如果你需要多次呼叫且不允許修改</li>
 </ol>
 <p>為什麼？因為 <code>FnOnce</code> 能接受所有閉包（所有閉包都至少是 FnOnce），而 <code>Fn</code> 只能接受不修改狀態的閉包。選能接受最多種的 bound，使用者傳入的自由度最高。</p>
-<p>實務上 <code>Fn</code> 很少用到——大部分需要多次呼叫閉包的 API 用 <code>FnMut</code> 就夠了（FnMut 已經能接受 Fn 的閉包）。只有少數場景需要<strong>保證閉包不修改狀態</strong>時才會用 <code>Fn</code>。</p>
+<p>實務上 <code>Fn</code> 很少用到——大部分需要多次呼叫閉包的 API 用 <code>FnMut</code> 就夠了（FnMut 也能接受 Fn 的閉包）。只有少數場景需要<strong>保證閉包不修改狀態</strong>時才會用 <code>Fn</code>。</p>
 <h4 id="trait_9">函數指標也實作了這三個 trait</h4>
 <p>普通的函數（和函數指標 <code>fn</code>）自動實作了 <code>Fn</code>、<code>FnMut</code>、<code>FnOnce</code>。所以你可以把函數名稱傳給任何接受這三個 trait 的地方。</p>
 <h3 id="_645">範例程式碼</h3>
@@ -11003,7 +11003,7 @@ name2 現在是：Bob!!!
 <li><code>Option::filter</code> 根據條件決定保留 Some 或轉成 None</li>
 <li><code>Result::map_err</code> 可以轉換錯誤型別，方便錯誤處理鏈</li>
 <li>這些方法可以鏈式呼叫，比層層 match 更簡潔易讀</li>
-<li>你可能已經注意到：光看型別簽名就能猜出方法在做什麼（<code>map</code> 接受 <code>T -&gt; U</code>，回傳 <code>Option&lt;U&gt;</code>）。這是函數式程式設計的一大特色——型別本身就是文件</li>
+<li>你可能已經注意到：光看型別簽名就能猜出方法在做什麼（Option 的 <code>map</code> 接受 <code>FnOnce(T) -&gt; U</code>，回傳 <code>Option&lt;U&gt;</code>）。這是函數式程式設計的一大特色——型別本身就是文件</li>
 </ul>
 <hr />
 <h2 id="8-iterator-trait">第六章第 8 集：Iterator trait</h2>
@@ -11037,7 +11037,7 @@ name2 現在是：Bob!!!
 
 <p>注意 <code>iter</code> 必須是 <code>mut</code> 的，因為每次呼叫 <code>next()</code> 都會推進內部狀態。</p>
 <h4 id="next_1">只需實作 next，其他方法免費送</h4>
-<p><code>Iterator</code> trait 提供了大量的 <strong>default method</strong>（還記得第五章嗎？）。因為所有的迭代操作本質上都是「不斷呼叫 next 直到 None」，所以只要你實作了 <code>next()</code>，像 <code>map</code>、<code>filter</code>、<code>count</code>、<code>sum</code> 等幾十個方法全部自動可用。</p>
+<p><code>Iterator</code> trait 提供了大量的<strong>預設實作</strong>（還記得第五章嗎？）。因為所有的迭代操作本質上都是「不斷呼叫 next 直到 None」，所以只要你實作了 <code>next()</code>，像 <code>map</code>、<code>filter</code>、<code>count</code>、<code>sum</code> 等幾十個方法全部自動可用。</p>
 <p>這就是 trait default method 的威力！</p>
 <h4 id="iterator_1">自訂 Iterator</h4>
 <p>讓我們自己做一個迭代器。假設我們想要一個「倒數計時器」：</p>
@@ -11060,7 +11060,7 @@ name2 現在是：Bob!!!
 <span class="p">}</span>
 </code></pre></div>
 
-<p>只要實作了 <code>next()</code>，<code>map</code>、<code>filter</code>、<code>sum</code>、<code>collect</code> 等幾十個方法全部自動可用。這些方法接下來幾集會陸續學到。</p>
+<p>只要實作了 <code>next</code>，<code>map</code>、<code>filter</code>、<code>sum</code>、<code>collect</code> 等幾十個方法全部自動可用。這些方法接下來幾集會陸續學到。</p>
 <h4 id="_659">標準庫的迭代器工廠</h4>
 <p>標準庫提供了一些方便的函數來建立迭代器：</p>
 <ul>
@@ -11183,7 +11183,7 @@ name2 現在是：Bob!!!
 <h4 id="_664">語法糖展開</h4>
 <p>上面的 <code>for</code> 迴圈，編譯器其實會轉換成這樣：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
-<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="p">::</span><span class="n">into_iter</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">into_iter</span><span class="p">();</span>
 <span class="k">while</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">.</span><span class="n">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
 <span class="p">}</span>
@@ -11191,7 +11191,7 @@ name2 現在是：Bob!!!
 
 <p>三個步驟：</p>
 <ol>
-<li>呼叫 <code>IntoIterator::into_iter(v)</code> 把 <code>v</code> 轉成迭代器</li>
+<li>呼叫 <code>v.into_iter()</code> 把 <code>v</code> 轉成迭代器</li>
 <li>反覆呼叫 <code>iter.next()</code></li>
 <li>用 <code>while let Some(x)</code> 解構（還記得第三章的 while let 嗎？），直到拿到 <code>None</code> 就結束</li>
 </ol>
@@ -11239,7 +11239,7 @@ name2 現在是：Bob!!!
 
 <span class="w">    </span><span class="c1">// 手動展開成 while let（完全等價）</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">--- 手動展開 ---&quot;</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="p">::</span><span class="n">into_iter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">fruits</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fruits</span><span class="p">.</span><span class="n">into_iter</span><span class="p">();</span>
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">fruit</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iter</span><span class="p">.</span><span class="n">next</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;水果：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fruit</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
@@ -11291,7 +11291,7 @@ name2 現在是：Bob!!!
 
 <h3 id="_666">重點整理</h3>
 <ul>
-<li><code>for x in v</code> 是語法糖，展開後是 <code>IntoIterator::into_iter(v)</code> + <code>while let Some(x) = iter.next()</code></li>
+<li><code>for x in v</code> 是語法糖，展開後是 <code>v.into_iter()</code> + <code>while let Some(x) = iter.next()</code></li>
 <li><code>IntoIterator</code> trait 定義了「如何把自己轉成迭代器」</li>
 <li>任何實作了 <code>IntoIterator</code> 的型別都能用 <code>for</code> 迴圈</li>
 <li>每個 <code>Iterator</code> 自動實作了 <code>IntoIterator</code></li>
@@ -11391,7 +11391,7 @@ name2 現在是：Bob!!!
 </tbody>
 </table>
 <h4 id="intoiterator">背後的 IntoIterator</h4>
-<p>上一集學到 <code>for x in something</code> 會呼叫 <code>IntoIterator::into_iter(something)</code>。那三種 for 語法糖是怎麼運作的？</p>
+<p>上一集學到 <code>for x in something</code> 會呼叫 <code>something.into_iter()</code>。那三種 for 語法糖是怎麼運作的？</p>
 <p>其實是因為 <code>Vec&lt;T&gt;</code>、<code>&amp;Vec&lt;T&gt;</code>、<code>&amp;mut Vec&lt;T&gt;</code> 分別實作了 <code>IntoIterator</code>：</p>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>

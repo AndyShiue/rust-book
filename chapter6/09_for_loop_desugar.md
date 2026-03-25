@@ -24,14 +24,14 @@ for x in v {
 
 ```rust
 let v = vec![1, 2, 3];
-let mut iter = IntoIterator::into_iter(v);
+let mut iter = v.into_iter();
 while let Some(x) = iter.next() {
     println!("{}", x);
 }
 ```
 
 三個步驟：
-1. 呼叫 `IntoIterator::into_iter(v)` 把 `v` 轉成迭代器
+1. 呼叫 `v.into_iter()` 把 `v` 轉成迭代器
 2. 反覆呼叫 `iter.next()`
 3. 用 `while let Some(x)` 解構（還記得第三章的 while let 嗎？），直到拿到 `None` 就結束
 
@@ -92,7 +92,7 @@ fn main() {
 
     // 手動展開成 while let（完全等價）
     println!("\n--- 手動展開 ---");
-    let mut iter = IntoIterator::into_iter(&fruits);
+    let mut iter = fruits.into_iter();
     while let Some(fruit) = iter.next() {
         println!("水果：{}", fruit);
     }
@@ -143,7 +143,7 @@ impl Iterator for Countdown {
 ```
 
 ## 重點整理
-- `for x in v` 是語法糖，展開後是 `IntoIterator::into_iter(v)` + `while let Some(x) = iter.next()`
+- `for x in v` 是語法糖，展開後是 `v.into_iter()` + `while let Some(x) = iter.next()`
 - `IntoIterator` trait 定義了「如何把自己轉成迭代器」
 - 任何實作了 `IntoIterator` 的型別都能用 `for` 迴圈
 - 每個 `Iterator` 自動實作了 `IntoIterator`

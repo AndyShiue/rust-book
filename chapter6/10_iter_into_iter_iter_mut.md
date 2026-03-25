@@ -65,7 +65,7 @@ println!("{:?}", scores);  // [70, 80, 90]
 
 ### 背後的 IntoIterator
 
-上一集學到 `for x in something` 會呼叫 `IntoIterator::into_iter(something)`。那三種 for 語法糖是怎麼運作的？
+上一集學到 `for x in something` 會呼叫 `something.into_iter()`。那三種 for 語法糖是怎麼運作的？
 
 其實是因為 `Vec<T>`、`&Vec<T>`、`&mut Vec<T>` 分別實作了 `IntoIterator`：
 
