@@ -1,4 +1,4 @@
-# 第六章第 1 集：function pointer
+# 第六章第 1 集：函數指標
 
 ## 本集目標
 認識函數指標（function pointer）型別，學會把函數名稱當成值來傳遞和儲存。
