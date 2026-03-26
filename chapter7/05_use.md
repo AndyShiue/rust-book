@@ -158,7 +158,7 @@ use std::collections::*;  // HashMap, BTreeMap, HashSet... 全部可用
 
 **一般不推薦**在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在**測試**裡很常見——`use super::*;` 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 `cargo test` 寫測試，到時候就會看到這個用法。
 
-### use enum variant 和 associated function
+### use enum variant
 
 `use` 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：
 

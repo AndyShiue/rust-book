@@ -9764,8 +9764,22 @@ c 的總和：7
 <p>為什麼 <code>PartialOrd</code> 要求 <code>PartialEq</code>？因為「比大小」本身隱含了「能判斷相等」——如果 <code>a &lt;= b</code> 且 <code>b &lt;= a</code>，那 <code>a == b</code>。</p>
 <p>為什麼 <code>Ord</code> 要求 <code>Eq</code>？因為完整排序必須能比較任意兩個值，包括相等的情況。而且 <code>Ord</code> 保證所有值都有確定的位置，所以不允許 NAN 這種「和自己不相等」的值。</p>
 <p>這就是為什麼 <code>f64</code> 只能走一邊（<code>PartialEq</code> + <code>PartialOrd</code>），無法走到另一邊（<code>Eq</code> + <code>Ord</code>）。</p>
+<h4 id="default">Default</h4>
+<p><code>Default</code> trait 提供一個「預設值」。數字的預設值是 <code>0</code>，<code>bool</code> 是 <code>false</code>，<code>String</code> 是空字串，<code>Vec</code> 是空 Vec。</p>
+<p>如果 struct 的每個欄位都有 <code>Default</code>，你就可以 derive 它：</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug, Default)]</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">height</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Config</span><span class="p">::</span><span class="n">default</span><span class="p">();</span>
+<span class="c1">// Config { width: 0, height: 0, title: &quot;&quot; }</span>
+</code></pre></div>
+
 <h3 id="_597">範例程式碼</h3>
-<div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Default)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Student</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">grade</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
 <span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
@@ -9807,6 +9821,11 @@ c 的總和：7
 <span class="w">    </span><span class="c1">// f64 沒有 Ord，所以不能用 .sort()</span>
 <span class="w">    </span><span class="c1">// let mut floats = vec![1.0_f64, 2.0, f64::NAN];</span>
 <span class="w">    </span><span class="c1">// floats.sort(); // 編譯錯誤！f64 沒有實作 Ord</span>
+
+<span class="w">    </span><span class="c1">// Default</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">default_student</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Student</span><span class="p">::</span><span class="n">default</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;預設學生：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">default_student</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Student { grade: 0, name: &quot;&quot; }</span>
 <span class="p">}</span>
 </code></pre></div>
 
@@ -9816,6 +9835,7 @@ c 的總和：7
 <li><code>PartialOrd</code>：<code>&lt;</code>、<code>&gt;</code>、<code>&lt;=</code>、<code>&gt;=</code> 比較；<code>Ord</code>：保證完整排序</li>
 <li><code>f64</code> 因為 NAN 的存在，只有 Partial 版本，沒有完整版</li>
 <li>derive 的 Ord 按欄位宣告順序逐一比較</li>
+<li><code>Default</code>：提供預設值（數字 <code>0</code>、bool <code>false</code>、String 空字串）</li>
 </ul>
 <hr />
 <h2 id="31-associated-type">第五章第 31 集：associated type</h2>
@@ -12790,7 +12810,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p><strong>一般不推薦</strong>在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在<strong>測試</strong>裡很常見——<code>use super::*;</code> 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 <code>cargo test</code> 寫測試，到時候就會看到這個用法。</p>
-<h4 id="use-enum-variant-associated-function">use enum variant 和 associated function</h4>
+<h4 id="use-enum-variant">use enum variant</h4>
 <p><code>use</code> 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">::</span><span class="n">Ordering</span><span class="p">::{</span><span class="n">Less</span><span class="p">,</span><span class="w"> </span><span class="n">Equal</span><span class="p">,</span><span class="w"> </span><span class="n">Greater</span><span class="p">};</span>
 
@@ -14080,7 +14100,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>如果欄位的型別<strong>沒有</strong> <code>Copy</code>（像 <code>String</code>），就是 <strong>move</strong></li>
 </ul>
 <p>也就是說，如果你用 <code>..p1</code> 並且移動了 <code>p1</code> 的某些非 Copy 欄位，那些欄位之後就不能再透過 <code>p1</code> 存取了。</p>
-<h4 id="default">搭配 Default</h4>
+<h4 id="default_1">搭配 Default</h4>
 <p>如果你的 struct 有實作 <code>Default</code> trait，可以用 <code>..Default::default()</code> 來建立「只指定幾個欄位，其他用預設值」的實例：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Config</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">debug</span><span class="p">:</span><span class="w"> </span><span class="nc">true</span><span class="p">,</span><span class="w"> </span><span class="o">..</span><span class="nb">Default</span><span class="p">::</span><span class="n">default</span><span class="p">()</span><span class="w"> </span><span class="p">};</span>
 </code></pre></div>
@@ -14497,7 +14517,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <div class="highlight"><pre><span></span><code><span class="n">Animal</span><span class="p">::</span><span class="n">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dog</span><span class="p">);</span>
 </code></pre></div>
 
-<p>明確告訴編譯器「我要呼叫 <code>Animal</code> trait 上的 <code>speak</code>」。<code>&amp;dog</code> 就是原本的 <code>self</code>。</p>
+<p>明確告訴編譯器「我要呼叫 <code>Animal</code> trait 上的 <code>speak</code>」。<code>&amp;dog</code> 就是原本的 <code>&amp;self</code>。</p>
 <h4 id="fully-qualified-syntax">第三種：完全限定語法（Fully Qualified Syntax）</h4>
 <div class="highlight"><pre><span></span><code><span class="o">&lt;</span><span class="n">Dog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Animal</span><span class="o">&gt;</span><span class="p">::</span><span class="n">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dog</span><span class="p">);</span>
 </code></pre></div>
@@ -14515,13 +14535,21 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>如果某個型別同時實作了 <code>Animal</code> 和 <code>Robot</code>，呼叫 <code>.name()</code> 時編譯器會報錯。這時候就需要第二種或第三種的語法來消歧義。</p>
-<h4 id="_819">關聯函數更常需要</h4>
-<p>如果是沒有 <code>self</code> 參數的<strong>關聯函數</strong>（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// 如果多個 trait 都有 create() 關聯函數</span>
+<h4 id="associated-function">associated function 更常需要</h4>
+<p>如果是沒有 <code>self</code> 參數的 <strong>associated function</strong>，因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 如果多個 trait 都有 create() 這個 associated function</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">MyType</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">TraitA</span><span class="o">&gt;</span><span class="p">::</span><span class="n">create</span><span class="p">();</span>
 </code></pre></div>
 
-<h3 id="_820">範例程式碼</h3>
+<h4 id="associated-type_1">存取 associated type</h4>
+<p>完全限定語法也可以用來存取某個型別在特定 trait 上的 <strong>associated type</strong>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Iterator trait 有一個 associated type 叫 Item</span>
+<span class="c1">// 用完全限定語法取得它的具體型別：</span>
+<span class="k">type</span><span class="w"> </span><span class="nc">MyItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">Iterator</span><span class="o">&gt;</span><span class="p">::</span><span class="n">Item</span><span class="p">;</span><span class="w">  </span><span class="c1">// i32</span>
+</code></pre></div>
+
+<p>存取 associated type 一定要用這個語法——Rust 不允許直接寫 <code>Type::TypeName</code>，即使只有一個 trait 有這個名字也不行。</p>
+<h3 id="_819">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">);</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">category</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="p">;</span>
@@ -14579,16 +14607,22 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="o">&lt;</span><span class="n">CyberDog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Animal</span><span class="o">&gt;</span><span class="p">::</span><span class="n">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dog</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;小白 汪汪叫！（動物）&quot;</span>
 <span class="w">    </span><span class="o">&lt;</span><span class="n">CyberDog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Robot</span><span class="o">&gt;</span><span class="p">::</span><span class="n">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dog</span><span class="p">);</span><span class="w">   </span><span class="c1">// &quot;小白 嗶嗶叫！（機器人）&quot;</span>
 
-<span class="w">    </span><span class="c1">// 關聯函數（沒有 self）— 更需要完全限定語法</span>
+<span class="w">    </span><span class="c1">// associated function（沒有 self）— 更需要完全限定語法</span>
 <span class="w">    </span><span class="c1">// Animal::category();     // 編譯錯誤！編譯器不知道是哪個型別的實作</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">animal_cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">CyberDog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Animal</span><span class="o">&gt;</span><span class="p">::</span><span class="n">category</span><span class="p">();</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">robot_cat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">CyberDog</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Robot</span><span class="o">&gt;</span><span class="p">::</span><span class="n">category</span><span class="p">();</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;動物分類：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">animal_cat</span><span class="p">);</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;機器人分類：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">robot_cat</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 存取 associated type</span>
+<span class="w">    </span><span class="c1">// Vec&lt;i32&gt; 實作了 IntoIterator，它的 Item 是 i32</span>
+<span class="w">    </span><span class="c1">// 用完全限定語法取得 associated type：</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">IntoIterator</span><span class="o">&gt;</span><span class="p">::</span><span class="n">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w">  </span><span class="c1">// 型別是 i32</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Vec&lt;i32&gt; 的 IntoIterator::Item 是 i32&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_821">重點整理</h3>
+<h3 id="_820">重點整理</h3>
 <ul>
 <li>方法呼叫有三種層級：<code>obj.method()</code> → <code>Trait::method(&amp;obj)</code> → <code>&lt;Type as Trait&gt;::method(&amp;obj)</code></li>
 <li>通常用最簡單的就好，有衝突時才升級</li>
@@ -14596,15 +14630,16 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>型別本身的方法優先於 trait 方法</li>
 <li><strong>associated function</strong>（沒有 <code>self</code>）更常需要完全限定語法</li>
 <li>完全限定語法的格式：<code>&lt;Type as Trait&gt;::function(args)</code></li>
+<li>也可以用來存取 <strong>associated type</strong>：<code>&lt;Type as Trait&gt;::TypeName</code></li>
 </ul>
 <hr />
 <h2 id="k-dst">附錄第 k 集：DST 簡介</h2>
-<h3 id="_822">本集目標</h3>
+<h3 id="_821">本集目標</h3>
 <p>理解什麼是動態大小型別（DST），以及 <code>Sized</code>、<code>?Sized</code> 在泛型中的意義。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
-<h3 id="_823">概念說明</h3>
+<h3 id="_822">概念說明</h3>
 <p>（本集提到的指標大小以 64 位元系統為準——現在絕大多數電腦都是 64 位元。）</p>
 <p>在 Rust 的型別系統裡，大部分型別的大小在編譯期就已知——<code>i32</code> 是 4 bytes、<code>bool</code> 是 1 byte、<code>(i32, i32)</code> 是 8 bytes。但有些型別的大小<strong>在編譯期是未知的</strong>，這就是 <strong>DST（Dynamically Sized Types）</strong>，動態大小型別。</p>
 <h4 id="dst">常見的 DST</h4>
@@ -14618,7 +14653,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// let arr: [i32] = [1, 2, 3];  // 編譯錯誤！</span>
 </code></pre></div>
 
-<h4 id="_824">怎麼用？靠指標！</h4>
+<h4 id="_823">怎麼用？靠指標！</h4>
 <p>DST 必須藏在某種指標後面：</p>
 <ul>
 <li><code>&amp;str</code>、<code>&amp;[T]</code> — 參考</li>
@@ -14685,7 +14720,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <p>假設你有 <code>"哈囉"</code>（6 bytes），想把 <code>'哈'</code> 改成 <code>'a'</code>——<code>'a'</code> 只有 1 byte，但 <code>'哈'</code> 佔了 3 bytes，你沒辦法就地替換，因為長度不同。如果硬改了第一個 byte 卻沒處理後面的，UTF-8 的多 byte 序列就斷了。而 Rust 的 <code>str</code> 保證內容一定是合法的 UTF-8，破壞這個保證會導致未定義行為。</p>
 <p>所以標準庫裡 <code>&amp;mut str</code> 上的方法少得可憐，基本上只有 <code>make_ascii_uppercase()</code> 和 <code>make_ascii_lowercase()</code> 這類「不會改變 byte 長度」的操作（ASCII 字母的大小寫轉換剛好是 1 byte 對 1 byte）。要修改字串，還是用 <code>String</code> 吧。</p>
-<h3 id="_825">範例程式碼</h3>
+<h3 id="_824">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="p">;</span>
 
 <span class="c1">// 預設：T 必須是 Sized</span>
@@ -14739,7 +14774,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_826">重點整理</h3>
+<h3 id="_825">重點整理</h3>
 <ul>
 <li><strong>DST（Dynamically Sized Types）</strong>：大小在編譯期未知的型別，如 <code>str</code>、<code>[T]</code></li>
 <li>DST 不能直接當值使用，必須透過指標：<code>&amp;str</code>、<code>&amp;[T]</code>、<code>Box&lt;str&gt;</code> 等</li>

@@ -24,7 +24,7 @@ dog.speak();
 Animal::speak(&dog);
 ```
 
-明確告訴編譯器「我要呼叫 `Animal` trait 上的 `speak`」。`&dog` 就是原本的 `self`。
+明確告訴編譯器「我要呼叫 `Animal` trait 上的 `speak`」。`&dog` 就是原本的 `&self`。
 
 ### 第三種：完全限定語法（Fully Qualified Syntax）
 
@@ -50,14 +50,26 @@ trait Robot {
 
 如果某個型別同時實作了 `Animal` 和 `Robot`，呼叫 `.name()` 時編譯器會報錯。這時候就需要第二種或第三種的語法來消歧義。
 
-### 關聯函數更常需要
+### associated function 更常需要
 
-如果是沒有 `self` 參數的**關聯函數**（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
+如果是沒有 `self` 參數的 **associated function**，因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
 
 ```rust
-// 如果多個 trait 都有 create() 關聯函數
+// 如果多個 trait 都有 create() 這個 associated function
 let x = <MyType as TraitA>::create();
 ```
+
+### 存取 associated type
+
+完全限定語法也可以用來存取某個型別在特定 trait 上的 **associated type**：
+
+```rust
+// Iterator trait 有一個 associated type 叫 Item
+// 用完全限定語法取得它的具體型別：
+type MyItem = <Vec<i32> as Iterator>::Item;  // i32
+```
+
+存取 associated type 一定要用這個語法——Rust 不允許直接寫 `Type::TypeName`，即使只有一個 trait 有這個名字也不行。
 
 ## 範例程式碼
 
@@ -119,12 +131,18 @@ fn main() {
     <CyberDog as Animal>::speak(&dog);  // "小白 汪汪叫！（動物）"
     <CyberDog as Robot>::speak(&dog);   // "小白 嗶嗶叫！（機器人）"
 
-    // 關聯函數（沒有 self）— 更需要完全限定語法
+    // associated function（沒有 self）— 更需要完全限定語法
     // Animal::category();     // 編譯錯誤！編譯器不知道是哪個型別的實作
     let animal_cat = <CyberDog as Animal>::category();
     let robot_cat = <CyberDog as Robot>::category();
     println!("動物分類：{}", animal_cat);
     println!("機器人分類：{}", robot_cat);
+
+    // 存取 associated type
+    // Vec<i32> 實作了 IntoIterator，它的 Item 是 i32
+    // 用完全限定語法取得 associated type：
+    let _: <Vec<i32> as IntoIterator>::Item = 42;  // 型別是 i32
+    println!("Vec<i32> 的 IntoIterator::Item 是 i32");
 }
 ```
 
@@ -136,3 +154,4 @@ fn main() {
 - 型別本身的方法優先於 trait 方法
 - **associated function**（沒有 `self`）更常需要完全限定語法
 - 完全限定語法的格式：`<Type as Trait>::function(args)`
+- 也可以用來存取 **associated type**：`<Type as Trait>::TypeName`

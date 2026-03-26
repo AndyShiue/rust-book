@@ -63,10 +63,28 @@ pub trait Ord: PartialOrd + Eq { ... }
 
 這就是為什麼 `f64` 只能走一邊（`PartialEq` + `PartialOrd`），無法走到另一邊（`Eq` + `Ord`）。
 
+### Default
+
+`Default` trait 提供一個「預設值」。數字的預設值是 `0`，`bool` 是 `false`，`String` 是空字串，`Vec` 是空 Vec。
+
+如果 struct 的每個欄位都有 `Default`，你就可以 derive 它：
+
+```rust
+#[derive(Debug, Default)]
+struct Config {
+    width: i32,
+    height: i32,
+    title: String,
+}
+
+let config = Config::default();
+// Config { width: 0, height: 0, title: "" }
+```
+
 ## 範例程式碼
 
 ```rust
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Default)]
 struct Student {
     grade: i32,
     name: String,
@@ -108,6 +126,11 @@ fn main() {
     // f64 沒有 Ord，所以不能用 .sort()
     // let mut floats = vec![1.0_f64, 2.0, f64::NAN];
     // floats.sort(); // 編譯錯誤！f64 沒有實作 Ord
+
+    // Default
+    let default_student = Student::default();
+    println!("預設學生：{:?}", default_student);
+    // Student { grade: 0, name: "" }
 }
 ```
 
@@ -116,3 +139,4 @@ fn main() {
 - `PartialOrd`：`<`、`>`、`<=`、`>=` 比較；`Ord`：保證完整排序
 - `f64` 因為 NAN 的存在，只有 Partial 版本，沒有完整版
 - derive 的 Ord 按欄位宣告順序逐一比較
+- `Default`：提供預設值（數字 `0`、bool `false`、String 空字串）
