@@ -5636,6 +5636,24 @@ c 的總和：7
 </code></pre></div>
 
 <p>注意：呼叫 <code>p.sum()</code> 的時候，<strong>不需要再手動傳入 <code>self</code></strong>。<code>.</code> 前面的 <code>p</code> 會自動變成方法裡的 <code>self</code>。所以雖然定義時寫了 <code>fn sum(self)</code>，呼叫時只要寫 <code>p.sum()</code> 而不是 <code>p.sum(p)</code>。</p>
+<h4 id="method">method 可以有其他參數</h4>
+<p>method 除了 <code>self</code> 之外，還可以有一個或更多其他的參數——就跟一般函數一樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span><span class="p">:</span><span class="w"> </span><span class="nc">Point</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+<span class="w">            </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>呼叫時，<code>self</code> 由 <code>.</code> 前面的值自動帶入，你只需要傳其他的參數：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span><span class="w">  </span><span class="c1">// p1 是 self，p2 是 other</span>
+</code></pre></div>
+
 <h4 id="associated-function-vs-method">associated function vs method 的差別：</h4>
 <ul>
 <li>associated function：沒有 <code>self</code>，用 <code>::</code> 呼叫 → <code>Point::new(3, 7)</code></li>
@@ -5656,6 +5674,14 @@ c 的總和：7
 <span class="w">    </span><span class="c1">// method（第一個參數是 self）</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">y</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// method 可以有 self 之外的參數</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span><span class="p">:</span><span class="w"> </span><span class="nc">Point</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+<span class="w">            </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">other</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// 另一個 method</span>
@@ -5688,9 +5714,14 @@ c 的總和：7
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">sum</span><span class="p">();</span><span class="w">                 </span><span class="c1">// . 呼叫 method</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;3 + 7 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
 
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">is_origin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">is_origin</span><span class="p">();</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;是原點嗎？{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">is_origin</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// method 帶其他參數</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">b</span><span class="p">);</span><span class="w">                 </span><span class="c1">// a 是 self，b 是 other</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;相加後：({}, {})&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;是原點嗎？{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">origin</span><span class="p">.</span><span class="n">is_origin</span><span class="p">());</span>
 
 <span class="w">    </span><span class="c1">// enum 的 method</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Direction</span><span class="p">::</span><span class="n">Left</span><span class="p">;</span>
@@ -5703,6 +5734,7 @@ c 的總和：7
 <ul>
 <li>method 的第一個參數是 <code>self</code>，代表值本身</li>
 <li>method 用 <code>.</code> 呼叫：<code>p.sum()</code>，<code>.</code> 前面的值自動成為 <code>self</code>，不需要手動傳入</li>
+<li>method 除了 <code>self</code> 還可以有其他參數：<code>fn add(self, other: Point) -&gt; Point</code>，呼叫時只傳 <code>self</code> 以外的參數</li>
 <li>struct 和 enum 都可以有 method</li>
 </ul>
 <hr />
@@ -14229,7 +14261,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>本集是通用補充，不特定屬於哪一章。</p>
 </blockquote>
 <h3 id="_806">概念說明</h3>
-<p>Rust 有四個常用的「讓程式直接掛掉」的巨集。它們都會造成 panic（程式中止），但語義不同，傳達給讀程式碼的人的訊息也不同。</p>
+<p>你可能注意到 <code>println!()</code>、<code>format!()</code> 這些名字後面都有 <code>!</code>。在 Rust 裡，名字帶 <code>!</code> 的東西叫做<strong>巨集（macro）</strong>——它和函數不太一樣，但目前你只需要知道怎麼用就好，巨集的原理以後會教。</p>
+<p>這集要介紹四個常用的「讓程式直接掛掉」的巨集。它們都會造成 panic（程式中止），但語義不同，傳達給讀程式碼的人的訊息也不同。</p>
 <h4 id="panic_1"><code>panic!("訊息")</code></h4>
 <p>最基本的「程式出事了，直接中止」。當你遇到無法處理的錯誤時使用：</p>
 <div class="highlight"><pre><span></span><code><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;發生了不該發生的事！&quot;</span><span class="p">);</span>
