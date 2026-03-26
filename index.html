@@ -14645,7 +14645,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">//                     ^^^^^^^ 注意：必須透過參考</span>
 </code></pre></div>
 
-<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你只能透過參考或指標來使用 <code>T</code>。</p>
+<p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你通常只能透過參考或智慧指標來使用 <code>T</code>。</p>
 <h4 id="cow_1">回頭看第五章的 Cow</h4>
 <p>第五章最後一集教 <code>Cow</code> 的時候，我們用的是簡化版的定義：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 第五章提供的簡化版</span>
