@@ -1,4 +1,4 @@
-# 附錄第 e 集：struct/enum 放在 fn 裡面
+# 附錄第 e 集：struct / enum 放在 fn 裡面
 
 ## 本集目標
 

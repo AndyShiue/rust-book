@@ -440,7 +440,7 @@
 <li><a href="#b-break">附錄第 b 集：break 回傳值</a></li>
 <li><a href="#c-raw-string-literal">附錄第 c 集：多行字串 &amp; raw string literal</a></li>
 <li><a href="#d">附錄第 d 集：格式化字串進階</a></li>
-<li><a href="#e-structenum-fn">附錄第 e 集：struct/enum 放在 fn 裡面</a></li>
+<li><a href="#e-struct-enum-fn">附錄第 e 集：struct / enum 放在 fn 裡面</a></li>
 <li><a href="#f-struct-update-syntax">附錄第 f 集：struct update syntax</a></li>
 <li><a href="#g-ref-pattern-match-ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</a></li>
 <li><a href="#h-panic-todo-unimplemented-unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</a></li>
@@ -9822,9 +9822,9 @@ c 的總和：7
 <h3 id="_599">本集目標</h3>
 <p>學會在 trait 中定義 associated type（關聯型別），理解它和泛型參數的差別。</p>
 <h3 id="_600">概念說明</h3>
-<p>第 18 集我們學了泛型 trait：<code>trait Convert&lt;T&gt;</code>。但有時候，型別參數不是「開放的」——一個型別只會有一種合理的實作。</p>
-<h4 id="trait_7">問題：泛型 trait 太自由了</h4>
-<p>想像一個「容器」的 trait。容器裡面裝什麼型別的元素？用泛型 trait 的話：</p>
+<p>第 18 集我們學了多參數 trait：<code>trait Convert&lt;T&gt;</code>。但有時候，型別參數不是「開放的」——一個型別只會有一種合理的實作。</p>
+<h4 id="trait_7">問題：多參數 trait 太自由了</h4>
+<p>想像一個「容器」的 trait。容器裡面裝什麼型別的元素？用多參數 trait 的話：</p>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">first</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
@@ -13967,7 +13967,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>要印出 <code>{</code> 和 <code>}</code> 本身，用 <code>{{</code> 和 <code>}}</code> 跳脫</li>
 </ul>
 <hr />
-<h2 id="e-structenum-fn">附錄第 e 集：struct/enum 放在 fn 裡面</h2>
+<h2 id="e-struct-enum-fn">附錄第 e 集：struct / enum 放在 fn 裡面</h2>
 <h3 id="_789">本集目標</h3>
 <p>了解 struct、enum、fn 等「項目」可以定義在函數內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
 <blockquote>
