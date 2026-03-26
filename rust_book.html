@@ -14622,11 +14622,11 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>DST 必須藏在某種指標後面：</p>
 <ul>
 <li><code>&amp;str</code>、<code>&amp;[T]</code> — 參考</li>
-<li><code>Box&lt;str&gt;</code>、<code>Box&lt;[T]&gt;</code> — 堆積上的指標</li>
+<li><code>Box&lt;str&gt;</code>、<code>Box&lt;[T]&gt;</code> — 指向 heap 的指標</li>
 </ul>
 <p>這些指標是所謂的<strong>胖指標（fat pointer）</strong>——它們不只存一個位址，還多存了一個長度資訊：</p>
 <div class="highlight"><pre><span></span><code>一般指標：[位址]           （8 bytes）
-胖指標：  [位址][長度]      （16 bytes）
+胖指標：　[位址][長度]     （16 bytes）
 </code></pre></div>
 
 <p>所以 <code>&amp;str</code> 實際上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。</p>
