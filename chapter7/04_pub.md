@@ -34,7 +34,7 @@ fn main() {
 
 ### pub fn
 
-函式加 `pub` 就對外公開，沒什麼好說的。
+函數加 `pub` 就對外公開，沒什麼好說的。
 
 ### pub struct —— 欄位要個別標記
 
@@ -71,7 +71,7 @@ fn main() {
 }
 ```
 
-這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 `StructName { ... }` 建構，必須透過你提供的建構函式。
+這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 `StructName { ... }` 建構，必須透過你提供的建構函數。
 
 ### pub enum —— variants 自動公開
 
@@ -165,7 +165,7 @@ mod shapes {
 mod database {
     pub(crate) fn connect() -> String {
         // 整個 crate 內部都能呼叫，但如果這是 library，
-        // 使用你 library 的人看不到這個函式
+        // 使用你 library 的人看不到這個函數
         String::from("connected")
     }
 
@@ -225,7 +225,7 @@ fn main() {
 
 - Rust **預設一切私有**，必須明確加 `pub` 才公開
 - `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`
-- 有私有欄位的 struct 無法從外部直接建構，必須提供建構函式
+- 有私有欄位的 struct 無法從外部直接建構，必須提供建構函數
 - `pub enum` 的所有 variants **自動公開**
 - `impl Trait for T` 裡的 fn 可見性跟著 trait 走，不加 `pub`；`impl T` 裡的 fn 各自用 `pub` 控制
 - `pub(crate)`：crate 內部可見，外部不可見

@@ -10,7 +10,7 @@
 
 這一集我們要把 Cargo 的全貌攤開來看，特別是怎麼引入外部套件。
 
-### dev build vs release build
+### debug build vs release build
 
 `cargo build` 和 `cargo run` 預設跑的是 **debug 模式**——編譯快但執行慢（沒有最佳化）。當你要發布程式的時候，加上 `--release`：
 

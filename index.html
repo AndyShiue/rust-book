@@ -440,7 +440,7 @@
 <li><a href="#b-break">附錄第 b 集：break 回傳值</a></li>
 <li><a href="#c-raw-string-literal">附錄第 c 集：多行字串 &amp; raw string literal</a></li>
 <li><a href="#d">附錄第 d 集：格式化字串進階</a></li>
-<li><a href="#e-structenum-main">附錄第 e 集：struct/enum 放在 main 裡面</a></li>
+<li><a href="#e-structenum-fn">附錄第 e 集：struct/enum 放在 fn 裡面</a></li>
 <li><a href="#f-struct-update-syntax">附錄第 f 集：struct update syntax</a></li>
 <li><a href="#g-ref-pattern-match-ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</a></li>
 <li><a href="#h-panic-todo-unimplemented-unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</a></li>
@@ -2255,7 +2255,7 @@ B   C\
 <span class="c1">//                   沒有分號     沒有分號</span>
 </code></pre></div>
 
-<p>這些值（1 和 2）後面<strong>沒有分號</strong>。在 Rust 裡，不加分號的值就是「回傳值」。這是 Rust 的表達式語法，之後學函式的時候會更詳細地講。</p>
+<p>這些值（1 和 2）後面<strong>沒有分號</strong>。在 Rust 裡，不加分號的值就是「回傳值」。這是 Rust 的表達式語法，之後學函數的時候會更詳細地講。</p>
 <h4 id="_161">兩邊型別要一致！</h4>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">condition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
@@ -12108,7 +12108,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_701">概念說明</h3>
 <p>我們從第一章開始就在用 <code>cargo new</code> 和 <code>cargo run</code>。其實 <code>cargo run</code> 背後做了兩件事：先<strong>編譯</strong>你的程式碼，再<strong>執行</strong>編譯出來的執行檔。如果你只想編譯但不執行，可以用 <code>cargo build</code>——它只會產生執行檔，放在 <code>target/debug/</code> 資料夾裡。</p>
 <p>這一集我們要把 Cargo 的全貌攤開來看，特別是怎麼引入外部套件。</p>
-<h4 id="dev-build-vs-release-build">dev build vs release build</h4>
+<h4 id="debug-build-vs-release-build">debug build vs release build</h4>
 <p><code>cargo build</code> 和 <code>cargo run</code> 預設跑的是 <strong>debug 模式</strong>——編譯快但執行慢（沒有最佳化）。當你要發布程式的時候，加上 <code>--release</code>：</p>
 <div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>build<span class="w"> </span>--release
 </code></pre></div>
@@ -12198,7 +12198,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_706">本集目標</h3>
 <p>學會用 mod 將程式碼組織成有層次的結構。</p>
 <h3 id="_707">概念說明</h3>
-<p>當程式越寫越長，全部塞在一個 <code>main.rs</code> 裡面會變得很難維護。這時候我們需要把相關的函式、struct、enum 分組——在 Rust 裡，這個分組機制就是 <strong>mod</strong>。</p>
+<p>當程式越寫越長，全部塞在一個 <code>main.rs</code> 裡面會變得很難維護。這時候我們需要把相關的函數、struct、enum 分組——在 Rust 裡，這個分組機制就是 <strong>mod</strong>。</p>
 <h4 id="mod">在同一個檔案裡定義 mod</h4>
 <p>最簡單的用法：直接在檔案裡用 <code>mod</code> 關鍵字建立一個區塊。</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
@@ -12212,7 +12212,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<p>要呼叫 mod 裡的函式，用 <code>::</code> 路徑語法：</p>
+<p>要呼叫 mod 裡的函數，用 <code>::</code> 路徑語法：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">math</span><span class="p">::</span><span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
 </code></pre></div>
 
@@ -12460,7 +12460,7 @@ note: iterators are lazy and do nothing unless consumed
 
 <p>你可能會好奇：<code>fn main()</code> 和 <code>mod secrets</code> 都沒加 <code>pub</code>，為什麼 <code>main</code> 能看到 <code>secrets</code>？因為它們都定義在根 mod 裡——同一個 mod 的成員互相看得到，不需要 <code>pub</code>。<code>pub</code> 是用來讓<strong>其他 mod</strong> 看到你的東西的。</p>
 <h4 id="pub-fn">pub fn</h4>
-<p>函式加 <code>pub</code> 就對外公開，沒什麼好說的。</p>
+<p>函數加 <code>pub</code> 就對外公開，沒什麼好說的。</p>
 <h4 id="pub-struct">pub struct —— 欄位要個別標記</h4>
 <p>struct 加 <code>pub</code> 只是讓這個<strong>型別</strong>公開，欄位還是私有的！每個欄位要<strong>個別</strong>加 <code>pub</code>：</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">user</span><span class="w"> </span><span class="p">{</span>
@@ -12493,7 +12493,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 <code>StructName { ... }</code> 建構，必須透過你提供的建構函式。</p>
+<p>這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 <code>StructName { ... }</code> 建構，必須透過你提供的建構函數。</p>
 <h4 id="pub-enum-variants">pub enum —— variants 自動公開</h4>
 <p>enum 跟 struct 不一樣：只要 enum 本身是 <code>pub</code>，所有 variants 都<strong>自動公開</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">status</span><span class="w"> </span><span class="p">{</span>
@@ -12573,7 +12573,7 @@ note: iterators are lazy and do nothing unless consumed
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">database</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">connect</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="c1">// 整個 crate 內部都能呼叫，但如果這是 library，</span>
-<span class="w">        </span><span class="c1">// 使用你 library 的人看不到這個函式</span>
+<span class="w">        </span><span class="c1">// 使用你 library 的人看不到這個函數</span>
 <span class="w">        </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;connected&quot;</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 
@@ -12631,7 +12631,7 @@ note: iterators are lazy and do nothing unless consumed
 <ul>
 <li>Rust <strong>預設一切私有</strong>，必須明確加 <code>pub</code> 才公開</li>
 <li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code></li>
-<li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函式</li>
+<li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函數</li>
 <li><code>pub enum</code> 的所有 variants <strong>自動公開</strong></li>
 <li><code>impl Trait for T</code> 裡的 fn 可見性跟著 trait 走，不加 <code>pub</code>；<code>impl T</code> 裡的 fn 各自用 <code>pub</code> 控制</li>
 <li><code>pub(crate)</code>：crate 內部可見，外部不可見</li>
@@ -13013,7 +13013,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="p">;</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">advanced</span><span class="p">;</span>
 
-<span class="c1">// 把常用的函式提升到 math 層級</span>
+<span class="c1">// 把常用的函數提升到 math 層級</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">basic</span><span class="p">::</span><span class="n">add</span><span class="p">;</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">basic</span><span class="p">::</span><span class="n">subtract</span><span class="p">;</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">use</span><span class="w"> </span><span class="n">advanced</span><span class="p">::</span><span class="n">power</span><span class="p">;</span>
@@ -13229,7 +13229,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_743">概念說明</h3>
 <p>Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來的，而是內建在語法裡的。</p>
 <h4 id="_744"><code>///</code> 項目文件註解</h4>
-<p>三個斜線 <code>///</code> 是用來為<strong>接下來的項目</strong>（函式、struct、enum、trait 等）寫文件：</p>
+<p>三個斜線 <code>///</code> 是用來為<strong>接下來的項目</strong>（函數、struct、enum、trait 等）寫文件：</p>
 <div class="highlight"><pre><span></span><code><span class="sd">/// 計算兩個整數的最大公因數。</span>
 <span class="sd">///</span>
 <span class="sd">/// 使用歐幾里得演算法，效率為 O(log(min(a, b)))。</span>
@@ -13255,7 +13255,7 @@ note: iterators are lazy and do nothing unless consumed
 <p>兩個斜線加驚嘆號 <code>//!</code> 是為<strong>包含它的項目</strong>寫文件，通常放在檔案最頂端：</p>
 <div class="highlight"><pre><span></span><code><span class="sd">//! # Math Library</span>
 <span class="sd">//!</span>
-<span class="sd">//! 這個 library 提供基本的數學運算函式。</span>
+<span class="sd">//! 這個 library 提供基本的數學運算函數。</span>
 <span class="sd">//!</span>
 <span class="sd">//! ## 功能</span>
 <span class="sd">//!</span>
@@ -13291,7 +13291,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_746">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="sd">//! # 溫度轉換工具</span>
 <span class="sd">//!</span>
-<span class="sd">//! 提供攝氏和華氏之間的轉換函式。</span>
+<span class="sd">//! 提供攝氏和華氏之間的轉換函數。</span>
 
 <span class="sd">/// 攝氏轉華氏。</span>
 <span class="sd">///</span>
@@ -13480,7 +13480,7 @@ note: iterators are lazy and do nothing unless consumed
 <p><strong>src/lib.rs：</strong></p>
 <div class="highlight"><pre><span></span><code><span class="sd">//! # My Math Lib</span>
 <span class="sd">//!</span>
-<span class="sd">//! 提供簡單好用的數學函式。</span>
+<span class="sd">//! 提供簡單好用的數學函數。</span>
 
 <span class="sd">/// 計算最大公因數。</span>
 <span class="sd">///</span>
@@ -13935,9 +13935,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>要印出 <code>{</code> 和 <code>}</code> 本身，用 <code>{{</code> 和 <code>}}</code> 跳脫</li>
 </ul>
 <hr />
-<h2 id="e-structenum-main">附錄第 e 集：struct/enum 放在 main 裡面</h2>
+<h2 id="e-structenum-fn">附錄第 e 集：struct/enum 放在 fn 裡面</h2>
 <h3 id="_789">本集目標</h3>
-<p>了解 struct、enum、fn 等「項目」可以定義在函式內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
+<p>了解 struct、enum、fn 等「項目」可以定義在函數內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
 <blockquote>
 <p>本集是<strong>第三章</strong>的補充。</p>
 </blockquote>
@@ -13954,8 +13954,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這段程式碼完全可以編譯。</p>
-<h4 id="_791">限制：只在該函式內可見</h4>
-<p>放在函式內的型別定義，只有那個函式看得到。其他函式無法使用它。所以慣例上，我們還是會把型別定義放在外面——除非你確定這個型別只在一個函式裡面用到。</p>
+<h4 id="_791">限制：只在該函數內可見</h4>
+<p>放在函數內的型別定義，只有那個 fn 看得到。其他函數無法使用它。所以慣例上，我們還是會把型別定義放在外面——除非你確定這個型別只在一個 fn 裡面用到。</p>
 <h4 id="_792">重要差異：項目不受順序限制</h4>
 <p>這裡有一個很多人不知道的重點。在 Rust 裡，<strong>項目（items）</strong>——包括 <code>struct</code>、<code>enum</code>、<code>fn</code>、<code>trait</code>、<code>impl</code> 等——<strong>不受定義順序影響</strong>。你可以先使用，後定義：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -14019,9 +14019,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h3 id="_795">重點整理</h3>
 <ul>
-<li><code>struct</code>、<code>enum</code>、<code>fn</code> 等項目可以合法地定義在函式內部</li>
-<li>定義在函式內的項目，只有該函式看得到（作用域限制）</li>
-<li>一般還是把型別定義放在函式外面，除非只有單一函式使用</li>
+<li><code>struct</code>、<code>enum</code>、<code>fn</code> 等項目可以合法地定義在函數內部</li>
+<li>定義在 fn 內的項目，只有該 fn 看得到（作用域限制）</li>
+<li>一般還是把型別定義放在 fn 外面，除非只有單一 fn 使用</li>
 <li><strong>項目不受定義順序影響</strong>——可以先使用、後定義</li>
 <li><strong><code>let</code> 綁定必須在使用之前出現</strong>——這是項目和 <code>let</code> 的根本差異</li>
 <li>原因：項目是編譯期的靜態定義，編譯器會先掃描完所有項目再處理執行期程式碼</li>
@@ -14482,9 +14482,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>如果某個型別同時實作了 <code>Animal</code> 和 <code>Robot</code>，呼叫 <code>.name()</code> 時編譯器會報錯。這時候就需要第二種或第三種的語法來消歧義。</p>
-<h4 id="_819">關聯函式更常需要</h4>
-<p>如果是沒有 <code>self</code> 參數的<strong>關聯函式</strong>（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// 如果多個 trait 都有 create() 關聯函式</span>
+<h4 id="_819">關聯函數更常需要</h4>
+<p>如果是沒有 <code>self</code> 參數的<strong>關聯函數</strong>（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 如果多個 trait 都有 create() 關聯函數</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">MyType</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">TraitA</span><span class="o">&gt;</span><span class="p">::</span><span class="n">create</span><span class="p">();</span>
 </code></pre></div>
 
@@ -14572,6 +14572,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
 <h3 id="_823">概念說明</h3>
+<p>（本集提到的指標大小以 64 位元系統為準——現在絕大多數電腦都是 64 位元。）</p>
 <p>在 Rust 的型別系統裡，大部分型別的大小在編譯期就已知——<code>i32</code> 是 4 bytes、<code>bool</code> 是 1 byte、<code>(i32, i32)</code> 是 8 bytes。但有些型別的大小<strong>在編譯期是未知的</strong>，這就是 <strong>DST（Dynamically Sized Types）</strong>，動態大小型別。</p>
 <h4 id="dst">常見的 DST</h4>
 <p>你其實已經見過它們了：</p>
@@ -14593,10 +14594,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>這些指標是所謂的<strong>胖指標（fat pointer）</strong>——它們不只存一個位址，還多存了一個長度資訊：</p>
 <div class="highlight"><pre><span></span><code>一般指標：[位址]           （8 bytes）
 胖指標：  [位址][長度]      （16 bytes）
-（假設電腦是 64 位元）
 </code></pre></div>
 
-<p>所以 <code>&amp;str</code> 實際上在 64 位元電腦上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。</p>
+<p>所以 <code>&amp;str</code> 實際上佔 16 bytes：8 bytes 指向字串資料，8 bytes 記錄長度。</p>
 <h4 id="sized-trait"><code>Sized</code> trait</h4>
 <p>Rust 有一個特殊的 trait 叫 <code>Sized</code>，表示「這個型別的大小在編譯期已知」。<strong>絕大多數型別都自動實作了 <code>Sized</code></strong>。</p>
 <p>而且——這是很多人不知道的——<strong>泛型參數預設有 <code>Sized</code> bound</strong>：</p>
@@ -14605,7 +14605,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="k">fn</span><span class="w"> </span><span class="nf">print_it</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 
-<p>這很合理，因為如果 <code>T</code> 的大小未知，函式根本不知道要在 stack 上分配多少空間。</p>
+<p>這很合理，因為如果 <code>T</code> 的大小未知，函數根本不知道要在 stack 上分配多少空間。</p>
 <h4 id="sized"><code>?Sized</code>：放寬限制</h4>
 <p>有時候你希望泛型參數可以接受 DST，這時候用 <code>?Sized</code> 來放寬限制：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_it</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="o">?</span><span class="nb">Sized</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>

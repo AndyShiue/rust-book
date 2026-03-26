@@ -50,12 +50,12 @@ trait Robot {
 
 如果某個型別同時實作了 `Animal` 和 `Robot`，呼叫 `.name()` 時編譯器會報錯。這時候就需要第二種或第三種的語法來消歧義。
 
-### 關聯函式更常需要
+### 關聯函數更常需要
 
-如果是沒有 `self` 參數的**關聯函式**（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
+如果是沒有 `self` 參數的**關聯函數**（associated function），因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
 
 ```rust
-// 如果多個 trait 都有 create() 關聯函式
+// 如果多個 trait 都有 create() 關聯函數
 let x = <MyType as TraitA>::create();
 ```
 

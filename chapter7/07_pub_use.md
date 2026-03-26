@@ -70,7 +70,7 @@ pub use rand::Rng;  // 使用者 use your_crate::Rng 就好，不用自己加 ra
 pub mod basic;
 pub mod advanced;
 
-// 把常用的函式提升到 math 層級
+// 把常用的函數提升到 math 層級
 pub use basic::add;
 pub use basic::subtract;
 pub use advanced::power;

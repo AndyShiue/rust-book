@@ -133,7 +133,7 @@ categories = ["mathematics"]
 ```rust
 //! # My Math Lib
 //!
-//! 提供簡單好用的數學函式。
+//! 提供簡單好用的數學函數。
 
 /// 計算最大公因數。
 ///
