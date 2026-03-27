@@ -69,7 +69,7 @@ let x = <MyType as TraitA>::create();
 type MyItem = <Vec<i32> as Iterator>::Item;  // i32
 ```
 
-存取 associated type 一定要用這個語法——Rust 不允許直接寫 `Type::TypeName`，即使只有一個 trait 有這個名字也不行。
+有些地方可以直接寫 `Type::TypeName`，但如果有歧義或是編譯器無法推斷，就需要用完全限定語法明確指定。
 
 ## 範例程式碼
 

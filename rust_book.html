@@ -14548,7 +14548,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="k">type</span><span class="w"> </span><span class="nc">MyItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nb">Iterator</span><span class="o">&gt;</span><span class="p">::</span><span class="n">Item</span><span class="p">;</span><span class="w">  </span><span class="c1">// i32</span>
 </code></pre></div>
 
-<p>存取 associated type 一定要用這個語法——Rust 不允許直接寫 <code>Type::TypeName</code>，即使只有一個 trait 有這個名字也不行。</p>
+<p>有些地方可以直接寫 <code>Type::TypeName</code>，但如果有歧義或是編譯器無法推斷，就需要用完全限定語法明確指定。</p>
 <h3 id="_819">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">);</span>
