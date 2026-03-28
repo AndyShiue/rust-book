@@ -12547,6 +12547,20 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 <code>StructName { ... }</code> 建構，必須透過你提供的建構函數。</p>
+<p>tuple struct 也一樣——欄位預設是私有的，要個別加 <code>pub</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">geometry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="p">(</span><span class="k">pub</span><span class="w"> </span><span class="kt">f64</span><span class="p">,</span><span class="w"> </span><span class="k">pub</span><span class="w"> </span><span class="kt">f64</span><span class="p">);</span><span class="w">  </span><span class="c1">// 兩個欄位都公開</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Id</span><span class="p">(</span><span class="kt">u64</span><span class="p">);</span><span class="w">                   </span><span class="c1">// 欄位是私有的！</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">geometry</span><span class="p">::</span><span class="n">Point</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">);</span><span class="w">  </span><span class="c1">// OK，欄位都是 pub</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;x = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// let id = geometry::Id(42);  // 編譯錯誤！Id 的欄位是私有的</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <h4 id="pub-enum-variants">pub enum —— variants 自動公開</h4>
 <p>enum 跟 struct 不一樣：只要 enum 本身是 <code>pub</code>，所有 variants 都<strong>自動公開</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">status</span><span class="w"> </span><span class="p">{</span>
@@ -12683,7 +12697,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_719">重點整理</h3>
 <ul>
 <li>Rust <strong>預設一切私有</strong>，必須明確加 <code>pub</code> 才公開</li>
-<li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code></li>
+<li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code>（tuple struct 也一樣）</li>
 <li>有私有欄位的 struct 無法從外部直接建構，必須提供建構函數</li>
 <li><code>pub enum</code> 的所有 variants <strong>自動公開</strong></li>
 <li><code>impl Trait for T</code> 裡的 fn 可見性跟著 trait 走，不加 <code>pub</code>；<code>impl T</code> 裡的 fn 各自用 <code>pub</code> 控制</li>

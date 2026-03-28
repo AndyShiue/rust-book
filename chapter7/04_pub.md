@@ -73,6 +73,22 @@ fn main() {
 
 這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 `StructName { ... }` 建構，必須透過你提供的建構函數。
 
+tuple struct 也一樣——欄位預設是私有的，要個別加 `pub`：
+
+```rust
+mod geometry {
+    pub struct Point(pub f64, pub f64);  // 兩個欄位都公開
+    pub struct Id(u64);                   // 欄位是私有的！
+}
+
+fn main() {
+    let p = geometry::Point(1.0, 2.0);  // OK，欄位都是 pub
+    println!("x = {}", p.0);
+
+    // let id = geometry::Id(42);  // 編譯錯誤！Id 的欄位是私有的
+}
+```
+
 ### pub enum —— variants 自動公開
 
 enum 跟 struct 不一樣：只要 enum 本身是 `pub`，所有 variants 都**自動公開**。
@@ -224,7 +240,7 @@ fn main() {
 ## 重點整理
 
 - Rust **預設一切私有**，必須明確加 `pub` 才公開
-- `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`
+- `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`（tuple struct 也一樣）
 - 有私有欄位的 struct 無法從外部直接建構，必須提供建構函數
 - `pub enum` 的所有 variants **自動公開**
 - `impl Trait for T` 裡的 fn 可見性跟著 trait 走，不加 `pub`；`impl T` 裡的 fn 各自用 `pub` 控制
