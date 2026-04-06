@@ -449,6 +449,21 @@
 <li><a href="#k-dst">附錄第 k 集：DST 簡介</a></li>
 </ul>
 </li>
+<li><a href="#_826">第八章：多執行緒</a><ul>
+<li><a href="#1_3">第八章第 1 集：指標</a></li>
+<li><a href="#2-threadspawn">第八章第 2 集：thread::spawn</a></li>
+<li><a href="#3-send-sync">第八章第 3 集：Send / Sync</a></li>
+<li><a href="#4-refcell">第八章第 4 集：RefCell 在多執行緒</a></li>
+<li><a href="#5-rc">第八章第 5 集：Rc 在多執行緒</a></li>
+<li><a href="#6-deref">第八章第 6 集：Deref 與自動解參考</a></li>
+<li><a href="#7-arct">第八章第 7 集：Arc&lt;T&gt;</a></li>
+<li><a href="#8-mutext">第八章第 8 集：Mutex&lt;T&gt;</a></li>
+<li><a href="#9-rwlockt">第八章第 9 集：RwLock&lt;T&gt;</a></li>
+<li><a href="#10-mpsc">第八章第 10 集：mpsc</a></li>
+<li><a href="#11_3">第八章第 11 集：死鎖</a></li>
+<li><a href="#12-threadscope">第八章第 12 集：thread::scope 簡介</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -14797,6 +14812,1134 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong><code>Sized</code></strong>：表示型別大小在編譯期已知；泛型參數預設有 <code>T: Sized</code> bound</li>
 <li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）</li>
 <li><code>Cow&lt;'a, B&gt;</code> 中的 <code>B: ?Sized</code> 就是為了讓 <code>B</code> 可以是 <code>str</code> 等 DST</li>
+</ul>
+<hr />
+<h1 id="_826">第八章：多執行緒</h1>
+<h2 id="1_3">第八章第 1 集：指標</h2>
+<h3 id="_827">本集目標</h3>
+<p>理解記憶體位址的概念，知道指標在底層是什麼東西。</p>
+<h3 id="_828">概念說明</h3>
+<p>前面幾章我們用 <code>&amp;T</code>、<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code> 的時候，關心的是「誰擁有資料」、「誰在借」。這一集要換個角度——這些東西在記憶體裡到底是什麼。</p>
+<p>附錄第 k 集曾經提過 DST 和胖指標的概念。如果當時覺得看不太懂是正常的——因為那時候我們還沒正式介紹過指標。這一集就是要把這個基礎補上。</p>
+<h4 id="_829">記憶體位址</h4>
+<p>程式執行的時候，每一個變數都會被放在記憶體的某個位置，而每個位置都有一個編號，叫做<strong>位址</strong>。<code>&amp;x</code> 拿到的就是 <code>x</code> 的位址。用 <code>{:p}</code> 格式化可以把它印出來看：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:p}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="c1">// 例如 0x7ffd5e8a3b4c</span>
+</code></pre></div>
+
+<p>這個十六進位的數字就是 <code>x</code> 在記憶體中的位址。</p>
+<h4 id="t_2"><code>&amp;T</code> 的真面目</h4>
+<p><code>&amp;x</code> 產生的值，一般來說就是 <code>x</code> 的記憶體位址。<code>&amp;T</code> 這個型別存的東西，本質上也就是作為位址的數字。當你把 <code>&amp;x</code> 傳進函數的時候，傳的不是 <code>x</code> 的內容，是 <code>x</code> 的位址。</p>
+<h4 id="_830">指標大小</h4>
+<p>在大部分情況下，<code>&amp;T</code> 佔 8 bytes，在 64 位元系統上就是一個位址的大小。用 <code>std::mem::size_of</code> 來驗證：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span><span class="w">          </span><span class="c1">// 4</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">;</span><span class="w"> </span><span class="mi">1000</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span><span class="w">  </span><span class="c1">// 4000</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span><span class="w">         </span><span class="c1">// 8</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">;</span><span class="w"> </span><span class="mi">1000</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span><span class="w"> </span><span class="c1">// 8</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">());</span><span class="w">     </span><span class="c1">// 8</span>
+</code></pre></div>
+
+<p><code>&amp;T</code> 和 <code>Box&lt;T&gt;</code> 大小一樣——因為它們存的都是位址。<code>&amp;T</code> 指向的資料可能在 stack 上也可能在 heap 上，而擁有所有權的 <code>Box&lt;T&gt;</code> 指向的一定在 heap 上。不管指向哪裡，位址本身的大小是一樣的。所以當 <code>T</code> 本身很大的時候，傳一個位址會比複製整個 <code>T</code> 輕量——但代價是每次存取都要透過位址去查找，多了一層間接。</p>
+<h4 id="_831">解參考</h4>
+<p>有了位址，我們能做什麼？用 <code>*</code> 運算子<strong>解參考</strong>（dereference），透過位址取得對應的內容：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">);</span><span class="w"> </span><span class="c1">// 透過位址取得值：42</span>
+</code></pre></div>
+
+<p>解參考不是免費的，大部分時候這個成本很小，但知道它的存在是有意義的。</p>
+<p>儘管智慧指標的內部可能不僅僅只有一個指標——例如 <code>Rc&lt;T&gt;</code> 除了指向資料的位址，還存了參考計數——它們也能用 <code>*</code> 解參考，用起來感覺像真正的指標：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// 100</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">rc</span><span class="p">);</span><span class="w"> </span><span class="c1">// 200</span>
+</code></pre></div>
+
+<h4 id="fat-pointer">胖指標（fat pointer）</h4>
+<p>附錄 k 介紹過 DST——<code>[T]</code> 和 <code>str</code> 是大小不確定的型別，沒辦法直接放在變數裡，通常要透過 <code>&amp;[T]</code>、<code>&amp;str</code>、<code>Box&lt;[T]&gt;</code> 等方式使用。但 DST 的大小不固定，光有位址不夠，還得知道長度，所以 <code>&amp;[T]</code> 和 <code>&amp;str</code> 佔 16 bytes：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 8（位址）</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span><span class="w"> </span><span class="c1">// 16（位址 + 長度）</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 16（位址 + 長度）</span>
+</code></pre></div>
+
+<p>這種「位址 + 額外資訊」的指標叫做<strong>胖指標</strong>（fat pointer）。</p>
+<h3 id="_832">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 印出位址</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;x 的位址：{:p}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;r 存的值：{:p}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">);</span><span class="w"> </span><span class="c1">// 和上面一樣</span>
+
+<span class="w">    </span><span class="c1">// 解參考</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;透過 r 取得 x 的值：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 智慧指標也能解參考</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box 裡的值：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 指標大小</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;--- 一般指標 ---&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;i32 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;i32 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[i32; 1000] 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">;</span><span class="w"> </span><span class="mi">1000</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;[i32; 1000] 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">;</span><span class="w"> </span><span class="mi">1000</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box&lt;i32&gt; 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+
+<span class="w">    </span><span class="c1">// 胖指標</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;--- 胖指標 ---&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;[i32] 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;str 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box&lt;[i32]&gt; 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+</code></pre></div>
+
+<h3 id="_833">重點整理</h3>
+<ul>
+<li><code>&amp;T</code> 在底層就是一個記憶體位址，本質上是一個數字</li>
+<li>在 64 位元系統上的大部分情況下，<code>&amp;T</code> 和 <code>Box&lt;T&gt;</code> 的大小是 8 bytes，就是一個位址的大小</li>
+<li>用 <code>*</code> 解參考，透過位址取得對應的內容，這有一層間接存取的成本</li>
+<li>智慧指標內部可能不只有一個指標，但一樣能用 <code>*</code> 解參考</li>
+<li><code>&amp;[T]</code> 和 <code>&amp;str</code> 是胖指標（fat pointer），佔 16 bytes（位址 + 長度），因為 DST 的大小不固定</li>
+</ul>
+<hr />
+<h2 id="2-threadspawn">第八章第 2 集：thread::spawn</h2>
+<h3 id="_834">本集目標</h3>
+<p>學會建立執行緒，讓程式同時做好幾件事。</p>
+<h3 id="_835">概念說明</h3>
+<p>到目前為止，我們的程式都是從頭到尾一行一行執行的。但有些時候你希望程式能<strong>同時</strong>做好幾件事——比如一邊下載檔案一邊更新進度條。這就是<strong>執行緒</strong>的用途。</p>
+<h4 id="_836">建立執行緒</h4>
+<p><code>std::thread::spawn</code> 接收一個閉包，在新的執行緒上執行它：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;我在另一個執行緒！&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<h4 id="join">不 join 就會死</h4>
+<p>有個很重要的事：main 函數結束時，整個程式就結束了——不管其他執行緒有沒有跑完。</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">10</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;main 結束了&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// 子執行緒可能只印了一部分，甚至什麼都沒印</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="joinhandle">JoinHandle</h4>
+<p><code>thread::spawn</code> 會回傳一個 <code>JoinHandle</code>。呼叫 <code>.join()</code> 可以等待那個執行緒跑完：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 等子執行緒跑完</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;全部完成&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>.join()</code> 不只是等待——它還能拿到閉包的回傳值。閉包回傳什麼，<code>.join().expect("執行緒發生錯誤")</code> 就得到什麼：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">answer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">21</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">        </span><span class="n">answer</span><span class="w"> </span><span class="c1">// 閉包的回傳值</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;從另一個執行緒拿到的結果：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w"> </span><span class="c1">// 42</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>這是從另一個執行緒把計算結果傳回來最簡單的方式。</p>
+<h4 id="move_6">move 閉包</h4>
+<p>如果閉包裡要用到外面的變數，需要加 <code>move</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// println!(&quot;{}&quot;, name); // 編譯錯誤！name 已經被 move 進閉包了</span>
+
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>為什麼需要 <code>move</code>？因為 <code>thread::spawn</code> 不只能在 main 裡呼叫——任何函數都可以 spawn 執行緒。新執行緒的生命週期不確定，它可能活得比呼叫它的函數還久。如果閉包只是借用 <code>name</code>，而那個函數先結束、把 <code>name</code> 丟掉了，閉包就拿著一個懸垂參考。加上 <code>move</code> 之後，<code>name</code> 的所有權搬進了閉包裡，不管原本的作用域怎麼結束，閉包都能繼續用它。</p>
+<h4 id="_837">輸出交錯</h4>
+<p>多個執行緒同時跑的時候，它們的輸出會交錯——每次執行結果可能不一樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;AAA&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">h2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;BBB&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">h1</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">h2</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>跑幾次看看，你會發現 AAA 和 BBB 的順序每次都可能不同。這就是多執行緒的特性——執行順序是不確定的。</p>
+<h3 id="_838">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">();</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒算出的總和：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
+<span class="w">        </span><span class="n">sum</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// data 已經被 move 了，這裡不能再用</span>
+<span class="w">    </span><span class="c1">// println!(&quot;{:?}&quot;, data); // 編譯錯誤</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;主執行緒收到結果：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_839">重點整理</h3>
+<ul>
+<li><code>thread::spawn(|| { ... })</code> 建立一個新的執行緒</li>
+<li>main 結束時所有執行緒跟著死，用 <code>.join()</code> 等待執行緒完成</li>
+<li><code>.join()</code> 還能拿到閉包的回傳值，是從另一個執行緒傳回結果最簡單的方式</li>
+<li>閉包裡要用外面的變數一般需要 <code>move</code>，因為不確定新執行緒的生命週期</li>
+<li>多個執行緒的執行順序是不確定的，輸出可能會交錯</li>
+</ul>
+<hr />
+<h2 id="3-send-sync">第八章第 3 集：Send / Sync</h2>
+<h3 id="_840">本集目標</h3>
+<p>理解 Rust 如何在編譯期保證型別能安全地跨執行緒使用。</p>
+<h3 id="_841">概念說明</h3>
+<h4 id="spawn">spawn 實際上在做什麼</h4>
+<p>上一集用 <code>thread::spawn</code> 建立執行緒的時候，我們傳入了一個閉包。閉包會捕捉外部變數——而 spawn 實際上就是<strong>把這些捕捉的變數送到另一個執行緒去</strong>。這才是我們真正要關心的事：哪些東西可以安全地送過去？</p>
+<p>不是所有型別都能安全地跨執行緒。Rust 用兩個 trait 在編譯期就幫你擋住不安全的情況。</p>
+<h4 id="send">Send</h4>
+<p>一個型別如果實作了 <code>Send</code>，代表它的值可以安全地 move 到另一個執行緒。大部分型別都是 <code>Send</code>——<code>i32</code>、<code>String</code>、<code>Vec&lt;T&gt;</code>（只要 T 是 Send）等等都是。</p>
+<h4 id="sync">Sync</h4>
+<p>一個型別如果實作了 <code>Sync</code>，代表它的 <code>&amp;T</code>（不可變參考）可以安全地在多個執行緒之間共享。換句話說：</p>
+<blockquote>
+<p><code>T: Sync</code> 等價於 <code>&amp;T: Send</code></p>
+</blockquote>
+<p>如果 <code>&amp;T</code> 能安全地送到另一個執行緒，那 <code>T</code> 就是 <code>Sync</code> 的。</p>
+<h4 id="sync-send">Sync 通常蘊含 Send</h4>
+<p>如果一個東西能被多個執行緒同時讀都沒問題（Sync），那把它整個搬到另一個執行緒去——連同時讀的可能性都不存在了——通常只會更安全。所以大部分 Sync 的型別也是 Send，但少數例外存在。</p>
+<h4 id="auto-trait-trait">auto trait：編譯器自動幫你實作的 trait</h4>
+<p>你不需要手動實作 Send 或 Sync。它們是所謂的 <strong>auto trait</strong>——編譯器會自動幫你的型別實作。規則很簡單：如果一個型別裡存的資料都是 Send，那它本身預設就是 Send。Sync 同理。</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">MyData</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w">     </span><span class="c1">// Send + Sync</span>
+<span class="w">    </span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span><span class="w">  </span><span class="c1">// Send + Sync</span>
+<span class="p">}</span>
+<span class="c1">// MyData 自動就是 Send + Sync</span>
+</code></pre></div>
+
+<h4 id="_842">不用死背</h4>
+<p>你不需要記住哪些型別是 Send、哪些是 Sync。試著把一個不安全的型別丟進 <code>thread::spawn</code>，編譯器會直接報錯告訴你：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">    </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="c1">// 編譯錯誤！Rc&lt;i32&gt; 不是 Send</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="spawn_1">回頭看 spawn 的型別簽名</h4>
+<p>現在我們知道了 Send 和 Sync，可以回頭看看 <code>thread::spawn</code> 的型別簽名：</p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">spawn</span><span class="o">&lt;</span><span class="n">F</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="nc">F</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">JoinHandle</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="k">where</span>
+<span class="w">    </span><span class="n">F</span><span class="p">:</span><span class="w"> </span><span class="nb">FnOnce</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">T</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Send</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">&#39;</span><span class="nb">static</span><span class="p">,</span>
+<span class="w">    </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nb">Send</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">&#39;</span><span class="nb">static</span><span class="p">,</span>
+</code></pre></div>
+
+<p>閉包 <code>F</code> 必須是 <code>Send</code>——閉包捕捉了什麼，它的型別就包含什麼，所以如果捕捉的變數不是 <code>Send</code>，閉包本身也不會是 <code>Send</code>，spawn 就會編譯失敗。回傳值 <code>T</code> 也必須是 <code>Send</code>，因為結果要從子執行緒傳回來。</p>
+<p>還有那個 <code>'static</code>——為什麼需要它？因為我們完全不知道 spawn 出來的執行緒會活多久。你可能會 join 它，也可能不 join 讓它自己跑到 main 結束才被強制終止。Rust 的型別系統沒辦法保證你一定會在某個時間點 join，所以它要求最保守的保證：閉包和回傳值裡的所有東西都不能有會過期的借用。第五章第 28 集學過 lifetime bound，<code>T: 'a</code> 代表 <code>T</code> 裡面的所有參考都必須活得過 <code>'a</code>。<code>F: 'static</code> 就是這個概念的極端情況——閉包裡面的參考要活得跟整個程式一樣久。實務上最常見的做法就是上一集說的 <code>move</code>——把值搬進閉包之後，閉包不借用任何東西，自然滿足 <code>'static</code>。</p>
+<h3 id="_843">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="c1">// 這個 struct 的所有欄位都是 Send + Sync，</span>
+<span class="c1">// 所以它自動就是 Send + Sync</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">max_retries</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;my_app&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">max_retries</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// Config 是 Send，可以安全地 move 到另一個執行緒</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;設定名稱：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;最大重試次數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">max_retries</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_844">重點整理</h3>
+<ul>
+<li><code>thread::spawn</code> 的閉包會把捕捉的變數送到另一個執行緒，所以這些變數必須是 <code>Send</code></li>
+<li><code>Send</code> = 值可以安全地 move 到另一個執行緒</li>
+<li><code>Sync</code> = <code>&amp;T</code> 可以安全地在多個執行緒之間共享（<code>T: Sync</code> 等價於 <code>&amp;T: Send</code>）</li>
+<li>Sync 通常蘊含 Send——能被多執行緒同時讀，搬過去只會更安全</li>
+<li>編譯器自動推導 Send / Sync，不用手動實作也不用死背</li>
+</ul>
+<hr />
+<h2 id="4-refcell">第八章第 4 集：RefCell 在多執行緒</h2>
+<h3 id="_845">本集目標</h3>
+<p>理解為什麼 interior mutability 在多執行緒下是危險的，以及 RefCell 的 Send / Sync 特性。</p>
+<h3 id="_846">概念說明</h3>
+<h4 id="interior-mutability">Interior mutability 是多執行緒的一大威脅</h4>
+<p>第五章學過，RefCell 能透過 <code>&amp;T</code>（不可變參考）修改內部的值。在單執行緒的世界裡，RefCell 會在執行期檢查借用規則，不會出問題。</p>
+<p>但在多執行緒的世界裡，事情就不一樣了。<code>&amp;T</code> 看起來是「只讀」的，而 Sync 的定義就是 <code>&amp;T</code> 能安全地在多個執行緒之間共享。如果一個型別能透過 <code>&amp;T</code> 偷偷修改內容，多個執行緒同時這樣做就可能出事。</p>
+<h4 id="refcell-borrow-atomic">RefCell 的 borrow 計數不是 atomic</h4>
+<p>RefCell 用普通的整數來記錄目前的借用狀態（有幾個不可變借用、有沒有可變借用）。這個計數器的操作不是 <strong>atomic</strong> 的——atomic 的意思是「不可分割」，一個 atomic 操作要嘛完整執行完，要嘛完全沒發生，不會被其他執行緒打斷到一半。RefCell 的計數器讀取和寫入不是 atomic 的，代表一個執行緒讀到一半，另一個執行緒可能就插進來改了值。如果兩個執行緒同時透過 <code>&amp;RefCell&lt;T&gt;</code> 呼叫 <code>borrow_mut()</code>，以下是可能發生的事：</p>
+<ol>
+<li>執行緒 A 呼叫 <code>borrow_mut()</code>，讀取計數器，看到值是 0（沒有人在借）</li>
+<li>執行緒 B 也呼叫 <code>borrow_mut()</code>，讀取計數器，也看到值是 0</li>
+<li>執行緒 A 判斷「沒有人在借，可以拿可變借用」，把計數器改成「可變借用中」</li>
+<li>執行緒 B 也判斷「沒有人在借」——因為它在步驟 2 讀到的是舊值——也拿到了可變借用</li>
+</ol>
+<p>結果：兩個執行緒同時拿到了可變借用，RefCell 的執行期檢查完全被繞過了。</p>
+<h4 id="refcell-sync">RefCell 不是 Sync</h4>
+<p>因為上面的原因，RefCell 不是 <code>Sync</code>——<code>&amp;RefCell&lt;T&gt;</code> 不能在多個執行緒之間共享。如果你試著這樣做，編譯器會擋住你。</p>
+<h4 id="refcell-send">RefCell 是 Send</h4>
+<p>但 RefCell 可以被 <strong>move</strong> 到另一個執行緒。為什麼？因為 move 之後，只有那一個執行緒擁有這個 RefCell，不存在多個執行緒同時操作的問題。</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RefCell</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="c1">// OK：RefCell 是 Send，可以 move 到另一個執行緒</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">data</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_847">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// RefCell 可以 move 到另一個執行緒（Send）</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RefCell</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 在這個執行緒裡，RefCell 運作正常</span>
+<span class="w">        </span><span class="n">data</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push_str</span><span class="p">(</span><span class="s">&quot; world&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 但不能在多個執行緒之間共享 &amp;RefCell（非 Sync）</span>
+<span class="w">    </span><span class="c1">// 如果你試著讓兩個執行緒共享同一個 RefCell，編譯器會擋住你。</span>
+<span class="w">    </span><span class="c1">// 之後會看到具體的例子。</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_848">重點整理</h3>
+<ul>
+<li>interior mutability 讓 <code>&amp;T</code> 能修改內容，但這在多執行緒下很危險</li>
+<li>atomic 操作 = 不可分割的操作，要嘛完整執行完，要嘛完全沒發生，不會被其他執行緒打斷到一半</li>
+<li>RefCell 的 borrow 計數是普通整數，不是 atomic，多執行緒同時操作可能繞過檢查</li>
+<li>RefCell 不是 <code>Sync</code>——不能在多個執行緒之間共享 <code>&amp;RefCell&lt;T&gt;</code></li>
+<li>RefCell 是 <code>Send</code>——可以 move 到另一個執行緒，因為 move 後只有一個執行緒擁有</li>
+</ul>
+<hr />
+<h2 id="5-rc">第八章第 5 集：Rc 在多執行緒</h2>
+<h3 id="_849">本集目標</h3>
+<p>理解為什麼 Rc 完全不能跨執行緒——既不是 Send 也不是 Sync。</p>
+<h3 id="_850">概念說明</h3>
+<h4 id="rc-sync">Rc 不是 Sync</h4>
+<p>Rc 的引用計數和 RefCell 的 borrow 計數一樣，是普通整數，不是 atomic 操作。如果多個執行緒同時透過 <code>&amp;Rc&lt;T&gt;</code> 做 clone 或 drop，引用計數的加減可能互相干擾，導致計數錯誤——可能提前釋放資料，或永遠不釋放。</p>
+<p>所以 Rc 不是 <code>Sync</code>，理由和 RefCell 相同。</p>
+<h4 id="rc-send">Rc 連 Send 都不是</h4>
+<p>上一集說 RefCell 是 <code>Send</code>，因為 move 過去之後只有一個執行緒擁有。但 Rc 不一樣。</p>
+<p>Rc 的設計就是讓多個 Rc 指向同一份資料。你把一個 Rc move 到另一個執行緒，但它的 clone 可能還留在原本的執行緒。兩邊同時操作引用計數，計數器就可能壞掉。</p>
+<p>問題不在 move 本身，而在 <strong>move 之後兩個執行緒仍然共享同一個計數器</strong>。</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"> </span><span class="c1">// a 和 b 共享同一份資料和計數器</span>
+
+<span class="w">    </span><span class="c1">// 如果把 a move 到另一個執行緒，</span>
+<span class="w">    </span><span class="c1">// b 還在原本的執行緒——兩邊同時操作計數器就爆了</span>
+<span class="w">    </span><span class="c1">// std::thread::spawn(move || {</span>
+<span class="w">    </span><span class="c1">//     println!(&quot;{}&quot;, a);</span>
+<span class="w">    </span><span class="c1">// });</span>
+<span class="w">    </span><span class="c1">// 編譯錯誤！Rc&lt;i32&gt; 不是 Send</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="rc_2">Rc 完全不能跨執行緒</h4>
+<p>Rc 不是 <code>Send</code> 也不是 <code>Sync</code>。不能 move 到其他執行緒，也不能在多個執行緒之間共享參考。如果需要跨執行緒共享資料，得用別的工具。</p>
+<h3 id="_851">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Rc 在單執行緒中正常運作</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Rc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;a = {}, b = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Rc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// 但不能跨執行緒——以下不會通過編譯：</span>
+
+<span class="w">    </span><span class="c1">// let data = Rc::new(42);</span>
+<span class="w">    </span><span class="c1">// thread::spawn(move || {</span>
+<span class="w">    </span><span class="c1">//     println!(&quot;{}&quot;, data);</span>
+<span class="w">    </span><span class="c1">// });</span>
+<span class="w">    </span><span class="c1">// 編譯錯誤：Rc&lt;i32&gt; 不是 Send</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Rc 只能在單執行緒中使用&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_852">重點整理</h3>
+<ul>
+<li>Rc 的引用計數是普通整數，不是 atomic，所以不是 <code>Sync</code></li>
+<li>Rc 連 <code>Send</code> 都不是：move 一個 Rc 到另一個執行緒後，它的 clone 可能還在原執行緒，兩邊同時操作計數器就會出問題</li>
+<li>也就是說 Rc 完全不能跨執行緒</li>
+</ul>
+<hr />
+<h2 id="6-deref">第八章第 6 集：Deref 與自動解參考</h2>
+<h3 id="_853">本集目標</h3>
+<p>理解 Rust 的自動解參考機制，以及智慧指標為什麼能直接呼叫內部型別的方法。</p>
+<h3 id="_854">概念說明</h3>
+<h4 id="_855">從 <code>.</code> 自動加 <code>&amp;</code> 說起</h4>
+<p>前面學過，呼叫方法的時候 Rust 會自動幫你加 <code>&amp;</code>。也就是說 <code>(&amp;a).method()</code> 其實能簡寫成 <code>a.method()</code>。</p>
+<p>這其實是一個更廣泛機制的一部分：當你用 <code>.</code> 呼叫方法時，Rust 會<strong>自動解參考</strong>。</p>
+<h4 id="_856">智慧指標的自動解參考</h4>
+<p>這個機制讓智慧指標用起來非常方便：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">boxed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">boxed</span><span class="p">.</span><span class="n">len</span><span class="p">());</span><span class="w"> </span><span class="c1">// 直接呼叫 String 的 len()</span>
+</code></pre></div>
+
+<p><code>boxed</code> 是 <code>Box&lt;String&gt;</code>，但 <code>len()</code> 是 <code>String</code> 的方法。Rust 自動幫你解參考了——先從 <code>Box&lt;String&gt;</code> 取出 <code>String</code>，再呼叫 <code>len()</code>。</p>
+<p><code>Arc</code>、<code>Rc</code> 也一樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">arc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arc</span><span class="p">.</span><span class="n">len</span><span class="p">());</span><span class="w"> </span><span class="c1">// 直接呼叫 Vec 的 len()</span>
+</code></pre></div>
+
+<h4 id="deref-trait">Deref trait</h4>
+<p>智慧指標之所以能自動解參考，是因為它們實作了 <code>Deref</code> trait。<code>Deref</code> 告訴 Rust：「當你需要解參考我的時候，你會得到什麼型別的參考。」</p>
+<ul>
+<li><code>Box&lt;T&gt;</code> 實作了 <code>Deref</code>，解參考得到 <code>&amp;T</code></li>
+<li><code>Rc&lt;T&gt;</code> 實作了 <code>Deref</code>，解參考得到 <code>&amp;T</code></li>
+<li><code>Arc&lt;T&gt;</code> 實作了 <code>Deref</code>，解參考得到 <code>&amp;T</code></li>
+<li><code>String</code> 實作了 <code>Deref</code>，解參考得到 <code>&amp;str</code></li>
+<li><code>Vec&lt;T&gt;</code> 實作了 <code>Deref</code>，解參考得到 <code>&amp;[T]</code></li>
+</ul>
+<p><code>DerefMut</code> 是可變版本，讓你能透過智慧指標取得 <code>&amp;mut T</code>。</p>
+<h4 id="string-str_1"><code>&amp;String</code> → <code>&amp;str</code> 的魔法</h4>
+<p>你可能之前就注意到了：一個接受 <code>&amp;str</code> 參數的函數，可以直接傳 <code>&amp;String</code> 進去。這背後就是 Deref 在運作：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Hello, {}!&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
+<span class="n">greet</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="c1">// &amp;String 自動轉成 &amp;str</span>
+</code></pre></div>
+
+<p>同理，<code>&amp;Vec&lt;T&gt;</code> 可以自動轉成 <code>&amp;[T]</code>。</p>
+<h4 id="_857">方法同名時的優先順序</h4>
+<p>Rust 從外往內找方法：外層智慧指標自身的方法優先於內層型別的方法。</p>
+<p>一個常見的例子是 <code>clone</code>。<code>Arc</code> 本身有 <code>clone</code> 方法（增加引用計數），<code>T</code> 可能也有 <code>clone</code> 方法（深度複製資料）。直接呼叫 <code>.clone()</code> 會拿到 Arc 的 clone：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"> </span><span class="c1">// Arc::clone，增加引用計數，不複製 String</span>
+</code></pre></div>
+
+<p>如果你想呼叫內層 String 的 clone，可以明確寫出來：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">).</span><span class="n">clone</span><span class="p">();</span><span class="w"> </span><span class="c1">// String::clone，真的複製了一份 String</span>
+</code></pre></div>
+
+<p>或者用慣用寫法 <code>Arc::clone(&amp;a)</code> 來表示你要的是 Arc 的 clone，讓意圖更清楚。</p>
+<h3 id="_858">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">print_len</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;長度：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">sum_slice</span><span class="p">(</span><span class="n">nums</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">])</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">nums</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Box 自動解參考</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">boxed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box 裡的字串長度：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">boxed</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+
+<span class="w">    </span><span class="c1">// &amp;String → &amp;str（Deref）</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">print_len</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// &amp;Vec&lt;T&gt; → &amp;[T]（Deref）</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;總和：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sum_slice</span><span class="p">(</span><span class="o">&amp;</span><span class="n">v</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// Arc 自動解參考</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">arc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">]);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Arc 裡的 Vec 長度：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arc</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+
+<span class="w">    </span><span class="c1">// clone 的優先順序</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;shared&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w">       </span><span class="c1">// Arc::clone（快，只增加計數）</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">).</span><span class="n">clone</span><span class="p">();</span><span class="w">    </span><span class="c1">// String::clone（慢，複製整個 String）</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;a = {}, b = {}, c = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Arc 計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span><span class="w"> </span><span class="c1">// 2，不是 3</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_859">重點整理</h3>
+<ul>
+<li>用 <code>.</code> 呼叫方法時，Rust 會自動解參考，智慧指標因此能直接呼叫內部型別的方法</li>
+<li><code>Deref</code> trait 讓智慧指標告訴 Rust「解參考後得到什麼」，<code>DerefMut</code> 是可變版本</li>
+<li><code>&amp;String</code> 自動轉成 <code>&amp;str</code>、<code>&amp;Vec&lt;T&gt;</code> 自動轉成 <code>&amp;[T]</code>，都是 Deref 在運作</li>
+<li>方法同名時外層優先——<code>Arc::clone</code> 和 <code>String::clone</code> 是不同的操作</li>
+</ul>
+<hr />
+<h2 id="7-arct">第八章第 7 集：Arc&lt;T&gt;</h2>
+<h3 id="_860">本集目標</h3>
+<p>學會用 <code>Arc&lt;T&gt;</code> 在多個執行緒之間安全地共享資料。</p>
+<h3 id="_861">概念說明</h3>
+<h4 id="_862">問題回顧</h4>
+<p>前面說了 Rc 不能跨執行緒，因為引用計數不是 atomic。但我們確實需要在多個執行緒之間共享資料——怎麼辦？</p>
+<h4 id="arcatomic-reference-counting">Arc：Atomic Reference Counting</h4>
+<p><code>Arc&lt;T&gt;</code> 就是把 Rc 的引用計數換成 <strong>atomic 操作</strong>的版本。Atomic 操作保證即使多個執行緒同時修改計數器，也不會互相干擾。</p>
+<p>用法跟 Rc 幾乎一樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">));</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="c1">// 增加計數，不複製資料</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span><span class="w"> </span><span class="c1">// 2</span>
+</code></pre></div>
+
+<h4 id="_863">跨執行緒共享</h4>
+<p>把 <code>Arc::clone</code> 出來的東西 move 到另一個執行緒：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]);</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">data_clone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data_clone</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;主執行緒：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<h4 id="t-send-sync">T 必須是 Send + Sync</h4>
+<p>Arc 要求 <code>T: Send + Sync</code>。為什麼？</p>
+<p><strong>Sync</strong>：多個執行緒透過各自的 Arc 同時存取同一份 T。上一集學了 Deref——Arc 實作了 Deref，所以你可以透過 Arc 直接存取 T 的內容。這等於多個執行緒同時持有 T 的不可變參考，所以 T 必須是 Sync。</p>
+<p><strong>Send</strong>：最後一個 Arc 被 drop 的時候，T 也會被 drop。而哪個執行緒持有最後一個 Arc 是不確定的，所以 T 的 drop 可能發生在任何執行緒上——T 等於被「送」到那個執行緒去銷毀，所以 T 必須是 Send。</p>
+<h3 id="_864">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">data_clone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data_clone</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">();</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 {} 算出的總和：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">sum</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;最終計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">));</span><span class="w"> </span><span class="c1">// 1</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_865">重點整理</h3>
+<ul>
+<li><code>Arc&lt;T&gt;</code> 是 Rc 的多執行緒版本，引用計數用 atomic 操作</li>
+<li>用法跟 Rc 幾乎一樣：<code>Arc::new()</code>、<code>Arc::clone()</code></li>
+<li><code>Arc::clone</code> 後把 clone move 到其他執行緒，就能共享資料</li>
+<li><code>T</code> 必須是 <code>Send + Sync</code>：Sync 因為多執行緒同時存取，Send 因為 drop 可能發生在任何執行緒</li>
+</ul>
+<hr />
+<h2 id="8-mutext">第八章第 8 集：Mutex&lt;T&gt;</h2>
+<h3 id="_866">本集目標</h3>
+<p>學會用 <code>Mutex&lt;T&gt;</code> 讓多個執行緒安全地修改共享資料。</p>
+<h3 id="_867">概念說明</h3>
+<h4 id="arc">Arc 只能讀，想改怎麼辦？</h4>
+<p>Arc 讓多個執行緒共享資料，但只能讀。如果你想讓多個執行緒<strong>修改</strong>同一份資料呢？</p>
+<h4 id="mutex-interior-mutability">Mutex：多執行緒版的 interior mutability</h4>
+<p><code>Mutex&lt;T&gt;</code> 和 RefCell 有些像——都是一種 interior mutability，讓你在不需要 <code>&amp;mut</code> 的情況下修改值。差別在於：</p>
+<ul>
+<li><strong>RefCell</strong>：單執行緒，用普通整數做借用檢查</li>
+<li><strong>Mutex</strong>：多執行緒，用作業系統的鎖（lock）保護資料</li>
+</ul>
+<h4 id="lock-mutexguard">lock 和 MutexGuard</h4>
+<p>用 <code>mutex.lock().expect("取得鎖失敗")</code> 取得鎖。它會回傳一個 <code>MutexGuard</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">*</span><span class="n">guard</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// 透過 guard 修改值</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">guard</span><span class="p">);</span><span class="w"> </span><span class="c1">// 43</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// guard 被 drop，自動解鎖</span>
+</code></pre></div>
+
+<p><code>MutexGuard</code> 實作了 Deref 和 DerefMut（上上集學的），所以你可以直接把它當 <code>&amp;T</code> 或 <code>&amp;mut T</code> 使用。</p>
+<p>同一時間只有一個執行緒能 lock 成功。其他執行緒呼叫 <code>lock()</code> 時會<strong>阻塞</strong>（等待），直到持有鎖的執行緒把 guard drop 掉。</p>
+<h4 id="arc-mutex">Arc + Mutex</h4>
+<p>實際上多半是這樣搭配使用——Arc 負責讓多個執行緒共享 Mutex，Mutex 負責保護裡面的資料：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">10</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">counter</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="o">*</span><span class="n">num</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;結果：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">));</span><span class="w"> </span><span class="c1">// 10</span>
+</code></pre></div>
+
+<h4 id="mutexguard">MutexGuard 不要活太久</h4>
+<p>Guard 活著的期間，鎖都不會放開，其他執行緒全部在等。所以盡量縮短 guard 的生命週期：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 不好：guard 活到作用域結束，鎖持有太久</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutex</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="o">*</span><span class="n">guard</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="c1">// ... 做了很多不需要鎖的事情 ...</span>
+<span class="c1">// guard 到這裡才被 drop</span>
+
+<span class="c1">// 好：用完就放</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutex</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">*</span><span class="n">guard</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// guard 立刻被 drop，鎖立刻釋放</span>
+<span class="c1">// ... 做其他事情 ...</span>
+</code></pre></div>
+
+<h3 id="_868">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">5</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">counter</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 縮小 guard 的作用域</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="o">*</span><span class="n">num</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 {} 把計數器改成 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">num</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="c1">// guard 在這裡就被 drop 了</span>
+
+<span class="w">            </span><span class="c1">// 這裡已經不持有鎖了</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 {} 做完了&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;最終結果：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_869">重點整理</h3>
+<ul>
+<li><code>Mutex&lt;T&gt;</code> 是多執行緒版的 interior mutability，用鎖保護資料</li>
+<li><code>lock().expect(...)</code> 回傳 <code>MutexGuard</code>，透過 Deref 直接當 <code>&amp;mut T</code> 用</li>
+<li>同一時間只有一個執行緒能持有鎖，其他執行緒會等待</li>
+<li>Guard 被 drop 時自動解鎖</li>
+<li>常見搭配：<code>Arc&lt;Mutex&lt;T&gt;&gt;</code>——Arc 負責共享，Mutex 負責安全修改</li>
+<li>MutexGuard 不要活太久，鎖住的期間其他執行緒全部在等</li>
+</ul>
+<hr />
+<h2 id="9-rwlockt">第八章第 9 集：RwLock&lt;T&gt;</h2>
+<h3 id="_870">本集目標</h3>
+<p>學會用 <code>RwLock&lt;T&gt;</code> 實現讀寫分離的鎖，以及和 Mutex 的比較。</p>
+<h3 id="_871">概念說明</h3>
+<h4 id="mutex">Mutex 的限制</h4>
+<p>Mutex 不管你要讀還是要寫，都要鎖住。但很多時候多個執行緒只是要讀資料——讀和讀之間不會衝突，全部鎖住太浪費了。</p>
+<h4 id="rwlock">RwLock：讀寫分離</h4>
+<p><code>RwLock&lt;T&gt;</code> 區分讀鎖和寫鎖：</p>
+<ul>
+<li><strong>讀鎖</strong>（<code>read().expect(...)</code>）：多個執行緒可以<strong>同時</strong>持有讀鎖</li>
+<li><strong>寫鎖</strong>（<code>write().expect(...)</code>）：寫鎖是獨佔的，持有寫鎖時不能有任何讀鎖或其他寫鎖</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">RwLock</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">lock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RwLock</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+
+<span class="c1">// 多個讀者可以同時讀</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lock</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得讀鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lock</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得讀鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// OK，可以同時持有多個讀鎖</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;r1 = {}, r2 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r1</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 寫入時獨佔</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lock</span><span class="p">.</span><span class="n">write</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得寫鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="o">*</span><span class="n">w</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="guard">Guard 的行為</h4>
+<p>讀鎖回傳 <code>RwLockReadGuard</code>，寫鎖回傳 <code>RwLockWriteGuard</code>。跟 MutexGuard 一樣，它們透過 Deref 讓你直接操作內容，drop 時自動放鎖。</p>
+<p>一樣要注意 guard 不要活太久。</p>
+<h4 id="refcell_1">和 RefCell 的對照</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RefCell</th>
+<th>RwLock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>執行緒</td>
+<td>單執行緒</td>
+<td>多執行緒</td>
+</tr>
+<tr>
+<td>規則</td>
+<td>多個 <code>borrow()</code> 或一個 <code>borrow_mut()</code></td>
+<td>多個 <code>read()</code> 或一個 <code>write()</code></td>
+</tr>
+<tr>
+<td>檢查方式</td>
+<td>執行期，違反會 panic</td>
+<td>作業系統的鎖，違反會阻塞等待</td>
+</tr>
+</tbody>
+</table>
+<h4 id="mutex-vs-rwlock">Mutex vs RwLock</h4>
+<p>什麼時候用哪個？</p>
+<ul>
+<li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了。</li>
+<li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者餓死</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
+</ul>
+<h3 id="_872">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">RwLock</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">RwLock</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]));</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
+
+<span class="w">    </span><span class="c1">// 啟動 3 個讀者</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">read_guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得讀鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;讀者 {}：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">read_guard</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// 多個讀者可以同時持有讀鎖</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 啟動 1 個寫者</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">write_guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">write</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得寫鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="n">write_guard</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;寫者：寫入完成，現在是 {:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">write_guard</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">handles</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">handle</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">handles</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;最終結果：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得讀鎖失敗&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_873">重點整理</h3>
+<ul>
+<li><code>RwLock&lt;T&gt;</code> 區分讀鎖和寫鎖：多個讀者可以同時讀，寫者獨佔</li>
+<li><code>read().expect(...)</code> 取得讀鎖，<code>write().expect(...)</code> 取得寫鎖</li>
+<li>Guard 透過 Deref 操作內容，drop 時自動放鎖</li>
+<li>和 RefCell 的對照：RefCell 是單執行緒版本，RwLock 是多執行緒版本</li>
+<li>Mutex 簡單、開銷小，大部分情況夠用；RwLock 適合讀遠多於寫的場景，但開銷較大且有寫者餓死的風險</li>
+</ul>
+<hr />
+<h2 id="10-mpsc">第八章第 10 集：mpsc</h2>
+<h3 id="_874">本集目標</h3>
+<p>學會用 channel 讓執行緒之間透過傳訊息溝通，以及和共享記憶體方式的比較。</p>
+<h3 id="_875">概念說明</h3>
+<h4 id="_876">另一種思路</h4>
+<p>前面的 Mutex 和 RwLock 是「共享記憶體」的思路——多個執行緒存取同一份資料，用鎖來避免衝突。</p>
+<p>Channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
+<h4 id="channel">建立 channel</h4>
+<p><code>std::sync::mpsc::channel()</code> 建立一對發送端（tx）和接收端（rx）：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
+</code></pre></div>
+
+<p><code>mpsc</code> 代表 <strong>multiple producer, single consumer</strong>——可以有多個發送端，但接收端只有一個。</p>
+<h4 id="_877">發送和接收</h4>
+<p><code>tx.send(value)</code> 把值送出去（value 會被 move），<code>rx.recv()</code> 在另一端接收（會阻塞直到收到）：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
+
+<span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">tx</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;發送失敗&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rx</span><span class="p">.</span><span class="n">recv</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;接收失敗&quot;</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;收到：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">received</span><span class="p">);</span>
+</code></pre></div>
+
+<h4 id="_878">多個發送端</h4>
+<p>用 <code>tx.clone()</code> 產生新的發送端：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">tx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tx</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">    </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">tx</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;來自執行緒 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;發送失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nb">drop</span><span class="p">(</span><span class="n">tx</span><span class="p">);</span><span class="w"> </span><span class="c1">// 原始的 tx 也要 drop，不然 rx 永遠不會結束</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">received</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">rx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;收到：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">received</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="_879">什麼時候結束</h4>
+<p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會回傳 <code>Err</code>，或者用 <code>for msg in rx</code> 迴圈會自動結束。這是判斷「沒有人會再發送了」的方式。</p>
+<p>注意上面的例子裡 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
+<h4 id="channel-vs">Channel vs 共享記憶體</h4>
+<p>什麼時候用哪個？</p>
+<ul>
+<li><strong>多個執行緒需要反覆讀寫同一份資料</strong>（例如共用的計數器、共用的快取）→ Mutex / RwLock 比較直接</li>
+<li><strong>一邊產生資料、一邊消費資料</strong>的流水線關係 → channel 更自然。資料的所有權直接轉移，不需要鎖，也不存在忘了放鎖的問題</li>
+</ul>
+<h3 id="_880">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="n">rx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc</span><span class="p">::</span><span class="n">channel</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 啟動 3 個 worker，各自做一些計算後把結果送回來</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">tx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tx</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 {} 計算完成：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="w">            </span><span class="n">tx</span><span class="p">.</span><span class="n">send</span><span class="p">((</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">)).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;發送失敗&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// drop 原始的 tx，這樣當所有 clone 都完成後，rx 迴圈會結束</span>
+<span class="w">    </span><span class="nb">drop</span><span class="p">(</span><span class="n">tx</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 接收所有結果</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">rx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;主執行緒收到：執行緒 {} 的結果是 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
+<span class="w">        </span><span class="n">total</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;所有結果的總和：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_881">重點整理</h3>
+<ul>
+<li>Channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
+<li><code>mpsc::channel()</code> 建立發送端 tx 和接收端 rx</li>
+<li><code>tx.send(value)</code> 會 move value，<code>rx.recv()</code> 阻塞直到收到</li>
+<li><code>tx.clone()</code> 產生多個發送端，但接收端只有一個（mpsc）</li>
+<li>所有 tx 都 drop 之後，rx 的迴圈自動結束</li>
+<li>流水線關係用 channel，反覆讀寫同一份資料用 Mutex / RwLock</li>
+</ul>
+<hr />
+<h2 id="11_3">第八章第 11 集：死鎖</h2>
+<h3 id="_882">本集目標</h3>
+<p>理解死鎖是什麼、為什麼 Rust 的編譯器擋不住它、以及如何避免。</p>
+<h3 id="_883">概念說明</h3>
+<h4 id="_884">什麼是死鎖</h4>
+<p>死鎖（deadlock）就是兩個或多個執行緒互相等待對方放鎖，結果誰都動不了，程式永遠卡住。</p>
+<p>最經典的情況：執行緒 A 拿著鎖 1 等鎖 2，執行緒 B 拿著鎖 2 等鎖 1。兩邊永遠等下去。</p>
+<h4 id="_885">程式碼示範</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">lock1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">lock2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock1</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock2</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_g1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 拿到鎖 1</span>
+<span class="w">        </span><span class="c1">// 假設這裡有一些延遲...</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_g2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 等待鎖 2</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock1</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock2</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_g2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 拿到鎖 2</span>
+<span class="w">        </span><span class="c1">// 假設這裡有一些延遲...</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_g1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 等待鎖 1</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// 如果時機剛好，程式會永遠卡在這裡</span>
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">b</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>執行緒 A 先拿到鎖 1，然後想拿鎖 2。但鎖 2 被執行緒 B 拿走了，B 又在等鎖 1——結果誰都走不動。</p>
+<h4 id="_886">編譯器不會擋死鎖</h4>
+<p>Send 和 Sync 保護的是<strong>資料競爭</strong>（data race）——多個執行緒同時存取資料造成的未定義行為。死鎖是<strong>邏輯問題</strong>，程式不會壞掉或出現未定義行為，只是永遠卡住。Rust 的編譯器無法偵測死鎖。</p>
+<h4 id="_887">同一個執行緒也會死鎖</h4>
+<p>Rust 的 Mutex 不是 reentrant 的——在同一個執行緒裡對同一個 Mutex lock 兩次，也會死鎖：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_g1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_g2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 死鎖！第一個鎖還沒放，第二次 lock 永遠等不到</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="_888">如何避免</h4>
+<ul>
+<li><strong>所有執行緒以相同順序取鎖</strong>：如果每個人都先拿鎖 1 再拿鎖 2，就不會互相卡住</li>
+<li><strong>減少同時持有多個鎖</strong>：能用一個鎖解決就不要用兩個</li>
+<li><strong>MutexGuard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
+</ul>
+<h3 id="_889">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">lock1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;資源 A&quot;</span><span class="p">)));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">lock2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;資源 B&quot;</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="c1">// 正確的方式：兩個執行緒以相同順序取鎖</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock1</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock2</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">g1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 先鎖 1</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">g2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 再鎖 2</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 A：{} 和 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">g1</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">g2</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock1</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock2</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">g1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l1</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 也是先鎖 1</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">g2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 再鎖 2</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;執行緒 B：{} 和 {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">g1</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">g2</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">b</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;沒有死鎖！&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_890">重點整理</h3>
+<ul>
+<li>死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住</li>
+<li>Rust 的編譯器不會擋死鎖——Send/Sync 保護的是資料競爭，死鎖是邏輯問題</li>
+<li>同一個執行緒對同一個 Mutex lock 兩次也會死鎖（Rust 的 Mutex 不是 reentrant）</li>
+<li>避免方法：統一取鎖順序、減少同時持有多個鎖、guard 用完趕快 drop</li>
+</ul>
+<hr />
+<h2 id="12-threadscope">第八章第 12 集：thread::scope 簡介</h2>
+<h3 id="_891">本集目標</h3>
+<p>學會用 <code>thread::scope</code> 建立有限生命週期的執行緒，不需要 move 或 Arc 就能借用外部資料。</p>
+<h3 id="_892">概念說明</h3>
+<h4 id="threadspawn">thread::spawn 的限制</h4>
+<p>前面用 <code>thread::spawn</code> 的時候，閉包裡要用外面的變數都得 move 進去，或用 Arc 包起來。這是因為 spawn 出來的執行緒可能活得比呼叫它的函數還久——Rust 沒辦法保證資料在執行緒結束前不會被丟掉。</p>
+<h4 id="spawn_2">為什麼 spawn 不能借用</h4>
+<p>第 3 集看過 <code>thread::spawn</code> 的型別簽名，閉包和回傳值都要求 <code>'static</code>——必須活得跟整個程式一樣久。這就是為什麼你不能借用局部變數：局部變數不是 <code>'static</code> 的。</p>
+<h4 id="threadscope">thread::scope</h4>
+<p><code>thread::scope</code> 解決了這個問題。它保證裡面 spawn 的所有執行緒在 scope 結束前都會被 join：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+
+<span class="w">    </span><span class="n">thread</span><span class="p">::</span><span class="n">scope</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;子執行緒：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span><span class="w"> </span><span class="c1">// 直接借用，不需要 move</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">});</span><span class="w"> </span><span class="c1">// 所有 scoped thread 在這裡保證已經結束</span>
+
+<span class="w">    </span><span class="c1">// data 還能用</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;主執行緒：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>因為 scope 保證所有執行緒在 <code>}</code> 之前都跑完了，所以 <code>data</code> 不可能被提前丟掉——閉包可以安全地借用它，不需要 move 也不需要 Arc。</p>
+<h4 id="spawn-arc">對比 spawn + Arc 的寫法</h4>
+<p>同一件事，用 <code>thread::spawn</code> 要這樣寫：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">]);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">data_clone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data_clone</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>用 <code>thread::scope</code> 簡潔很多：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+
+<span class="n">thread</span><span class="p">::</span><span class="n">scope</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">s</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>不需要 Arc、不需要 clone、不需要 move、不需要手動 join。</p>
+<h3 id="_893">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+
+<span class="w">    </span><span class="n">thread</span><span class="p">::</span><span class="n">scope</span><span class="p">(</span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 多個執行緒同時借用 input（不可變借用）</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">sum</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">sum</span><span class="p">();</span>
+<span class="w">            </span><span class="n">sum</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">h2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">max</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;空的 input&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="o">*</span><span class="n">max</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">h3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">spawn</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">min</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;空的 input&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="o">*</span><span class="n">min</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// scope 裡面也可以 join 拿回傳值</span>
+<span class="w">        </span><span class="n">results</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">h1</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">results</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">h2</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="n">results</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">h3</span><span class="p">.</span><span class="n">join</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;執行緒發生錯誤&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;input 還能用：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;總和 = {}, 最大 = {}, 最小 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_894">重點整理</h3>
+<ul>
+<li><code>thread::spawn</code> 要求 <code>'static</code>，所以閉包不能借用局部變數</li>
+<li><code>thread::scope</code> 保證所有 scoped thread 在 scope 結束前 join，因此可以安全借用外部資料</li>
+<li>不需要 move、不需要 Arc、不需要手動 join——程式碼簡潔很多</li>
+<li>當你只需要在一個區域內使用多執行緒，<code>thread::scope</code> 比 <code>thread::spawn</code> 方便</li>
 </ul>
 <hr />
 </main>

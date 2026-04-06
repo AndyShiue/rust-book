@@ -15,6 +15,7 @@ CHAPTERS = [
     ("第六章：閉包與迭代器", "chapter6"),
     ("第七章：Cargo、Crate 與 Mod 系統", "chapter7"),
     ("附錄：補充主題", "appendix1"),
+    ("第八章：多執行緒", "chapter8"),
 ]
 
 parts = []
