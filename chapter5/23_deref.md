@@ -175,8 +175,8 @@ fn main() {
 ```
 
 ## 重點整理
-- 在 Rust 中，實作了 `Deref` 的型別常被稱為智慧指標；`*v` 展開為 `*(Deref::deref(&v))`，所以 `*Box<T>` 得到 `T`
+- 在 Rust 中，實作了 `Deref` 的型別常被稱為智慧指標；`*v` 展開為 `*(Deref::deref(&v))`，所以解參考 `Box<T>` 得到 `T`
 - `DerefMut` 是 `Deref` 的 subtrait（必須先有 Deref 才能實作 DerefMut）；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
 - Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）
-- Method call 的自動解參考是獨立的機制：用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*` 或兩者組合來找到對應的方法
-- 方法同名時外層優先——`Rc::clone` 和 `String::clone` 是不�
+- method call 的自動解參考是獨立的機制：用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*` 或兩者組合來找到對應的方法
+- 方法同名時外層優先——`Rc::clone` 和 `String::clone` 是不同的操作

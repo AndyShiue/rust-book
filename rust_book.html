@@ -9152,11 +9152,11 @@ c 的總和：7
 
 <h3 id="_558">重點整理</h3>
 <ul>
-<li>在 Rust 中，實作了 <code>Deref</code> 的型別常被稱為智慧指標；<code>*v</code> 展開為 <code>*(Deref::deref(&amp;v))</code>，所以 <code>*Box&lt;T&gt;</code> 得到 <code>T</code></li>
+<li>在 Rust 中，實作了 <code>Deref</code> 的型別常被稱為智慧指標；<code>*v</code> 展開為 <code>*(Deref::deref(&amp;v))</code>，所以解參考 <code>Box&lt;T&gt;</code> 得到 <code>T</code></li>
 <li><code>DerefMut</code> 是 <code>Deref</code> 的 subtrait（必須先有 Deref 才能實作 DerefMut）；<code>*v = 值</code> 展開為 <code>*(DerefMut::deref_mut(&amp;mut v)) = 值</code></li>
 <li>Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 <code>&amp;Box&lt;i32&gt;</code> → <code>&amp;i32</code>）</li>
-<li>Method call 的自動解參考是獨立的機制：用 <code>.</code> 呼叫方法時，Rust 會嘗試加 <code>&amp;</code>、加 <code>*</code> 或兩者組合來找到對應的方法</li>
-<li>方法同名時外層優先——<code>Rc::clone</code> 和 <code>String::clone</code> 是不�</li>
+<li>method call 的自動解參考是獨立的機制：用 <code>.</code> 呼叫方法時，Rust 會嘗試加 <code>&amp;</code>、加 <code>*</code> 或兩者組合來找到對應的方法</li>
+<li>方法同名時外層優先——<code>Rc::clone</code> 和 <code>String::clone</code> 是不同的操作</li>
 </ul>
 <hr />
 <h2 id="24-cellt">第五章第 24 集：Cell&lt;T&gt;</h2>
@@ -15438,7 +15438,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h4 id="t-send-sync">T 必須是 Send + Sync</h4>
 <p>Arc 要求 <code>T: Send + Sync</code>。為什麼？</p>
-<p><strong>Sync</strong>：多個執行緒透過各自的 Arc 同時存取同一份 T。第五章第 23 集學了 Deref——Arc 實作了 Deref，所以你可以透過 Arc 直接存取 T 的內容。這等於多個執行緒同時持有 T 的不可變參考，所以 T 必須是 Sync。</p>
+<p><strong>Sync</strong>：多個執行緒透過各自的 Arc 同時存取同一份 T。第五章學了 Deref——Arc 實作了 Deref，所以你可以透過 Arc 直接存取 T 的內容。這等於多個執行緒同時持有 T 的不可變參考，所以 T 必須是 Sync。</p>
 <p><strong>Send</strong>：最後一個 Arc 被 drop 的時候，T 也會被 drop。而哪個執行緒持有最後一個 Arc 是不確定的，所以 T 的 drop 可能發生在任何執行緒上——T 等於被「送」到那個執行緒去銷毀，所以 T 必須是 Send。</p>
 <h3 id="_862">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
@@ -15498,7 +15498,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span><span class="w"> </span><span class="c1">// guard 被 drop，自動解鎖</span>
 </code></pre></div>
 
-<p><code>MutexGuard</code> 實作了 Deref 和 DerefMut（第五章第 23 集學的），所以你可以直接把它當 <code>&amp;T</code> 或 <code>&amp;mut T</code> 使用。</p>
+<p><code>MutexGuard</code> 實作了 Deref 和 DerefMut（第五章學的），所以你可以直接把它當 <code>&amp;T</code> 或 <code>&amp;mut T</code> 使用。</p>
 <p>同一時間只有一個執行緒能 lock 成功。其他執行緒呼叫 <code>lock()</code> 時會<strong>阻塞</strong>（等待），直到持有鎖的執行緒把 guard drop 掉。</p>
 <h4 id="arc-mutex">Arc + Mutex</h4>
 <p>實際上多半是這樣搭配使用——Arc 負責讓多個執行緒共享 Mutex，Mutex 負責保護裡面的資料：</p>
@@ -15530,7 +15530,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mutex</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
 <span class="o">*</span><span class="n">guard</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 <span class="c1">// ... 做了很多不需要鎖的事情 ...</span>
-<span class="c1">// guard 到這裡才被 drop</span>
+<span class="c1">// guard 到後面才被 drop</span>
 
 <span class="c1">// 好：用完就放</span>
 <span class="p">{</span>
