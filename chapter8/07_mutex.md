@@ -1,4 +1,4 @@
-# 第八章第 8 集：Mutex<T>
+# 第八章第 7 集：Mutex<T>
 
 ## 本集目標
 學會用 `Mutex<T>` 讓多個執行緒安全地修改共享資料。
@@ -31,7 +31,7 @@ let m = Mutex::new(42);
 } // guard 被 drop，自動解鎖
 ```
 
-`MutexGuard` 實作了 Deref 和 DerefMut（上上集學的），所以你可以直接把它當 `&T` 或 `&mut T` 使用。
+`MutexGuard` 實作了 Deref 和 DerefMut（第五章第 23 集學的），所以你可以直接把它當 `&T` 或 `&mut T` 使用。
 
 同一時間只有一個執行緒能 lock 成功。其他執行緒呼叫 `lock()` 時會**阻塞**（等待），直到持有鎖的執行緒把 guard drop 掉。
 

@@ -1,4 +1,4 @@
-# 第五章第 28 集：lifetime bound
+# 第五章第 29 集：lifetime bound
 
 ## 本集目標
 學會 `T: 'a` 這種 lifetime bound，理解為什麼 `&'a T` 需要 T 裡面的參考都活得過 `'a`。

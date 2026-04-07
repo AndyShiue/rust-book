@@ -1,4 +1,4 @@
-# 第五章第 30 集：常見的 derive trait
+# 第五章第 31 集：常見的 derive trait
 
 ## 本集目標
 學會 `PartialEq`、`Eq`、`PartialOrd`、`Ord` 等常見 derive trait 的用途和差別。

@@ -1,4 +1,4 @@
-# 第五章第 31 集：associated type
+# 第五章第 32 集：associated type
 
 ## 本集目標
 學會在 trait 中定義 associated type（關聯型別），理解它和泛型參數的差別。

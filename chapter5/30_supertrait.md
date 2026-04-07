@@ -1,4 +1,4 @@
-# 第五章第 29 集：supertrait
+# 第五章第 30 集：supertrait
 
 ## 本集目標
 學會用 supertrait 定義 trait 之間的依賴關係，理解 `Copy: Clone` 的設計原理。

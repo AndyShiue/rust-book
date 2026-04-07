@@ -118,6 +118,17 @@ slice[0] = 99;  // arr 變成 [1, 99, 3, 4, 5]
 
 所以標準庫裡 `&mut str` 上的方法少得可憐，基本上只有 `make_ascii_uppercase()` 和 `make_ascii_lowercase()` 這類「不會改變 byte 長度」的操作（ASCII 字母的大小寫轉換剛好是 1 byte 對 1 byte）。要修改字串，還是用 `String` 吧。
 
+### DST 與 Deref
+
+第五章也介紹了 Deref trait。`String` 和 `Vec<T>` 也實作了 `Deref`，但它們解參考得到的正是 DST：
+
+- `String` 實作了 `Deref`，`Deref::deref(&String)` 回傳 `&str`
+- `Vec<T>` 實作了 `Deref`，`Deref::deref(&Vec<T>)` 回傳 `&[T]`
+
+也就是說 `*String` 得到的是 `str`，`*Vec<T>` 得到的是 `[T]`。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在**參考的層級**：`&String` 轉成 `&str`，`&Vec<T>` 轉成 `&[T]`。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。
+
+這就是為什麼一個接受 `&str` 的函數可以直接傳 `&String` 進去，接受 `&[T]` 的函數可以直接傳 `&Vec<T>` 進去——背後的機制正是 DST + Deref + 胖指標的組合。
+
 ## 範例程式碼
 
 ```rust
@@ -182,3 +193,4 @@ fn main() {
 - **`Sized`**：表示型別大小在編譯期已知；泛型參數預設有 `T: Sized` bound
 - **`?Sized`**：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）
 - `Cow<'a, B>` 中的 `B: ?Sized` 就是為了讓 `B` 可以是 `str` 等 DST
+- `String` 和 `Vec<T>` 的 Deref 分別得到 DST `str` 和 `[T]`，deref coercion 讓 `&String` → `&str`、`&Vec<T>` → `&[T]` 成為可能
