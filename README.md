@@ -18,8 +18,8 @@
 ### 第四章：所有權與借用（14 集）
 Rust 最核心的概念——所有權、move、借用規則、String vs &str、Vec。
 
-### 第五章：泛型、Trait Bound 與生命週期（32 集）
-泛型函數與型別、trait 與 trait bound、impl Trait、Box、Rc、Cell/RefCell、生命週期、Cow。
+### 第五章：泛型、Trait Bound 與生命週期（33 集）
+泛型函數與型別、trait 與 trait bound、impl Trait、Box、Rc、Deref、Cell/RefCell、生命週期、Cow。
 
 ### 第六章：閉包與迭代器（15 集）
 閉包語法、Fn/FnMut/FnOnce、Iterator trait、常用迭代器方法。
@@ -29,6 +29,9 @@ Cargo 專案管理、use/mod、可見性、cargo test、發布 crate。
 
 ### 附錄：補充主題（11 集）
 數字字面值、格式化字串、break 回傳值、raw string、struct 放 main 裡、struct update syntax、ref/match ergonomics、panic!/todo!/unreachable!、Rc 迴圈與 Weak、fully qualified syntax、DST 簡介。
+
+### 第八章：多執行緒（11 集）
+指標與記憶體位址、thread::spawn、Send/Sync、RefCell 與 Rc 在多執行緒下的限制、Arc、Mutex、RwLock、mpsc channel、死鎖、thread::scope。
 
 ## 特色
 
