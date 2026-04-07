@@ -9156,7 +9156,7 @@ c 的總和：7
 <li><code>DerefMut</code> 是 <code>Deref</code> 的 subtrait（必須先有 Deref 才能實作 DerefMut）；<code>*v = 值</code> 展開為 <code>*(DerefMut::deref_mut(&amp;mut v)) = 值</code></li>
 <li>Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 <code>&amp;Box&lt;i32&gt;</code> → <code>&amp;i32</code>）</li>
 <li>method call 的自動解參考是獨立的機制：用 <code>.</code> 呼叫方法時，Rust 會嘗試加 <code>&amp;</code>、加 <code>*</code> 或兩者組合來找到對應的方法</li>
-<li>方法同名時外層優先——<code>Rc::clone</code> 和 <code>String::clone</code> 是不同的操作</li>
+<li>方法同名時外層優先——<code>Rc</code> 的 <code>clone</code> 和 <code>String</code> 的 <code>clone</code> 是不同的操作</li>
 </ul>
 <hr />
 <h2 id="24-cellt">第五章第 24 集：Cell&lt;T&gt;</h2>
@@ -10244,7 +10244,7 @@ c 的總和：7
 <li><code>into_owned()</code>：不管哪種都轉成擁有的值</li>
 <li>適合用在「大部分時候不修改，偶爾需要修改」的場景</li>
 </ul>
-<p>恭喜你完成了第五章！🎉 這一章的內容非常紮實——從泛型、trait bound、生命週期，到 Box、Deref、Rc、Cell、RefCell 等智慧指標，再到 Display、Associated Type、Cow。這些是 Rust 型別系統最強大的武器，也是讀懂標準庫原始碼的基礎。下一章我們將進入閉包與迭代器——Rust 最優雅的函數式程式設計風格！</p>
+<p>恭喜你完成了第五章！🎉 這一章的內容非常紮實——從泛型、trait bound、生命週期，到 Box、Rc、Deref、Cell、RefCell 等智慧指標，再到 Display、Associated Type、Cow。這些是 Rust 型別系統最強大的武器，也是讀懂標準庫原始碼的基礎。下一章我們將進入閉包與迭代器——Rust 最優雅的函數式程式設計風格！</p>
 <hr />
 <h1 id="_615">第六章：閉包與迭代器</h1>
 <h2 id="1_2">第六章第 1 集：函數指標</h2>
