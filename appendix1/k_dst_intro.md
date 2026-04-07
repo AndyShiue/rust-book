@@ -125,7 +125,7 @@ slice[0] = 99;  // arr 變成 [1, 99, 3, 4, 5]
 - `String` 實作了 `Deref`，`Deref::deref(&String)` 回傳 `&str`
 - `Vec<T>` 實作了 `Deref`，`Deref::deref(&Vec<T>)` 回傳 `&[T]`
 
-也就是說 `*String` 得到的是 `str`，解參考 `Vec<T>` 得到的是 `[T]`。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在**參考的層級**：`&String` 轉成 `&str`，`&Vec<T>` 轉成 `&[T]`。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。
+也就是說解參考 `String` 得到的是 `str`，解參考 `Vec<T>` 得到的是 `[T]`。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在**參考的層級**：`&String` 轉成 `&str`，`&Vec<T>` 轉成 `&[T]`。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。
 
 這就是為什麼一個接受 `&str` 的函數可以直接傳 `&String` 進去，接受 `&[T]` 的函數可以直接傳 `&Vec<T>` 進去——背後的機制正是 DST + Deref + 胖指標的組合。
 
