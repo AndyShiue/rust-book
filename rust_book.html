@@ -13810,7 +13810,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>發布前寫好 README、文件註解、測試，是對使用者的基本尊重</li>
 </ul>
 <p>恭喜你完成了第七章！🎉 到這裡為止，我們已經教完了 Rust 的主要觀念——所有權、借用、泛型、trait、生命週期、閉包、迭代器，以及模組系統和套件管理。你現在已經可以獨當一面了。如果你腦中有什麼點子，現在就是動手實作的好時機！</p>
-<p>即便如此，Rust 還有很多獨特而強大的功能。後面的章節會繼續介紹進階主題，希望能帶給你對 Rust 更完整、更全面的認識。</p>
+<p>即便如此，Rust 還有很多獨特而強大的功能。後面的章節會繼續介紹那些還沒介紹的重要主題，希望能帶給你對 Rust 更完整、更全面的認識。</p>
 <hr />
 <h1 id="_762">附錄：補充主題</h1>
 <h2 id="a_1">附錄第 a 集：數字字面值格式</h2>
@@ -15004,16 +15004,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>解參考不是免費的，大部分時候這個成本很小，但知道它的存在是有意義的。</p>
-<p>儘管智慧指標的內部可能不僅僅只有一個指標——例如 <code>Rc&lt;T&gt;</code> 除了指向資料的位址，還存了參考計數——它們也能用 <code>*</code> 解參考，用起來感覺像真正的指標：</p>
-<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Box</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// 100</span>
-
-<span class="kd">let</span><span class="w"> </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">rc</span><span class="p">);</span><span class="w"> </span><span class="c1">// 200</span>
-</code></pre></div>
-
 <h4 id="fat-pointer">胖指標（fat pointer）</h4>
-<p>附錄 k 介紹過 DST——<code>[T]</code> 和 <code>str</code> 是大小不確定的型別，沒辦法直接放在變數裡，通常要透過 <code>&amp;[T]</code>、<code>&amp;str</code>、<code>Box&lt;[T]&gt;</code> 等方式使用。但 DST 的大小不固定，光有位址不夠，還得知道長度，所以 <code>&amp;[T]</code> 和 <code>&amp;str</code> 佔 16 bytes：</p>
+<p>附錄第 k 集介紹過 DST——<code>[T]</code> 和 <code>str</code> 是大小不確定的型別，沒辦法直接放在變數裡，通常要透過 <code>&amp;[T]</code>、<code>&amp;str</code>、<code>Box&lt;[T]&gt;</code> 等方式使用。但 DST 的大小不固定，光有位址不夠。想像一下：你拿到一個位址，知道從這裡開始是一段連續的 <code>i32</code> 資料——但到哪裡結束？記憶體本身不會告訴你，位址只是一個起點。所以除了位址之外，還得額外記錄長度，才知道這段資料有多長。因此 <code>&amp;[T]</code> 和 <code>&amp;str</code> 佔 16 bytes：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 8（位址）</span>
@@ -15021,7 +15013,6 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 16（位址 + 長度）</span>
 </code></pre></div>
 
-<p>這種「位址 + 額外資訊」的指標叫做<strong>胖指標</strong>（fat pointer）。</p>
 <h3 id="_837">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
@@ -15060,7 +15051,6 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>&amp;T</code> 在底層就是一個記憶體位址，本質上是一個數字</li>
 <li>在 64 位元系統上的大部分情況下，<code>&amp;T</code> 和 <code>Box&lt;T&gt;</code> 的大小是 8 bytes，就是一個位址的大小</li>
 <li>用 <code>*</code> 解參考，透過位址取得對應的內容，這有一層間接存取的成本</li>
-<li>智慧指標內部可能不只有一個指標，但一樣能用 <code>*</code> 解參考</li>
 <li><code>&amp;[T]</code> 和 <code>&amp;str</code> 是胖指標（fat pointer），佔 16 bytes（位址 + 長度），因為 DST 的大小不固定</li>
 </ul>
 <hr />
@@ -15748,8 +15738,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <h4 id="_877">什麼時候結束</h4>
-<p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會回傳 <code>Err</code>，或者用 <code>for msg in rx</code> 迴圈會自動結束。這是判斷「沒有人會再發送了」的方式。</p>
-<p>注意上面的例子裡 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
+<p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會先把還沒收的訊息全部收完，收完之後再呼叫 <code>recv()</code> 才會回傳 <code>Err</code>。用 <code>for msg in rx</code> 迴圈也一樣——先把剩餘的訊息全部跑完，然後才結束。這是判斷「沒有人會再發送了，而且所有訊息都已經處理完了」的方式。</p>
+<p>注意上面的例子裡的 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
 <h4 id="channel-vs">channel vs 共享記憶體</h4>
 <p>什麼時候用哪個？</p>
 <ul>
@@ -15840,7 +15830,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_884">編譯器不會擋死鎖</h4>
 <p>Send 和 Sync 保護的是<strong>資料競爭</strong>（data race）——多個執行緒同時存取資料造成的未定義行為。死鎖是<strong>邏輯問題</strong>，程式不會壞掉或出現未定義行為，只是永遠卡住。Rust 的編譯器無法偵測死鎖。</p>
 <h4 id="_885">同一個執行緒也會死鎖</h4>
-<p>Rust 的 Mutex 不是 reentrant 的——在同一個執行緒裡對同一個 Mutex lock 兩次，也會死鎖：</p>
+<p>就算只有一個執行緒，對同一個 Mutex lock 兩次也會死鎖——因為第一次 lock 還沒放開，第二次 lock 就永遠等不到：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -15854,7 +15844,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><strong>所有執行緒以相同順序取鎖</strong>：如果每個人都先拿鎖 1 再拿鎖 2，就不會互相卡住</li>
 <li><strong>減少同時持有多個鎖</strong>：能用一個鎖解決就不要用兩個</li>
-<li><strong>MutexGuard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
+<li><strong>guard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
 </ul>
 <h3 id="_887">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
@@ -15892,7 +15882,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li>死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住</li>
 <li>Rust 的編譯器不會擋死鎖——Send/Sync 保護的是資料競爭，死鎖是邏輯問題</li>
-<li>同一個執行緒對同一個 Mutex lock 兩次也會死鎖（Rust 的 Mutex 不是 reentrant）</li>
+<li>同一個執行緒對同一個 Mutex lock 兩次也會死鎖，因為第一次的鎖還沒放開</li>
 <li>避免方法：統一取鎖順序、減少同時持有多個鎖、guard 用完趕快 drop</li>
 </ul>
 <hr />
@@ -15993,6 +15983,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>不需要 move、不需要 Arc、不需要手動 join——程式碼簡潔很多</li>
 <li>當你只需要在一個區域內使用多執行緒，<code>thread::scope</code> 比 <code>thread::spawn</code> 方便</li>
 </ul>
+<p>恭喜你完成了第八章！🎉 這一章從指標的底層概念出發，一路學到了執行緒、Send/Sync、Arc、Mutex、RwLock、channel 和 thread::scope。多執行緒程式設計在很多語言裡是讓人頭痛的領域，但 Rust 的型別系統在編譯期就幫你擋住了 data race——你不需要靠經驗和直覺來避免這類 bug，編譯器就是你最好的隊友。下一章我們將介紹進階語言功能！</p>
 <hr />
 </main>
 
