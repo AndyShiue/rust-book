@@ -52,7 +52,7 @@ let mut b = Box::new(0);
 println!("{}", *b); // 42
 ```
 
-`Box<T>` 同時實作了 `Deref` 和 `DerefMut`，所以既能讀也能寫。`Rc<T>` 只實作了 `Deref`——因為 Rc 是共享的，不允許透過 `*` 修改內容。
+`Box<T>` 同時實作了 `Deref` 和 `DerefMut`，所以既能讀也能寫。`Rc<T>` 則只實作了 `Deref`，不允許透過 `*` 修改內容。
 
 ### Deref coercion
 

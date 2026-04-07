@@ -9051,7 +9051,7 @@ c 的總和：7
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="c1">// 42</span>
 </code></pre></div>
 
-<p><code>Box&lt;T&gt;</code> 同時實作了 <code>Deref</code> 和 <code>DerefMut</code>，所以既能讀也能寫。<code>Rc&lt;T&gt;</code> 只實作了 <code>Deref</code>——因為 Rc 是共享的，不允許透過 <code>*</code> 修改內容。</p>
+<p><code>Box&lt;T&gt;</code> 同時實作了 <code>Deref</code> 和 <code>DerefMut</code>，所以既能讀也能寫。<code>Rc&lt;T&gt;</code> 則只實作了 <code>Deref</code>，不允許透過 <code>*</code> 修改內容。</p>
 <h4 id="deref-coercion">Deref coercion</h4>
 <p><strong>Deref coercion</strong> 是 Rust 在需要的時候自動透過 Deref 轉換參考型別的機制。這不只發生在 method call，任何需要型別匹配的地方都可能觸發。</p>
 <p>例如，一個函數接受 <code>&amp;i32</code>，你可以直接傳 <code>&amp;Box&lt;i32&gt;</code> 進去，Rust 會自動透過 Deref 把 <code>&amp;Box&lt;i32&gt;</code> 轉成 <code>&amp;i32</code>：</p>
