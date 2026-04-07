@@ -14896,12 +14896,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>假設你有 <code>"哈囉"</code>（6 bytes），想把 <code>'哈'</code> 改成 <code>'a'</code>——<code>'a'</code> 只有 1 byte，但 <code>'哈'</code> 佔了 3 bytes，你沒辦法就地替換，因為長度不同。如果硬改了第一個 byte 卻沒處理後面的，UTF-8 的多 byte 序列就斷了。而 Rust 的 <code>str</code> 保證內容一定是合法的 UTF-8，破壞這個保證會導致未定義行為。</p>
 <p>所以標準庫裡 <code>&amp;mut str</code> 上的方法少得可憐，基本上只有 <code>make_ascii_uppercase()</code> 和 <code>make_ascii_lowercase()</code> 這類「不會改變 byte 長度」的操作（ASCII 字母的大小寫轉換剛好是 1 byte 對 1 byte）。要修改字串，還是用 <code>String</code> 吧。</p>
 <h4 id="dst-deref">DST 與 Deref</h4>
-<p>第五章也介紹了 Deref trait。<code>String</code> 和 <code>Vec&lt;T&gt;</code> 也實作了 <code>Deref</code>，但它們解參考得到的正是 DST：</p>
+<p>第五章也介紹了 Deref trait。<code>String</code> 和 <code>Vec&lt;T&gt;</code> 也實作了 <code>Deref</code>，它們解參考得到的正是 DST：</p>
 <ul>
 <li><code>String</code> 實作了 <code>Deref</code>，<code>Deref::deref(&amp;String)</code> 回傳 <code>&amp;str</code></li>
 <li><code>Vec&lt;T&gt;</code> 實作了 <code>Deref</code>，<code>Deref::deref(&amp;Vec&lt;T&gt;)</code> 回傳 <code>&amp;[T]</code></li>
 </ul>
-<p>也就是說 <code>*String</code> 得到的是 <code>str</code>，<code>*Vec&lt;T&gt;</code> 得到的是 <code>[T]</code>。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在<strong>參考的層級</strong>：<code>&amp;String</code> 轉成 <code>&amp;str</code>，<code>&amp;Vec&lt;T&gt;</code> 轉成 <code>&amp;[T]</code>。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。</p>
+<p>也就是說 <code>*String</code> 得到的是 <code>str</code>，解參考 <code>Vec&lt;T&gt;</code> 得到的是 <code>[T]</code>。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在<strong>參考的層級</strong>：<code>&amp;String</code> 轉成 <code>&amp;str</code>，<code>&amp;Vec&lt;T&gt;</code> 轉成 <code>&amp;[T]</code>。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。</p>
 <p>這就是為什麼一個接受 <code>&amp;str</code> 的函數可以直接傳 <code>&amp;String</code> 進去，接受 <code>&amp;[T]</code> 的函數可以直接傳 <code>&amp;Vec&lt;T&gt;</code> 進去——背後的機制正是 DST + Deref + 胖指標的組合。</p>
 <h3 id="_829">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="p">;</span>
