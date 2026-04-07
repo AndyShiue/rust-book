@@ -5,11 +5,23 @@
 
 ## 概念說明
 
+### 對智慧指標使用 `*`
+
+到目前為止，我們只對一般的參考（`&T`）用過 `*`。但其實 `*` 也能用在其他型別上：
+
+```rust
+let b = Box::new(42);
+let val: i32 = *b; // 把值從 Box 裡拿出來
+println!("{}", val); // 42
+```
+
+`*b` 得到的是 Box 裡面的 `i32`。這之所以能成立，是因為 `Box<T>` 實作了一個叫 `Deref` 的 trait。
+
 ### Deref trait 與智慧指標
 
-第 21 集學了 `Box<T>`，我們用 `*` 把值從 Box 裡解出來。這些指標之所以能用 `*`，是因為它們實作了 `Deref` trait。在 Rust 中，我們常常把**實作了 `Deref` 的型別**叫作**智慧指標（smart pointer）**——`Box<T>`、`Rc<T>` 都是。`Deref` 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」
+`Deref` 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」`Box<T>` 和 `Rc<T>` 都實作了 `Deref`。在 Rust 中，我們常常把**實作了 `Deref` 的型別**叫作**智慧指標（smart pointer）**。
 
-### `*v` 的 desugaring
+### `*v` 背後發生了什麼
 
 當你對一個實作了 `Deref` 的型別使用 `*` 時，Rust 實際上會這樣展開：
 
@@ -21,7 +33,7 @@
 
 `Deref::deref` 接收 `&Self`，回傳一個參考（例如 `&T`），然後外面的 `*` 再把這個參考解開，得到 `T` 本身。
 
-以 `Box<i32>` 為例：
+以剛才的 `Box<i32>` 為例：
 
 ```rust
 let b = Box::new(42);
@@ -32,11 +44,11 @@ let b = Box::new(42);
 // 再 * 一次得到 i32
 ```
 
-所以 `Box<T>` 解參考後最終得到的是 `T`。`Rc<T>` 也一樣，`Rc<T>` 解參考後得到 `T`。
+所以解參考 `Box<T>` 最終得到的是 `T`。`Rc<T>` 也一樣，解參考 `Rc<T>` 得到 `T`。
 
 ### DerefMut
 
-`DerefMut` 是 `Deref` 的 subtrait——也就是說，要實作 `DerefMut` 必須先實作 `Deref`。`DerefMut` 是可變版本，當你對一個可變的智慧指標寫入時，Rust 會用 `DerefMut` 來展開：
+`DerefMut` 是 `Deref` 的可變版本。當你對一個可變的智慧指標寫入時，Rust 會用 `DerefMut` 來展開：
 
 ```rust
 *v = 新的值
@@ -71,9 +83,9 @@ show(&b); // deref coercion：&Box<i32> 自動轉成 &i32
 
 Deref coercion 也可以連鎖。例如 `&Box<Box<i32>>` 會先 deref 成 `&Box<i32>`，再 deref 成 `&i32`。DerefMut 同理。
 
-### Method call 的自動解參考
+### method call 的自動解參考
 
-method call 有另一套獨立的機制。前面學過 `a.method()` 是 `(&a).method()` 的簡寫——如果 `method` 接收的是 `&self`，Rust 會自動幫你加 `&`。反過來，如果你有一個 `&T` 或智慧指標，而方法定義在 `T` 上，Rust 也會自動幫你加 `*`。
+method call 有另一套獨立的機制。前面學過 `(&a).method()` 可以簡寫為 `a.method()`——如果 `method` 接收的是 `&self`，Rust 會自動幫你加 `&`。反過來，如果你有一個 `&T` 或智慧指標，而方法定義在 `T` 上，Rust 也會自動幫你加 `*`。
 
 當你用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*`、或兩者組合，一層一層嘗試，直到找到有對應方法的型別。如果 `a` 是 `&Box<i32>`，而你呼叫一個定義在 `i32` 上、接收 `&self` 的方法，Rust 會做 `(&**a).method()`——先 `*a` 得到 `Box<i32>`，再 `*` 得到 `i32`，再 `&` 回去得到 `&i32` 來匹配 `&self`。
 
@@ -176,7 +188,7 @@ fn main() {
 
 ## 重點整理
 - 在 Rust 中，實作了 `Deref` 的型別常被稱為智慧指標；`*v` 展開為 `*(Deref::deref(&v))`，所以解參考 `Box<T>` 得到 `T`
-- `DerefMut` 是 `Deref` 的 subtrait（必須先有 Deref 才能實作 DerefMut）；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
+- `DerefMut` 是 `Deref` 的可變版本；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
 - Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）
 - method call 的自動解參考是獨立的機制：用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*` 或兩者組合來找到對應的方法
 - 方法同名時外層優先——`Rc` 的 `clone` 和 `String` 的 `clone` 是不同的操作
