@@ -9019,7 +9019,7 @@ c 的總和：7
 <p>理解 <code>Deref</code> trait 和 Rust 的自動解參考機制，以及智慧指標為什麼能直接呼叫內部型別的方法。</p>
 <h3 id="_555">概念說明</h3>
 <h4 id="deref-trait">Deref trait 與智慧指標</h4>
-<p>第 21 集學了 <code>Box&lt;T&gt;</code>，我們用 <code>*</code> 把值從 Box 裡解出來。智慧指標之所以能用 <code>*</code>，是因為它們實作了 <code>Deref</code> trait。在 Rust 中，我們常常把<strong>實作了 <code>Deref</code> 的型別</strong>叫作<strong>智慧指標（smart pointer）</strong>——<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code> 都是。<code>Deref</code> 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」</p>
+<p>第 21 集學了 <code>Box&lt;T&gt;</code>，我們用 <code>*</code> 把值從 Box 裡解出來。這些指標之所以能用 <code>*</code>，是因為它們實作了 <code>Deref</code> trait。在 Rust 中，我們常常把<strong>實作了 <code>Deref</code> 的型別</strong>叫作<strong>智慧指標（smart pointer）</strong>——<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code> 都是。<code>Deref</code> 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」</p>
 <h4 id="v-desugaring"><code>*v</code> 的 desugaring</h4>
 <p>當你對一個實作了 <code>Deref</code> 的型別使用 <code>*</code> 時，Rust 實際上會這樣展開：</p>
 <div class="highlight"><pre><span></span><code><span class="o">*</span><span class="n">v</span>
@@ -15126,7 +15126,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>這是從另一個執行緒把計算結果傳回來最簡單的方式。</p>
 <h4 id="move_6">move 閉包</h4>
-<p>如果閉包裡要用到外面的變數，需要加 <code>move</code>：</p>
+<p>如果閉包裡要用到外面的變數，一般需要加 <code>move</code>：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -15646,7 +15646,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>什麼時候用哪個？</p>
 <ul>
 <li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了。</li>
-<li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者餓死</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
+<li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者飢餓</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
 </ul>
 <h3 id="_870">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">RwLock</span><span class="p">};</span>
@@ -15693,7 +15693,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>read().expect(...)</code> 取得讀鎖，<code>write().expect(...)</code> 取得寫鎖</li>
 <li>Guard 透過 Deref 操作內容，drop 時自動放鎖</li>
 <li>和 RefCell 的對照：RefCell 是單執行緒版本，RwLock 是多執行緒版本</li>
-<li>Mutex 簡單、開銷小，大部分情況夠用；RwLock 適合讀遠多於寫的場景，但開銷較大且有寫者餓死的風險</li>
+<li>Mutex 簡單、開銷小，大部分情況夠用；RwLock 適合讀遠多於寫的場景，但開銷較大且有寫者飢餓的風險</li>
 </ul>
 <hr />
 <h2 id="9-mpsc">第八章第 9 集：mpsc</h2>
@@ -15702,7 +15702,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_873">概念說明</h3>
 <h4 id="_874">另一種思路</h4>
 <p>前面的 Mutex 和 RwLock 是「共享記憶體」的思路——多個執行緒存取同一份資料，用鎖來避免衝突。</p>
-<p>Channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
+<p>channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
 <h4 id="channel">建立 channel</h4>
 <p><code>std::sync::mpsc::channel()</code> 建立一對發送端（tx）和接收端（rx）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
@@ -15750,7 +15750,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_877">什麼時候結束</h4>
 <p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會回傳 <code>Err</code>，或者用 <code>for msg in rx</code> 迴圈會自動結束。這是判斷「沒有人會再發送了」的方式。</p>
 <p>注意上面的例子裡 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
-<h4 id="channel-vs">Channel vs 共享記憶體</h4>
+<h4 id="channel-vs">channel vs 共享記憶體</h4>
 <p>什麼時候用哪個？</p>
 <ul>
 <li><strong>多個執行緒需要反覆讀寫同一份資料</strong>（例如共用的計數器、共用的快取）→ Mutex / RwLock 比較直接</li>
@@ -15789,7 +15789,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h3 id="_879">重點整理</h3>
 <ul>
-<li>Channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
+<li>channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
 <li><code>mpsc::channel()</code> 建立發送端 tx 和接收端 rx</li>
 <li><code>tx.send(value)</code> 會 move value，<code>rx.recv()</code> 阻塞直到收到</li>
 <li><code>tx.clone()</code> 產生多個發送端，但接收端只有一個（mpsc）</li>

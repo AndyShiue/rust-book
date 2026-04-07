@@ -77,7 +77,7 @@ fn main() {
 
 ### move 閉包
 
-如果閉包裡要用到外面的變數，需要加 `move`：
+如果閉包裡要用到外面的變數，一般需要加 `move`：
 
 ```rust
 use std::thread;

@@ -7,7 +7,7 @@
 
 ### Deref trait 與智慧指標
 
-第 21 集學了 `Box<T>`，我們用 `*` 把值從 Box 裡解出來。智慧指標之所以能用 `*`，是因為它們實作了 `Deref` trait。在 Rust 中，我們常常把**實作了 `Deref` 的型別**叫作**智慧指標（smart pointer）**——`Box<T>`、`Rc<T>` 都是。`Deref` 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」
+第 21 集學了 `Box<T>`，我們用 `*` 把值從 Box 裡解出來。這些指標之所以能用 `*`，是因為它們實作了 `Deref` trait。在 Rust 中，我們常常把**實作了 `Deref` 的型別**叫作**智慧指標（smart pointer）**——`Box<T>`、`Rc<T>` 都是。`Deref` 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」
 
 ### `*v` 的 desugaring
 
