@@ -15189,9 +15189,19 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_846">本集目標</h3>
 <p>理解 Rust 如何在編譯期保證型別能安全地跨執行緒使用。</p>
 <h3 id="_847">概念說明</h3>
+<h4 id="_848">為什麼需要額外的保護</h4>
+<p>還記得第四章一開頭的鑰匙圈比喻嗎？現在你應該知道了——鑰匙就是指標。</p>
+<p>Rust 的所有權規則以及參考的限制——同時只能有一個 <code>&amp;mut</code>，而且 <code>&amp;</code> 和 <code>&amp;mut</code> 不能同時存在的原因之一就是為了防止兩個指標同時讀寫同一個位址，造成前面提到過的<strong>資料競爭（data race）</strong>。舉個具體的例子：假設有一個 <code>i32</code> 值是 0，執行緒 A 和執行緒 B 各自透過指標對它加 1。你預期結果是 2，但實際上可能是這樣：</p>
+<ol>
+<li>執行緒 A 讀取值：0</li>
+<li>執行緒 B 也讀取值：0</li>
+<li>執行緒 A 把 0 + 1 = 1 寫回去</li>
+<li>執行緒 B 也把 0 + 1 = 1 寫回去</li>
+</ol>
+<p>結果是 1，不是 2。兩次加 1 只生效了一次。</p>
+<p>但光有所有權和借用規則，在多執行緒下還不夠。Rust 另外用兩個 trait——<code>Send</code> 和 <code>Sync</code>——來處理多執行緒的安全問題：實作了這些 trait 的型別能在多執行緒之間傳遞，沒有實作的則會被編譯器擋住。</p>
 <h4 id="spawn">spawn 實際上在做什麼</h4>
 <p>上一集用 <code>thread::spawn</code> 建立執行緒的時候，我們傳入了一個閉包。閉包會捕捉外部變數——而 spawn 實際上就是<strong>把這些捕捉的變數送到另一個執行緒去</strong>。這才是我們真正要關心的事：哪些東西可以安全地送過去？</p>
-<p>不是所有型別都能安全地跨執行緒。Rust 用兩個 trait 在編譯期就幫你擋住不安全的情況。</p>
 <h4 id="send">Send</h4>
 <p>一個型別如果實作了 <code>Send</code>，代表它的值可以安全地 move 到另一個執行緒。大部分型別都是 <code>Send</code>——<code>i32</code>、<code>String</code>、<code>Vec&lt;T&gt;</code>（只要 T 是 Send）等等都是。</p>
 <h4 id="sync">Sync</h4>
@@ -15211,7 +15221,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// MyData 自動就是 Send + Sync</span>
 </code></pre></div>
 
-<h4 id="_848">不用死背</h4>
+<h4 id="_849">不用死背</h4>
 <p>你不需要記住哪些型別是 Send、哪些是 Sync。試著把一個不安全的型別丟進 <code>thread::spawn</code>，編譯器會直接報錯告訴你：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15235,7 +15245,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>閉包 <code>F</code> 必須是 <code>Send</code>——閉包捕捉了什麼，它的型別就包含什麼，所以如果捕捉的變數不是 <code>Send</code>，閉包本身也不會是 <code>Send</code>，spawn 就會編譯失敗。回傳值 <code>T</code> 也必須是 <code>Send</code>，因為結果要從子執行緒傳回來。</p>
 <p>還有那個 <code>'static</code>——為什麼需要它？因為我們完全不知道 spawn 出來的執行緒會活多久。你可能會 join 它，也可能不 join 讓它自己跑到 main 結束才被強制終止。Rust 的型別系統沒辦法保證你一定會在某個時間點 join，所以它要求最保守的保證：閉包和回傳值裡的所有東西都不能有會過期的借用。第五章第 28 集學過 lifetime bound，<code>T: 'a</code> 代表 <code>T</code> 裡面的所有參考都必須活得過 <code>'a</code>。<code>F: 'static</code> 就是這個概念的極端情況——閉包裡面的參考要活得跟整個程式一樣久。實務上最常見的做法就是上一集說的 <code>move</code>——把值搬進閉包之後，閉包不借用任何東西，自然滿足 <code>'static</code>。</p>
-<h3 id="_849">範例程式碼</h3>
+<h3 id="_850">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="c1">// 這個 struct 的所有欄位都是 Send + Sync，</span>
@@ -15261,19 +15271,19 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_850">重點整理</h3>
+<h3 id="_851">重點整理</h3>
 <ul>
 <li><code>thread::spawn</code> 的閉包會把捕捉的變數送到另一個執行緒，所以這些變數必須是 <code>Send</code></li>
 <li><code>Send</code> = 值可以安全地 move 到另一個執行緒</li>
 <li><code>Sync</code> = <code>&amp;T</code> 可以安全地在多個執行緒之間共享（<code>T: Sync</code> 等價於 <code>&amp;T: Send</code>）</li>
 <li>Sync 通常蘊含 Send——能被多執行緒同時讀，搬過去只會更安全</li>
-<li>編譯器自動推導 Send / Sync，不用手動實作也不用死背</li>
+<li>編譯器自動推導 Send / Sync，不用手動�</li>
 </ul>
 <hr />
 <h2 id="4-refcell">第八章第 4 集：RefCell 在多執行緒</h2>
-<h3 id="_851">本集目標</h3>
+<h3 id="_852">本集目標</h3>
 <p>理解為什麼 interior mutability 在多執行緒下是危險的，以及 RefCell 的 Send / Sync 特性。</p>
-<h3 id="_852">概念說明</h3>
+<h3 id="_853">概念說明</h3>
 <h4 id="interior-mutability">interior mutability 是多執行緒的一大威脅</h4>
 <p>第五章學過，RefCell 能透過 <code>&amp;T</code>（不可變參考）修改內部的值。在單執行緒的世界裡，RefCell 會在執行期檢查借用規則，不會出問題。</p>
 <p>但在多執行緒的世界裡，事情就不一樣了。<code>&amp;T</code> 看起來是「只讀」的，而 Sync 的定義就是 <code>&amp;T</code> 能安全地在多個執行緒之間共享。如果一個型別能透過 <code>&amp;T</code> 偷偷修改內容，多個執行緒同時這樣做就可能出事。</p>
@@ -15306,7 +15316,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_853">範例程式碼</h3>
+<h3 id="_854">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15327,7 +15337,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_854">重點整理</h3>
+<h3 id="_855">重點整理</h3>
 <ul>
 <li>interior mutability 讓 <code>&amp;T</code> 能修改內容，但這在多執行緒下很危險</li>
 <li>atomic 操作 = 不可分割的操作，要嘛完整執行完，要嘛完全沒發生，不會被其他執行緒打斷到一半</li>
@@ -15337,9 +15347,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="5-rc">第八章第 5 集：Rc 在多執行緒</h2>
-<h3 id="_855">本集目標</h3>
+<h3 id="_856">本集目標</h3>
 <p>理解為什麼 Rc 完全不能跨執行緒——既不是 Send 也不是 Sync。</p>
-<h3 id="_856">概念說明</h3>
+<h3 id="_857">概念說明</h3>
 <h4 id="rc-sync">Rc 不是 Sync</h4>
 <p>Rc 的引用計數和 RefCell 的 borrow 計數一樣，是普通整數，不是 atomic 操作。如果多個執行緒同時透過 <code>&amp;Rc&lt;T&gt;</code> 做 clone 或 drop，引用計數的加減可能互相干擾，導致計數錯誤——可能提前釋放資料，或永遠不釋放。</p>
 <p>所以 Rc 不是 <code>Sync</code>，理由和 RefCell 相同。</p>
@@ -15364,7 +15374,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h4 id="rc_2">Rc 完全不能跨執行緒</h4>
 <p>Rc 不是 <code>Send</code> 也不是 <code>Sync</code>。不能 move 到其他執行緒，也不能在多個執行緒之間共享參考。如果需要跨執行緒共享資料，得用別的工具。</p>
-<h3 id="_857">範例程式碼</h3>
+<h3 id="_858">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15387,7 +15397,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_858">重點整理</h3>
+<h3 id="_859">重點整理</h3>
 <ul>
 <li>Rc 的引用計數是普通整數，不是 atomic，所以不是 <code>Sync</code></li>
 <li>Rc 連 <code>Send</code> 都不是：move 一個 Rc 到另一個執行緒後，它的 clone 可能還在原執行緒，兩邊同時操作計數器就會出問題</li>
@@ -15395,10 +15405,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="6-arct">第八章第 6 集：Arc&lt;T&gt;</h2>
-<h3 id="_859">本集目標</h3>
+<h3 id="_860">本集目標</h3>
 <p>學會用 <code>Arc&lt;T&gt;</code> 在多個執行緒之間安全地共享資料。</p>
-<h3 id="_860">概念說明</h3>
-<h4 id="_861">問題回顧</h4>
+<h3 id="_861">概念說明</h3>
+<h4 id="_862">問題回顧</h4>
 <p>前面說了 Rc 不能跨執行緒，因為引用計數不是 atomic。但我們確實需要在多個執行緒之間共享資料——怎麼辦？</p>
 <h4 id="arcatomic-reference-counting">Arc：Atomic Reference Counting</h4>
 <p><code>Arc&lt;T&gt;</code> 就是把 Rc 的引用計數換成 <strong>atomic 操作</strong>的版本。Atomic 操作保證即使多個執行緒同時修改計數器，也不會互相干擾。</p>
@@ -15410,7 +15420,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span><span class="w"> </span><span class="c1">// 2</span>
 </code></pre></div>
 
-<h4 id="_862">跨執行緒共享</h4>
+<h4 id="_863">跨執行緒共享</h4>
 <p>把 <code>Arc::clone</code> 出來的東西 move 到另一個執行緒：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15430,7 +15440,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>Arc 要求 <code>T: Send + Sync</code>。為什麼？</p>
 <p><strong>Sync</strong>：多個執行緒透過各自的 Arc 同時存取同一份 T。第五章學了 Deref——Arc 實作了 Deref，所以你可以透過 Arc 直接存取 T 的內容。這等於多個執行緒同時持有 T 的不可變參考，所以 T 必須是 Sync。</p>
 <p><strong>Send</strong>：最後一個 Arc 被 drop 的時候，T 也會被 drop。而哪個執行緒持有最後一個 Arc 是不確定的，所以 T 的 drop 可能發生在任何執行緒上——T 等於被「送」到那個執行緒去銷毀，所以 T 必須是 Send。</p>
-<h3 id="_863">範例程式碼</h3>
+<h3 id="_864">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15456,7 +15466,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_864">重點整理</h3>
+<h3 id="_865">重點整理</h3>
 <ul>
 <li><code>Arc&lt;T&gt;</code> 是 Rc 的多執行緒版本，引用計數用 atomic 操作</li>
 <li>用法跟 Rc 幾乎一樣：<code>Arc::new()</code>、<code>Arc::clone()</code></li>
@@ -15465,9 +15475,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="7-mutext">第八章第 7 集：Mutex&lt;T&gt;</h2>
-<h3 id="_865">本集目標</h3>
+<h3 id="_866">本集目標</h3>
 <p>學會用 <code>Mutex&lt;T&gt;</code> 讓多個執行緒安全地修改共享資料。</p>
-<h3 id="_866">概念說明</h3>
+<h3 id="_867">概念說明</h3>
 <h4 id="arc">Arc 只能讀，想改怎麼辦？</h4>
 <p>Arc 讓多個執行緒共享資料，但只能讀。如果你想讓多個執行緒<strong>修改</strong>同一份資料呢？</p>
 <h4 id="mutex-interior-mutability">Mutex：多執行緒版的 interior mutability</h4>
@@ -15530,7 +15540,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// ... 做其他事情 ...</span>
 </code></pre></div>
 
-<h3 id="_867">範例程式碼</h3>
+<h3 id="_868">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15562,7 +15572,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_868">重點整理</h3>
+<h3 id="_869">重點整理</h3>
 <ul>
 <li><code>Mutex&lt;T&gt;</code> 是多執行緒版的 interior mutability，用鎖保護資料</li>
 <li><code>lock().expect(...)</code> 回傳 <code>MutexGuard</code>，透過 Deref 直接當 <code>&amp;mut T</code> 用</li>
@@ -15573,9 +15583,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="8-rwlockt">第八章第 8 集：RwLock&lt;T&gt;</h2>
-<h3 id="_869">本集目標</h3>
+<h3 id="_870">本集目標</h3>
 <p>學會用 <code>RwLock&lt;T&gt;</code> 實現讀寫分離的鎖，以及和 Mutex 的比較。</p>
-<h3 id="_870">概念說明</h3>
+<h3 id="_871">概念說明</h3>
 <h4 id="mutex">Mutex 的限制</h4>
 <p>Mutex 不管你要讀還是要寫，都要鎖住。但很多時候多個執行緒只是要讀資料——讀和讀之間不會衝突，全部鎖住太浪費了。</p>
 <h4 id="rwlock">RwLock：讀寫分離</h4>
@@ -15638,7 +15648,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了。</li>
 <li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者飢餓</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
 </ul>
-<h3 id="_871">範例程式碼</h3>
+<h3 id="_872">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">RwLock</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15677,7 +15687,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_872">重點整理</h3>
+<h3 id="_873">重點整理</h3>
 <ul>
 <li><code>RwLock&lt;T&gt;</code> 區分讀鎖和寫鎖：多個讀者可以同時讀，寫者獨佔</li>
 <li><code>read().expect(...)</code> 取得讀鎖，<code>write().expect(...)</code> 取得寫鎖</li>
@@ -15687,10 +15697,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="9-mpsc">第八章第 9 集：mpsc</h2>
-<h3 id="_873">本集目標</h3>
+<h3 id="_874">本集目標</h3>
 <p>學會用 channel 讓執行緒之間透過傳訊息溝通，以及和共享記憶體方式的比較。</p>
-<h3 id="_874">概念說明</h3>
-<h4 id="_875">另一種思路</h4>
+<h3 id="_875">概念說明</h3>
+<h4 id="_876">另一種思路</h4>
 <p>前面的 Mutex 和 RwLock 是「共享記憶體」的思路——多個執行緒存取同一份資料，用鎖來避免衝突。</p>
 <p>channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
 <h4 id="channel">建立 channel</h4>
@@ -15701,7 +15711,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p><code>mpsc</code> 代表 <strong>multiple producer, single consumer</strong>——可以有多個發送端，但接收端只有一個。</p>
-<h4 id="_876">發送和接收</h4>
+<h4 id="_877">發送和接收</h4>
 <p><code>tx.send(value)</code> 把值送出去（value 會被 move），<code>rx.recv()</code> 在另一端接收（會阻塞直到收到）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15716,7 +15726,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;收到：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">received</span><span class="p">);</span>
 </code></pre></div>
 
-<h4 id="_877">多個發送端</h4>
+<h4 id="_878">多個發送端</h4>
 <p>用 <code>tx.clone()</code> 產生新的發送端：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15737,7 +15747,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_878">什麼時候結束</h4>
+<h4 id="_879">什麼時候結束</h4>
 <p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會先把還沒收的訊息全部收完，收完之後再呼叫 <code>recv()</code> 才會回傳 <code>Err</code>。用 <code>for msg in rx</code> 迴圈也一樣——先把剩餘的訊息全部跑完，然後才結束。這是判斷「沒有人會再發送了，而且所有訊息都已經處理完了」的方式。</p>
 <p>注意上面的例子裡的 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
 <h4 id="channel-vs">channel vs 共享記憶體</h4>
@@ -15746,7 +15756,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong>多個執行緒需要反覆讀寫同一份資料</strong>（例如共用的計數器、共用的快取）→ Mutex / RwLock 比較直接</li>
 <li><strong>一邊產生資料、一邊消費資料</strong>的流水線關係 → channel 更自然。資料的所有權直接轉移，不需要鎖，也不存在忘了放鎖的問題</li>
 </ul>
-<h3 id="_879">範例程式碼</h3>
+<h3 id="_880">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15777,7 +15787,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_880">重點整理</h3>
+<h3 id="_881">重點整理</h3>
 <ul>
 <li>channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
 <li><code>mpsc::channel()</code> 建立發送端 tx 和接收端 rx</li>
@@ -15788,13 +15798,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="10_1">第八章第 10 集：死鎖</h2>
-<h3 id="_881">本集目標</h3>
+<h3 id="_882">本集目標</h3>
 <p>理解死鎖是什麼、為什麼 Rust 的編譯器擋不住它、以及如何避免。</p>
-<h3 id="_882">概念說明</h3>
-<h4 id="_883">什麼是死鎖</h4>
+<h3 id="_883">概念說明</h3>
+<h4 id="_884">什麼是死鎖</h4>
 <p>死鎖（deadlock）就是兩個或多個執行緒互相等待對方放鎖，結果誰都動不了，程式永遠卡住。</p>
 <p>最經典的情況：執行緒 A 拿著鎖 1 等鎖 2，執行緒 B 拿著鎖 2 等鎖 1。兩邊永遠等下去。</p>
-<h4 id="_884">程式碼示範</h4>
+<h4 id="_885">程式碼示範</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15827,9 +15837,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>執行緒 A 先拿到鎖 1，然後想拿鎖 2。但鎖 2 被執行緒 B 拿走了，B 又在等鎖 1——結果誰都走不動。</p>
-<h4 id="_885">編譯器不會擋死鎖</h4>
+<h4 id="_886">編譯器不會擋死鎖</h4>
 <p>Send 和 Sync 保護的是<strong>資料競爭</strong>（data race）——多個執行緒同時存取資料造成的未定義行為。死鎖是<strong>邏輯問題</strong>，程式不會壞掉或出現未定義行為，只是永遠卡住。Rust 的編譯器無法偵測死鎖。</p>
-<h4 id="_886">同一個執行緒也會死鎖</h4>
+<h4 id="_887">同一個執行緒也會死鎖</h4>
 <p>就算只有一個執行緒，對同一個 Mutex lock 兩次也會死鎖——因為第一次 lock 還沒放開，第二次 lock 就永遠等不到：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
 
@@ -15840,13 +15850,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_887">如何避免</h4>
+<h4 id="_888">如何避免</h4>
 <ul>
 <li><strong>所有執行緒以相同順序取鎖</strong>：如果每個人都先拿鎖 1 再拿鎖 2，就不會互相卡住</li>
 <li><strong>減少同時持有多個鎖</strong>：能用一個鎖解決就不要用兩個</li>
 <li><strong>guard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
 </ul>
-<h3 id="_888">範例程式碼</h3>
+<h3 id="_889">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15878,7 +15888,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_889">重點整理</h3>
+<h3 id="_890">重點整理</h3>
 <ul>
 <li>死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住</li>
 <li>Rust 的編譯器不會擋死鎖——Send/Sync 保護的是資料競爭，死鎖是邏輯問題</li>
@@ -15887,9 +15897,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="11-threadscope">第八章第 11 集：thread::scope 簡介</h2>
-<h3 id="_890">本集目標</h3>
+<h3 id="_891">本集目標</h3>
 <p>學會用 <code>thread::scope</code> 建立有限生命週期的執行緒，不需要 move 或 Arc 就能借用外部資料。</p>
-<h3 id="_891">概念說明</h3>
+<h3 id="_892">概念說明</h3>
 <h4 id="threadspawn">thread::spawn 的限制</h4>
 <p>前面用 <code>thread::spawn</code> 的時候，閉包裡要用外面的變數都得 move 進去，或用 Arc 包起來。這是因為 spawn 出來的執行緒可能活得比呼叫它的函數還久——Rust 沒辦法保證資料在執行緒結束前不會被丟掉。</p>
 <h4 id="spawn_2">為什麼 spawn 不能借用</h4>
@@ -15941,7 +15951,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>不需要 Arc、不需要 clone、不需要 move、不需要手動 join。</p>
-<h3 id="_892">範例程式碼</h3>
+<h3 id="_893">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -15976,7 +15986,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_893">重點整理</h3>
+<h3 id="_894">重點整理</h3>
 <ul>
 <li><code>thread::spawn</code> 要求 <code>'static</code>，所以閉包不能借用局部變數</li>
 <li><code>thread::scope</code> 保證所有 scoped thread 在 scope 結束前 join，因此可以安全借用外部資料</li>
