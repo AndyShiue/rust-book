@@ -15191,7 +15191,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_847">概念說明</h3>
 <h4 id="_848">為什麼需要額外的保護</h4>
 <p>還記得第四章一開頭的鑰匙圈比喻嗎？現在你應該能理解鑰匙就是指標了。</p>
-<p>Rust 的所有權規則以及借用規則——例如同時不能有兩個 <code>&amp;mut</code>——的原因之一就是為了防止兩個指標同時讀寫同一個位址，造成前面提到過的<strong>資料競爭（data race）</strong>。舉個具體的例子：假設有一個 <code>i32</code> 值是 0，執行緒 A 和執行緒 B 各自透過指標對它加 1。你預期結果是 2，但實際上可能是這樣：</p>
+<p>Rust 有所有權規則以及借用規則——例如同時不能有兩個 <code>&amp;mut</code>——的原因之一就是為了防止一個位址的值被同時讀寫，造成前面提到過的<strong>資料競爭（data race）</strong>。舉個具體的例子：假設有一個 <code>i32</code> 值是 0，執行緒 A 和執行緒 B 各自透過指標對它加 1。你預期結果是 2，但實際上可能是這樣：</p>
 <ol>
 <li>執行緒 A 讀取值：0</li>
 <li>執行緒 B 也讀取值：0</li>
@@ -15199,8 +15199,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>執行緒 B 也把 0 + 1 = 1 寫回去</li>
 </ol>
 <p>結果是 1，不是 2。兩次加 1 只生效了一次。</p>
-<p>注意這裡的關鍵是兩個執行緒同時對同一份資料做讀寫——事實上，只要有共用的資料而且有人在寫，就可能出事。如果只是把 <code>i32</code> 的值丟到另一個執行緒，<code>i32</code> 是 Copy 的，會直接複製一份過去，兩邊各自操作自己的副本，不會互相干擾。</p>
-<p>但光有所有權和借用規則，在多執行緒下還不夠。Rust 另外用兩個 trait——<code>Send</code> 和 <code>Sync</code>——來處理多執行緒的安全問題：實作了這些 trait 的型別能在多執行緒之間傳遞，沒有實作的則會被編譯器擋住。</p>
+<p>注意這裡的關鍵是兩個執行緒同時對同一份資料做讀寫——事實上，只要有共用的資料而且有人在寫，就可能出事。即使另一方只是在讀，也可能讀到還沒完全完成寫入的資料。</p>
+<p>Rust 的所有權和借用規則能防止很多問題——例如同時不能有兩個 <code>&amp;mut</code>，<code>&amp;</code> 和 <code>&amp;mut</code> 也不能同時存在。但在多執行緒下，光靠這些還不夠。比如上面的例子：如果只是把 <code>i32</code> 的值傳給另一個執行緒，<code>i32</code> 是 Copy 的，會直接複製一份過去，兩邊各自操作自己的副本，不會出事。但有些型別不是這麼單純——把它 move 過去之後，原本的執行緒可能還持有共用的資料。哪些型別可以安全地跨執行緒？哪些不行？Rust 用兩個 trait——<code>Send</code> 和 <code>Sync</code>——來回答這個問題。</p>
 <h4 id="spawn">spawn 實際上在做什麼</h4>
 <p>上一集用 <code>thread::spawn</code> 建立執行緒的時候，我們傳入了一個閉包。閉包會捕捉外部變數——而 spawn 實際上就是<strong>把這些捕捉的變數送到另一個執行緒去</strong>。這才是我們真正要關心的事：哪些東西可以安全地送過去？</p>
 <h4 id="send">Send</h4>
@@ -15279,7 +15279,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>Send</code> = 值可以安全地 move 到另一個執行緒</li>
 <li><code>Sync</code> = <code>&amp;T</code> 可以安全地在多個執行緒之間共享（<code>T: Sync</code> 等價於 <code>&amp;T: Send</code>）</li>
 <li>Sync 通常蘊含 Send——能被多執行緒同時讀，搬過去只會更安全</li>
-<li>編譯器自動推導 Send / Sync，不用手動實作也不用死背</li>
+<li>編譯器自動推導 Send / Sync，不用手</li>
 </ul>
 <hr />
 <h2 id="4-refcell">第八章第 4 集：RefCell 在多執行緒</h2>
