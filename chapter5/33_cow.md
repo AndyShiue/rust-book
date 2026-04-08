@@ -113,4 +113,4 @@ fn main() {
 - `into_owned()`：不管哪種都轉成擁有的值
 - 適合用在「大部分時候不修改，偶爾需要修改」的場景
 
-恭喜你完成了第五章！🎉 這一章的內容非常紮實——從泛型、trait bound、生命週期，到 Box、Rc、Deref、Cell、RefCell 等智慧指標，再到 Display、Associated Type、Cow。這些是 Rust 型別系統最強大的武器，也是讀懂標準庫原始碼的基礎。下一章我們將進入閉包與迭代器——Rust 最優雅的函數式程式設計風格！
+恭喜你完成了第五章！🎉 這一章的內容非常紮實——從泛型、trait bound、生命週期，到 Box、Rc 等智慧指標與 Deref 機制，再到 Cell、RefCell 的 interior mutability，以及 Display、Associated Type、Cow。這些是 Rust 型別系統最強大的武器，也是讀懂標準庫原始碼的基礎。下一章我們將進入閉包與迭代器——Rust 最優雅的函數式程式設計風格！
