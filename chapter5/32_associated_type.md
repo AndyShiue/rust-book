@@ -26,6 +26,7 @@ Associated type 解決了這個問題：
 ```rust
 trait Container {
     type Item;
+    // 要使用 Self 的 associated type，用 Self::Type 的語法
     fn first(&self) -> Option<&Self::Item>;
 }
 ```
