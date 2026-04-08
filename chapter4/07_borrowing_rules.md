@@ -47,7 +47,7 @@ let r3 = &x;
 println!("{} {} {}", r1, r2, r3); // 完全OK
 ```
 
-### 懸垂參考（Dangling Reference）
+### 懸垂參考（dangling reference）
 
 還有一個重要的規則：**你不能回傳一個區域變數的參考**。
 

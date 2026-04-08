@@ -38,7 +38,7 @@ fn main() {
 x = 6
 ```
 
-### Shadowing vs mut：最大的差別
+### shadowing vs mut：最大的差別
 
 「等等，這跟 `mut` 有什麼不一樣？不都是改值嗎？」
 
@@ -90,7 +90,7 @@ input + 1 = 43
 
 如果沒有 shadowing，你就得取兩個不同的名字，像 `input_str` 和 `input_num`，有點囉嗦。
 
-### Shadowing 和作用域
+### shadowing 和作用域
 
 還記得第一章第 9 集學的作用域嗎？Shadowing 在大括號 `{}` 裡面也能用，而且出了大括號，遮蔽就會結束，舊的變數會「回來」：
 

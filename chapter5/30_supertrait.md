@@ -7,7 +7,7 @@
 
 有時候一個 trait 需要建立在另一個 trait 的基礎之上。
 
-### Supertrait 語法
+### supertrait 語法
 
 ```rust
 trait Summarize: std::fmt::Display {
@@ -19,7 +19,7 @@ trait Summarize: std::fmt::Display {
 
 好處是在 Summarize 的預設實作或使用者程式碼裡，可以確定 `self` 一定有 Display 的功能。
 
-注意：**實作 Summarize 不會自動幫你實作 Display**。你必須自己手動 impl Display，然後才能 impl Summarize。Supertrait 只是一個「前提條件」，不是「自動贈送」。
+注意：**實作 Summarize 不會自動幫你實作 Display**。你必須自己手動 impl Display，然後才能 impl Summarize。supertrait 只是一個「前提條件」，不是「自動贈送」。
 
 ### Copy: Clone
 

@@ -7,7 +7,7 @@
 
 第 13 集我們學了 `T: Clone`，要求 T 必須實作 Clone。但如果你想同時要求 T 實作多個 trait 呢？
 
-### 多個 Trait Bound
+### 多個 trait bound
 
 用 `+` 把多個 trait bound 串起來：
 

@@ -31,7 +31,7 @@ let long = "這是一段很長的句子，\
 // 結果："這是一段很長的句子，但其實只有一行。"
 ```
 
-### Raw string literal
+### raw string literal
 
 有時候字串裡有很多反斜線（例如 Windows 路徑），每個都要跳脫很煩。`r"..."` 語法讓你完全不需要跳脫：
 
@@ -92,7 +92,7 @@ fn main() {
     "##;
     println!("程式碼範例：{}", code_sample);
 
-    // Raw string 也能多行
+    // raw string 也能多行
     let html = r#"
 <html>
     <body>
@@ -111,4 +111,4 @@ fn main() {
 - `r"..."` 是 raw string，不處理任何跳脫字元（`\n`、`\\` 等都照原樣保留）
 - `r#"..."#` 讓 raw string 裡可以包含雙引號
 - `#` 的層數可以增加（`r##"..."##`、`r###"..."###`），只要前後一致
-- Raw string 特別適合 Windows 路徑、正則表達式、JSON、嵌入程式碼等場景
+- raw string 特別適合 Windows 路徑、正則表達式、JSON、嵌入程式碼等場景

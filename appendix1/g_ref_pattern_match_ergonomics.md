@@ -37,7 +37,7 @@ match opt {
 
 如果不寫 `ref`，`s` 會拿走 `String` 的所有權，之後就不能再用 `opt` 了。
 
-### Match ergonomics（Rust 1.26+）
+### match ergonomics（Rust 1.26+）
 
 從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個**參考**的時候，裡面的綁定會自動變成參考：
 

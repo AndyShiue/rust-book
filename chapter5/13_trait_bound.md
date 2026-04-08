@@ -17,7 +17,7 @@ fn duplicate<T>(x: &T) -> (T, T) {
 
 這很合理——`T` 可以是任何型別，萬一有個型別沒有實作 Clone 呢？
 
-### Trait Bound：限制 T 的能力
+### trait bound：限制 T 的能力
 
 解法是加上 **trait bound**，告訴 Rust「T 必須實作 Clone」：
 
@@ -31,7 +31,7 @@ fn duplicate<T: Clone>(x: &T) -> (T, T) {
 
 ### 到處都能加 trait bound
 
-Trait bound 不只能用在函數上。幾乎所有有泛型參數的地方都能加——struct、enum、impl 定義裡都可以：
+trait bound 不只能用在函數上。幾乎所有有泛型參數的地方都能加——struct、enum、impl 定義裡都可以：
 
 ```rust
 // struct 上：只有 Clone 的型別才能放進 Wrapper
@@ -116,8 +116,8 @@ fn main() {
 ```
 
 ## 重點整理
-- **Trait bound** `T: Clone` 限制 T 必須實作特定 trait
-- Trait bound 可以加在函數、struct、enum、impl 等各種泛型參數上
+- **trait bound** `T: Clone` 限制 T 必須實作特定 trait
+- trait bound 可以加在函數、struct、enum、impl 等各種泛型參數上
 - 沒有 trait bound 的話，泛型函數/方法不能假設 T 有任何能力
 - **條件式 impl**：`impl<T: Clone> Pair<T> { ... }` 只在 T 符合條件時提供方法
 - `Pair<Pair<i32>>` 無法呼叫 `to_tuple()`，因為 `Pair` 沒有 derive Clone

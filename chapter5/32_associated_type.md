@@ -19,9 +19,9 @@ trait Container<T> {
 
 但這意味著同一個型別可以同時實作 `Container<i32>` 和 `Container<String>`——通常容器只會有一種元素型別。
 
-### Associated Type：一對一的關係
+### associated Type：一對一的關係
 
-Associated type 解決了這個問題：
+associated type 解決了這個問題：
 
 ```rust
 trait Container {
@@ -59,7 +59,7 @@ impl Container for NumberList {
 
 用哪個？如果「確定了所有 input 之後，這個型別就只有一個合理的答案」，把它放在 associated type（output）。如果「同一組 input 可以搭配多種不同答案」，把它放在角括號裡（input）。
 
-### 在 Trait Bound 中指定 Associated Type
+### 在 trait bound 中指定 associated Type
 
 你可以在 trait bound 裡指定 associated type 的具體型別：
 

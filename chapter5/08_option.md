@@ -46,7 +46,7 @@ match maybe_value {
 
 因為 `Option`、`Some`、`None` 實在太常用了，Rust 預設就把它們引入到每個檔案裡。所以你不需要寫 `Option::Some(42)`，直接寫 `Some(42)` 就好。
 
-### 零成本的秘密：Niche Optimization
+### 零成本的秘密：niche optimization
 
 一個有趣的小知識：`Option<&T>` 和普通的參考 `&T` 佔用一樣大的記憶體！
 
@@ -90,4 +90,4 @@ fn main() {
 - `Some(T)` 表示有值，`None` 表示沒有值
 - 編譯器強制你處理 `None` 的情況，runtime 不會有 null pointer exception
 - `Option`、`Some`、`None` 太常用，Rust 預設就引入了，不需要額外路徑
-- Niche optimization：`Option<&T>` 和 `&T` 大小相同，零額外成本
+- niche optimization：`Option<&T>` 和 `&T` 大小相同，零額外成本

@@ -63,7 +63,7 @@ println!("{}", add_offset(5));     // 15
 
 根據閉包**怎麼使用**捕捉到的變數，Rust 會把閉包分成不同的種類——有些閉包只能呼叫一次，有些可以呼叫很多次。這一集先看兩個例子感受一下差別，下幾集再深入解釋。
 
-### Result::map —— FnOnce 的例子
+### Result 的 map —— FnOnce 的例子
 
 標準庫很多方法都接受閉包。還記得第五章的 `Result<T, E>` 嗎？它有一個 `map` 方法，可以把 `Ok` 裡的值做轉換。`map` 只需要呼叫閉包一次，所以它接受 `FnOnce`——「至少能呼叫一次」就夠了。
 
@@ -83,7 +83,7 @@ println!("{:?}", message);  // Ok("結果是：42")
 
 這個閉包把 `prefix` move 進來了，呼叫一次之後 `prefix` 就沒了。但沒關係，`map` 本來就只呼叫接收的函數一次。
 
-### Vec::retain —— FnMut 的例子
+### Vec 的 retain —— FnMut 的例子
 
 `Vec<T>` 的 `retain` 方法會保留符合條件的元素，移除不符合的。它接受一個閉包，這個閉包接收 `&T`（每個元素的參考）、回傳 `bool`（true 保留、false 移除）。因為 `retain` 要對每個元素都呼叫一次，所以它要求 `FnMut`——「可以多次呼叫」。
 
@@ -108,7 +108,7 @@ println!("{:?}，移除了 {} 個", numbers, removed_count);
 
 ### 如果把 FnOnce 傳給 retain？
 
-上面 `Result::map` 那種會 move 變數的閉包，能傳給 `retain` 嗎？
+上面傳給 `Result` 的 `map` 那種會 move 變數的閉包能傳給 `retain` 嗎？
 
 ```rust
 let mut items = vec![1, 2, 3];
@@ -152,7 +152,7 @@ fn main() {
     let add_base = |x| x + base;
     println!("add_base(7) = {}", add_base(7));
 
-    // Result::map（FnOnce）
+    // Result 的 map（FnOnce）
     let result: Result<i32, String> = Ok(21);
     let doubled = result.map(|x| x * 2);
     println!("doubled = {:?}", doubled);
@@ -161,7 +161,7 @@ fn main() {
     let still_err = err_result.map(|x| x * 2);
     println!("still_err = {:?}", still_err);
 
-    // Vec::retain（FnMut）
+    // Vec 的 retain（FnMut）
     let mut scores = vec![55, 72, 88, 43, 91, 60];
     scores.retain(|s| *s >= 60);
     println!("及格分數：{:?}", scores);
@@ -179,7 +179,7 @@ fn main() {
 ## 重點整理
 - 閉包用 `|參數| 表達式` 語法，可以省略型別標註讓 Rust 推導
 - 閉包最大的特色是能**捕捉外部變數**，這是函數指標做不到的
-- `Result::map` 接受 `FnOnce` 閉包——只需呼叫一次
-- `Vec::retain` 接受 `FnMut` 閉包——需要多次呼叫
+- `Result` 的 `map` 接受 `FnOnce` 閉包——只需呼叫一次
+- `Vec` 的 `retain` 接受 `FnMut` 閉包——需要多次呼叫
 - 如果閉包只能呼叫一次（FnOnce），就不能傳給需要多次呼叫的方法
 - 不捕捉外部變數的閉包可以自動轉型成函數指標 `fn`

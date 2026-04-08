@@ -5,7 +5,7 @@
 
 ## 概念說明
 
-### Interior mutability 是多執行緒的一大威脅
+### interior mutability 是多執行緒的一大威脅
 
 第五章學過，RefCell 能透過 `&T`（不可變參考）修改內部的值。在單執行緒的世界裡，RefCell 會在執行期檢查借用規則，不會出問題。
 

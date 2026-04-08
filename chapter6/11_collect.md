@@ -17,22 +17,6 @@ let v: Vec<i32> = (1..=5).collect();
 
 你可能注意到了——`1..=5` 是第一章學的 range 語法，它也實作了 `Iterator`！所以可以直接對它呼叫 `.collect()` 和其他迭代器方法。
 
-### Turbofish 語法
-
-`.collect()` 的回傳型別取決於你要收集成什麼。Rust 通常需要你告訴它目標型別。有兩種方式：
-
-**方式一：型別標註**
-```rust
-let v: Vec<i32> = (1..=5).collect();
-```
-
-**方式二：Turbofish `::<>`**
-```rust
-let v = (1..=5).collect::<Vec<i32>>();
-```
-
-兩種寫法效果一樣，看個人偏好。鏈式呼叫的時候 turbofish 比較方便，因為不用另外宣告變數。
-
 ### 收集成 String
 
 `collect()` 不只能收集成 Vec。如果迭代器產出的是 `char` 或 `&str`，可以直接收集成 `String`：

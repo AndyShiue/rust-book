@@ -191,4 +191,4 @@ fn main() {
 - `DerefMut` 是 `Deref` 的可變版本；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
 - Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）
 - method call 的自動解參考是獨立的機制：用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*` 或兩者組合來找到對應的方法
-- 方法同名時外層優先——`Rc` 的 `clone` 和 `String` 的 `clone` 是不同的操作
+- 方法同名時外層優先——`Rc` 的 `clone` 優先於 `String` 的 `clone`

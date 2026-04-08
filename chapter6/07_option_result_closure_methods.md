@@ -145,22 +145,22 @@ fn find_even(numbers: &[i32]) -> Option<i32> {
 }
 
 fn main() {
-    // Option::map
+    // Option 的 map
     let maybe_num: Option<i32> = Some(21);
     let doubled = maybe_num.map(|n| n * 2);
     println!("map: {:?}", doubled);
 
-    // Option::and_then
+    // Option 的 and_then
     let result = maybe_num.and_then(|n| {
         if n > 10 { Some(n - 10) } else { None }
     });
     println!("and_then: {:?}", result);
 
-    // Option::filter
+    // Option 的 filter
     let even = maybe_num.filter(|n| n % 2 == 0);
     println!("filter(偶數): {:?}", even);
 
-    // Option::unwrap_or_else
+    // Option 的 unwrap_or_else
     let none_value: Option<i32> = None;
     let default = none_value.unwrap_or_else(|| {
         println!("計算預設值中...");
@@ -179,7 +179,7 @@ fn main() {
     let negative = parse_and_double("-5");
     println!("parse_and_double(\"-5\") = {:?}", negative);
 
-    // Result::unwrap_or_else
+    // Result 的 unwrap_or_else
     let safe_value = parse_and_double("oops").unwrap_or_else(|e| {
         println!("錯誤處理：{}", e);
         0
@@ -197,10 +197,10 @@ fn main() {
 ```
 
 ## 重點整理
-- `Option::map` / `Result::map` 對內部值做轉換，None / Err 時不執行
+- `Option` 的 `map` 和 `Result` 的 `map` 對內部值做轉換，None / Err 時不執行
 - `and_then` 用於閉包本身也回傳 Option / Result 的情況，避免巢狀
 - `unwrap_or_else` 懶惰計算預設值，只在 None / Err 時才執行閉包
-- `Option::filter` 根據條件決定保留 Some 或轉成 None
-- `Result::map_err` 可以轉換錯誤型別，方便錯誤處理鏈
+- `Option` 的 `filter` 根據條件決定保留 Some 或轉成 None
+- `Result` 的 `map_err` 可以轉換錯誤型別，方便錯誤處理鏈
 - 這些方法可以鏈式呼叫，比層層 match 更簡潔易讀
 - 你可能已經注意到：光看型別簽名就能猜出方法在做什麼（Option 的 `map` 接受 `FnOnce(T) -> U`，回傳 `Option<U>`）。這是函數式程式設計的一大特色——型別本身就是文件

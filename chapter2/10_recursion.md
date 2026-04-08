@@ -49,7 +49,7 @@ fn main() {
 
 每個遞迴函數都需要兩樣東西：
 
-**1. Base case（基底情況）**：什麼時候停下來
+**1. base case（基底情況）**：什麼時候停下來
 
 ```rust
 if n <= 1 {
@@ -57,7 +57,7 @@ if n <= 1 {
 }
 ```
 
-**2. Recursive case（遞迴情況）**：怎麼把問題縮小
+**2. recursive case（遞迴情況）**：怎麼把問題縮小
 
 ```rust
 n * factorial(n - 1)  // 把問題縮小：n 變成 n-1

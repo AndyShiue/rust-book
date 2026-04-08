@@ -27,7 +27,7 @@ struct Excerpt<'a> {
 
 `'a` 告訴 Rust：「這個 struct 的壽命不能超過它借用的資料。」
 
-Enum 也一樣——如果 variant 攜帶參考，就需要生命週期：
+enum 也一樣——如果 variant 攜帶參考，就需要生命週期：
 
 ```rust
 enum Token<'a> {

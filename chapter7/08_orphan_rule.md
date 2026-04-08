@@ -20,7 +20,7 @@ impl fmt::Display for Vec<i32> {
 
 編譯器會直接拒絕你。為什麼？
 
-### Orphan Rule（孤兒規則）
+### orphan rule（孤兒規則）
 
 Rust 有一條規則：
 
@@ -38,7 +38,7 @@ Rust 有一條規則：
 - Crate B 也為 `Vec<i32>` 實作了 `Display`，印出 `1 | 2 | 3`
 - 你的程式同時用了 A 和 B……編譯器要用哪一個？
 
-這就是衝突。Orphan rule 從根本上避免了這個問題。
+這就是衝突。orphan rule 從根本上避免了這個問題。
 
 ### 合法的情況
 
@@ -69,7 +69,7 @@ impl Describable for Vec<i32> {
 }
 ```
 
-### Newtype Pattern（繞過限制的方法）
+### newtype pattern（繞過限制的方法）
 
 如果你真的需要為外部型別實作外部 trait，可以用 **newtype pattern**——建立一個 tuple struct 把外部型別包起來：
 
@@ -95,7 +95,7 @@ impl fmt::Display for MyVec {
 ```rust
 use std::fmt;
 
-// Newtype pattern：用自己的 struct 包住外部型別
+// newtype pattern：用自己的 struct 包住外部型別
 struct Scores(Vec<i32>);
 
 impl Scores {
@@ -150,10 +150,10 @@ impl From<String> for Vec<i32> { ... }
 
 ## 重點整理
 
-- **Orphan rule**：要 impl trait，trait 或型別至少有一個必須是你的 crate 定義的
+- **orphan rule**：要 impl trait，trait 或型別至少有一個必須是你的 crate 定義的
 - 「你的型別 + 外部 trait」✅ 合法
 - 「外部型別 + 你的 trait」✅ 合法
 - 「外部型別 + 外部 trait」❌ 不合法
 - 這個規則是為了防止不同 crate 之間的 impl 衝突
-- **Newtype pattern**：用 `struct MyWrapper(OriginalType)` 把外部型別包起來，就變成你的型別了
+- **newtype pattern**：用 `struct MyWrapper(OriginalType)` 把外部型別包起來，就變成你的型別了
 - 多參數 trait 的 orphan rule 遠比上面講的更複雜，詳見官方文件
