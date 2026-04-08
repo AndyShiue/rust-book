@@ -10144,6 +10144,7 @@ c 的總和：7
 <h3 id="_609">重點整理</h3>
 <ul>
 <li><code>type Item;</code> 在 trait 中定義 associated type</li>
+<li>用 <code>Self::Item</code> 的語法可以在 trait 定義中讀取 Self 的 associated type</li>
 <li>實作時用 <code>type Item = i32;</code> 指定具體型別</li>
 <li><strong>input vs output</strong>：Self 和角括號參數是 input，associated type 是 output。input 決定 output</li>
 <li>在 trait bound 中用 <code>Container&lt;Item = i32&gt;</code> 指定 associated type</li>

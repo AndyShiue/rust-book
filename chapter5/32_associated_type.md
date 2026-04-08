@@ -160,6 +160,7 @@ fn main() {
 
 ## 重點整理
 - `type Item;` 在 trait 中定義 associated type
+- 用 `Self::Item` 的語法可以在 trait 定義中讀取 Self 的 associated type
 - 實作時用 `type Item = i32;` 指定具體型別
 - **input vs output**：Self 和角括號參數是 input，associated type 是 output。input 決定 output
 - 在 trait bound 中用 `Container<Item = i32>` 指定 associated type
