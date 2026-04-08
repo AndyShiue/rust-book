@@ -757,7 +757,7 @@
 
 <p>這次答案就是 <strong>20</strong> 了。括號裡面的會先算，<code>2 + 3 = 5</code>，然後 <code>5 * 4 = 20</code>。</p>
 <h4 id="_34">小訣竅</h4>
-<p>不確定順序的時候，加括號就對了。括號不只是改順序，也讓程式碼更好讀。就算順序本來就對，加個括號讓意圖更明確也沒什麼不好。</p>
+<p>不確定順序的時候，加括號就對了。括號不只是改順序，有時也讓程式碼更好讀。就算順序本來就對，加個括號讓意圖更明確也沒什麼不好。</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="c1">// 這兩行結果一樣，但第二行更清楚</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
@@ -919,9 +919,9 @@
 <h3 id="_51">本集目標</h3>
 <p>了解大括號 <code>{}</code> 創造的「範圍」，以及為什麼變數出了大括號就不能用了。</p>
 <h3 id="_52">正文</h3>
-<p>今天來聊一個很重要的概念——<strong>作用域</strong>（scope）。</p>
+<p>這集來聊一個很重要的概念——<strong>作用域</strong>（scope）。</p>
 <h4 id="_53">什麼是作用域？</h4>
-<p>你可以把大括號 <code>{}</code> 想成一個房間。在房間裡面建立的東西，出了房間就消失了。</p>
+<p>你可以把大括號 <code>{}</code> 想成一個房間。在房間裡面建立的東西，出了房間就看不到了。</p>
 <p>來看這個例子：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="p">{</span><span class="w"></span>
@@ -948,11 +948,11 @@
 </code></pre></div>
 
 <p>Rust 在跟你說：「我找不到 <code>y</code> 這個東西。」</p>
-<p>為什麼？因為 <code>y</code> 是在那對大括號裡面建立的，一出了大括號，<code>y</code> 就「消失」了。就像你在一個房間裡放了一張椅子，關上門之後，走廊上是看不到那張椅子的。</p>
+<p>為什麼？因為 <code>y</code> 是在那對大括號裡面建立的，一出了大括號，<code>y</code> 就不見了。就像你在一個房間裡放了一張椅子，關上門之後，走廊上是看不到那張椅子的。</p>
 <h4 id="_55">為什麼要有作用域？</h4>
 <p>這其實是一件好事。它讓你的變數不會在不該出現的地方亂跑。想像一下如果每個變數在程式的任何地方都能用，那程式一大起來就會超級混亂。作用域幫你把東西整理得有條有理。</p>
 <h4 id="_56">不只是獨立的大括號</h4>
-<p>上一集教的 <code>if</code> 也有大括號對吧？其實 <code>if</code> 的大括號也是一個作用域。之後我們會學到迴圈、函數等等，只要看到 <code>{}</code>，裡面就是一個作用域。這是 Rust 裡面一個很統一的規則。</p>
+<p>上一集教的 <code>if</code> 也有大括號對吧？其實 <code>if</code> 的大括號也是一個作用域，外面看不到裡面的變數。之後我們會學到迴圈、函數等等，只要看到 <code>{}</code>，裡面就是一個作用域。這是 Rust 裡面一個很統一的規則。</p>
 <h3 id="_57">重點整理</h3>
 <ul>
 <li>每對大括號 <code>{}</code> 都會建立一個作用域（scope）</li>
@@ -1138,7 +1138,7 @@
 <p>Rust 在跟你說：「<code>x</code> 是不可變的，你不能再給它新的值。」</p>
 <h4 id="_77">等等，為什麼不行？</h4>
 <p>在很多程式語言裡，變數就是可以隨便改的。但 Rust 的態度是：<strong>如果你不打算改它，就別讓它可以被改</strong>。</p>
-<p>為什麼？因為如果一個值你知道它不會變，你在讀程式的時候就不用擔心它被偷改了。這在大型程式裡超級重要。</p>
+<p>為什麼？因為如果你知道一個值不會變，你在讀程式的時候就不用擔心它被偷改了。這在大型程式裡很重要。</p>
 <h4 id="mut">要改的話，加 mut</h4>
 <p>如果你確實需要改變值，加上 <code>mut</code>（mutable 的縮寫，意思是「可變的」）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
@@ -1306,7 +1306,7 @@ Andy
 <p>學會把使用者輸入的文字轉換成數字。</p>
 <h3 id="_95">正文</h3>
 <p>和上一集一樣，這集的語法先照抄就好，不用完全理解每一行在做什麼。之後學到更多概念會回來解釋。 </p>
-<p>上一集我們學了怎麼讀取使用者的輸入，但讀進來的東西是<strong>文字</strong>。如果使用者輸入了 <code>"42"</code>，對 Rust 來說那是一串文字，不是數字 42。</p>
+<p>上一集我們學了怎麼讀取使用者的輸入，但讀進來的東西是<strong>文字</strong>。如果使用者輸入了 <code>42</code>，對 Rust 來說那是一串文字，不是數字 42。</p>
 <p>你不能拿文字去做加減乘除，所以我們需要把它「轉換」成數字。</p>
 <h4 id="_96">文字轉數字</h4>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
