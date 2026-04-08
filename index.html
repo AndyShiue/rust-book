@@ -7132,7 +7132,7 @@ c 的總和：7
 
 <p>就像 <code>&amp;String</code> 會自動轉成 <code>&amp;str</code>，<code>i32</code> 的 <code>&amp;Vec</code> 也會自動轉成 <code>&amp;[i32]</code>。</p>
 <h4 id="for_1">for 迴圈與所有權</h4>
-<p>這是很重要的一點：<code>for</code> 迴圈走訪 Vec 時，有兩種寫法：</p>
+<p>這是很重要的一點：<code>for</code> 迴圈走訪 Vec 時，可以選擇要 move 還是 borrow：</p>
 <p><strong><code>for x in v</code>——move！</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
 <span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="p">{</span>

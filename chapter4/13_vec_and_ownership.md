@@ -54,7 +54,7 @@ println!("v 還在：{:?}", v);
 
 ### for 迴圈與所有權
 
-這是很重要的一點：`for` 迴圈走訪 Vec 時，有兩種寫法：
+這是很重要的一點：`for` 迴圈走訪 Vec 時，可以選擇要 move 還是 borrow：
 
 **`for x in v`——move！**
 
