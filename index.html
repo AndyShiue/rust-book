@@ -6476,7 +6476,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p>這叫做<strong>懸垂參考</strong>——參考指向的資料已經消失了，如果 Rust 允許這樣做，你就會讀到垃圾資料。Rust 的編譯器會在編譯時就阻止這種事情發生。</p>
+<p>這叫做<strong>懸垂參考</strong>——參考指向的資料在函數結束後就消失了，如果 Rust 允許這樣做，你就會讀到垃圾資料。Rust 的編譯器會在編譯時就阻止這種事情發生。</p>
 <p>至於 Rust 是怎麼追蹤「參考還有沒有效」的，那就是之後會學到的<strong>生命週期（lifetime）</strong>概念了。這裡先知道「不能回傳區域變數的參考」就好。</p>
 <h3 id="_415">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug)]</span>
