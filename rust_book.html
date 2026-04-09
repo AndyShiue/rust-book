@@ -5572,7 +5572,7 @@ c 的總和：7
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">);</span>
 </code></pre></div>
 
-<p><code>Point::new</code> 看起來是不是有點眼熟？之前用 enum 的時候也是用 <code>::</code> 啊！像 <code>Color::Red</code>。概念是一樣的——<code>::</code> 表示「某個型別底下的東西」。</p>
+<p><code>Point::new</code> 看起來是不是有點眼熟？之前用 enum 的時候也是用 <code>::</code> 啊！像 <code>Color::Red</code>。概念是一樣的——<code>::</code> 可以表示「某個型別底下的東西」。</p>
 <p>associated function 最常見的用途就是 <code>new</code>——作為「建構函數」來建立型別的值。</p>
 <h3 id="_369">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
@@ -5782,9 +5782,11 @@ c 的總和：7
 <li>更簡潔，尤其是型別名很長的時候</li>
 <li>如果之後改了型別名，impl 裡面不用每個地方都改</li>
 </ol>
-<p><strong>注意區分：</strong>
-- 小寫 <code>self</code>：代表「這個值本身」（method 的第一個參數）
-- 大寫 <code>Self</code>：代表「目前的型別」</p>
+<p><strong>注意區分：</strong></p>
+<ul>
+<li>小寫 <code>self</code>：代表「這個值本身」（method 的第一個參數）</li>
+<li>大寫 <code>Self</code>：代表「目前的型別」</li>
+</ul>
 <h3 id="_377">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>

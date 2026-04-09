@@ -23,7 +23,7 @@ impl Point {
 let p = Point::new(3, 7);
 ```
 
-`Point::new` 看起來是不是有點眼熟？之前用 enum 的時候也是用 `::` 啊！像 `Color::Red`。概念是一樣的——`::` 表示「某個型別底下的東西」。
+`Point::new` 看起來是不是有點眼熟？之前用 enum 的時候也是用 `::` 啊！像 `Color::Red`。概念是一樣的——`::` 可以表示「某個型別底下的東西」。
 
 associated function 最常見的用途就是 `new`——作為「建構函數」來建立型別的值。
 
