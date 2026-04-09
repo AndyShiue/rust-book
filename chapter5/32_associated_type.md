@@ -59,7 +59,20 @@ impl Container for NumberList {
 
 用哪個？如果「確定了所有 input 之後，這個型別就只有一個合理的答案」，把它放在 associated type（output）。如果「同一組 input 可以搭配多種不同答案」，把它放在角括號裡（input）。
 
-### 在 trait bound 中指定 associated Type
+### Deref 也有 associated type
+
+第 23 集學的 `Deref` trait 就用了 associated type：
+
+```rust
+trait Deref {
+    type Target;
+    fn deref(&self) -> &Self::Target;
+}
+```
+
+`type Target` 決定了解參考後得到什麼型別。例如 `Box<T>` 的實作是 `type Target = T`——解參考 `Box<i32>` 得到 `i32`。這跟 Container 的 `type Item` 是同樣的道理：一個 `Box<i32>` 解參考後只會得到 `i32`，不會得到別的東西，所以用 associated type 而不是泛型參數。
+
+### 在 trait bound 中指定 associated type
 
 你可以在 trait bound 裡指定 associated type 的具體型別：
 
@@ -163,5 +176,6 @@ fn main() {
 - 用 `Self::Item` 的語法可以在 trait 定義中讀取 Self 的 associated type
 - 實作時用 `type Item = i32;` 指定具體型別
 - **input vs output**：Self 和角括號參數是 input，associated type 是 output。input 決定 output
+- `Deref` 的 `type Target` 也是 associated type——`Box<T>` 的 `Target = T`，代表解參考後得到 `T`
 - 在 trait bound 中用 `Container<Item = i32>` 指定 associated type
 

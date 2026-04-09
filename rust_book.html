@@ -4782,7 +4782,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<p><code>1..=5</code> 代表 1、2、3、4、5（包含頭尾）。這個 <code>..=</code> 和第一章學的 <code>for i in 0..=5</code> 是一樣的語法。</p>
+<p><code>1..=5</code> 代表 1、2、3、4、5（包含頭尾）。這個 <code>..=</code> 和第一章學的 <code>for i in 0..=5</code> 是差不多的意思。</p>
 <p>除了 <code>..=</code>（包含結尾），也可以用 <code>..</code>（不包含結尾）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">match</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="o">..</span><span class="mi">50</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;不及格&quot;</span><span class="p">),</span><span class="w">    </span><span class="c1">// 0 到 49</span>
@@ -9812,6 +9812,8 @@ c 的總和：7
 <p>這表示：<strong>要實作 Copy，必須先實作 Clone。</strong> </p>
 <p>為什麼？因為 Copy 是一種「自動複製」的能力，而 Clone 是「手動複製」的能力。邏輯上，如果你能自動複製，那你也一定能手動複製。所以 Copy 要求 Clone 作為前提。</p>
 <p>這就是為什麼 <code>#[derive(Copy, Clone)]</code> 要同時寫兩個——只寫 <code>derive(Copy)</code> 會報錯，因為 Copy 要求 Clone。</p>
+<h4 id="derefmut-deref">DerefMut: Deref</h4>
+<p>第 23 集學的 <code>DerefMut</code> 也是一樣的道理——<code>DerefMut</code> 的 supertrait 是 <code>Deref</code>。要能可變解參考，前提是先要能不可變解參考。所以實作了 <code>DerefMut</code> 的型別一定也實作了 <code>Deref</code>。</p>
 <h3 id="_599">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="p">;</span>
@@ -9886,13 +9888,14 @@ c 的總和：7
 <ul>
 <li><code>trait A: B</code> 表示「要實作 A，必須先實作 B」——B 是 A 的 supertrait</li>
 <li><code>Copy: Clone</code>——Copy 要求 Clone，所以 derive 時必須同時寫兩個</li>
+<li><code>DerefMut: Deref</code>——要能可變解參考，必須先能不可變解參考</li>
 <li>實作 subtrait 不會自動實作 supertrait——你必須自己先 impl supertrait</li>
 <li>subtrait 的預設實作裡可以使用 supertrait 的方法</li>
 </ul>
 <hr />
 <h2 id="31-derive-trait">第五章第 31 集：常見的 derive trait</h2>
 <h3 id="_601">本集目標</h3>
-<p>學會 <code>PartialEq</code>、<code>Eq</code>、<code>PartialOrd</code>、<code>Ord</code> 等常見 derive trait 的用途和差別。</p>
+<p>學會 <code>PartialEq</code>、<code>Eq</code>、<code>PartialOrd</code>、<code>Ord</code>、<code>Default</code> 等常見 derive trait 的用途和差別。</p>
 <h3 id="_602">概念說明</h3>
 <p>第四章我們學了 <code>Debug</code>、<code>Clone</code>、<code>Copy</code>。Rust 標準庫還有其他可以 derive 的 trait，今天來認識最常用的幾個。</p>
 <h4 id="partialeq-eq">PartialEq 和 Eq</h4>
@@ -10049,7 +10052,16 @@ c 的總和：7
 <p>舉例來說，<code>Convert&lt;T&gt;</code> 裡的 <code>T</code> 是輸入，所以同一個 <code>Self</code> 搭配不同的 <code>T</code> 可以有不同的實作：<code>i32</code> 可以同時實作 <code>Convert&lt;String&gt;</code> 和 <code>Convert&lt;(i32,)&gt;</code>。</p>
 <p>但 <code>Container</code> 的 <code>Item</code> 是輸出。當你確定了 Self 是 <code>NumberList</code>，<code>Item</code> 就<strong>只能有一個答案</strong>——<code>i32</code>。</p>
 <p>用哪個？如果「確定了所有 input 之後，這個型別就只有一個合理的答案」，把它放在 associated type（output）。如果「同一組 input 可以搭配多種不同答案」，把它放在角括號裡（input）。</p>
-<h4 id="trait-bound-associated-type">在 trait bound 中指定 associated Type</h4>
+<h4 id="deref-associated-type">Deref 也有 associated type</h4>
+<p>第 23 集學的 <code>Deref</code> trait 就用了 associated type：</p>
+<div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Deref</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Target</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">deref</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Self</span><span class="p">::</span><span class="n">Target</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>type Target</code> 決定了解參考後得到什麼型別。例如 <code>Box&lt;T&gt;</code> 的實作是 <code>type Target = T</code>——解參考 <code>Box&lt;i32&gt;</code> 得到 <code>i32</code>。這跟 Container 的 <code>type Item</code> 是同樣的道理：一個 <code>Box&lt;i32&gt;</code> 解參考後只會得到 <code>i32</code>，不會得到別的東西，所以用 associated type 而不是泛型參數。</p>
+<h4 id="trait-bound-associated-type">在 trait bound 中指定 associated type</h4>
 <p>你可以在 trait bound 裡指定 associated type 的具體型別：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_first</span><span class="o">&lt;</span><span class="n">C</span><span class="p">:</span><span class="w"> </span><span class="nc">Container</span><span class="o">&lt;</span><span class="n">Item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">i32</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">C</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
@@ -10148,6 +10160,7 @@ c 的總和：7
 <li>用 <code>Self::Item</code> 的語法可以在 trait 定義中讀取 Self 的 associated type</li>
 <li>實作時用 <code>type Item = i32;</code> 指定具體型別</li>
 <li><strong>input vs output</strong>：Self 和角括號參數是 input，associated type 是 output。input 決定 output</li>
+<li><code>Deref</code> 的 <code>type Target</code> 也是 associated type——<code>Box&lt;T&gt;</code> 的 <code>Target = T</code>，代表解參考後得到 <code>T</code></li>
 <li>在 trait bound 中用 <code>Container&lt;Item = i32&gt;</code> 指定 associated type</li>
 </ul>
 <hr />
@@ -11062,8 +11075,10 @@ name2 現在是：Bob!!!
 <h3 id="_660">概念說明</h3>
 <p>第五章我們用 <code>match</code> 處理 <code>Option</code> 和 <code>Result</code>，每次都要展開兩個分支。現在學了閉包，很多操作可以一行搞定。</p>
 <h4 id="option_3">Option 的閉包方法</h4>
+<p>以下方法定義在 <code>Option&lt;T&gt;</code> 上，簽名中的 <code>T</code> 就是 <code>Option&lt;T&gt;</code> 的型別參數。</p>
 <h5 id="map-some">map —— 轉換 Some 裡的值</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Option&lt;U&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Option&lt;T&gt; 上的方法：</span>
+<span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Option&lt;U&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Some(10)</span>
 </code></pre></div>
@@ -11071,14 +11086,16 @@ name2 現在是：Bob!!!
 <p>如果是 <code>None</code>，<code>map</code> 什麼都不做，直接回傳 <code>None</code>。不用寫 match。</p>
 <h5 id="and_then">and_then —— 鏈式操作（可能失敗）</h5>
 <p><code>map</code> 的閉包回傳普通值，但如果你的轉換本身也可能回傳 <code>None</code> 呢？用 <code>and_then</code>：</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Option&lt;U&gt;) -&gt; Option&lt;U&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Option&lt;T&gt; 上的方法：</span>
+<span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Option&lt;U&gt;) -&gt; Option&lt;U&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">and_then</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">None</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div>
 
 <p><code>and_then</code> 的閉包回傳 <code>Option</code>，避免了 <code>Option&lt;Option&lt;T&gt;&gt;</code> 的巢狀問題。其實 <code>and_then</code> 就等於先 <code>map</code> 再 <code>flatten</code>——<code>map</code> 會產生 <code>Option&lt;Option&lt;U&gt;&gt;</code>，<code>flatten</code> 再把它攤平成 <code>Option&lt;U&gt;</code>。<code>and_then</code> 一步到位。</p>
 <h5 id="unwrap_or_else-default">unwrap_or_else —— 給一個計算 default 的閉包</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn unwrap_or_else(self, f: impl FnOnce() -&gt; T) -&gt; T</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Option&lt;T&gt; 上的方法：</span>
+<span class="c1">// fn unwrap_or_else(self, f: impl FnOnce() -&gt; T) -&gt; T</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">None</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;沒有值，計算預設值...&quot;</span><span class="p">);</span>
@@ -11088,29 +11105,33 @@ name2 現在是：Bob!!!
 
 <p>跟 <code>unwrap_or</code> 不同，<code>unwrap_or_else</code> 的預設值是<strong>懶惰計算</strong>的——只有在真的是 None 的時候才會執行閉包。</p>
 <h5 id="filter">filter —— 條件過濾</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn filter(self, predicate: impl FnOnce(&amp;T) -&gt; bool) -&gt; Option&lt;T&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Option&lt;T&gt; 上的方法：</span>
+<span class="c1">// fn filter(self, predicate: impl FnOnce(&amp;T) -&gt; bool) -&gt; Option&lt;T&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// Some(4)，因為 4 是偶數</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// None，因為 4 不是奇數</span>
 </code></pre></div>
 
 <h4 id="result_1">Result 的閉包方法</h4>
-<p>Result 也有類似的一套方法。</p>
+<p>Result 也有類似的一套方法。以下方法定義在 <code>Result&lt;T, E&gt;</code> 上，<code>T</code> 是 Ok 的型別，<code>E</code> 是 Err 的型別。</p>
 <h5 id="map-ok">map —— 轉換 Ok 的值</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Result&lt;U, E&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Result&lt;T, E&gt; 上的方法：</span>
+<span class="c1">// fn map&lt;U&gt;(self, f: impl FnOnce(T) -&gt; U) -&gt; Result&lt;U, E&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">doubled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span><span class="w">  </span><span class="c1">// Ok(20)</span>
 </code></pre></div>
 
 <h5 id="map_err-err">map_err —— 轉換 Err 的值</h5>
 <p>跟 <code>map</code> 相反——<code>map</code> 對 Ok 做事、Err 不動；<code>map_err</code> 對 Err 做事、Ok 不動。</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn map_err&lt;F&gt;(self, f: impl FnOnce(E) -&gt; F) -&gt; Result&lt;T, F&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Result&lt;T, E&gt; 上的方法：</span>
+<span class="c1">// fn map_err&lt;F&gt;(self, f: impl FnOnce(E) -&gt; F) -&gt; Result&lt;T, F&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;not found&quot;</span><span class="p">));</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;錯誤：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">));</span>
 </code></pre></div>
 
 <h5 id="and_then_1">and_then —— 鏈式操作</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Result&lt;U, E&gt;) -&gt; Result&lt;U, E&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Result&lt;T, E&gt; 上的方法：</span>
+<span class="c1">// fn and_then&lt;U&gt;(self, f: impl FnOnce(T) -&gt; Result&lt;U, E&gt;) -&gt; Result&lt;U, E&gt;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">and_then</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
@@ -11123,7 +11144,8 @@ name2 現在是：Bob!!!
 
 <p>跟 Option 一樣，<code>and_then</code> 就等於 <code>map</code> 再 <code>flatten</code>。</p>
 <h5 id="unwrap_or_else-err-default">unwrap_or_else —— 從 Err 計算 default</h5>
-<div class="highlight"><pre><span></span><code><span class="c1">// fn unwrap_or_else(self, f: impl FnOnce(E) -&gt; T) -&gt; T</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// Result&lt;T, E&gt; 上的方法：</span>
+<span class="c1">// fn unwrap_or_else(self, f: impl FnOnce(E) -&gt; T) -&gt; T</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;oops&quot;</span><span class="p">));</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;發生錯誤：{}，使用預設值&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
@@ -11227,7 +11249,7 @@ name2 現在是：Bob!!!
 <li><code>Option</code> 的 <code>filter</code> 根據條件決定保留 Some 或轉成 None</li>
 <li><code>Result</code> 的 <code>map_err</code> 可以轉換錯誤型別，方便錯誤處理鏈</li>
 <li>這些方法可以鏈式呼叫，比層層 match 更簡潔易讀</li>
-<li>你可能已經注意到：光看型別簽名就能猜出方法在做什麼（Option 的 <code>map</code> 接受 <code>FnOnce(T) -&gt; U</code>，回傳 <code>Option&lt;U&gt;</code>）。這是函數式程式設計的一大特色——型別本身就是文件</li>
+<li>你可能已經注意到：光看型別簽名就能猜出方法在做什麼（<code>Option&lt;T&gt;</code> 的 <code>map</code> 接受 <code>FnOnce(T) -&gt; U</code>，回傳 <code>Option&lt;U&gt;</code>）。這是函數式程式設計的一大特色——型別本身就是文件</li>
 </ul>
 <hr />
 <h2 id="8-iterator-trait">第六章第 8 集：Iterator trait</h2>
@@ -13071,16 +13093,36 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<p>跑 <code>cargo test</code>，Rust 會自動找出所有標了 <code>#[test]</code> 的函數並執行它們。</p>
+<p>跑 <code>cargo test</code>，Rust 會自動找出所有標了 <code>#[test]</code> 的函數並執行它們。如果測試函數 panic 了，那個測試就算失敗。</p>
 <h4 id="assert">assert 系列巨集</h4>
 <ul>
-<li><code>assert!(condition)</code> — 如果 <code>condition</code> 是 <code>false</code>，測試失敗</li>
-<li><code>assert_eq!(left, right)</code> — 如果 <code>left != right</code>，測試失敗</li>
-<li><code>assert_ne!(left, right)</code> — 如果 <code>left == right</code>，測試失敗</li>
+<li><code>assert!(condition)</code> — 如果 <code>condition</code> 是 <code>false</code>，程式 panic</li>
+<li><code>assert_eq!(left, right)</code> — 如果 <code>left != right</code>，程式 panic</li>
+<li><code>assert_ne!(left, right)</code> — 如果 <code>left == right</code>，程式 panic</li>
 </ul>
 <p><code>assert_eq!</code> 和 <code>assert_ne!</code> 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。</p>
-<p><code>assert!</code> 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。這時候就有一個值得注意的差別：<code>assert!</code> 在 debug 和 release 模式下<strong>都會執行</strong>，即使是正式發布的程式，失敗了一樣會 panic。如果你只想在 debug 模式檢查（release 時自動移除），可以用 <code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code>——它們在 release 模式下會被編譯器完全忽略。</p>
-<p>不過在<strong>測試</strong>裡面，直接用 <code>assert!</code> 系列就好——反正測試不會被 release build 影響。</p>
+<p><code>assert!</code> 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。但要注意：<code>assert!</code> 在 debug 和 release 模式下<strong>都會執行</strong>，即使是正式發布的程式，條件不成立一樣會 panic。如果你只想在開發階段檢查、正式發布時自動移除，可以用 <code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code>——它們在 release 模式下會被編譯器完全忽略。</p>
+<p>不過在<strong>測試</strong>裡面，直接用 <code>assert!</code> 系列就好——測試本來就不會用 release build 跑。</p>
+<h4 id="panic_1">測試預期中的 panic</h4>
+<p>有時候你想反過來確認某段程式碼<strong>會</strong> panic——比如存取超出範圍的索引。這時候用 <code>#[should_panic]</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#[test]</span>
+<span class="cp">#[should_panic]</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">test_out_of_bounds</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span><span class="w"> </span><span class="c1">// 這裡會 panic</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>如果函數 panic 了，測試通過；如果函數<strong>沒有</strong> panic，測試反而失敗。</p>
+<p>你還可以用 <code>expected</code> 參數指定 panic 訊息必須包含什麼字串，確保 panic 的原因是對的：</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#[test]</span>
+<span class="cp">#[should_panic(expected = </span><span class="s">&quot;index out of bounds&quot;</span><span class="cp">)]</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">test_out_of_bounds_message</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div>
+
 <h4 id="mod_5">測試 mod 的慣用結構</h4>
 <p>上一集學了 <code>use super::*;</code>——測試最常這樣用。慣例是在檔案底部加一個測試 mod：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
@@ -13173,6 +13215,16 @@ note: iterators are lazy and do nothing unless consumed
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_not_equal</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="fm">assert_ne!</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="o">-</span><span class="mi">5</span><span class="p">);</span><span class="w">  </span><span class="c1">// abs(-5) 應該是 5，不是 -5</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 測試預期中的 panic</span>
+<span class="w">    </span><span class="cp">#[test]</span>
+<span class="w">    </span><span class="cp">#[should_panic(expected = </span><span class="s">&quot;already borrowed&quot;</span><span class="cp">)]</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">test_refcell_double_borrow</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">cell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RefCell</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">42</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cell</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cell</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">();</span><span class="w"> </span><span class="c1">// 已經有不可變借用，這裡會 panic</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -13186,6 +13238,7 @@ note: iterators are lazy and do nothing unless consumed
 <li><code>#[test]</code> 標記測試函數，<code>cargo test</code> 自動找到並執行所有測試</li>
 <li><code>assert!(condition)</code>、<code>assert_eq!(a, b)</code>、<code>assert_ne!(a, b)</code> 驗證結果（debug 和 release 都會執行）</li>
 <li><code>debug_assert!</code>、<code>debug_assert_eq!</code>、<code>debug_assert_ne!</code> 只在 debug 模式執行，release 時會被忽略</li>
+<li><code>#[should_panic]</code> 測試預期中的 panic；加上 <code>expected = "..."</code> 可以確認 panic 訊息</li>
 <li><code>#[cfg(test)]</code> 讓測試 mod 只在測試時編譯</li>
 <li><code>use super::*;</code> 引入父 mod 的所有東西——測試最常用的寫法</li>
 <li>測試可以直接測試私有函數（因為測試 mod 是子 mod）</li>
@@ -14458,7 +14511,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_812">概念說明</h3>
 <p>你可能注意到 <code>println!()</code>、<code>format!()</code> 這些名字後面都有 <code>!</code>。在 Rust 裡，名字帶 <code>!</code> 的東西叫做<strong>巨集（macro）</strong>——它和函數不太一樣，但目前你只需要知道怎麼用就好，巨集的原理以後會教。</p>
 <p>這集要介紹四個常用的「讓程式直接掛掉」的巨集。它們都會造成 panic（程式中止），但語義不同，傳達給讀程式碼的人的訊息也不同。</p>
-<h4 id="panic_1"><code>panic!("訊息")</code></h4>
+<h4 id="panic_2"><code>panic!("訊息")</code></h4>
 <p>最基本的「程式出事了，直接中止」。當你遇到無法處理的錯誤時使用：</p>
 <div class="highlight"><pre><span></span><code><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;發生了不該發生的事！&quot;</span><span class="p">);</span>
 </code></pre></div>

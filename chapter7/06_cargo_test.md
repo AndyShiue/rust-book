@@ -20,19 +20,45 @@ fn it_works() {
 }
 ```
 
-跑 `cargo test`，Rust 會自動找出所有標了 `#[test]` 的函數並執行它們。
+跑 `cargo test`，Rust 會自動找出所有標了 `#[test]` 的函數並執行它們。如果測試函數 panic 了，那個測試就算失敗。
 
 ### assert 系列巨集
 
-- `assert!(condition)` — 如果 `condition` 是 `false`，測試失敗
-- `assert_eq!(left, right)` — 如果 `left != right`，測試失敗
-- `assert_ne!(left, right)` — 如果 `left == right`，測試失敗
+- `assert!(condition)` — 如果 `condition` 是 `false`，程式 panic
+- `assert_eq!(left, right)` — 如果 `left != right`，程式 panic
+- `assert_ne!(left, right)` — 如果 `left == right`，程式 panic
 
 `assert_eq!` 和 `assert_ne!` 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。
 
-`assert!` 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。這時候就有一個值得注意的差別：`assert!` 在 debug 和 release 模式下**都會執行**，即使是正式發布的程式，失敗了一樣會 panic。如果你只想在 debug 模式檢查（release 時自動移除），可以用 `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!`——它們在 release 模式下會被編譯器完全忽略。
+`assert!` 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。但要注意：`assert!` 在 debug 和 release 模式下**都會執行**，即使是正式發布的程式，條件不成立一樣會 panic。如果你只想在開發階段檢查、正式發布時自動移除，可以用 `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!`——它們在 release 模式下會被編譯器完全忽略。
 
-不過在**測試**裡面，直接用 `assert!` 系列就好——反正測試不會被 release build 影響。
+不過在**測試**裡面，直接用 `assert!` 系列就好——測試本來就不會用 release build 跑。
+
+### 測試預期中的 panic
+
+有時候你想反過來確認某段程式碼**會** panic——比如存取超出範圍的索引。這時候用 `#[should_panic]`：
+
+```rust
+#[test]
+#[should_panic]
+fn test_out_of_bounds() {
+    let v = vec![1, 2, 3];
+    let _ = v[10]; // 這裡會 panic
+}
+```
+
+如果函數 panic 了，測試通過；如果函數**沒有** panic，測試反而失敗。
+
+你還可以用 `expected` 參數指定 panic 訊息必須包含什麼字串，確保 panic 的原因是對的：
+
+```rust
+#[test]
+#[should_panic(expected = "index out of bounds")]
+fn test_out_of_bounds_message() {
+    let v = vec![1, 2, 3];
+    let _ = v[10];
+}
+```
 
 ### 測試 mod 的慣用結構
 
@@ -134,6 +160,16 @@ mod tests {
     fn test_not_equal() {
         assert_ne!(abs(-5), -5);  // abs(-5) 應該是 5，不是 -5
     }
+
+    // 測試預期中的 panic
+    #[test]
+    #[should_panic(expected = "already borrowed")]
+    fn test_refcell_double_borrow() {
+        use std::cell::RefCell;
+        let cell = RefCell::new(42);
+        let _r = cell.borrow();
+        let _w = cell.borrow_mut(); // 已經有不可變借用，這裡會 panic
+    }
 }
 
 fn main() {
@@ -146,6 +182,7 @@ fn main() {
 - `#[test]` 標記測試函數，`cargo test` 自動找到並執行所有測試
 - `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果（debug 和 release 都會執行）
 - `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!` 只在 debug 模式執行，release 時會被忽略
+- `#[should_panic]` 測試預期中的 panic；加上 `expected = "..."` 可以確認 panic 訊息
 - `#[cfg(test)]` 讓測試 mod 只在測試時編譯
 - `use super::*;` 引入父 mod 的所有東西——測試最常用的寫法
 - 測試可以直接測試私有函數（因為測試 mod 是子 mod）

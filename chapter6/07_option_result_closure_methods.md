@@ -9,9 +9,12 @@
 
 ### Option 的閉包方法
 
+以下方法定義在 `Option<T>` 上，簽名中的 `T` 就是 `Option<T>` 的型別參數。
+
 #### map —— 轉換 Some 裡的值
 
 ```rust
+// Option<T> 上的方法：
 // fn map<U>(self, f: impl FnOnce(T) -> U) -> Option<U>
 let x: Option<i32> = Some(5);
 let y = x.map(|v| v * 2);  // Some(10)
@@ -24,6 +27,7 @@ let y = x.map(|v| v * 2);  // Some(10)
 `map` 的閉包回傳普通值，但如果你的轉換本身也可能回傳 `None` 呢？用 `and_then`：
 
 ```rust
+// Option<T> 上的方法：
 // fn and_then<U>(self, f: impl FnOnce(T) -> Option<U>) -> Option<U>
 let x: Option<i32> = Some(5);
 let y = x.and_then(|v| if v > 3 { Some(v * 2) } else { None });
@@ -34,6 +38,7 @@ let y = x.and_then(|v| if v > 3 { Some(v * 2) } else { None });
 #### unwrap_or_else —— 給一個計算 default 的閉包
 
 ```rust
+// Option<T> 上的方法：
 // fn unwrap_or_else(self, f: impl FnOnce() -> T) -> T
 let x: Option<i32> = None;
 let y = x.unwrap_or_else(|| {
@@ -47,6 +52,7 @@ let y = x.unwrap_or_else(|| {
 #### filter —— 條件過濾
 
 ```rust
+// Option<T> 上的方法：
 // fn filter(self, predicate: impl FnOnce(&T) -> bool) -> Option<T>
 let x: Option<i32> = Some(4);
 let y = x.filter(|v| v % 2 == 0);  // Some(4)，因為 4 是偶數
@@ -55,11 +61,12 @@ let z = x.filter(|v| v % 2 != 0);  // None，因為 4 不是奇數
 
 ### Result 的閉包方法
 
-Result 也有類似的一套方法。
+Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，`T` 是 Ok 的型別，`E` 是 Err 的型別。
 
 #### map —— 轉換 Ok 的值
 
 ```rust
+// Result<T, E> 上的方法：
 // fn map<U>(self, f: impl FnOnce(T) -> U) -> Result<U, E>
 let r: Result<i32, String> = Ok(10);
 let doubled = r.map(|v| v * 2);  // Ok(20)
@@ -70,6 +77,7 @@ let doubled = r.map(|v| v * 2);  // Ok(20)
 跟 `map` 相反——`map` 對 Ok 做事、Err 不動；`map_err` 對 Err 做事、Ok 不動。
 
 ```rust
+// Result<T, E> 上的方法：
 // fn map_err<F>(self, f: impl FnOnce(E) -> F) -> Result<T, F>
 let r: Result<i32, String> = Err(String::from("not found"));
 let r2 = r.map_err(|e| format!("錯誤：{}", e));
@@ -78,6 +86,7 @@ let r2 = r.map_err(|e| format!("錯誤：{}", e));
 #### and_then —— 鏈式操作
 
 ```rust
+// Result<T, E> 上的方法：
 // fn and_then<U>(self, f: impl FnOnce(T) -> Result<U, E>) -> Result<U, E>
 let r: Result<i32, String> = Ok(5);
 let r2 = r.and_then(|v| {
@@ -94,6 +103,7 @@ let r2 = r.and_then(|v| {
 #### unwrap_or_else —— 從 Err 計算 default
 
 ```rust
+// Result<T, E> 上的方法：
 // fn unwrap_or_else(self, f: impl FnOnce(E) -> T) -> T
 let r: Result<i32, String> = Err(String::from("oops"));
 let value = r.unwrap_or_else(|e| {
@@ -203,4 +213,4 @@ fn main() {
 - `Option` 的 `filter` 根據條件決定保留 Some 或轉成 None
 - `Result` 的 `map_err` 可以轉換錯誤型別，方便錯誤處理鏈
 - 這些方法可以鏈式呼叫，比層層 match 更簡潔易讀
-- 你可能已經注意到：光看型別簽名就能猜出方法在做什麼（Option 的 `map` 接受 `FnOnce(T) -> U`，回傳 `Option<U>`）。這是函數式程式設計的一大特色——型別本身就是文件
+- 你可能已經注意到：光看型別簽名就能猜出方法在做什麼（`Option<T>` 的 `map` 接受 `FnOnce(T) -> U`，回傳 `Option<U>`）。這是函數式程式設計的一大特色——型別本身就是文件

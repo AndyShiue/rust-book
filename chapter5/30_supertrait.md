@@ -35,6 +35,10 @@ trait Copy: Clone { }
 
 這就是為什麼 `#[derive(Copy, Clone)]` 要同時寫兩個——只寫 `derive(Copy)` 會報錯，因為 Copy 要求 Clone。
 
+### DerefMut: Deref
+
+第 23 集學的 `DerefMut` 也是一樣的道理——`DerefMut` 的 supertrait 是 `Deref`。要能可變解參考，前提是先要能不可變解參考。所以實作了 `DerefMut` 的型別一定也實作了 `Deref`。
+
 ## 範例程式碼
 
 ```rust
@@ -110,6 +114,7 @@ fn main() {
 ## 重點整理
 - `trait A: B` 表示「要實作 A，必須先實作 B」——B 是 A 的 supertrait
 - `Copy: Clone`——Copy 要求 Clone，所以 derive 時必須同時寫兩個
+- `DerefMut: Deref`——要能可變解參考，必須先能不可變解參考
 - 實作 subtrait 不會自動實作 supertrait——你必須自己先 impl supertrait
 - subtrait 的預設實作裡可以使用 supertrait 的方法
 
