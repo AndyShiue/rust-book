@@ -120,4 +120,4 @@ fn main() {
 - struct 和 enum 的 impl 裡都可以用 `Self`
 - 使用 `Self` 讓程式碼更簡潔，也更容易維護
 
-恭喜你完成了第三章！🎉 這一章你學會了 struct、enum、pattern matching（match、if let、while let）、解構、associated function 和 method。你現在已經能用 Rust 的型別系統來組織資料和行為了。下一章我們要進入 Rust 最核心也最獨特的概念——所有權（ownership）！
+恭喜你完成了第三章！🎉 這一章你學會了 struct、enum、pattern matching（match、if let、while let、let else）、解構、associated function 和 method。你現在已經能用 Rust 的型別系統來組織資料和行為了。下一章我們要進入 Rust 最核心也最獨特的概念——所有權（ownership）！

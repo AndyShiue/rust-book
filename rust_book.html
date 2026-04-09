@@ -5870,14 +5870,14 @@ c 的總和：7
 <li>struct 和 enum 的 impl 裡都可以用 <code>Self</code></li>
 <li>使用 <code>Self</code> 讓程式碼更簡潔，也更容易維護</li>
 </ul>
-<p>恭喜你完成了第三章！🎉 這一章你學會了 struct、enum、pattern matching（match、if let、while let）、解構、associated function 和 method。你現在已經能用 Rust 的型別系統來組織資料和行為了。下一章我們要進入 Rust 最核心也最獨特的概念——所有權（ownership）！</p>
+<p>恭喜你完成了第三章！🎉 這一章你學會了 struct、enum、pattern matching（match、if let、while let、let else）、解構、associated function 和 method。你現在已經能用 Rust 的型別系統來組織資料和行為了。下一章我們要進入 Rust 最核心也最獨特的概念——所有權（ownership）！</p>
 <hr />
 <h1 id="_379">第四章：所有權與借用</h1>
 <h2 id="1">第四章第 1 集：所有權（鑰匙圈比喻）</h2>
 <h3 id="_380">本集目標</h3>
 <p>用生活化的鑰匙圈比喻，理解 Rust 最核心的概念——所有權。</p>
 <h3 id="_381">概念說明</h3>
-<p>今天我們不寫程式，先來聊一個 Rust 最重要的概念：<strong>所有權（ownership）</strong>。</p>
+<p>這集我們不寫程式，先來聊一個 Rust 最重要的概念：<strong>所有權（ownership）</strong>。</p>
 <h4 id="_382">鑰匙圈比喻</h4>
 <p>想像你有一個鑰匙圈。鑰匙圈上可能掛著一些小裝飾（很輕、隨身帶著），也可能掛著一把鑰匙，這把鑰匙可以打開一個保險箱。規則很簡單：</p>
 <blockquote>
