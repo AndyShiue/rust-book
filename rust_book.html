@@ -6719,7 +6719,7 @@ c 的總和：7
 </ul>
 <h4 id="copy_4">為什麼整數是 Copy？</h4>
 <p>現在你應該懂了：整數（i32 等）就像鑰匙圈上的小裝飾，完全在 stack 上，小小的、複製起來零成本。所以 Rust 讓它們自動 Copy。</p>
-<p>而像之後會學到的 String 那樣的型別，它的資料在 heap 上。如果隨便複製，就等於複製了整個保險箱裡的東西，代價很大。所以 Rust 預設用 move，要複製就得明確呼叫 <code>.clone()</code>。</p>
+<p>而像之後會學到的 String 那樣的型別，它的資料在 heap 上。如果隨便複製，就等於複製了整個保險箱裡的東西，代價很大。所以 Rust 需要用 move，要複製就得明確呼叫 <code>.clone()</code>。</p>
 <h3 id="_427">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug, Copy, Clone)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">StackData</span><span class="w"> </span><span class="p">{</span>
@@ -6757,11 +6757,11 @@ c 的總和：7
 
 <h3 id="_428">重點整理</h3>
 <ul>
-<li><strong>Stack（堆疊）</strong>：快速、大小固定。整數、浮點、布林、char、小 struct 都在這裡</li>
-<li><strong>Heap（堆積）</strong>：靈活、大小可變。大型或動態大小的資料放在這裡</li>
+<li><strong>stack（堆疊）</strong>：快速、大小固定。整數、浮點、布林、char、小 struct 都在這裡</li>
+<li><strong>heap（堆積）</strong>：靈活、大小可變。大型或動態大小的資料放在這裡</li>
 <li>鑰匙圈比喻揭秘：裝飾 = stack 資料、保險箱 = heap 資料、鑰匙 = 指標</li>
 <li>整數是 Copy，因為它們完全在 stack 上，複製幾乎沒有成本</li>
-<li>Heap 資料預設 move（只轉移指標），要完整複製就用 clone（複製整個保險箱的內容）</li>
+<li>heap 資料預設 move（只轉移鑰匙），要完整複製就用 clone（複製整個保險箱的內容）</li>
 </ul>
 <hr />
 <h2 id="10-string">第四章第 10 集：String</h2>
