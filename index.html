@@ -6114,6 +6114,7 @@ c 的總和：7
 <li>浮點數：<code>f32</code>, <code>f64</code></li>
 <li>布林值：<code>bool</code></li>
 <li>字元：<code>char</code></li>
+<li>……還有其他更多型別</li>
 </ul>
 <p>另外，<strong>tuple</strong> 和<strong>陣列</strong>如果裡面每個元素都是 Copy 的，那它們整體也是 Copy 的：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// (i32, bool, char) → 全部 Copy → tuple 也是 Copy</span>
