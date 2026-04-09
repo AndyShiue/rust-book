@@ -13,7 +13,7 @@
 
 ```rust
 let mut x = 10;
-let r = &mut x; // 可變借用
+let r: &mut i32 = &mut x; // 可變借用
 *r = 20;        // 透過 r 修改 x 的值
 ```
 
