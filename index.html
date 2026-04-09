@@ -4683,6 +4683,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>Player { hp: 0, .. }</code> 表示「hp 是 0，其他欄位我不管」。不用每個不要的欄位都寫 <code>_</code>。</p>
+<p>enum 的 struct variant 也能這樣匹配——只要 variant 裡有命名欄位，用法完全一樣。</p>
 <h4 id="match-tuple">在 match tuple 時使用</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">);</span>
 
@@ -4700,6 +4701,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>(first, ..)</code> 只取第一個，<code>(.., last)</code> 只取最後一個，<code>(first, .., last)</code> 取頭和尾。</p>
+<p>tuple struct 和 enum 的 tuple variant 也能用類似的方式匹配，只是寫法上要帶上型別名稱，例如 <code>MyStruct(first, ..)</code> 或 <code>MyEnum::Variant(first, ..)</code>。</p>
 <h4 id="_321">在陣列和切片裡使用</h4>
 <p>第 13 集學過 slice pattern，<code>..</code> 在陣列和切片裡也一樣好用：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">];</span>
@@ -4765,8 +4767,8 @@ c 的總和：7
 <h3 id="_324">重點整理</h3>
 <ul>
 <li><code>..</code> 用來一次忽略多個欄位或值</li>
-<li>match struct 時：<code>Player { hp, .. }</code> 只取 hp，其他全部忽略</li>
-<li>match tuple 時：<code>(first, ..)</code> 只取第一個，<code>(.., last)</code> 只取最後一個</li>
+<li>match struct 時：<code>Player { hp, .. }</code> 只取 hp，其他全部忽略；enum 的 struct variant 也一樣</li>
+<li>match tuple 時：<code>(first, ..)</code> 只取第一個，<code>(.., last)</code> 只取最後一個；tuple struct 和 enum 的 tuple variant 用類似寫法（帶上型別名稱）</li>
 <li>陣列和切片裡：<code>[first, ..]</code> 取第一個，<code>[first, .., last]</code> 取頭和尾</li>
 <li><code>..</code> 在一個模式裡只能出現一次</li>
 </ul>

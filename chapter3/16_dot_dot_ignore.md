@@ -29,6 +29,8 @@ match p {
 
 `Player { hp: 0, .. }` 表示「hp 是 0，其他欄位我不管」。不用每個不要的欄位都寫 `_`。
 
+enum 的 struct variant 也能這樣匹配——只要 variant 裡有命名欄位，用法完全一樣。
+
 ### 在 match tuple 時使用
 
 ```rust
@@ -48,6 +50,8 @@ match scores {
 ```
 
 `(first, ..)` 只取第一個，`(.., last)` 只取最後一個，`(first, .., last)` 取頭和尾。
+
+tuple struct 和 enum 的 tuple variant 也能用類似的方式匹配，只是寫法上要帶上型別名稱，例如 `MyStruct(first, ..)` 或 `MyEnum::Variant(first, ..)`。
 
 ### 在陣列和切片裡使用
 
@@ -120,7 +124,7 @@ fn main() {
 
 ## 重點整理
 - `..` 用來一次忽略多個欄位或值
-- match struct 時：`Player { hp, .. }` 只取 hp，其他全部忽略
-- match tuple 時：`(first, ..)` 只取第一個，`(.., last)` 只取最後一個
+- match struct 時：`Player { hp, .. }` 只取 hp，其他全部忽略；enum 的 struct variant 也一樣
+- match tuple 時：`(first, ..)` 只取第一個，`(.., last)` 只取最後一個；tuple struct 和 enum 的 tuple variant 用類似寫法（帶上型別名稱）
 - 陣列和切片裡：`[first, ..]` 取第一個，`[first, .., last]` 取頭和尾
 - `..` 在一個模式裡只能出現一次
