@@ -27,6 +27,14 @@ let Point { x, .. } = p;
 // 只取 x，忽略其他欄位
 ```
 
+tuple struct 也可以解構，用法跟 tuple pattern 幾乎一樣，只是前面要加上型別名稱：
+
+```rust
+struct Pair(i32, i32);
+let p = Pair(1, 2);
+let Pair(a, b) = p;
+```
+
 ## 範例程式碼
 
 ```rust
@@ -68,4 +76,5 @@ fn main() {
 - 用 field shorthand：欄位名直接當變數名
 - 用 `欄位名: 變數名` 可以取不同的名字
 - `..` 可以忽略不需要的欄位
+- tuple struct 也能解構：`let Pair(a, b) = p;`
 - let 解構在取出 struct 資料時非常方便

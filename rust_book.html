@@ -5163,6 +5163,12 @@ c 的總和：7
 <span class="c1">// 只取 x，忽略其他欄位</span>
 </code></pre></div>
 
+<p>tuple struct 也可以解構，用法跟 tuple pattern 幾乎一樣，只是前面要加上型別名稱：</p>
+<div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Pair</span><span class="p">(</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="kt">i32</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">Pair</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+</code></pre></div>
+
 <h3 id="_347">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
@@ -5203,6 +5209,7 @@ c 的總和：7
 <li>用 field shorthand：欄位名直接當變數名</li>
 <li>用 <code>欄位名: 變數名</code> 可以取不同的名字</li>
 <li><code>..</code> 可以忽略不需要的欄位</li>
+<li>tuple struct 也能解構：<code>let Pair(a, b) = p;</code></li>
 <li>let 解構在取出 struct 資料時非常方便</li>
 </ul>
 <hr />
@@ -7738,6 +7745,14 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
+<h4 id="trait_3">實作 trait 也是一樣</h4>
+<p>第四章教 trait 的時候，我們幫具體型別實作了 trait，像 <code>impl Describe for Cat</code>。如果你想幫一個泛型型別實作 trait，語法也是一樣——在 <code>impl</code> 後面加上 <code>&lt;T&gt;</code> 來宣告型別參數：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SomeTrait</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>一樣是「對於任何型別 T，幫 <code>Pair&lt;T&gt;</code> 實作這個 trait」。</p>
 <h3 id="_483">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Pair</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -7780,6 +7795,7 @@ c 的總和：7
 <li><code>impl&lt;T&gt;</code> 的 <code>&lt;T&gt;</code> 是<strong>宣告</strong> T，<code>Pair&lt;T&gt;</code> 的 <code>&lt;T&gt;</code> 是<strong>使用</strong> T</li>
 <li>結論：<strong><code>impl&lt;T&gt;</code> 宣告 T，然後把 T 傳給 <code>Pair&lt;T&gt;</code></strong></li>
 <li>宣告之後，整個 <code>impl</code> 區塊裡的方法都可以使用 <code>T</code></li>
+<li>幫泛型型別實作 trait 語法類似：<code>impl&lt;T&gt; SomeTrait for Pair&lt;T&gt; { ... }</code></li>
 </ul>
 <hr />
 <h2 id="ch5_option">第五章第 8 集：Option</h2>
@@ -8065,14 +8081,16 @@ c 的總和：7
 </ul>
 <p>所以 <code>?</code> 就是 match + early return 的簡寫。</p>
 <h4 id="_502">注意：錯誤型別要一致</h4>
-<p>使用 <code>?</code> 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，需要手動轉換。</p>
-<p>比如 <code>.parse()</code> 的錯誤型別是 <code>std::num::ParseIntError</code>，但你的函數回傳 <code>Result&lt;_, String&gt;</code>，這時候就需要用 match 把錯誤轉成 String：</p>
+<p>使用 <code>Result</code> 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，就不能直接用 <code>?</code>——你得先把錯誤轉成對的型別。</p>
+<p>比如 <code>.parse()</code> 的錯誤型別是 <code>std::num::ParseIntError</code>，但你的函數回傳 <code>Result&lt;_, String&gt;</code>。這時候你可以用 match 自己轉換，然後再手動 return：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">,</span>
 <span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">)),</span>
 <span class="p">};</span>
 </code></pre></div>
 
+<p>或者先包一層把錯誤轉好的輔助函數，在那個函數回傳之後就能直接用 <code>?</code>——下面的範例程式碼就是這樣做的。</p>
+<p>後面我們會教到更方便處理這種狀況的做法，不用每次都自己手動轉換錯誤型別。</p>
 <h4 id="option_2"><code>?</code> 也能用在 Option</h4>
 <p><code>?</code> 不只能用在 Result 上，也能用在 Option 上——如果是 <code>None</code>，就直接 <code>return None</code>。</p>
 <h4 id="main-result">main 也能回傳 Result</h4>
@@ -8134,7 +8152,7 @@ c 的總和：7
 <li><code>?</code> 是 match + early return 的簡寫</li>
 <li><code>Result</code> 上用 <code>?</code>：Ok 取值，Err 提前回傳</li>
 <li><code>Option</code> 上用 <code>?</code>：Some 取值，None 提前回傳</li>
-<li>使用 <code>?</code> 時，錯誤型別必須和函數回傳型別一致——不一致時用 match 手動轉換</li>
+<li>使用 <code>?</code> 時，錯誤型別必須和函數回傳型別一致——不一致時要另外處理</li>
 <li><code>fn main() -&gt; Result&lt;(), String&gt;</code> 讓 main 也能使用 <code>?</code></li>
 </ul>
 <hr />
@@ -8658,14 +8676,14 @@ c 的總和：7
 <h3 id="_534">概念說明</h3>
 <p>到目前為止，我們的 trait 都比較簡單——<code>Clone</code>、<code>Display</code>、<code>Describe</code>，沒有型別參數。但有時候你想定義的行為和<strong>另一個型別</strong>有關。</p>
 <p>比如「轉換」這件事：i32 可以轉成 f64，也可以轉成 String。同一個型別，轉換的目標不同，邏輯也不同。</p>
-<h4 id="trait_3">帶型別參數的 trait</h4>
+<h4 id="trait_4">帶型別參數的 trait</h4>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Convert</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">T</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
 
 <p><code>Convert&lt;T&gt;</code> 的意思是：「可以轉換成 <code>T</code> 型別」。同一個型別可以實作 <code>Convert&lt;f64&gt;</code>、<code>Convert&lt;String&gt;</code> 等不同版本。</p>
-<h4 id="trait_4">實作多參數 Trait</h4>
+<h4 id="trait_5">實作多參數 Trait</h4>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="n">Convert</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">i32</span><span class="p">,)</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">i32</span><span class="p">,)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">(</span><span class="bp">self</span><span class="p">,)</span>
@@ -8683,7 +8701,7 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="trait_5">和沒有額外參數的 trait 的差別</h4>
+<h4 id="trait_6">和沒有額外參數的 trait 的差別</h4>
 <ul>
 <li><code>Clone</code>（無額外參數）：一個型別只能實作一次 Clone</li>
 <li><code>Convert&lt;T&gt;</code>（有參數）：一個型別可以實作 <code>Convert&lt;String&gt;</code>、<code>Convert&lt;(i32,)&gt;</code> 等多個版本</li>
@@ -10002,7 +10020,7 @@ c 的總和：7
 </code></pre></div>
 
 <p>這就是為什麼 <code>f64</code> 不能有 <code>Ord</code>——你沒辦法把 NAN 放進一個排序裡，因為它和誰比結果都是 <code>false</code>，沒有一個合理的位置可以放它。</p>
-<h4 id="trait_6">四個 trait 的完整關係</h4>
+<h4 id="trait_7">四個 trait 的完整關係</h4>
 <p>先看它們的定義（簡化版）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="nb">PartialEq</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="nb">Eq</span><span class="p">:</span><span class="w"> </span><span class="nb">PartialEq</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
@@ -10098,7 +10116,7 @@ c 的總和：7
 <p>學會在 trait 中定義 associated type（關聯型別），理解它和泛型參數的差別。</p>
 <h3 id="_607">概念說明</h3>
 <p>第 18 集我們學了多參數 trait：<code>trait Convert&lt;T&gt;</code>。但有時候，型別參數不是「開放的」——一個型別只會有一種合理的實作。</p>
-<h4 id="trait_7">問題：多參數 trait 太自由了</h4>
+<h4 id="trait_8">問題：多參數 trait 太自由了</h4>
 <p>想像一個「容器」的 trait。容器裡面裝什麼型別的元素？用多參數 trait 的話：</p>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Container</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">first</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">;</span>
@@ -10903,7 +10921,7 @@ name2 現在是：Bob!!!
 <h3 id="_648">本集目標</h3>
 <p>理解 Fn、FnMut、FnOnce 是 trait 而非型別，掌握它們的繼承關係，並學會在 API 設計中選擇正確的 bound。</p>
 <h3 id="_649">概念說明</h3>
-<h4 id="trait_8">它們是 trait，不是型別</h4>
+<h4 id="trait_9">它們是 trait，不是型別</h4>
 <p>前幾集我們一直說 FnOnce、FnMut、Fn，但還沒正式說明——它們其實是 <strong>trait</strong>。就像第五章學的 <code>Clone</code>、<code>Display</code> 一樣，Fn / FnMut / FnOnce 是定義在標準庫裡的 trait。每個閉包的匿名 struct 會自動 impl 對應的 trait（上一集講的推斷規則決定 impl 哪些）。</p>
 <p>那這些 trait 到底長什麼樣？</p>
 <ul>
@@ -10956,7 +10974,7 @@ name2 現在是：Bob!!!
 </ol>
 <p>為什麼？因為 <code>FnOnce</code> 能接受所有閉包（所有閉包都至少是 FnOnce），而 <code>Fn</code> 只能接受不修改狀態的閉包。選能接受最多種的 bound，使用者傳入的自由度最高。</p>
 <p>實務上 <code>Fn</code> 很少用到——大部分需要多次呼叫閉包的 API 用 <code>FnMut</code> 就夠了（FnMut 也能接受 Fn 的閉包）。只有少數場景需要<strong>保證閉包不修改狀態</strong>時才會用 <code>Fn</code>。</p>
-<h4 id="trait_9">函數指標也實作了這三個 trait</h4>
+<h4 id="trait_10">函數指標也實作了這三個 trait</h4>
 <p>普通的函數（和函數指標 <code>fn</code>）自動實作了 <code>Fn</code>、<code>FnMut</code>、<code>FnOnce</code>。所以你可以把函數名稱傳給任何接受這三個 trait 的地方。</p>
 <h3 id="_651">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 只需要呼叫一次 → 用 FnOnce（能接受最多種閉包）</span>
@@ -11078,7 +11096,7 @@ name2 現在是：Bob!!!
 <span class="n">greet</span><span class="p">();</span>
 </code></pre></div>
 
-<h4 id="trait_10">閉包自動實作的 trait</h4>
+<h4 id="trait_11">閉包自動實作的 trait</h4>
 <p>閉包能不能 Clone 或 Copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 Copy，整體就能 Copy：</p>
 <ul>
 <li>所有捕捉的變數都是 Copy → 閉包也是 Copy</li>
@@ -13565,7 +13583,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="trait_11">多參數 trait 的情況</h3>
+<h3 id="trait_12">多參數 trait 的情況</h3>
 <p>上面講的規則是最簡單的版本。對於多參數 trait（像第五章學的 <code>From&lt;T&gt;</code>），規則其實更複雜。簡單來說：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// OK：你的型別出現在參數裡</span>
 <span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;</span><span class="n">MyType</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">..</span><span class="p">.</span><span class="w"> </span><span class="p">}</span>
@@ -14824,7 +14842,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>最常用的寫法。編譯器會自動找到對應的方法。</p>
-<h4 id="trait_12">第二種：指定 Trait 或型別</h4>
+<h4 id="trait_13">第二種：指定 Trait 或型別</h4>
 <div class="highlight"><pre><span></span><code><span class="n">Animal</span><span class="p">::</span><span class="n">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dog</span><span class="p">);</span>
 </code></pre></div>
 

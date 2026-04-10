@@ -56,6 +56,18 @@ impl<T> Pair<T> {
 }
 ```
 
+### 實作 trait 也是一樣
+
+第四章教 trait 的時候，我們幫具體型別實作了 trait，像 `impl Describe for Cat`。如果你想幫一個泛型型別實作 trait，語法也是一樣——在 `impl` 後面加上 `<T>` 來宣告型別參數：
+
+```rust
+impl<T> SomeTrait for Pair<T> {
+    // ...
+}
+```
+
+一樣是「對於任何型別 T，幫 `Pair<T>` 實作這個 trait」。
+
 ## 範例程式碼
 
 ```rust
@@ -99,3 +111,4 @@ fn main() {
 - `impl<T>` 的 `<T>` 是**宣告** T，`Pair<T>` 的 `<T>` 是**使用** T
 - 結論：**`impl<T>` 宣告 T，然後把 T 傳給 `Pair<T>`**
 - 宣告之後，整個 `impl` 區塊裡的方法都可以使用 `T`
+- 幫泛型型別實作 trait 語法類似：`impl<T> SomeTrait for Pair<T> { ... }`

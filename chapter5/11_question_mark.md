@@ -34,9 +34,9 @@ fn do_stuff() -> Result<i32, String> {
 
 ### 注意：錯誤型別要一致
 
-使用 `?` 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，需要手動轉換。
+使用 `Result` 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，就不能直接用 `?`——你得先把錯誤轉成對的型別。
 
-比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`，這時候就需要用 match 把錯誤轉成 String：
+比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`。這時候你可以用 match 自己轉換，然後再手動 return：
 
 ```rust
 let n = match input.parse::<i32>() {
@@ -44,6 +44,10 @@ let n = match input.parse::<i32>() {
     Err(e) => return Err(format!("{:?}", e)),
 };
 ```
+
+或者先包一層把錯誤轉好的輔助函數，在那個函數回傳之後就能直接用 `?`——下面的範例程式碼就是這樣做的。
+
+後面我們會教到更方便處理這種狀況的做法，不用每次都自己手動轉換錯誤型別。
 
 ### `?` 也能用在 Option
 
@@ -111,5 +115,5 @@ fn main() -> Result<(), String> {
 - `?` 是 match + early return 的簡寫
 - `Result` 上用 `?`：Ok 取值，Err 提前回傳
 - `Option` 上用 `?`：Some 取值，None 提前回傳
-- 使用 `?` 時，錯誤型別必須和函數回傳型別一致——不一致時用 match 手動轉換
+- 使用 `?` 時，錯誤型別必須和函數回傳型別一致——不一致時要另外處理
 - `fn main() -> Result<(), String>` 讓 main 也能使用 `?`
