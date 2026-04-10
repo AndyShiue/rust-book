@@ -75,7 +75,7 @@ fn main() {
 
 ## 為什麼 tuple 和 struct 能用 let 解構？
 
-你可能會好奇：為什麼 tuple 和 struct 可以在 `let` 和函數參數裡直接解構，但 enum 不行？
+你可能會好奇：為什麼 tuple 和 struct 可以在 `let`、`for` 和函數參數裡直接解構，但 enum 不行？
 
 ```rust
 let (x, y) = (1, 2);             // OK
@@ -87,7 +87,7 @@ let Point { x, y } = p;          // OK
 
 但 enum 不一樣。一個 `Color` 可能是 `Red`、`Green`、或 `Blue`。如果你寫 `let Color::Red = c`，但 `c` 其實是 `Green` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
 
-這種一定會成功的模式叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let` 和函數參數只接受 irrefutable pattern。
+這種一定會成功的模式叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
 
 想處理可能失敗的模式？下一集會教 `if let`。
 
@@ -96,4 +96,4 @@ let Point { x, y } = p;          // OK
 - 語法是 `模式: 型別`，模式在前，型別在後
 - tuple 和 struct 都可以在參數位置解構
 - 呼叫時和平常一樣傳值，解構是函數內部的事
-- `let` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 不行
+- `let`、`for` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 不行
