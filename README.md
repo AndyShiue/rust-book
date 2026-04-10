@@ -12,7 +12,7 @@
 ### 第二章：函數、陣列與切片（15 集）
 函數、陣列、切片、`for` 迴圈走訪。
 
-### 第三章：Struct、Enum 與 Pattern Matching（29 集）
+### 第三章：Struct、Enum 與 Pattern Matching（30 集）
 自訂型別、match 表達式、各種 pattern（tuple、slice、nested、guard 等）、method 與 associated function。
 
 ### 第四章：所有權與借用（14 集）
