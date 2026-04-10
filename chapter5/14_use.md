@@ -5,9 +5,11 @@
 
 ## 概念說明
 
-你可能已經注意到，我們一直在用 `Vec`、`String`、`Option`、`Result` 這些型別，從來沒有寫過完整路徑。但 Rust 的標準庫其實有很深的模組結構，這些型別的完整路徑像是 `std::vec::Vec`、`std::string::String`、`std::option::Option`。
+Rust 有非常多內建的函數、型別和 trait，為了組織它們，Rust 的標準庫用模組把東西分門別類。舉例來說，每個型別都有一個完整的**路徑**來說明它位於哪個模組裡，路徑用 `::` 分隔，像是 `std::string::String`（`String` 位於 `std` 的 `string` 模組裡）、`std::vec::Vec`、`std::fmt::Display`。平常要用某個型別，就要寫出它的完整路徑。
 
-為什麼不用寫完整路徑？因為 Rust 有一個叫 **prelude** 的機制——Rust 預設就把最常用的型別和 trait 引入到每個檔案裡。`Vec`、`String`、`Option`、`Result`、`Some`、`None`、`Ok`、`Err`，還有 `Clone`、`Copy` 等常用 trait，都在 prelude 裡面。
+但奇怪的是，我們前面一直在用 `Vec`、`String`、`Option`、`Result` 這些型別，從來沒寫過 `std::vec::Vec` 這種完整路徑也能用，為什麼？
+
+因為 Rust 有一個叫 **prelude** 的機制——Rust 預設就把最常用的函數、型別和 trait 引入到每個檔案裡。`Vec`、`String`、`Option`、`Result`、`Some`、`None`、`Ok`、`Err`，還有 `Clone`、`Copy` 等常用 trait，都在 prelude 裡面，所以不用寫完整路徑。
 
 但不是所有東西都在 prelude 裡。比如 `std::fmt::Display` 這個 trait，就不在 prelude 裡。如果你想用它，就要寫完整路徑——或者用 `use` 把它引入。
 

@@ -8366,8 +8366,9 @@ c 的總和：7
 <h3 id="_517">本集目標</h3>
 <p>學會用 <code>use</code> 把長路徑縮短，並理解為什麼之前不用 <code>use</code> 就能用 <code>Option</code>、<code>Vec</code> 等型別。</p>
 <h3 id="_518">概念說明</h3>
-<p>你可能已經注意到，我們一直在用 <code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code> 這些型別，從來沒有寫過完整路徑。但 Rust 的標準庫其實有很深的模組結構，這些型別的完整路徑像是 <code>std::vec::Vec</code>、<code>std::string::String</code>、<code>std::option::Option</code>。</p>
-<p>為什麼不用寫完整路徑？因為 Rust 有一個叫 <strong>prelude</strong> 的機制——Rust 預設就把最常用的型別和 trait 引入到每個檔案裡。<code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code>、<code>Some</code>、<code>None</code>、<code>Ok</code>、<code>Err</code>，還有 <code>Clone</code>、<code>Copy</code> 等常用 trait，都在 prelude 裡面。</p>
+<p>Rust 有非常多內建的函數、型別和 trait，為了組織它們，Rust 的標準庫用模組把東西分門別類。舉例來說，每個型別都有一個完整的<strong>路徑</strong>來說明它位於哪個模組裡，路徑用 <code>::</code> 分隔，像是 <code>std::string::String</code>（<code>String</code> 位於 <code>std</code> 的 <code>string</code> 模組裡）、<code>std::vec::Vec</code>、<code>std::fmt::Display</code>。平常要用某個型別，就要寫出它的完整路徑。</p>
+<p>但奇怪的是，我們前面一直在用 <code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code> 這些型別，從來沒寫過 <code>std::vec::Vec</code> 這種完整路徑也能用，為什麼？</p>
+<p>因為 Rust 有一個叫 <strong>prelude</strong> 的機制——Rust 預設就把最常用的函數、型別和 trait 引入到每個檔案裡。<code>Vec</code>、<code>String</code>、<code>Option</code>、<code>Result</code>、<code>Some</code>、<code>None</code>、<code>Ok</code>、<code>Err</code>，還有 <code>Clone</code>、<code>Copy</code> 等常用 trait，都在 prelude 裡面，所以不用寫完整路徑。</p>
 <p>但不是所有東西都在 prelude 裡。比如 <code>std::fmt::Display</code> 這個 trait，就不在 prelude 裡。如果你想用它，就要寫完整路徑——或者用 <code>use</code> 把它引入。</p>
 <h4 id="use">use 的語法</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="p">;</span>
@@ -12534,7 +12535,7 @@ note: iterators are lazy and do nothing unless consumed
 <h3 id="_712">本集目標</h3>
 <p>學會用 mod 將程式碼組織成有層次的結構。</p>
 <h3 id="_713">概念說明</h3>
-<p>當程式越寫越長，全部塞在一個 <code>main.rs</code> 裡面會變得很難維護。這時候我們需要把相關的函數、struct、enum 分組——在 Rust 裡，這個分組機制就是 <strong>mod</strong>。</p>
+<p>當程式越寫越長，全部塞在一個 <code>main.rs</code> 裡面會變得很難維護。這時候我們需要把相關的函數、struct、enum 分組——在 Rust 裡，這個分組機制就是 <strong>模組（mod）</strong>。</p>
 <h4 id="mod">在同一個檔案裡定義 mod</h4>
 <p>最簡單的用法：直接在檔案裡用 <code>mod</code> 關鍵字建立一個區塊。</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
