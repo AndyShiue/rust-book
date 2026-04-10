@@ -18,9 +18,39 @@ CHAPTERS = [
     ("第八章：多執行緒", "chapter8"),
 ]
 
+CHAPTER_PREFIX = {
+    "chapter1": "ch1",
+    "chapter2": "ch2",
+    "chapter3": "ch3",
+    "chapter4": "ch4",
+    "chapter5": "ch5",
+    "chapter6": "ch6",
+    "chapter7": "ch7",
+    "chapter8": "ch8",
+    "appendix1": "ap1",
+}
+
+
+def filename_to_anchor(prefix, filename):
+    """Convert filename like '12_aaa_bbb.md' to 'ch1_aaa_bbb' (using given prefix)."""
+    stem = filename.rsplit(".", 1)[0]  # remove .md
+    # Strip leading number(s) or single letter followed by underscore
+    m = re.match(r'^[0-9]+_(.*)', stem)
+    if m:
+        rest = m.group(1)
+    else:
+        m = re.match(r'^[a-zA-Z]_(.*)', stem)
+        if m:
+            rest = m.group(1)
+        else:
+            rest = stem
+    return f"{prefix}_{rest}"
+
+
 parts = []
 for title, folder in CHAPTERS:
-    parts.append(f"# {title}\n\n")
+    prefix = CHAPTER_PREFIX[folder]
+    parts.append(f"# {title} {{: #{prefix} }}\n\n")
     chapter_dir = BASE / folder
     files = sorted(chapter_dir.glob("*.md"))
     for f in files:
@@ -28,6 +58,15 @@ for title, folder in CHAPTERS:
         # Insert blank line before list items that follow a line ending with fullwidth colon
         text = re.sub(r'(：\s*)\n(- )', r'\1\n\n\2', text)
         text = re.sub(r'(：\s*)\n(\d+\. )', r'\1\n\n\2', text)
+        # Add custom anchor ID to the first heading using attr_list syntax
+        anchor_id = filename_to_anchor(prefix, f.name)
+        text = re.sub(
+            r'^(# .+?)$',
+            r'\1 {: #' + anchor_id + ' }',
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
         # Demote all headings by one level so chapter title stays h1
         text = re.sub(r"^##### ", "###### ", text, flags=re.MULTILINE)
         text = re.sub(r"^#### ", "##### ", text, flags=re.MULTILINE)
@@ -78,6 +117,7 @@ md = markdown.Markdown(extensions=[
     "codehilite",
     "tables",
     "toc",
+    "attr_list",
 ], extension_configs={
     "codehilite": {"css_class": "highlight", "guess_lang": False},
     "toc": {"permalink": False, "toc_depth": 2},
