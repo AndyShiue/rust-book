@@ -61,6 +61,9 @@ fn main() {
     let y = first("hello", "world");
     println!("{}", y);
 
+    // 但兩個參數的型別必須一樣，因為 first 的兩個參數都是 T
+    // let bad = first(1, "a"); // 編譯錯誤！1 是 i32 但 "a" 是 &str
+
     // T = i32, U = &str
     let pair = make_pair(42, "hello");
     println!("{:?}", pair);
