@@ -59,7 +59,7 @@ fn print_excerpt(e: &Excerpt<'_>) {
 
 `'_` 告訴 Rust「我知道這裡需要一個生命週期，你自己推斷吧」。還記得第 5 集學的型別佔位符 `_` 嗎？`'_` 就是它的生命週期版本。
 
-### impl 帶生命週期的 Struct
+### impl 帶生命週期的 struct
 
 ```rust
 impl<'a> Excerpt<'a> {

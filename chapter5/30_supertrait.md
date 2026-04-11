@@ -1,7 +1,7 @@
 # 第五章第 30 集：supertrait
 
 ## 本集目標
-學會用 supertrait 定義 trait 之間的依賴關係，理解 `Copy: Clone` 的設計原理。
+學會用 supertrait 定義 trait 之間的依賴關係，理解 `Copy: Clone` 以及 `DerefMut: Deref` 的設計原理。
 
 ## 概念說明
 

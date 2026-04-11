@@ -9751,7 +9751,7 @@ c 的總和：7
 </code></pre></div>
 
 <p><code>'_</code> 告訴 Rust「我知道這裡需要一個生命週期，你自己推斷吧」。還記得第 5 集學的型別佔位符 <code>_</code> 嗎？<code>'_</code> 就是它的生命週期版本。</p>
-<h4 id="impl-struct">impl 帶生命週期的 Struct</h4>
+<h4 id="impl-struct">impl 帶生命週期的 struct</h4>
 <div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Excerpt</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">text</span>
@@ -9917,7 +9917,7 @@ c 的總和：7
 <hr />
 <h2 id="ch5_supertrait">第五章第 30 集：supertrait</h2>
 <h3 id="_598">本集目標</h3>
-<p>學會用 supertrait 定義 trait 之間的依賴關係，理解 <code>Copy: Clone</code> 的設計原理。</p>
+<p>學會用 supertrait 定義 trait 之間的依賴關係，理解 <code>Copy: Clone</code> 以及 <code>DerefMut: Deref</code> 的設計原理。</p>
 <h3 id="_599">概念說明</h3>
 <p>有時候一個 trait 需要建立在另一個 trait 的基礎之上。</p>
 <h4 id="supertrait">supertrait 語法</h4>
