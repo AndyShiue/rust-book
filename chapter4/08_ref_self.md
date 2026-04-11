@@ -37,6 +37,20 @@ impl Cat {
 
 大部分的 method 都用 `&self`，因為你通常只是想「看看這個東西的狀態」，不需要消耗它。
 
+### 實際例子：Clone
+
+一個很好的例子是 `Clone` trait。它定義的簡化版長這樣：
+
+```rust
+trait Clone {
+    fn clone(&self) -> Self;
+}
+```
+
+`clone` 接收 `&self`——只是借用自己，不消耗——然後回傳一個新的 `Self`（大寫 Self，第三章最後一集教過，代表實作這個 trait 的型別）。這解釋為什麼你可以對同一個變數連續呼叫好幾次 `.clone()`——因為 clone 只是借用，不會 move 原本的值。
+
+如果 clone 的簽名是 `fn clone(self) -> Self`，那每次 clone 都會消耗原本的值，那就違反 clone 的本意了。
+
 ### 函數參數也一樣
 
 不只是 method 的 self，一般函數參數也是同樣的邏輯：
@@ -135,5 +149,6 @@ fn main() {
 - `&mut self`：可變借用，可以修改欄位，呼叫後還能繼續用
 - `self`：消耗所有權，呼叫後變數就不能再用了
 - 選擇原則：**只讀 → `&self`，要改 → `&mut self`，要消耗 → `self`**
+- `Clone` 裡方法的定義是 `fn clone(&self) -> Self`——借用自己產生一份新的，所以 clone 不會消耗原本的值
 - 一般函數參數也一樣：**只讀 → `&T`，要改 → `&mut T`，要消耗 → `T`**
 - 呼叫 method 時直接寫 `c.method()`，Rust 會自動加 `&` 或 `&mut`

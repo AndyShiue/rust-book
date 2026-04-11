@@ -6653,6 +6653,15 @@ c 的總和：7
 <li><strong>要轉移所有權（呼叫後原本的變數不能再用）</strong> → 用 <code>self</code></li>
 </ul>
 <p>大部分的 method 都用 <code>&amp;self</code>，因為你通常只是想「看看這個東西的狀態」，不需要消耗它。</p>
+<h4 id="clone_2">實際例子：Clone</h4>
+<p>一個很好的例子是 <code>Clone</code> trait。它定義的簡化版長這樣：</p>
+<div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="nb">Clone</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>clone</code> 接收 <code>&amp;self</code>——只是借用自己，不消耗——然後回傳一個新的 <code>Self</code>（大寫 Self，第三章最後一集教過，代表實作這個 trait 的型別）。這解釋為什麼你可以對同一個變數連續呼叫好幾次 <code>.clone()</code>——因為 clone 只是借用，不會 move 原本的值。</p>
+<p>如果 clone 的簽名是 <code>fn clone(self) -&gt; Self</code>，那每次 clone 都會消耗原本的值，那就違反 clone 的本意了。</p>
 <h4 id="_421">函數參數也一樣</h4>
 <p>不只是 method 的 self，一般函數參數也是同樣的邏輯：</p>
 <table>
@@ -6763,6 +6772,7 @@ c 的總和：7
 <li><code>&amp;mut self</code>：可變借用，可以修改欄位，呼叫後還能繼續用</li>
 <li><code>self</code>：消耗所有權，呼叫後變數就不能再用了</li>
 <li>選擇原則：<strong>只讀 → <code>&amp;self</code>，要改 → <code>&amp;mut self</code>，要消耗 → <code>self</code></strong></li>
+<li><code>Clone</code> 裡方法的定義是 <code>fn clone(&amp;self) -&gt; Self</code>——借用自己產生一份新的，所以 clone 不會消耗原本的值</li>
 <li>一般函數參數也一樣：<strong>只讀 → <code>&amp;T</code>，要改 → <code>&amp;mut T</code>，要消耗 → <code>T</code></strong></li>
 <li>呼叫 method 時直接寫 <code>c.method()</code>，Rust 會自動加 <code>&amp;</code> 或 <code>&amp;mut</code></li>
 </ul>
