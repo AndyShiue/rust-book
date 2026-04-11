@@ -1,15 +1,15 @@
 # 第五章第 18 集：多參數 trait
 
 ## 本集目標
-學會定義帶型別參數的 trait，讓同一個型別可以針對不同目標型別實作同一個 trait。
+學會定義帶其他型別參數的 trait，讓同一個型別可以針對不同目標型別實作同一個 trait。
 
 ## 概念說明
 
-到目前為止，我們的 trait 都比較簡單——`Clone`、`Display`、`Describe`，沒有型別參數。但有時候你想定義的行為和**另一個型別**有關。
+到目前為止，我們的 trait 都比較簡單——`Clone`、`Display`、`Describe`，沒有其他型別參數。但有時候你想定義的行為和**另一個型別**有關。
 
 比如「轉換」這件事：i32 可以轉成 f64，也可以轉成 String。同一個型別，轉換的目標不同，邏輯也不同。
 
-### 帶型別參數的 trait
+### 帶其他型別參數的 trait
 
 ```rust
 trait Convert<T> {
@@ -42,10 +42,10 @@ impl Convert<String> for i32 {
 }
 ```
 
-### 和沒有額外參數的 trait 的差別
+### 和沒有其他參數的 trait 的差別
 
-- `Clone`（無額外參數）：一個型別只能實作一次 Clone
-- `Convert<T>`（有參數）：一個型別可以實作 `Convert<String>`、`Convert<(i32,)>` 等多個版本
+- `Clone`（沒有其他參數）：一個型別只能實作一次 Clone
+- `Convert<T>`（有其他參數）：一個型別可以實作 `Convert<String>`、`Convert<(i32,)>` 等多個版本
 
 ## 範例程式碼
 
@@ -99,7 +99,7 @@ fn main() {
 ```
 
 ## 重點整理
-- Trait 可以帶型別參數：`trait Convert<T> { ... }`
+- Trait 可以帶其他型別參數：`trait Convert<T> { ... }`
 - 同一個型別可以對不同的 `T` 實作同一個 trait（例如 `Convert<String>` 和 `Convert<(i32,)>`）
-- 這和無額外參數的 trait 不同——一個型別只能實作一次那些 trait
+- 這和沒有其他參數的 trait 不同——一個型別只能實作一次那些 trait
 - 多參數 trait 讓「和另一個型別相關的行為」可以統一定義

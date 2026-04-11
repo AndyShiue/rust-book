@@ -8685,11 +8685,11 @@ c 的總和：7
 <hr />
 <h2 id="ch5_multi_param_trait">第五章第 18 集：多參數 trait</h2>
 <h3 id="_533">本集目標</h3>
-<p>學會定義帶型別參數的 trait，讓同一個型別可以針對不同目標型別實作同一個 trait。</p>
+<p>學會定義帶其他型別參數的 trait，讓同一個型別可以針對不同目標型別實作同一個 trait。</p>
 <h3 id="_534">概念說明</h3>
-<p>到目前為止，我們的 trait 都比較簡單——<code>Clone</code>、<code>Display</code>、<code>Describe</code>，沒有型別參數。但有時候你想定義的行為和<strong>另一個型別</strong>有關。</p>
+<p>到目前為止，我們的 trait 都比較簡單——<code>Clone</code>、<code>Display</code>、<code>Describe</code>，沒有其他型別參數。但有時候你想定義的行為和<strong>另一個型別</strong>有關。</p>
 <p>比如「轉換」這件事：i32 可以轉成 f64，也可以轉成 String。同一個型別，轉換的目標不同，邏輯也不同。</p>
-<h4 id="trait_4">帶型別參數的 trait</h4>
+<h4 id="trait_4">帶其他型別參數的 trait</h4>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Convert</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">T</span><span class="p">;</span>
 <span class="p">}</span>
@@ -8714,10 +8714,10 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="trait_6">和沒有額外參數的 trait 的差別</h4>
+<h4 id="trait_6">和沒有其他參數的 trait 的差別</h4>
 <ul>
-<li><code>Clone</code>（無額外參數）：一個型別只能實作一次 Clone</li>
-<li><code>Convert&lt;T&gt;</code>（有參數）：一個型別可以實作 <code>Convert&lt;String&gt;</code>、<code>Convert&lt;(i32,)&gt;</code> 等多個版本</li>
+<li><code>Clone</code>（沒有其他參數）：一個型別只能實作一次 Clone</li>
+<li><code>Convert&lt;T&gt;</code>（有其他參數）：一個型別可以實作 <code>Convert&lt;String&gt;</code>、<code>Convert&lt;(i32,)&gt;</code> 等多個版本</li>
 </ul>
 <h3 id="_535">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 定義一個帶型別參數的 trait</span>
@@ -8770,9 +8770,9 @@ c 的總和：7
 
 <h3 id="_536">重點整理</h3>
 <ul>
-<li>Trait 可以帶型別參數：<code>trait Convert&lt;T&gt; { ... }</code></li>
+<li>Trait 可以帶其他型別參數：<code>trait Convert&lt;T&gt; { ... }</code></li>
 <li>同一個型別可以對不同的 <code>T</code> 實作同一個 trait（例如 <code>Convert&lt;String&gt;</code> 和 <code>Convert&lt;(i32,)&gt;</code>）</li>
-<li>這和無額外參數的 trait 不同——一個型別只能實作一次那些 trait</li>
+<li>這和沒有其他參數的 trait 不同——一個型別只能實作一次那些 trait</li>
 <li>多參數 trait 讓「和另一個型別相關的行為」可以統一定義</li>
 </ul>
 <hr />
