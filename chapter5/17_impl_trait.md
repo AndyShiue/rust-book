@@ -5,7 +5,7 @@
 
 ## 概念說明
 
-上一集我們學了 trait bound：`fn foo<T: Display>(x: &T)`。Rust 還提供了一種更簡潔的寫法：`impl Trait`。
+我們前面學了 trait bound：`fn foo<T: Display>(x: &T)`。Rust 還提供了一種更簡潔的寫法：`impl Trait`。
 
 ### 參數位置的 impl Trait
 

@@ -8596,7 +8596,7 @@ c 的總和：7
 <h3 id="_529">本集目標</h3>
 <p>學會用 <code>impl Trait</code> 作為 trait bound 的簡寫，理解它在參數和回傳值中的不同含義。</p>
 <h3 id="_530">概念說明</h3>
-<p>上一集我們學了 trait bound：<code>fn foo&lt;T: Display&gt;(x: &amp;T)</code>。Rust 還提供了一種更簡潔的寫法：<code>impl Trait</code>。</p>
+<p>我們前面學了 trait bound：<code>fn foo&lt;T: Display&gt;(x: &amp;T)</code>。Rust 還提供了一種更簡潔的寫法：<code>impl Trait</code>。</p>
 <h4 id="impl-trait">參數位置的 impl Trait</h4>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">impl</span><span class="w"> </span><span class="n">Display</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
