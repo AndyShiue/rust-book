@@ -8573,11 +8573,23 @@ c 的總和：7
 <span class="p">}</span>
 </code></pre></div>
 
+<h3 id="where_2">where 還能用在哪裡</h3>
+<p><code>where</code> 不只能用在函數上。其他很多會用到泛型的地方也都能用 <code>where</code>，例如 <code>impl</code> 區塊：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="k">where</span>
+<span class="w">    </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nb">Clone</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Display</span><span class="p">,</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// 方法定義</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>此外，<code>where</code> 也能出現在 struct、enum 和 trait 的定義上。目前知道就好了，之後需要用到的時候自然會想起來。</p>
 <h3 id="_528">重點整理</h3>
 <ul>
 <li>用 <code>+</code> 組合多個 trait bound：<code>T: Clone + Display</code></li>
 <li><code>where</code> 子句是另一種寫 trait bound 的方式，更好讀</li>
 <li><code>where</code> 比角括號更靈活，冒號前面可以放 tuple 等複雜型別（如 <code>(T, U): Clone</code>）</li>
+<li><code>where</code> 不只能用在函數上，impl、struct、enum、trait 等能用泛型的地方都能用</li>
 </ul>
 <hr />
 <h2 id="ch5_impl_trait">第五章第 17 集：impl Trait 語法</h2>

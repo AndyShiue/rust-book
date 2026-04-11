@@ -92,7 +92,23 @@ fn main() {
 }
 ```
 
+## where 還能用在哪裡
+
+`where` 不只能用在函數上。其他很多會用到泛型的地方也都能用 `where`，例如 `impl` 區塊：
+
+```rust
+impl<T> Pair<T>
+where
+    T: Clone + Display,
+{
+    // 方法定義
+}
+```
+
+此外，`where` 也能出現在 struct、enum 和 trait 的定義上。目前知道就好了，之後需要用到的時候自然會想起來。
+
 ## 重點整理
 - 用 `+` 組合多個 trait bound：`T: Clone + Display`
 - `where` 子句是另一種寫 trait bound 的方式，更好讀
 - `where` 比角括號更靈活，冒號前面可以放 tuple 等複雜型別（如 `(T, U): Clone`）
+- `where` 不只能用在函數上，impl、struct、enum、trait 等能用泛型的地方都能用
