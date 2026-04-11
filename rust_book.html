@@ -10988,7 +10988,7 @@ name2 現在是：Bob!!!
 <span class="p">}</span>
 </code></pre></div>
 
-<p>注意 <code>FnMut</code> 的參數要加 <code>mut</code>——因為呼叫 FnMut 閉包需要 <code>&amp;mut self</code>，而 <code>f</code> 擁有這個閉包，所以 <code>f</code> 本身要是 <code>mut</code> 的。</p>
+<p>注意 <code>FnMut</code> 的參數要加 <code>mut</code>——因為呼叫 FnMut 閉包需要 <code>&amp;mut self</code>，所以 <code>f</code> 本身要是 <code>mut</code> 的。</p>
 <h4 id="api-bound">API 設計原則：選能接受最多種閉包的 bound</h4>
 <p>當你設計一個接受閉包的函數時，應該選<strong>能接受最多種閉包</strong>的 trait bound：</p>
 <ol>
@@ -11064,7 +11064,7 @@ name2 現在是：Bob!!!
 <li>用 <code>impl FnOnce()</code> / <code>impl FnMut()</code> / <code>impl Fn()</code> 來接受閉包參數</li>
 <li><code>FnMut</code> 的參數要加 <code>mut</code></li>
 <li>API 設計原則：<strong>先選 FnOnce</strong>，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn</li>
-<li>普通函數和函數指標自動實作了 Fn + FnMut + FnOnce</li>
+<li>函數指標自動實作了 Fn + FnMut + FnOnce</li>
 </ul>
 <hr />
 <h2 id="ch6_move_closure">第六章第 6 集：move 閉包</h2>
@@ -11187,7 +11187,7 @@ name2 現在是：Bob!!!
 
 <h3 id="_658">重點整理</h3>
 <ul>
-<li><code>move</code> 強制閉包以 by-value 方式捕捉所有外部變數</li>
+<li><code>move</code> 強制閉包以捕捉所有外部變數的所有權</li>
 <li>回傳閉包時通常需要 <code>move</code>，避免懸垂參考</li>
 <li><code>move</code> <strong>不影響</strong>閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼<strong>使用</strong>捕捉的值</li>
 <li>閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy</li>
@@ -11368,7 +11368,7 @@ name2 現在是：Bob!!!
 
 <h3 id="_662">重點整理</h3>
 <ul>
-<li><code>Option</code> 的 <code>map</code> 和 <code>Result</code> 的 <code>map</code> 對內部值做轉換，None / Err 時不執行</li>
+<li><code>Option</code> 和 <code>Result</code> 的 <code>map</code> 對內部值做轉換，None / Err 時不執行</li>
 <li><code>and_then</code> 用於閉包本身也回傳 Option / Result 的情況，避免巢狀</li>
 <li><code>unwrap_or_else</code> 懶惰計算預設值，只在 None / Err 時才執行閉包</li>
 <li><code>Option</code> 的 <code>filter</code> 根據條件決定保留 Some 或轉成 None</li>

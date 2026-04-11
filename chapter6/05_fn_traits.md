@@ -57,7 +57,7 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 }
 ```
 
-注意 `FnMut` 的參數要加 `mut`——因為呼叫 FnMut 閉包需要 `&mut self`，而 `f` 擁有這個閉包，所以 `f` 本身要是 `mut` 的。
+注意 `FnMut` 的參數要加 `mut`——因為呼叫 FnMut 閉包需要 `&mut self`，所以 `f` 本身要是 `mut` 的。
 
 ### API 設計原則：選能接受最多種閉包的 bound
 
@@ -140,4 +140,4 @@ fn main() {
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數
 - `FnMut` 的參數要加 `mut`
 - API 設計原則：**先選 FnOnce**，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn
-- 普通函數和函數指標自動實作了 Fn + FnMut + FnOnce
+- 函數指標自動實作了 Fn + FnMut + FnOnce

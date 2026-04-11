@@ -207,7 +207,7 @@ fn main() {
 ```
 
 ## 重點整理
-- `Option` 的 `map` 和 `Result` 的 `map` 對內部值做轉換，None / Err 時不執行
+- `Option` 和 `Result` 的 `map` 對內部值做轉換，None / Err 時不執行
 - `and_then` 用於閉包本身也回傳 Option / Result 的情況，避免巢狀
 - `unwrap_or_else` 懶惰計算預設值，只在 None / Err 時才執行閉包
 - `Option` 的 `filter` 根據條件決定保留 Some 或轉成 None
