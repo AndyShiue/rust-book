@@ -9455,6 +9455,7 @@ c 的總和：7
 
 <h3 id="_569">重點整理</h3>
 <ul>
+<li><code>RefCell&lt;T&gt;</code> 和 Cell 類似——讓你在不需要 <code>&amp;mut</code> 的情況下修改值</li>
 <li><code>RefCell&lt;T&gt;</code> 把借用規則的檢查從編譯時移到執行時</li>
 <li><code>.borrow()</code> 取得不可變參考，<code>.borrow_mut()</code> 取得可變參考</li>
 <li>T <strong>不需要</strong> Copy（和 Cell 的差別）</li>

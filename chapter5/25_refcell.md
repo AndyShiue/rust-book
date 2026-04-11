@@ -99,6 +99,7 @@ fn main() {
 ```
 
 ## 重點整理
+- `RefCell<T>` 和 Cell 類似——讓你在不需要 `&mut` 的情況下修改值
 - `RefCell<T>` 把借用規則的檢查從編譯時移到執行時
 - `.borrow()` 取得不可變參考，`.borrow_mut()` 取得可變參考
 - T **不需要** Copy（和 Cell 的差別）
