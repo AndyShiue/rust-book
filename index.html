@@ -12742,7 +12742,8 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_718">完整的多檔案範例</h4>
+<h3 id="_718">範例程式碼</h3>
+<p>由於檔案 mod 涉及多個檔案，無法用單一檔案示範。以下是完整的多檔案範例，建立對應的檔案結構後用 <code>cargo run</code> 執行：</p>
 <div class="highlight"><pre><span></span><code>src/
 ├── main.rs
 ├── math.rs
@@ -12784,9 +12785,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_719">範例程式碼</h3>
-<p>由於檔案 mod 涉及多個檔案，無法用單一檔案示範。請參考上方的完整多檔案範例，建立對應的檔案結構後用 <code>cargo run</code> 執行。</p>
-<h3 id="_720">重點整理</h3>
+<h3 id="_719">重點整理</h3>
 <ul>
 <li><code>mod math;</code>（分號結尾）告訴 Rust 去找子 mod</li>
 <li>被拆出去的檔案裡<strong>不需要</strong>再寫 <code>mod math { ... }</code>，檔案本身就是 mod</li>
@@ -12796,11 +12795,11 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_pub">第七章第 4 集：pub 可見性</h2>
-<h3 id="_721">本集目標</h3>
+<h3 id="_720">本集目標</h3>
 <p>完整理解 Rust 的可見性規則，掌握 <code>pub</code> 的各種用法。</p>
-<h3 id="_722">概念說明</h3>
+<h3 id="_721">概念說明</h3>
 <p>第 2 集提到 mod 裡的東西預設是私有的，這一集我們來把可見性規則講清楚。</p>
-<h4 id="_723">預設私有</h4>
+<h4 id="_722">預設私有</h4>
 <p>Rust 的哲學是<strong>預設封閉</strong>——所有東西一開始都是私有的，你必須明確地用 <code>pub</code> 開放。這跟有些語言預設 public 的設計完全相反。</p>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">secrets</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">hidden</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -13000,9 +12999,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_724">範例程式碼</h3>
-<p>這一集的概念說明中已經包含了完整的程式碼範例，不另外重複。</p>
-<h3 id="_725">重點整理</h3>
+<h3 id="_723">重點整理</h3>
 <ul>
 <li>Rust <strong>預設一切私有</strong>，必須明確加 <code>pub</code> 才公開</li>
 <li><code>pub struct</code> 只公開型別名稱，每個欄位需要<strong>個別</strong>加 <code>pub</code>（tuple struct 也一樣）</li>
@@ -13015,9 +13012,9 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_use">第七章第 5 集：use</h2>
-<h3 id="_726">本集目標</h3>
+<h3 id="_724">本集目標</h3>
 <p>學會用 <code>use</code> 簡化路徑，理解 Rust 的路徑解析規則和各種匯入方式。</p>
-<h3 id="_727">概念說明</h3>
+<h3 id="_725">概念說明</h3>
 <p>在前面我們已經初步接觸過 <code>use</code>，這裡要把所有用法和路徑規則講完整。</p>
 <h4 id="use_2">為什麼需要 use</h4>
 <p>每次呼叫都寫完整路徑很累：</p>
@@ -13147,7 +13144,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>不用每次都寫 <code>Ordering::Less</code>，直接用 <code>Less</code> 就好。這在 match 很多 variant 的時候特別方便。</p>
-<h3 id="_728">範例程式碼</h3>
+<h3 id="_726">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">basic</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
@@ -13191,7 +13188,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_729">重點整理</h3>
+<h3 id="_727">重點整理</h3>
 <ul>
 <li><code>use</code> 將路徑帶入作用域，讓你不必每次寫完整路徑</li>
 <li>絕對路徑用 <code>crate::</code> 開頭，相對路徑從當前 mod 位置開始</li>
@@ -13206,12 +13203,12 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_cargo_test">第七章第 6 集：cargo test</h2>
-<h3 id="_730">本集目標</h3>
+<h3 id="_728">本集目標</h3>
 <p>學會用 <code>#[test]</code> 寫測試、用 <code>assert!</code> 系列巨集驗證結果、用 <code>cargo test</code> 跑測試。</p>
-<h3 id="_731">概念說明</h3>
-<h4 id="_732">為什麼要寫測試？</h4>
+<h3 id="_729">概念說明</h3>
+<h4 id="_730">為什麼要寫測試？</h4>
 <p>程式碼寫完之後，你怎麼確定它是對的？手動跑一遍？那下次改了程式碼又要再跑一遍。<strong>自動化測試</strong>讓你寫一次，之後隨時都能驗證——一個指令就知道有沒有東西壞掉。</p>
-<h4 id="_733">最簡單的測試</h4>
+<h4 id="_731">最簡單的測試</h4>
 <p>在函數上面加 <code>#[test]</code>，它就變成測試函數：</p>
 <div class="highlight"><pre><span></span><code><span class="cp">#[test]</span>
 <span class="k">fn</span><span class="w"> </span><span class="nf">it_works</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -13291,9 +13288,9 @@ note: iterators are lazy and do nothing unless consumed
 <li>執行所有 <code>#[test]</code> 函數</li>
 <li>報告哪些通過、哪些失敗</li>
 </ol>
-<h4 id="_734">測試私有函數</h4>
+<h4 id="_732">測試私有函數</h4>
 <p>因為 <code>mod tests</code> 是你程式碼的子 mod，而同一個 mod 裡的東西互相看得到——所以測試可以直接測試<strong>私有函數</strong>，不需要 <code>pub</code>。</p>
-<h3 id="_735">範例程式碼</h3>
+<h3 id="_733">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">is_even</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
 <span class="p">}</span>
@@ -13359,7 +13356,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_736">重點整理</h3>
+<h3 id="_734">重點整理</h3>
 <ul>
 <li><code>#[test]</code> 標記測試函數，<code>cargo test</code> 自動找到並執行所有測試</li>
 <li><code>assert!(condition)</code>、<code>assert_eq!(a, b)</code>、<code>assert_ne!(a, b)</code> 驗證結果（debug 和 release 都會執行）</li>
@@ -13371,9 +13368,9 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_pub_use">第七章第 7 集：pub use</h2>
-<h3 id="_737">本集目標</h3>
+<h3 id="_735">本集目標</h3>
 <p>學會用 <code>pub use</code> 重新匯出（re-export）內部項目，讓使用者不需要知道你的 mod 結構。</p>
-<h3 id="_738">概念說明</h3>
+<h3 id="_736">概念說明</h3>
 <p>假設你寫了一個 library，內部結構長這樣：</p>
 <div class="highlight"><pre><span></span><code>src/
 ├── lib.rs
@@ -13431,9 +13428,9 @@ note: iterators are lazy and do nothing unless consumed
 <li><strong>簡化公開 API</strong>：使用者不需要知道你的內部結構，用更短的路徑存取</li>
 <li><strong>自由重構</strong>：你可以隨意改內部的 mod 結構，只要 <code>pub use</code> 保持不變，使用者的程式碼不會壞</li>
 </ol>
-<h4 id="_739">實際案例</h4>
+<h4 id="_737">實際案例</h4>
 <p>很多知名的 Rust library 都大量使用 re-export。比如你寫 <code>use std::io::Read;</code>，其實 <code>Read</code> 可能定義在更深層的地方，只是被 re-export 到 <code>std::io</code> 了。</p>
-<h3 id="_740">範例程式碼</h3>
+<h3 id="_738">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">mod</span><span class="w"> </span><span class="nn">shapes</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">mod</span><span class="w"> </span><span class="nn">circle</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Circle</span><span class="w"> </span><span class="p">{</span>
@@ -13485,7 +13482,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_741">重點整理</h3>
+<h3 id="_739">重點整理</h3>
 <ul>
 <li><code>pub use path::Item;</code> 把內部的東西重新匯出，讓外部用更短的路徑存取</li>
 <li>使用者不需要知道你內部的 mod 結構——你可以自由重構而不影響外部</li>
@@ -13494,9 +13491,9 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_orphan_rule">第七章第 8 集：orphan rule</h2>
-<h3 id="_742">本集目標</h3>
+<h3 id="_740">本集目標</h3>
 <p>理解 Rust 的 orphan rule（孤兒規則），以及當你想為外部型別實作外部 trait 時該怎麼辦。</p>
-<h3 id="_743">概念說明</h3>
+<h3 id="_741">概念說明</h3>
 <p>在第五章我們學過 trait——你可以為自己的型別實作任何 trait。但你有沒有試過這樣：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
 
@@ -13515,7 +13512,7 @@ note: iterators are lazy and do nothing unless consumed
 </blockquote>
 <p>換句話說：<strong>trait 是你的，或型別是你的</strong>，至少要符合一個。</p>
 <p>上面的例子裡，<code>Display</code> 是標準函式庫定義的，<code>Vec&lt;i32&gt;</code> 也是——兩個都不是你的，所以不行。</p>
-<h4 id="_744">為什麼要有這個限制</h4>
+<h4 id="_742">為什麼要有這個限制</h4>
 <p>想像一下如果沒有 orphan rule：</p>
 <ul>
 <li>Crate A 為 <code>Vec&lt;i32&gt;</code> 實作了 <code>Display</code>，印出 <code>[1, 2, 3]</code></li>
@@ -13523,7 +13520,7 @@ note: iterators are lazy and do nothing unless consumed
 <li>你的程式同時用了 A 和 B……編譯器要用哪一個？</li>
 </ul>
 <p>這就是衝突。orphan rule 從根本上避免了這個問題。</p>
-<h4 id="_745">合法的情況</h4>
+<h4 id="_743">合法的情況</h4>
 <p>以下這些都是合法的：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 情況 1：你的型別 + 外部 trait</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">MyPoint</span><span class="w"> </span><span class="p">{</span>
@@ -13566,7 +13563,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p><code>MyVec</code> 是你定義的型別，所以可以為它實作 <code>Display</code>。<code>self.0</code> 存取內部的 <code>Vec&lt;i32&gt;</code>。</p>
-<h3 id="_746">範例程式碼</h3>
+<h3 id="_744">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
 
 <span class="c1">// newtype pattern：用自己的 struct 包住外部型別</span>
@@ -13618,7 +13615,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>完整的規則涉及「covered type parameter」等概念，超出本教學的範圍。有興趣可以參考<a href="https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules">官方文件</a>。</p>
-<h3 id="_747">重點整理</h3>
+<h3 id="_745">重點整理</h3>
 <ul>
 <li><strong>orphan rule</strong>：要 impl trait，trait 或型別至少有一個必須是你的 crate 定義的</li>
 <li>「你的型別 + 外部 trait」✅ 合法</li>
@@ -13630,11 +13627,11 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_doc_comments">第七章第 9 集：文件註解</h2>
-<h3 id="_748">本集目標</h3>
+<h3 id="_746">本集目標</h3>
 <p>學會撰寫文件註解，用 <code>cargo doc</code> 產生專業的 HTML 文件。</p>
-<h3 id="_749">概念說明</h3>
+<h3 id="_747">概念說明</h3>
 <p>Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來的，而是內建在語法裡的。</p>
-<h4 id="_750"><code>///</code> 項目文件註解</h4>
+<h4 id="_748"><code>///</code> 項目文件註解</h4>
 <p>三個斜線 <code>///</code> 是用來為<strong>接下來的項目</strong>（函數、struct、enum、trait 等）寫文件：</p>
 <div class="highlight"><pre><span></span><code><span class="sd">/// 計算兩個整數的最大公因數。</span>
 <span class="sd">///</span>
@@ -13675,7 +13672,7 @@ note: iterators are lazy and do nothing unless consumed
 </code></pre></div>
 
 <p>放在 <code>lib.rs</code> 頂端就是整個 crate 的文件，放在某個 mod 檔案頂端就是那個 mod 的文件。</p>
-<h4 id="_751">常用的文件段落</h4>
+<h4 id="_749">常用的文件段落</h4>
 <p>Rust 社群有一些約定俗成的文件段落名稱：</p>
 <ul>
 <li><code># Examples</code> — 使用範例（最重要的一個！）</li>
@@ -13694,7 +13691,7 @@ note: iterators are lazy and do nothing unless consumed
 <li>自動在瀏覽器打開</li>
 </ol>
 <p>生成的文件就跟你在 docs.rs 上看到的一模一樣。</p>
-<h3 id="_752">範例程式碼</h3>
+<h3 id="_750">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="sd">//! # 溫度轉換工具</span>
 <span class="sd">//!</span>
 <span class="sd">//! 提供攝氏和華氏之間的轉換函數。</span>
@@ -13768,7 +13765,7 @@ note: iterators are lazy and do nothing unless consumed
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_753">重點整理</h3>
+<h3 id="_751">重點整理</h3>
 <ul>
 <li><code>///</code> 為接下來的項目（fn、struct、enum 等）撰寫文件</li>
 <li><code>//!</code> 為包含它的項目（mod、crate）撰寫文件，通常放在檔案最頂端</li>
@@ -13779,11 +13776,11 @@ note: iterators are lazy and do nothing unless consumed
 </ul>
 <hr />
 <h2 id="ch7_cargo_publish">第七章第 10 集：cargo publish</h2>
-<h3 id="_754">本集目標</h3>
+<h3 id="_752">本集目標</h3>
 <p>學會將你的 library 發布到 crates.io，讓全世界的 Rust 開發者都能使用。</p>
-<h3 id="_755">概念說明</h3>
+<h3 id="_753">概念說明</h3>
 <p>到目前為止，我們學會了怎麼組織程式碼、寫文件、使用別人的套件。這一集要反過來——把你自己的套件發布出去。</p>
-<h4 id="_756">帳號設定</h4>
+<h4 id="_754">帳號設定</h4>
 <p>首先，你需要一個 crates.io 的帳號：</p>
 <ol>
 <li>到 <a href="https://crates.io">crates.io</a> 用 GitHub 帳號登入</li>
@@ -13821,19 +13818,19 @@ note: iterators are lazy and do nothing unless consumed
 <li><code>keywords</code>：搜尋用的關鍵字（最多 5 個）</li>
 <li><code>categories</code>：分類（需符合 crates.io 的分類清單）</li>
 </ul>
-<h4 id="_757">發布前檢查</h4>
+<h4 id="_755">發布前檢查</h4>
 <p>發布前可以先用 <code>cargo package</code> 檢查有沒有問題：</p>
 <div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>package
 </code></pre></div>
 
 <p>這會模擬打包過程，檢查有沒有缺少必要欄位或其他問題。</p>
-<h4 id="_758">發布！</h4>
+<h4 id="_756">發布！</h4>
 <p>一切準備好後：</p>
 <div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>publish
 </code></pre></div>
 
 <p>完成！你的套件現在在 crates.io 上了，任何人都可以 <code>cargo add my-awesome-lib</code> 來使用。</p>
-<h4 id="_759">版本更新流程</h4>
+<h4 id="_757">版本更新流程</h4>
 <p>套件發布後，如果要更新：</p>
 <ol>
 <li>修改程式碼</li>
@@ -13852,7 +13849,7 @@ note: iterators are lazy and do nothing unless consumed
 <div class="highlight"><pre><span></span><code>cargo<span class="w"> </span>yank<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.1.0
 </code></pre></div>
 
-<h4 id="_760">發布前最好做的事</h4>
+<h4 id="_758">發布前最好做的事</h4>
 <ul>
 <li>寫好 <code>README.md</code>（這會顯示在 crates.io 套件頁面上）</li>
 <li>跑過 <code>cargo test</code> 確認所有測試通過</li>
@@ -13860,7 +13857,7 @@ note: iterators are lazy and do nothing unless consumed
 <li>確保有範例程式碼</li>
 <li>用 <code>cargo doc --open</code> 檢查文件看起來沒問題</li>
 </ul>
-<h3 id="_761">範例程式碼</h3>
+<h3 id="_759">範例程式碼</h3>
 <p>一個準備好發布的小 library 的完整結構：</p>
 <div class="highlight"><pre><span></span><code>my-math-lib/
 ├── Cargo.toml
@@ -13978,7 +13975,7 @@ cargo<span class="w"> </span>package<span class="w">        </span><span class="
 cargo<span class="w"> </span>publish<span class="w">        </span><span class="c1"># 正式發布！</span>
 </code></pre></div>
 
-<h3 id="_762">重點整理</h3>
+<h3 id="_760">重點整理</h3>
 <ul>
 <li>在 crates.io 用 GitHub 登入，產生 API Token 後用 <code>cargo login</code> 設定</li>
 <li><code>Cargo.toml</code> 發布前應填寫 <code>license</code>、<code>description</code>、<code>homepage</code>、<code>repository</code>、<code>readme</code></li>
@@ -13993,20 +13990,20 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <hr />
 <h1 id="ap1">附錄：補充主題</h1>
 <h2 id="ap1_number_literals">附錄第 a 集：數字字面值格式</h2>
-<h3 id="_763">本集目標</h3>
+<h3 id="_761">本集目標</h3>
 <p>學會用底線分隔、不同進位制、型別後綴，以及浮點數字面值的各種寫法。</p>
 <blockquote>
 <p>本集是<strong>第一章</strong>的補充。</p>
 </blockquote>
-<h3 id="_764">概念說明</h3>
+<h3 id="_762">概念說明</h3>
 <p>第一章我們學了基本的數字寫法，像 <code>42</code>、<code>3.14</code>。但 Rust 的數字字面值其實有很多寫法，讓你寫出來的數字更好讀、更精確。</p>
-<h4 id="_765">底線分隔符</h4>
+<h4 id="_763">底線分隔符</h4>
 <p>當數字很大的時候，<code>1000000</code> 和 <code>1_000_000</code> 哪個比較好讀？Rust 允許你在數字字面值的任意位置插入底線 <code>_</code>，編譯器會直接忽略它們：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">million</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_000_000</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">weird_but_legal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_00_00_00</span><span class="p">;</span><span class="w"> </span><span class="c1">// 合法，但別這樣寫</span>
 </code></pre></div>
 
-<h4 id="_766">不同進位制</h4>
+<h4 id="_764">不同進位制</h4>
 <p>除了十進位，Rust 還支援三種進位制前綴：</p>
 <ul>
 <li><code>0x</code> — 十六進位（例如 <code>0xff</code> = 255）</li>
@@ -14014,7 +14011,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>0o</code> — 八進位（例如 <code>0o77</code> = 63）</li>
 </ul>
 <p>這在處理位元運算、顏色值等場景特別實用。底線也能搭配進位制使用：<code>0b1111_0000</code>。</p>
-<h4 id="_767">型別後綴</h4>
+<h4 id="_765">型別後綴</h4>
 <p>你可以直接在數字後面加上型別：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xFF</span><span class="k">u8</span><span class="p">;</span><span class="w">          </span><span class="c1">// 十六進位 + u8</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">big</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1_000_000</span><span class="k">i64</span><span class="p">;</span><span class="w">     </span><span class="c1">// 底線 + i64</span>
@@ -14022,7 +14019,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>不加後綴的話，整數預設是 <code>i32</code>，浮點數預設是 <code>f64</code>。</p>
-<h4 id="_768">浮點數字面值</h4>
+<h4 id="_766">浮點數字面值</h4>
 <p>浮點數有幾種寫法：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.14</span><span class="p">;</span><span class="w">         </span><span class="c1">// 一般小數，預設 f64</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.14</span><span class="k">f32</span><span class="p">;</span><span class="w">      </span><span class="c1">// 指定 f32</span>
@@ -14032,7 +14029,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>注意：Rust 的浮點數字面值<strong>必須有小數點或科學記號</strong>。<code>1f64</code> 不合法，要寫 <code>1.0f64</code> 或 <code>1.0</code>。</p>
-<h3 id="_769">範例程式碼</h3>
+<h3 id="_767">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 底線分隔</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">population</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23_000_000</span><span class="p">;</span>
@@ -14067,7 +14064,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_770">重點整理</h3>
+<h3 id="_768">重點整理</h3>
 <ul>
 <li><code>_</code> 可以插在數字字面值的任意位置，幫助閱讀，編譯器會忽略</li>
 <li><code>0x</code> 十六進位、<code>0b</code> 二進位、<code>0o</code> 八進位</li>
@@ -14077,14 +14074,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_break_return_value">附錄第 b 集：break 回傳值</h2>
-<h3 id="_771">本集目標</h3>
+<h3 id="_769">本集目標</h3>
 <p>學會用 <code>break</code> 從 <code>loop</code> 迴圈中回傳值，把迴圈當作表達式使用。</p>
 <blockquote>
 <p>本集是<strong>第一章</strong>的補充。</p>
 </blockquote>
-<h3 id="_772">概念說明</h3>
+<h3 id="_770">概念說明</h3>
 <p>還記得 Rust 裡「幾乎所有東西都是表達式」嗎？<code>loop</code> 迴圈也不例外——你可以透過 <code>break</code> 帶一個值出來，讓整個 <code>loop</code> 變成一個表達式。</p>
-<h4 id="_773">基本語法</h4>
+<h4 id="_771">基本語法</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">break</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="p">};</span>
@@ -14095,7 +14092,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>你可能會問：<code>while</code> 和 <code>for</code> 為什麼不行？</p>
 <p>原因是：<code>while</code> 和 <code>for</code> 有可能<strong>一次都不執行</strong>。如果迴圈體從未執行，那 <code>break</code> 帶出的值根本不存在，編譯器就無法保證一定有回傳值。</p>
 <p>但 <code>loop</code> 不同——它是無條件迴圈，<strong>一定會進入迴圈體</strong>，所以編譯器可以確定 <code>break</code> 一定會被執行到（否則就是無窮迴圈）。這就是為什麼只有 <code>loop</code> 能當表達式回傳值。</p>
-<h4 id="_774">實際應用場景</h4>
+<h4 id="_772">實際應用場景</h4>
 <p>最常見的用法是「在迴圈裡搜尋某個東西，找到就帶出來」：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 做一些搜尋...</span>
@@ -14106,7 +14103,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這比先宣告一個變數、在迴圈裡賦值、再 <code>break</code> 出來要簡潔得多。</p>
-<h3 id="_775">範例程式碼</h3>
+<h3 id="_773">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 基本用法：loop 回傳值</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">lucky_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">loop</span><span class="w"> </span><span class="p">{</span>
@@ -14128,7 +14125,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_776">重點整理</h3>
+<h3 id="_774">重點整理</h3>
 <ul>
 <li><code>let x = loop { break value; };</code> 讓 <code>loop</code> 成為表達式，回傳 <code>break</code> 帶出的值</li>
 <li>只有 <code>loop</code> 能這樣做，<code>while</code> 和 <code>for</code> 不行——因為它們可能一次都不執行</li>
@@ -14136,21 +14133,21 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_multiline_raw_strings">附錄第 c 集：多行字串 &amp; raw string literal</h2>
-<h3 id="_777">本集目標</h3>
+<h3 id="_775">本集目標</h3>
 <p>學會在 Rust 中撰寫多行字串、行接續符號、以及不需要跳脫字元的 raw string。</p>
 <blockquote>
 <p>本集是<strong>第一章</strong>的補充。</p>
 </blockquote>
-<h3 id="_778">概念說明</h3>
+<h3 id="_776">概念說明</h3>
 <p>寫程式的時候，我們常常需要處理多行文字、檔案路徑、或是包含特殊字元的字串。Rust 提供了幾種好用的語法來應對這些情況。</p>
-<h4 id="_779">多行字串</h4>
+<h4 id="_777">多行字串</h4>
 <p>在 Rust 裡，字串字面值可以直接跨行：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">poem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;床前明月光，</span>
 <span class="s">疑是地上霜。&quot;</span><span class="p">;</span>
 </code></pre></div>
 
 <p>換行符號會直接被包含在字串裡。</p>
-<h4 id="_780">行接續符 <code>\</code></h4>
+<h4 id="_778">行接續符 <code>\</code></h4>
 <p>如果你想把很長的字串分行寫，但<strong>不要</strong>換行符號出現在結果裡，可以在行尾加 <code>\</code>。它會吃掉換行以及下一行開頭的空白：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;這是一段很長的句子，\</span>
 <span class="s">            但其實只有一行。&quot;</span><span class="p">;</span>
@@ -14173,7 +14170,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>你可以加任意多層 <code>#</code>，只要開頭和結尾的數量一致就好。</p>
-<h3 id="_781">範例程式碼</h3>
+<h3 id="_779">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 多行字串</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">haiku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;古池や</span>
@@ -14219,7 +14216,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_782">重點整理</h3>
+<h3 id="_780">重點整理</h3>
 <ul>
 <li>字串字面值可以直接跨行，換行符號會被保留</li>
 <li>行尾加 <code>\</code> 可以接續下一行，同時忽略換行和下一行的前導空白</li>
@@ -14230,33 +14227,33 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_format_strings">附錄第 d 集：格式化字串進階</h2>
-<h3 id="_783">本集目標</h3>
+<h3 id="_781">本集目標</h3>
 <p>學會 <code>println!</code> 的各種格式化技巧，包括變數捕獲簡寫、寬度、對齊、精度控制和進位制顯示。</p>
 <blockquote>
 <p>本集是<strong>第二章</strong>的補充。</p>
 </blockquote>
-<h3 id="_784">概念說明</h3>
+<h3 id="_782">概念說明</h3>
 <p>我們之前一直用 <code>println!("{}", x)</code> 來印東西，但其實 Rust 的格式化字串功能強大得多。這集介紹最常用的技巧，但不會涵蓋所有用法——完整的格式化語法請參考<a href="https://doc.rust-lang.org/std/fmt/">官方文件</a>。</p>
-<h4 id="_785">變數捕獲簡寫</h4>
+<h4 id="_783">變數捕獲簡寫</h4>
 <p>你可以直接在 <code>{}</code> 裡寫變數名稱：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Andy&quot;</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{name}&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 等同於 println!(&quot;{}&quot;, name)</span>
 </code></pre></div>
 
 <p>這比一直寫 <code>{}</code> 然後在後面對應變數方便多了，尤其是有很多變數的時候。注意只能放變數名，不能放表達式（<code>"{x + 1}"</code> 不行）。</p>
-<h4 id="_786">小數精度</h4>
+<h4 id="_784">小數精度</h4>
 <p>用 <code>:.N</code> 控制小數點後幾位：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">pi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.14159265</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{pi:.2}&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 印出 3.14</span>
 </code></pre></div>
 
-<h4 id="_787">寬度</h4>
+<h4 id="_785">寬度</h4>
 <p>用 <code>:N</code> 指定最小寬度——不夠寬的話會用空白補齊：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{x:5}&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;   42&quot;（寬度 5，靠右，空白補齊）</span>
 </code></pre></div>
 
-<h4 id="_788">對齊</h4>
+<h4 id="_786">對齊</h4>
 <p>用 <code>:&gt;N</code>、<code>:&lt;N</code>、<code>:^N</code> 來明確控制靠右、靠左、置中：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Andy&quot;</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[{name:&gt;10}]&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 靠右對齊，寬度 10</span>
@@ -14264,13 +14261,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;[{name:^10}]&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 置中</span>
 </code></pre></div>
 
-<h4 id="_789">填充字元</h4>
+<h4 id="_787">填充字元</h4>
 <p>預設用空白填充，你也可以指定其他字元：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{id:0&gt;5}&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 印出 00042（用 0 填充）</span>
 </code></pre></div>
 
-<h4 id="_790">進位制顯示</h4>
+<h4 id="_788">進位制顯示</h4>
 <p>用 <code>:b</code>、<code>:x</code>、<code>:o</code> 分別以二進位、十六進位、八進位顯示數字：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{n:b}&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// 11111111</span>
@@ -14279,12 +14276,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這些格式也可以組合——例如 <code>{:0&gt;8b}</code> 是「零填充到 8 位的二進位」。</p>
-<h4 id="_791">跳脫大括號</h4>
+<h4 id="_789">跳脫大括號</h4>
 <p>如果你想在格式化字串裡印出 <code>{</code> 或 <code>}</code> 本身，用 <code>{{</code> 和 <code>}}</code>：</p>
 <div class="highlight"><pre><span></span><code><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;這是大括號：{{}}&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// 印出：這是大括號：{}</span>
 </code></pre></div>
 
-<h3 id="_792">範例程式碼</h3>
+<h3 id="_790">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;小明&quot;</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">87.5678</span><span class="p">;</span>
@@ -14329,7 +14326,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_793">重點整理</h3>
+<h3 id="_791">重點整理</h3>
 <ul>
 <li><code>println!("{x}")</code> 直接在大括號裡寫變數名，只能放變數不能放表達式</li>
 <li><code>{:.2}</code> 控制小數點後位數</li>
@@ -14342,12 +14339,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_items_in_main">附錄第 e 集：struct / enum 放在 fn 裡面</h2>
-<h3 id="_794">本集目標</h3>
+<h3 id="_792">本集目標</h3>
 <p>了解 struct、enum、fn 等「項目」可以定義在函數內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
 <blockquote>
 <p>本集是<strong>第三章</strong>的補充。</p>
 </blockquote>
-<h3 id="_795">概念說明</h3>
+<h3 id="_793">概念說明</h3>
 <p>你可能習慣了把 <code>struct</code> 和 <code>enum</code> 定義在 <code>fn main()</code> 的外面，但其實把它們放在裡面也完全合法：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="p">{</span>
@@ -14360,9 +14357,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這段程式碼完全可以編譯。</p>
-<h4 id="_796">限制：只在該函數內可見</h4>
+<h4 id="_794">限制：只在該函數內可見</h4>
 <p>放在函數內的型別定義，只有那個 fn 看得到。其他函數無法使用它。所以慣例上，我們還是會把型別定義放在外面——除非你確定這個型別只在一個 fn 裡面用到。</p>
-<h4 id="_797">重要差異：項目不受順序限制</h4>
+<h4 id="_795">重要差異：項目不受順序限制</h4>
 <p>這裡有一個很多人不知道的重點。在 Rust 裡，<strong>項目（items）</strong>——包括 <code>struct</code>、<code>enum</code>、<code>fn</code>、<code>trait</code>、<code>impl</code> 等——<strong>不受定義順序影響</strong>。你可以先使用，後定義：</p>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">};</span><span class="w">  </span><span class="c1">// 先使用</span>
@@ -14376,9 +14373,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這和 <code>let</code> 完全不同！<code>let</code> 綁定必須在使用之前出現，否則編譯器會報錯。但項目定義是「全域可見」的（在它所在的作用域內），跟你寫在哪一行無關。</p>
-<h4 id="_798">為什麼會這樣？</h4>
+<h4 id="_796">為什麼會這樣？</h4>
 <p>因為項目是在編譯期就確定的靜態定義，編譯器會先掃描所有項目，建立完整的型別資訊，然後才處理 <code>let</code> 等執行期的敘述。</p>
-<h3 id="_799">範例程式碼</h3>
+<h3 id="_797">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// 先呼叫，後定義——完全合法</span>
 <span class="w">    </span><span class="n">greet</span><span class="p">();</span>
@@ -14423,7 +14420,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_800">重點整理</h3>
+<h3 id="_798">重點整理</h3>
 <ul>
 <li><code>struct</code>、<code>enum</code>、<code>fn</code> 等項目可以合法地定義在函數內部</li>
 <li>定義在 fn 內的項目，只有該 fn 看得到（作用域限制）</li>
@@ -14434,14 +14431,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_struct_update_syntax">附錄第 f 集：struct update syntax</h2>
-<h3 id="_801">本集目標</h3>
+<h3 id="_799">本集目標</h3>
 <p>學會用 <code>..</code> 語法從既有的 struct 實例快速建立新實例，並理解 Copy 與 move 欄位的差異。</p>
 <blockquote>
 <p>本集是<strong>第三章</strong>的補充。</p>
 </blockquote>
-<h3 id="_802">概念說明</h3>
+<h3 id="_800">概念說明</h3>
 <p>還記得建立 struct 的時候，每個欄位都要寫出來嗎？如果你只想改一兩個欄位，其他照舊，每次都全部寫一遍很煩。Rust 提供了 <strong>struct update syntax</strong>，用 <code>..</code> 來「填入剩下的欄位」。</p>
-<h4 id="_803">基本語法</h4>
+<h4 id="_801">基本語法</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Point</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="o">..</span><span class="n">p1</span><span class="w"> </span><span class="p">};</span>
 </code></pre></div>
 
@@ -14460,7 +14457,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>這在有很多欄位的 struct 特別好用。</p>
-<h3 id="_804">範例程式碼</h3>
+<h3 id="_802">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="cp">#[derive(Debug)]</span>
 <span class="k">struct</span><span class="w"> </span><span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">width</span><span class="p">:</span><span class="w"> </span><span class="kt">u32</span><span class="p">,</span>
@@ -14522,7 +14519,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_805">重點整理</h3>
+<h3 id="_803">重點整理</h3>
 <ul>
 <li><code>let p2 = Point { x: 1, ..p1 };</code> 用 <code>p1</code> 填入 <code>p2</code> 剩餘的欄位</li>
 <li><code>..source</code> 必須放在最後面</li>
@@ -14533,12 +14530,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_ref_pattern_match_ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</h2>
-<h3 id="_806">本集目標</h3>
+<h3 id="_804">本集目標</h3>
 <p>了解 <code>ref</code> 關鍵字在模式匹配中的作用，以及為什麼在現代 Rust 中幾乎不需要手動寫 <code>ref</code>。</p>
 <blockquote>
 <p>本集是<strong>第三章</strong>的補充。</p>
 </blockquote>
-<h3 id="_807">概念說明</h3>
+<h3 id="_805">概念說明</h3>
 <p>這集要講一個你可能在舊程式碼裡看過、但在現代 Rust 中幾乎用不到的語法：<code>ref</code>。理解它的存在和原理，有助於你讀懂別人的程式碼。</p>
 <h4 id="ref"><code>ref</code> 是什麼？</h4>
 <p>在模式中，<code>ref</code> 會把綁定的變數變成一個參考，而不是取得所有權：</p>
@@ -14574,7 +14571,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>這就是所謂的 <strong>match ergonomics</strong>。編譯器看到你 match 的是一個參考（<code>&amp;opt</code>），就會自動幫你在模式裡加上 <code>ref</code>。</p>
 <h4 id="ref_1">所以現在還需要寫 <code>ref</code> 嗎？</h4>
 <p>幾乎不需要了。99% 的情況你只要 match 參考（<code>match &amp;value</code>），編譯器就會自動處理。但讀舊程式碼的時候，看到 <code>ref</code> 至少要知道它在做什麼。</p>
-<h3 id="_808">範例程式碼</h3>
+<h3 id="_806">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// ===== ref 基本用法 =====</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">);</span>
@@ -14618,7 +14615,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_809">重點整理</h3>
+<h3 id="_807">重點整理</h3>
 <ul>
 <li><code>let ref x = val;</code> 等同於 <code>let x = &amp;val;</code>——在 <code>let</code> 中兩者完全一樣</li>
 <li>在 match 中，<code>Some(ref x)</code> 會借用而不是 move 內部的值</li>
@@ -14629,12 +14626,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_panic_todo_unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</h2>
-<h3 id="_810">本集目標</h3>
+<h3 id="_808">本集目標</h3>
 <p>認識四種會讓程式立即終止的巨集，以及它們各自的使用時機。</p>
 <blockquote>
 <p>本集是通用補充，不特定屬於哪一章。</p>
 </blockquote>
-<h3 id="_811">概念說明</h3>
+<h3 id="_809">概念說明</h3>
 <p>你可能注意到 <code>println!()</code>、<code>format!()</code> 這些名字後面都有 <code>!</code>。在 Rust 裡，名字帶 <code>!</code> 的東西叫做<strong>巨集（macro）</strong>——它和函數不太一樣，但目前你只需要知道怎麼用就好，巨集的原理以後會教。</p>
 <p>這集要介紹四個常用的「讓程式直接掛掉」的巨集。它們都會造成 panic（程式中止），但語義不同，傳達給讀程式碼的人的訊息也不同。</p>
 <h4 id="panic_2"><code>panic!("訊息")</code></h4>
@@ -14675,14 +14672,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>如果真的走到了，表示你的假設有誤，panic 會幫你發現這個 bug。</p>
-<h4 id="_812">四者比較</h4>
+<h4 id="_810">四者比較</h4>
 <ul>
 <li><code>panic!</code> — 出事了。用於無法處理的錯誤</li>
 <li><code>todo!</code> — 還沒寫，之後會實作。開發中的佔位符</li>
 <li><code>unimplemented!</code> — 沒有實作，不保證之後會做。可能是沒需求、可能是 trait 要求但沒意義</li>
 <li><code>unreachable!</code> — 不該走到這裡。標記邏輯上不可能的分支</li>
 </ul>
-<h3 id="_813">範例程式碼</h3>
+<h3 id="_811">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">enum</span><span class="w"> </span><span class="nc">Shape</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">Circle</span><span class="p">(</span><span class="kt">f64</span><span class="p">),</span>
 <span class="w">    </span><span class="n">Rectangle</span><span class="p">(</span><span class="kt">f64</span><span class="p">,</span><span class="w"> </span><span class="kt">f64</span><span class="p">),</span>
@@ -14753,7 +14750,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_814">重點整理</h3>
+<h3 id="_812">重點整理</h3>
 <ul>
 <li><code>panic!("msg")</code> 是最基本的中止方式，用於無法處理的錯誤</li>
 <li><code>todo!()</code> 是開發佔位符，明確表示「之後會實作」</li>
@@ -14763,15 +14760,15 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_rc_cycle_weak">附錄第 i 集：Rc 迴圈與 Weak</h2>
-<h3 id="_815">本集目標</h3>
+<h3 id="_813">本集目標</h3>
 <p>理解 <code>Rc</code> 參考迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
-<h3 id="_816">概念說明</h3>
+<h3 id="_814">概念說明</h3>
 <p>還記得第五章學的 <code>Rc&lt;T&gt;</code> 嗎？它透過參考計數來管理記憶體——每多一個 <code>Rc</code> 指向同一筆資料，計數就加一；每少一個就減一；歸零時釋放記憶體。</p>
 <p>聽起來很完美，但有一個致命弱點：<strong>參考迴圈（reference cycle）</strong>。</p>
-<h4 id="_817">什麼是參考迴圈？</h4>
+<h4 id="_815">什麼是參考迴圈？</h4>
 <p>想像 A 持有 <code>Rc</code> 指向 B，B 也持有 <code>Rc</code> 指向 A。當我們不再需要它們的時候：</p>
 <ol>
 <li>A 的 <code>Rc</code> 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放</li>
@@ -14805,7 +14802,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>子 → 父：用 <code>Weak</code>（子女知道父親存在，但不擁有）</li>
 </ul>
 <p>這樣當外部的 <code>Rc</code> 都 drop 之後，strong count 能夠正常歸零，記憶體就能正確釋放。</p>
-<h3 id="_818">範例程式碼</h3>
+<h3 id="_816">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -14844,7 +14841,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_819">重點整理</h3>
+<h3 id="_817">重點整理</h3>
 <ul>
 <li><code>Rc</code> 的參考迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放</li>
 <li><code>Rc::downgrade(&amp;rc)</code> 建立 <code>Weak&lt;T&gt;</code>，<strong>不增加 strong count</strong></li>
@@ -14855,14 +14852,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_fully_qualified_syntax">附錄第 j 集：fully qualified syntax</h2>
-<h3 id="_820">本集目標</h3>
+<h3 id="_818">本集目標</h3>
 <p>學會三種不同層級的方法呼叫語法，以及在 trait 方法名稱衝突時如何消歧義。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
-<h3 id="_821">概念說明</h3>
+<h3 id="_819">概念說明</h3>
 <p>在 Rust 裡，呼叫一個方法其實有三種寫法，從簡單到完整：</p>
-<h4 id="_822">第一種：方法語法</h4>
+<h4 id="_820">第一種：方法語法</h4>
 <div class="highlight"><pre><span></span><code><span class="n">dog</span><span class="p">.</span><span class="n">speak</span><span class="p">();</span>
 </code></pre></div>
 
@@ -14877,7 +14874,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>最明確的寫法：「在 <code>Dog</code> 實作的 <code>Animal</code> trait 上，呼叫 <code>speak</code> 方法，傳入 <code>&amp;dog</code>」。</p>
-<h4 id="_823">什麼時候需要用到？</h4>
+<h4 id="_821">什麼時候需要用到？</h4>
 <p>大部分時候第一層就夠了。但當<strong>多個 trait 定義了同名方法</strong>的時候，編譯器不知道你要呼叫哪一個，就需要更明確的語法：</p>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">;</span>
@@ -14903,7 +14900,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>有些地方可以直接寫 <code>Type::TypeName</code>，但如果有歧義或是編譯器無法推斷，就需要用完全限定語法明確指定。</p>
-<h3 id="_824">範例程式碼</h3>
+<h3 id="_822">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">);</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">category</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">&#39;</span><span class="nb">static</span><span class="w"> </span><span class="kt">str</span><span class="p">;</span>
@@ -14976,7 +14973,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_825">重點整理</h3>
+<h3 id="_823">重點整理</h3>
 <ul>
 <li>方法呼叫有三種層級：<code>obj.method()</code> → <code>Trait::method(&amp;obj)</code> → <code>&lt;Type as Trait&gt;::method(&amp;obj)</code></li>
 <li>通常用最簡單的就好，有衝突時才升級</li>
@@ -14988,12 +14985,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ap1_dst_intro">附錄第 k 集：DST 簡介</h2>
-<h3 id="_826">本集目標</h3>
+<h3 id="_824">本集目標</h3>
 <p>理解什麼是動態大小型別（DST），以及 <code>Sized</code>、<code>?Sized</code> 在泛型中的意義。</p>
 <blockquote>
 <p>本集是<strong>第五章</strong>的補充。</p>
 </blockquote>
-<h3 id="_827">概念說明</h3>
+<h3 id="_825">概念說明</h3>
 <p>（本集提到的指標大小以 64 位元系統為準——現在絕大多數電腦都是 64 位元。）</p>
 <p>在 Rust 的型別系統裡，大部分型別的大小在編譯期就已知——<code>i32</code> 是 4 bytes、<code>bool</code> 是 1 byte、<code>(i32, i32)</code> 是 8 bytes。但有些型別的大小<strong>在編譯期是未知的</strong>，這就是 <strong>DST（Dynamically Sized Types）</strong>，動態大小型別。</p>
 <h4 id="dst">常見的 DST</h4>
@@ -15007,7 +15004,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// let arr: [i32] = [1, 2, 3];  // 編譯錯誤！</span>
 </code></pre></div>
 
-<h4 id="_828">怎麼用？靠指標！</h4>
+<h4 id="_826">怎麼用？靠指標！</h4>
 <p>DST 必須藏在某種指標後面：</p>
 <ul>
 <li><code>&amp;str</code>、<code>&amp;[T]</code> — 參考</li>
@@ -15082,7 +15079,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <p>也就是說解參考 <code>String</code> 得到的是 <code>str</code>，解參考 <code>Vec&lt;T&gt;</code> 得到的是 <code>[T]</code>。雖然 DST 沒辦法直接放在變數裡，但 deref coercion 發生在<strong>參考的層級</strong>：<code>&amp;String</code> 轉成 <code>&amp;str</code>，<code>&amp;Vec&lt;T&gt;</code> 轉成 <code>&amp;[T]</code>。轉換的結果就是一個胖指標，帶著位址和長度，不需要知道 DST 的實際大小。</p>
 <p>這就是為什麼一個接受 <code>&amp;str</code> 的函數可以直接傳 <code>&amp;String</code> 進去，接受 <code>&amp;[T]</code> 的函數可以直接傳 <code>&amp;Vec&lt;T&gt;</code> 進去——背後的機制正是 DST + Deref + 胖指標的組合。</p>
-<h3 id="_829">範例程式碼</h3>
+<h3 id="_827">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="p">;</span>
 
 <span class="c1">// 預設：T 必須是 Sized</span>
@@ -15136,7 +15133,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_830">重點整理</h3>
+<h3 id="_828">重點整理</h3>
 <ul>
 <li><strong>DST（Dynamically Sized Types）</strong>：大小在編譯期未知的型別，如 <code>str</code>、<code>[T]</code></li>
 <li>DST 不能直接當值使用，必須透過指標：<code>&amp;str</code>、<code>&amp;[T]</code>、<code>Box&lt;str&gt;</code> 等</li>
@@ -15149,12 +15146,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <hr />
 <h1 id="ch8">第八章：多執行緒</h1>
 <h2 id="ch8_pointer">第八章第 1 集：指標</h2>
-<h3 id="_831">本集目標</h3>
+<h3 id="_829">本集目標</h3>
 <p>理解記憶體位址的概念，知道指標在底層是什麼東西。</p>
-<h3 id="_832">概念說明</h3>
+<h3 id="_830">概念說明</h3>
 <p>前面幾章我們用 <code>&amp;T</code>、<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code> 的時候，關心的是「誰擁有資料」、「誰在借」。這一集要換個角度——這些東西在記憶體裡到底是什麼。</p>
 <p>附錄第 k 集曾經提過 DST 和胖指標的概念。如果當時覺得看不太懂是正常的——因為那時候我們還沒正式介紹過指標。這一集就是要把這個基礎補上。</p>
-<h4 id="_833">記憶體位址</h4>
+<h4 id="_831">記憶體位址</h4>
 <p>程式執行的時候，每一個變數都會被放在記憶體的某個位置，而每個位置都有一個編號，叫做<strong>位址</strong>。<code>&amp;x</code> 拿到的就是 <code>x</code> 的位址。用 <code>{:p}</code> 格式化可以把它印出來看：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:p}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="c1">// 例如 0x7ffd5e8a3b4c</span>
@@ -15163,7 +15160,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>這個十六進位的數字就是 <code>x</code> 在記憶體中的位址。</p>
 <h4 id="t_2"><code>&amp;T</code> 的真面目</h4>
 <p><code>&amp;x</code> 產生的值，一般來說就是 <code>x</code> 的記憶體位址。<code>&amp;T</code> 這個型別存的東西，本質上也就是作為位址的數字。當你把 <code>&amp;x</code> 傳進函數的時候，傳的不是 <code>x</code> 的內容，是 <code>x</code> 的位址。</p>
-<h4 id="_834">指標大小</h4>
+<h4 id="_832">指標大小</h4>
 <p>在大部分情況下，<code>&amp;T</code> 佔 8 bytes，在 64 位元系統上就是一個位址的大小。用 <code>std::mem::size_of</code> 來驗證：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
@@ -15175,7 +15172,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p><code>&amp;T</code> 和 <code>Box&lt;T&gt;</code> 大小一樣——因為它們存的都是位址。<code>&amp;T</code> 指向的資料可能在 stack 上也可能在 heap 上，而擁有所有權的 <code>Box&lt;T&gt;</code> 指向的一定在 heap 上。不管指向哪裡，位址本身的大小是一樣的。所以當 <code>T</code> 本身很大的時候，傳一個位址會比複製整個 <code>T</code> 輕量——但代價是每次存取都要透過位址去查找，多了一層間接。</p>
-<h4 id="_835">解參考</h4>
+<h4 id="_833">解參考</h4>
 <p>有了位址，我們能做什麼？用 <code>*</code> 運算子<strong>解參考</strong>（dereference），透過位址取得對應的內容：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
 <span class="kd">let</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">;</span>
@@ -15192,7 +15189,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 16（位址 + 長度）</span>
 </code></pre></div>
 
-<h3 id="_836">範例程式碼</h3>
+<h3 id="_834">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -15225,7 +15222,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box&lt;[i32]&gt; 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">());</span>
 </code></pre></div>
 
-<h3 id="_837">重點整理</h3>
+<h3 id="_835">重點整理</h3>
 <ul>
 <li><code>&amp;T</code> 在底層就是一個記憶體位址，本質上是一個數字</li>
 <li>在 64 位元系統上的大部分情況下，<code>&amp;T</code> 和 <code>Box&lt;T&gt;</code> 的大小是 8 bytes，就是一個位址的大小</li>
@@ -15234,11 +15231,11 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_thread_spawn">第八章第 2 集：thread::spawn</h2>
-<h3 id="_838">本集目標</h3>
+<h3 id="_836">本集目標</h3>
 <p>學會建立執行緒，讓程式同時做好幾件事。</p>
-<h3 id="_839">概念說明</h3>
+<h3 id="_837">概念說明</h3>
 <p>到目前為止，我們的程式都是從頭到尾一行一行執行的。但有些時候你希望程式能<strong>同時</strong>做好幾件事——比如一邊下載檔案一邊更新進度條。這就是<strong>執行緒</strong>的用途。</p>
-<h4 id="_840">建立執行緒</h4>
+<h4 id="_838">建立執行緒</h4>
 <p><code>std::thread::spawn</code> 接收一個閉包，在新的執行緒上執行它：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15312,7 +15309,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>為什麼需要 <code>move</code>？因為 <code>thread::spawn</code> 不只能在 main 裡呼叫——任何函數都可以 spawn 執行緒。新執行緒的生命週期不確定，它可能活得比呼叫它的函數還久。如果閉包只是借用 <code>name</code>，而那個函數先結束、把 <code>name</code> 丟掉了，閉包就拿著一個懸垂參考。加上 <code>move</code> 之後，<code>name</code> 的所有權搬進了閉包裡，不管原本的作用域怎麼結束，閉包都能繼續用它。</p>
-<h4 id="_841">輸出交錯</h4>
+<h4 id="_839">輸出交錯</h4>
 <p>多個執行緒同時跑的時候，它們的輸出會交錯——每次執行結果可能不一樣：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15335,7 +15332,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>跑幾次看看，你會發現 AAA 和 BBB 的順序每次都可能不同。這就是多執行緒的特性——執行順序是不確定的。</p>
-<h3 id="_842">範例程式碼</h3>
+<h3 id="_840">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -15355,7 +15352,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_843">重點整理</h3>
+<h3 id="_841">重點整理</h3>
 <ul>
 <li><code>thread::spawn(|| { ... })</code> 建立一個新的執行緒</li>
 <li>main 結束時所有執行緒跟著死，用 <code>.join()</code> 等待執行緒完成</li>
@@ -15365,10 +15362,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_send_sync">第八章第 3 集：Send / Sync</h2>
-<h3 id="_844">本集目標</h3>
+<h3 id="_842">本集目標</h3>
 <p>理解 Rust 如何在編譯期保證型別能安全地跨執行緒使用。</p>
-<h3 id="_845">概念說明</h3>
-<h4 id="_846">為什麼需要額外的保護</h4>
+<h3 id="_843">概念說明</h3>
+<h4 id="_844">為什麼需要額外的保護</h4>
 <p>還記得第四章一開頭的鑰匙圈比喻嗎？現在你應該能理解鑰匙就是指標了。</p>
 <p>Rust 有所有權規則以及借用規則——例如同時不能有兩個 <code>&amp;mut</code>——的原因之一就是為了防止一個位址的值被同時讀寫，造成前面提到過的<strong>資料競爭（data race）</strong>。舉個具體的例子：假設有一個 <code>i32</code> 值是 0，執行緒 A 和執行緒 B 各自透過指標對它加 1。你預期結果是 2，但實際上可能是這樣：</p>
 <ol>
@@ -15401,7 +15398,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// MyData 自動就是 Send + Sync</span>
 </code></pre></div>
 
-<h4 id="_847">不用死背</h4>
+<h4 id="_845">不用死背</h4>
 <p>你不需要記住哪些型別是 Send、哪些是 Sync。試著把一個不安全的型別丟進 <code>thread::spawn</code>，編譯器會直接報錯告訴你：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15425,7 +15422,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>閉包 <code>F</code> 必須是 <code>Send</code>——閉包捕捉了什麼，它的型別就包含什麼，所以如果捕捉的變數不是 <code>Send</code>，閉包本身也不會是 <code>Send</code>，spawn 就會編譯失敗。回傳值 <code>T</code> 也必須是 <code>Send</code>，因為結果要從子執行緒傳回來。</p>
 <p>還有那個 <code>'static</code>——為什麼需要它？因為我們完全不知道 spawn 出來的執行緒會活多久。你可能會 join 它，也可能不 join 讓它自己跑到 main 結束才被強制終止。Rust 的型別系統沒辦法保證你一定會在某個時間點 join，所以它要求最保守的保證：閉包和回傳值裡的所有東西都不能有會過期的借用。第五章第 28 集學過 lifetime bound，<code>T: 'a</code> 代表 <code>T</code> 裡面的所有參考都必須活得過 <code>'a</code>。<code>F: 'static</code> 就是這個概念的極端情況——閉包裡面的參考要活得跟整個程式一樣久。實務上最常見的做法就是上一集說的 <code>move</code>——把值搬進閉包之後，閉包不借用任何東西，自然滿足 <code>'static</code>。</p>
-<h3 id="_848">範例程式碼</h3>
+<h3 id="_846">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="c1">// 這個 struct 的所有欄位都是 Send + Sync，</span>
@@ -15451,7 +15448,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_849">重點整理</h3>
+<h3 id="_847">重點整理</h3>
 <ul>
 <li>資料競爭（data race）：多個執行緒同時存取同一份資料且至少一方在寫，結果不可預期</li>
 <li><code>thread::spawn</code> 的閉包會把捕捉的變數送到另一個執行緒，所以這些變數必須是 <code>Send</code></li>
@@ -15462,9 +15459,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_refcell_multithread">第八章第 4 集：RefCell 在多執行緒</h2>
-<h3 id="_850">本集目標</h3>
+<h3 id="_848">本集目標</h3>
 <p>理解為什麼 interior mutability 在多執行緒下是危險的，以及 RefCell 的 Send / Sync 特性。</p>
-<h3 id="_851">概念說明</h3>
+<h3 id="_849">概念說明</h3>
 <h4 id="interior-mutability">interior mutability 是多執行緒的一大威脅</h4>
 <p>第五章學過，RefCell 能透過 <code>&amp;T</code>（不可變參考）修改內部的值。在單執行緒的世界裡，RefCell 會在執行期檢查借用規則，不會出問題。</p>
 <p>但在多執行緒的世界裡，事情就不一樣了。<code>&amp;T</code> 看起來是「只讀」的，而 Sync 的定義就是 <code>&amp;T</code> 能安全地在多個執行緒之間共享。如果一個型別能透過 <code>&amp;T</code> 偷偷修改內容，多個執行緒同時這樣做就可能出事。</p>
@@ -15497,7 +15494,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_852">範例程式碼</h3>
+<h3 id="_850">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::</span><span class="n">RefCell</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15518,7 +15515,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_853">重點整理</h3>
+<h3 id="_851">重點整理</h3>
 <ul>
 <li>interior mutability 讓 <code>&amp;T</code> 能修改內容，但這在多執行緒下很危險</li>
 <li>atomic 操作 = 不可分割的操作，要嘛完整執行完，要嘛完全沒發生，不會被其他執行緒打斷到一半</li>
@@ -15528,9 +15525,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_rc_multithread">第八章第 5 集：Rc 在多執行緒</h2>
-<h3 id="_854">本集目標</h3>
+<h3 id="_852">本集目標</h3>
 <p>理解為什麼 Rc 完全不能跨執行緒——既不是 Send 也不是 Sync。</p>
-<h3 id="_855">概念說明</h3>
+<h3 id="_853">概念說明</h3>
 <h4 id="rc-sync">Rc 不是 Sync</h4>
 <p>Rc 的引用計數和 RefCell 的 borrow 計數一樣，是普通整數，不是 atomic 操作。如果多個執行緒同時透過 <code>&amp;Rc&lt;T&gt;</code> 做 clone 或 drop，引用計數的加減可能互相干擾，導致計數錯誤——可能提前釋放資料，或永遠不釋放。</p>
 <p>所以 Rc 不是 <code>Sync</code>，理由和 RefCell 相同。</p>
@@ -15555,7 +15552,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h4 id="rc_2">Rc 完全不能跨執行緒</h4>
 <p>Rc 不是 <code>Send</code> 也不是 <code>Sync</code>。不能 move 到其他執行緒，也不能在多個執行緒之間共享參考。如果需要跨執行緒共享資料，得用別的工具。</p>
-<h3 id="_856">範例程式碼</h3>
+<h3 id="_854">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::</span><span class="n">Rc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15578,7 +15575,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_857">重點整理</h3>
+<h3 id="_855">重點整理</h3>
 <ul>
 <li>Rc 的引用計數是普通整數，不是 atomic，所以不是 <code>Sync</code></li>
 <li>Rc 連 <code>Send</code> 都不是：move 一個 Rc 到另一個執行緒後，它的 clone 可能還在原執行緒，兩邊同時操作計數器就會出問題</li>
@@ -15586,10 +15583,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_arc">第八章第 6 集：Arc&lt;T&gt;</h2>
-<h3 id="_858">本集目標</h3>
+<h3 id="_856">本集目標</h3>
 <p>學會用 <code>Arc&lt;T&gt;</code> 在多個執行緒之間安全地共享資料。</p>
-<h3 id="_859">概念說明</h3>
-<h4 id="_860">問題回顧</h4>
+<h3 id="_857">概念說明</h3>
+<h4 id="_858">問題回顧</h4>
 <p>前面說了 Rc 不能跨執行緒，因為引用計數不是 atomic。但我們確實需要在多個執行緒之間共享資料——怎麼辦？</p>
 <h4 id="arcatomic-reference-counting">Arc：Atomic Reference Counting</h4>
 <p><code>Arc&lt;T&gt;</code> 就是把 Rc 的引用計數換成 <strong>atomic 操作</strong>的版本。Atomic 操作保證即使多個執行緒同時修改計數器，也不會互相干擾。</p>
@@ -15601,7 +15598,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;計數 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">strong_count</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span><span class="w"> </span><span class="c1">// 2</span>
 </code></pre></div>
 
-<h4 id="_861">跨執行緒共享</h4>
+<h4 id="_859">跨執行緒共享</h4>
 <p>把 <code>Arc::clone</code> 出來的東西 move 到另一個執行緒：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15621,7 +15618,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>Arc 要求 <code>T: Send + Sync</code>。為什麼？</p>
 <p><strong>Sync</strong>：多個執行緒透過各自的 Arc 同時存取同一份 T。第五章學了 Deref——Arc 實作了 Deref，所以你可以透過 Arc 直接存取 T 的內容。這等於多個執行緒同時持有 T 的不可變參考，所以 T 必須是 Sync。</p>
 <p><strong>Send</strong>：最後一個 Arc 被 drop 的時候，T 也會被 drop。而哪個執行緒持有最後一個 Arc 是不確定的，所以 T 的 drop 可能發生在任何執行緒上——T 等於被「送」到那個執行緒去銷毀，所以 T 必須是 Send。</p>
-<h3 id="_862">範例程式碼</h3>
+<h3 id="_860">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Arc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15647,7 +15644,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_863">重點整理</h3>
+<h3 id="_861">重點整理</h3>
 <ul>
 <li><code>Arc&lt;T&gt;</code> 是 Rc 的多執行緒版本，引用計數用 atomic 操作</li>
 <li>用法跟 Rc 幾乎一樣：<code>Arc::new()</code>、<code>Arc::clone()</code></li>
@@ -15656,9 +15653,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_mutex">第八章第 7 集：Mutex&lt;T&gt;</h2>
-<h3 id="_864">本集目標</h3>
+<h3 id="_862">本集目標</h3>
 <p>學會用 <code>Mutex&lt;T&gt;</code> 讓多個執行緒安全地修改共享資料。</p>
-<h3 id="_865">概念說明</h3>
+<h3 id="_863">概念說明</h3>
 <h4 id="arc">Arc 只能讀，想改怎麼辦？</h4>
 <p>Arc 讓多個執行緒共享資料，但只能讀。如果你想讓多個執行緒<strong>修改</strong>同一份資料呢？</p>
 <h4 id="mutex-interior-mutability">Mutex：多執行緒版的 interior mutability</h4>
@@ -15721,7 +15718,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// ... 做其他事情 ...</span>
 </code></pre></div>
 
-<h3 id="_866">範例程式碼</h3>
+<h3 id="_864">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15753,7 +15750,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_867">重點整理</h3>
+<h3 id="_865">重點整理</h3>
 <ul>
 <li><code>Mutex&lt;T&gt;</code> 是多執行緒版的 interior mutability，用鎖保護資料</li>
 <li><code>lock().expect(...)</code> 回傳 <code>MutexGuard</code>，透過 Deref 直接當 <code>&amp;mut T</code> 用</li>
@@ -15764,9 +15761,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_rwlock">第八章第 8 集：RwLock&lt;T&gt;</h2>
-<h3 id="_868">本集目標</h3>
+<h3 id="_866">本集目標</h3>
 <p>學會用 <code>RwLock&lt;T&gt;</code> 實現讀寫分離的鎖，以及和 Mutex 的比較。</p>
-<h3 id="_869">概念說明</h3>
+<h3 id="_867">概念說明</h3>
 <h4 id="mutex">Mutex 的限制</h4>
 <p>Mutex 不管你要讀還是要寫，都要鎖住。但很多時候多個執行緒只是要讀資料——讀和讀之間不會衝突，全部鎖住太浪費了。</p>
 <h4 id="rwlock">RwLock：讀寫分離</h4>
@@ -15829,7 +15826,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了。</li>
 <li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者飢餓</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
 </ul>
-<h3 id="_870">範例程式碼</h3>
+<h3 id="_868">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">RwLock</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15868,7 +15865,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_871">重點整理</h3>
+<h3 id="_869">重點整理</h3>
 <ul>
 <li><code>RwLock&lt;T&gt;</code> 區分讀鎖和寫鎖：多個讀者可以同時讀，寫者獨佔</li>
 <li><code>read().expect(...)</code> 取得讀鎖，<code>write().expect(...)</code> 取得寫鎖</li>
@@ -15878,10 +15875,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_mpsc">第八章第 9 集：mpsc</h2>
-<h3 id="_872">本集目標</h3>
+<h3 id="_870">本集目標</h3>
 <p>學會用 channel 讓執行緒之間透過傳訊息溝通，以及和共享記憶體方式的比較。</p>
-<h3 id="_873">概念說明</h3>
-<h4 id="_874">另一種思路</h4>
+<h3 id="_871">概念說明</h3>
+<h4 id="_872">另一種思路</h4>
 <p>前面的 Mutex 和 RwLock 是「共享記憶體」的思路——多個執行緒存取同一份資料，用鎖來避免衝突。</p>
 <p>channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
 <h4 id="channel">建立 channel</h4>
@@ -15892,7 +15889,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p><code>mpsc</code> 代表 <strong>multiple producer, single consumer</strong>——可以有多個發送端，但接收端只有一個。</p>
-<h4 id="_875">發送和接收</h4>
+<h4 id="_873">發送和接收</h4>
 <p><code>tx.send(value)</code> 把值送出去（value 會被 move），<code>rx.recv()</code> 在另一端接收（會阻塞直到收到）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15907,7 +15904,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;收到：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">received</span><span class="p">);</span>
 </code></pre></div>
 
-<h4 id="_876">多個發送端</h4>
+<h4 id="_874">多個發送端</h4>
 <p>用 <code>tx.clone()</code> 產生新的發送端：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15928,7 +15925,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_877">什麼時候結束</h4>
+<h4 id="_875">什麼時候結束</h4>
 <p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會先把還沒收的訊息全部收完，收完之後再呼叫 <code>recv()</code> 才會回傳 <code>Err</code>。用 <code>for msg in rx</code> 迴圈也一樣——先把剩餘的訊息全部跑完，然後才結束。這是判斷「沒有人會再發送了，而且所有訊息都已經處理完了」的方式。</p>
 <p>注意上面的例子裡的 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
 <h4 id="channel-vs">channel vs 共享記憶體</h4>
@@ -15937,7 +15934,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong>多個執行緒需要反覆讀寫同一份資料</strong>（例如共用的計數器、共用的快取）→ Mutex / RwLock 比較直接</li>
 <li><strong>一邊產生資料、一邊消費資料</strong>的流水線關係 → channel 更自然。資料的所有權直接轉移，不需要鎖，也不存在忘了放鎖的問題</li>
 </ul>
-<h3 id="_878">範例程式碼</h3>
+<h3 id="_876">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15968,7 +15965,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_879">重點整理</h3>
+<h3 id="_877">重點整理</h3>
 <ul>
 <li>channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
 <li><code>mpsc::channel()</code> 建立發送端 tx 和接收端 rx</li>
@@ -15979,13 +15976,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_deadlock">第八章第 10 集：死鎖</h2>
-<h3 id="_880">本集目標</h3>
+<h3 id="_878">本集目標</h3>
 <p>理解死鎖是什麼、為什麼 Rust 的編譯器擋不住它、以及如何避免。</p>
-<h3 id="_881">概念說明</h3>
-<h4 id="_882">什麼是死鎖</h4>
+<h3 id="_879">概念說明</h3>
+<h4 id="_880">什麼是死鎖</h4>
 <p>死鎖（deadlock）就是兩個或多個執行緒互相等待對方放鎖，結果誰都動不了，程式永遠卡住。</p>
 <p>最經典的情況：執行緒 A 拿著鎖 1 等鎖 2，執行緒 B 拿著鎖 2 等鎖 1。兩邊永遠等下去。</p>
-<h4 id="_883">程式碼示範</h4>
+<h4 id="_881">程式碼示範</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -16018,9 +16015,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>執行緒 A 先拿到鎖 1，然後想拿鎖 2。但鎖 2 被執行緒 B 拿走了，B 又在等鎖 1——結果誰都走不動。</p>
-<h4 id="_884">編譯器不會擋死鎖</h4>
+<h4 id="_882">編譯器不會擋死鎖</h4>
 <p>Send 和 Sync 保護的是<strong>資料競爭</strong>（data race）——多個執行緒同時存取資料造成的未定義行為。死鎖是<strong>邏輯問題</strong>，程式不會壞掉或出現未定義行為，只是永遠卡住。Rust 的編譯器無法偵測死鎖。</p>
-<h4 id="_885">同一個執行緒也會死鎖</h4>
+<h4 id="_883">同一個執行緒也會死鎖</h4>
 <p>就算只有一個執行緒，對同一個 Mutex lock 兩次也會死鎖——因為第一次 lock 還沒放開，第二次 lock 就永遠等不到：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
 
@@ -16031,13 +16028,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_886">如何避免</h4>
+<h4 id="_884">如何避免</h4>
 <ul>
 <li><strong>所有執行緒以相同順序取鎖</strong>：如果每個人都先拿鎖 1 再拿鎖 2，就不會互相卡住</li>
 <li><strong>減少同時持有多個鎖</strong>：能用一個鎖解決就不要用兩個</li>
 <li><strong>guard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
 </ul>
-<h3 id="_887">範例程式碼</h3>
+<h3 id="_885">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -16069,7 +16066,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_888">重點整理</h3>
+<h3 id="_886">重點整理</h3>
 <ul>
 <li>死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住</li>
 <li>Rust 的編譯器不會擋死鎖——Send/Sync 保護的是資料競爭，死鎖是邏輯問題</li>
@@ -16078,9 +16075,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </ul>
 <hr />
 <h2 id="ch8_thread_scope">第八章第 11 集：thread::scope 簡介</h2>
-<h3 id="_889">本集目標</h3>
+<h3 id="_887">本集目標</h3>
 <p>學會用 <code>thread::scope</code> 建立有限生命週期的執行緒，不需要 move 或 Arc 就能借用外部資料。</p>
-<h3 id="_890">概念說明</h3>
+<h3 id="_888">概念說明</h3>
 <h4 id="threadspawn">thread::spawn 的限制</h4>
 <p>前面用 <code>thread::spawn</code> 的時候，閉包裡要用外面的變數都得 move 進去，或用 Arc 包起來。這是因為 spawn 出來的執行緒可能活得比呼叫它的函數還久——Rust 沒辦法保證資料在執行緒結束前不會被丟掉。</p>
 <h4 id="spawn_2">為什麼 spawn 不能借用</h4>
@@ -16132,7 +16129,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>不需要 Arc、不需要 clone、不需要 move、不需要手動 join。</p>
-<h3 id="_891">範例程式碼</h3>
+<h3 id="_889">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -16167,7 +16164,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_892">重點整理</h3>
+<h3 id="_890">重點整理</h3>
 <ul>
 <li><code>thread::spawn</code> 要求 <code>'static</code>，所以閉包不能借用局部變數</li>
 <li><code>thread::scope</code> 保證所有 scoped thread 在 scope 結束前 join，因此可以安全借用外部資料</li>
