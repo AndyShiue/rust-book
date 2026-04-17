@@ -15032,8 +15032,18 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p><code>?Sized</code> 的意思是「<code>T</code> 可以是 <code>Sized</code>，也可以不是」。但因為大小可能未知，你通常只能透過參考或智慧指標來使用 <code>T</code>。</p>
+<h4 id="trait-self-sized">Trait 裡的 Self 預設是 <code>?Sized</code></h4>
+<p>前面說泛型參數 <code>T</code> 預設有 <code>Sized</code> bound。但 trait 裡的 <code>Self</code> 是個例外——它預設是 <code>?Sized</code> 的，也就是說 <code>Self</code> 不一定是 Sized。</p>
+<p>這意味著：如果你的 trait 方法需要把 <code>Self</code> 當成值來用（例如回傳 <code>Self</code>），你必須在 trait 上明確加上 <code>: Sized</code>。</p>
+<p>還記得第四章第 8 集介紹的 <code>Clone</code> 嗎？它的方法是 <code>fn clone(&amp;self) -&gt; Self</code>——直接回傳 <code>Self</code>。由於 <code>Self</code> 預設可能不是 Sized，而回傳的型別必須有已知大小，所以 <code>Clone</code> 實際上的定義是：</p>
+<div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="nb">Clone</span><span class="p">:</span><span class="w"> </span><span class="nb">Sized</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>如果沒有那個 <code>: Sized</code>，編譯器會拒絕這個定義，因為它無法保證 <code>Self</code> 的大小已知。</p>
 <h4 id="cow_1">回頭看第五章的 Cow</h4>
-<p>第五章最後一集教 <code>Cow</code> 的時候，我們用的是簡化版的定義：</p>
+<p>第五章最後一集教 <code>Cow</code> 的時候，我們用的也是簡化版的定義：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// 第五章提供的簡化版</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Cow</span><span class="o">&lt;&#39;</span><span class="na">a</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
 <span class="k">where</span>
@@ -15140,6 +15150,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>指向 DST 的指標是<strong>胖指標（fat pointer）</strong>：位址 + 長度，在 64 位元電腦上佔 16 bytes</li>
 <li><strong><code>Sized</code></strong>：表示型別大小在編譯期已知；泛型參數預設有 <code>T: Sized</code> bound</li>
 <li><strong><code>?Sized</code></strong>：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）</li>
+<li>Trait 裡的 <code>Self</code> 預設是 <code>?Sized</code>；如果方法需要回傳 <code>Self</code>，要在 trait 上加 <code>: Sized</code>（如 <code>Clone: Sized</code>）</li>
 <li><code>Cow&lt;'a, B&gt;</code> 中的 <code>B: ?Sized</code> 就是為了讓 <code>B</code> 可以是 <code>str</code> 等 DST</li>
 <li><code>String</code> 和 <code>Vec&lt;T&gt;</code> 的 Deref 分別得到 DST <code>str</code> 和 <code>[T]</code>，deref coercion 讓 <code>&amp;String</code> → <code>&amp;str</code>、<code>&amp;Vec&lt;T&gt;</code> → <code>&amp;[T]</code> 成為可能</li>
 </ul>
@@ -15676,7 +15687,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span><span class="w"> </span><span class="c1">// guard 被 drop，自動解鎖</span>
 </code></pre></div>
 
-<p><code>MutexGuard</code> 實作了 Deref 和 DerefMut（第五章學的），所以你可以直接把它當 <code>&amp;T</code> 或 <code>&amp;mut T</code> 使用。</p>
+<p><code>MutexGuard</code> 實作了 Deref 和 DerefMut（第五章學的），所以它也是一種智慧指標——你可以直接把它當 <code>&amp;T</code> 或 <code>&amp;mut T</code> 使用。</p>
 <p>同一時間只有一個執行緒能 lock 成功。其他執行緒呼叫 <code>lock()</code> 時會<strong>阻塞</strong>（等待），直到持有鎖的執行緒把 guard drop 掉。</p>
 <h4 id="arc-mutex">Arc + Mutex</h4>
 <p>實際上多半是這樣搭配使用——Arc 負責讓多個執行緒共享 Mutex，Mutex 負責保護裡面的資料：</p>
@@ -15718,6 +15729,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="c1">// ... 做其他事情 ...</span>
 </code></pre></div>
 
+<h4 id="mutex-send-sync">Mutex 把 Send 變成 Sync</h4>
+<p>第 3 集學了 Send 和 Sync。有些型別是 <code>Send</code> 但不是 <code>Sync</code>——例如第 4 集講的 <code>RefCell&lt;T&gt;</code>，它能安全地 move 到另一個執行緒（Send），但不能讓多個執行緒同時透過 <code>&amp;RefCell&lt;T&gt;</code> 存取（不是 Sync）。</p>
+<p><code>Mutex</code> 能解決這個問題。<code>Mutex&lt;T&gt;</code> 保證同一時間只有一個執行緒能存取 <code>T</code>——即使多個執行緒共享同一個 <code>&amp;Mutex&lt;T&gt;</code>，也只有拿到鎖的那一個能操作裡面的 <code>T</code>。所以 <code>Mutex&lt;T&gt;</code> 只要求 <code>T: Send</code>，就能讓 <code>Mutex&lt;T&gt;</code> 本身成為 <code>Sync</code>。</p>
+<p>換句話說：<code>T</code> 不是 Sync 沒關係，Mutex 的鎖機制已經確保不會有同時存取的問題。<code>T</code> 需要 Send 是因為：當執行緒 A 拿到鎖、操作完 <code>T</code>、放鎖之後，下一個拿到鎖的可能是執行緒 B。從 <code>T</code> 的角度來看，它原本被 A 獨佔使用，現在換成被 B 獨佔使用——效果等同於 <code>T</code> 從 A 被「送」到了 B。所以 <code>T</code> 必須是 Send。</p>
 <h3 id="_864">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15758,6 +15773,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>Guard 被 drop 時自動解鎖</li>
 <li>常見搭配：<code>Arc&lt;Mutex&lt;T&gt;&gt;</code>——Arc 負責共享，Mutex 負責安全修改</li>
 <li>MutexGuard 不要活太久，鎖住的期間其他執行緒全部在等</li>
+<li><code>Mutex&lt;T&gt;</code> 只要求 <code>T: Send</code> 就能是 <code>Sync</code>——Mutex 的鎖機制讓不是 Sync 的型別也能安全地被多個執行緒共享</li>
 </ul>
 <hr />
 <h2 id="ch8_rwlock">第八章第 8 集：RwLock&lt;T&gt;</h2>
@@ -15791,7 +15807,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <h4 id="guard">Guard 的行為</h4>
-<p>讀鎖回傳 <code>RwLockReadGuard</code>，寫鎖回傳 <code>RwLockWriteGuard</code>。跟 MutexGuard 一樣，它們透過 Deref 讓你直接操作內容，drop 時自動放鎖。</p>
+<p>讀鎖回傳 <code>RwLockReadGuard</code>，寫鎖回傳 <code>RwLockWriteGuard</code>。跟 MutexGuard 一樣，它們也是智慧指標——可以直接操作內容，drop 時自動放鎖。</p>
 <p>一樣要注意 guard 不要活太久。</p>
 <h4 id="refcell_1">和 RefCell 的對照</h4>
 <table>

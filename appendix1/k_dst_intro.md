@@ -67,9 +67,25 @@ fn print_it<T: ?Sized>(val: &T) { ... }
 
 `?Sized` 的意思是「`T` 可以是 `Sized`，也可以不是」。但因為大小可能未知，你通常只能透過參考或智慧指標來使用 `T`。
 
+### Trait 裡的 Self 預設是 `?Sized`
+
+前面說泛型參數 `T` 預設有 `Sized` bound。但 trait 裡的 `Self` 是個例外——它預設是 `?Sized` 的，也就是說 `Self` 不一定是 Sized。
+
+這意味著：如果你的 trait 方法需要把 `Self` 當成值來用（例如回傳 `Self`），你必須在 trait 上明確加上 `: Sized`。
+
+還記得第四章第 8 集介紹的 `Clone` 嗎？它的方法是 `fn clone(&self) -> Self`——直接回傳 `Self`。由於 `Self` 預設可能不是 Sized，而回傳的型別必須有已知大小，所以 `Clone` 實際上的定義是：
+
+```rust
+trait Clone: Sized {
+    fn clone(&self) -> Self;
+}
+```
+
+如果沒有那個 `: Sized`，編譯器會拒絕這個定義，因為它無法保證 `Self` 的大小已知。
+
 ### 回頭看第五章的 Cow
 
-第五章最後一集教 `Cow` 的時候，我們用的是簡化版的定義：
+第五章最後一集教 `Cow` 的時候，我們用的也是簡化版的定義：
 
 ```rust
 // 第五章提供的簡化版
@@ -192,5 +208,6 @@ fn main() {
 - 指向 DST 的指標是**胖指標（fat pointer）**：位址 + 長度，在 64 位元電腦上佔 16 bytes
 - **`Sized`**：表示型別大小在編譯期已知；泛型參數預設有 `T: Sized` bound
 - **`?Sized`**：放寬限制，讓泛型參數可以接受 DST（但必須透過參考使用）
+- Trait 裡的 `Self` 預設是 `?Sized`；如果方法需要回傳 `Self`，要在 trait 上加 `: Sized`（如 `Clone: Sized`）
 - `Cow<'a, B>` 中的 `B: ?Sized` 就是為了讓 `B` 可以是 `str` 等 DST
 - `String` 和 `Vec<T>` 的 Deref 分別得到 DST `str` 和 `[T]`，deref coercion 讓 `&String` → `&str`、`&Vec<T>` → `&[T]` 成為可能

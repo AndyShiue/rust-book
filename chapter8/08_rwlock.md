@@ -37,7 +37,7 @@ let lock = RwLock::new(42);
 
 ### Guard 的行為
 
-讀鎖回傳 `RwLockReadGuard`，寫鎖回傳 `RwLockWriteGuard`。跟 MutexGuard 一樣，它們透過 Deref 讓你直接操作內容，drop 時自動放鎖。
+讀鎖回傳 `RwLockReadGuard`，寫鎖回傳 `RwLockWriteGuard`。跟 MutexGuard 一樣，它們也是智慧指標——可以直接操作內容，drop 時自動放鎖。
 
 一樣要注意 guard 不要活太久。
 

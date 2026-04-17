@@ -31,7 +31,7 @@ let m = Mutex::new(42);
 } // guard 被 drop，自動解鎖
 ```
 
-`MutexGuard` 實作了 Deref 和 DerefMut（第五章學的），所以你可以直接把它當 `&T` 或 `&mut T` 使用。
+`MutexGuard` 實作了 Deref 和 DerefMut（第五章學的），所以它也是一種智慧指標——你可以直接把它當 `&T` 或 `&mut T` 使用。
 
 同一時間只有一個執行緒能 lock 成功。其他執行緒呼叫 `lock()` 時會**阻塞**（等待），直到持有鎖的執行緒把 guard drop 掉。
 
@@ -81,6 +81,14 @@ let mut guard = mutex.lock().expect("取得鎖失敗");
 // ... 做其他事情 ...
 ```
 
+### Mutex 把 Send 變成 Sync
+
+第 3 集學了 Send 和 Sync。有些型別是 `Send` 但不是 `Sync`——例如第 4 集講的 `RefCell<T>`，它能安全地 move 到另一個執行緒（Send），但不能讓多個執行緒同時透過 `&RefCell<T>` 存取（不是 Sync）。
+
+`Mutex` 能解決這個問題。`Mutex<T>` 保證同一時間只有一個執行緒能存取 `T`——即使多個執行緒共享同一個 `&Mutex<T>`，也只有拿到鎖的那一個能操作裡面的 `T`。所以 `Mutex<T>` 只要求 `T: Send`，就能讓 `Mutex<T>` 本身成為 `Sync`。
+
+換句話說：`T` 不是 Sync 沒關係，Mutex 的鎖機制已經確保不會有同時存取的問題。`T` 需要 Send 是因為：當執行緒 A 拿到鎖、操作完 `T`、放鎖之後，下一個拿到鎖的可能是執行緒 B。從 `T` 的角度來看，它原本被 A 獨佔使用，現在換成被 B 獨佔使用——效果等同於 `T` 從 A 被「送」到了 B。所以 `T` 必須是 Send。
+
 ## 範例程式碼
 
 ```rust
@@ -122,3 +130,4 @@ fn main() {
 - Guard 被 drop 時自動解鎖
 - 常見搭配：`Arc<Mutex<T>>`——Arc 負責共享，Mutex 負責安全修改
 - MutexGuard 不要活太久，鎖住的期間其他執行緒全部在等
+- `Mutex<T>` 只要求 `T: Send` 就能是 `Sync`——Mutex 的鎖機制讓不是 Sync 的型別也能安全地被多個執行緒共享
