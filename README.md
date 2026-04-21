@@ -27,7 +27,7 @@ Rust 最核心的概念——所有權、move、借用規則、String vs &str、
 ### 第七章：Cargo、Crate 與 Mod 系統（10 集）
 Cargo 專案管理、use/mod、可見性、cargo test、發布 crate。
 
-### 附錄：補充主題（11 集）
+### 附錄一（11 集）
 數字字面值、格式化字串、break 回傳值、raw string、struct 放 main 裡、struct update syntax、ref/match ergonomics、panic!/todo!/unreachable!、Rc 迴圈與 Weak、fully qualified syntax、DST 簡介。
 
 ### 第八章：多執行緒（12 集）
@@ -55,4 +55,4 @@ python build_book.py
 
 ## 授權
 
-本教學內容由 [Andy Shiue](https://github.com/AndyShiue) 撰寫。
+本教學內容由 [Andy Shiue](https://github.com/AndyShiue

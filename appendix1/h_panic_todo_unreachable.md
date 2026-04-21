@@ -1,4 +1,4 @@
-# 附錄第 h 集：panic! / todo! / unimplemented! / unreachable!
+# 附錄一第 h 集：panic! / todo! / unimplemented! / unreachable!
 
 ## 本集目標
 

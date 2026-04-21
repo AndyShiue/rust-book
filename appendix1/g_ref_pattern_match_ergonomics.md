@@ -1,4 +1,4 @@
-# 附錄第 g 集：ref pattern 與 match ergonomics
+# 附錄一第 g 集：ref pattern 與 match ergonomics
 
 ## 本集目標
 

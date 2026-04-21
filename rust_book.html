@@ -437,18 +437,18 @@
 <li><a href="#ch7_cargo_publish">第七章第 10 集：cargo publish</a></li>
 </ul>
 </li>
-<li><a href="#ap1">附錄：補充主題</a><ul>
-<li><a href="#ap1_number_literals">附錄第 a 集：數字字面值格式</a></li>
-<li><a href="#ap1_break_return_value">附錄第 b 集：break 回傳值</a></li>
-<li><a href="#ap1_multiline_raw_strings">附錄第 c 集：多行字串 &amp; raw string literal</a></li>
-<li><a href="#ap1_format_strings">附錄第 d 集：格式化字串進階</a></li>
-<li><a href="#ap1_items_in_main">附錄第 e 集：struct / enum 放在 fn 裡面</a></li>
-<li><a href="#ap1_struct_update_syntax">附錄第 f 集：struct update syntax</a></li>
-<li><a href="#ap1_ref_pattern_match_ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</a></li>
-<li><a href="#ap1_panic_todo_unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</a></li>
-<li><a href="#ap1_rc_cycle_weak">附錄第 i 集：Rc 迴圈與 Weak</a></li>
-<li><a href="#ap1_fully_qualified_syntax">附錄第 j 集：fully qualified syntax</a></li>
-<li><a href="#ap1_dst_intro">附錄第 k 集：DST 簡介</a></li>
+<li><a href="#ap1">附錄一</a><ul>
+<li><a href="#ap1_number_literals">附錄一第 a 集：數字字面值格式</a></li>
+<li><a href="#ap1_break_return_value">附錄一第 b 集：break 回傳值</a></li>
+<li><a href="#ap1_multiline_raw_strings">附錄一第 c 集：多行字串 &amp; raw string literal</a></li>
+<li><a href="#ap1_format_strings">附錄一第 d 集：格式化字串進階</a></li>
+<li><a href="#ap1_items_in_main">附錄一第 e 集：struct / enum 放在 fn 裡面</a></li>
+<li><a href="#ap1_struct_update_syntax">附錄一第 f 集：struct update syntax</a></li>
+<li><a href="#ap1_ref_pattern_match_ergonomics">附錄一第 g 集：ref pattern 與 match ergonomics</a></li>
+<li><a href="#ap1_panic_todo_unreachable">附錄一第 h 集：panic! / todo! / unimplemented! / unreachable!</a></li>
+<li><a href="#ap1_rc_cycle_weak">附錄一第 i 集：Rc 迴圈與 Weak</a></li>
+<li><a href="#ap1_fully_qualified_syntax">附錄一第 j 集：fully qualified syntax</a></li>
+<li><a href="#ap1_dst_intro">附錄一第 k 集：DST 簡介</a></li>
 </ul>
 </li>
 <li><a href="#ch8">第八章：多執行緒</a><ul>
@@ -13989,8 +13989,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>恭喜你完成了第七章！🎉 到這裡為止，我們已經教完了 Rust 的主要觀念——所有權、借用、泛型、trait、生命週期、閉包、迭代器，以及模組系統和套件管理。你現在已經可以獨當一面了。如果你腦中有什麼點子，現在就是動手實作的好時機！</p>
 <p>即便如此，Rust 還有很多獨特而強大的功能。後面的章節會繼續介紹那些還沒介紹的重要主題，希望能帶給你對 Rust 更完整、更全面的認識。</p>
 <hr />
-<h1 id="ap1">附錄：補充主題</h1>
-<h2 id="ap1_number_literals">附錄第 a 集：數字字面值格式</h2>
+<h1 id="ap1">附錄一</h1>
+<h2 id="ap1_number_literals">附錄一第 a 集：數字字面值格式</h2>
 <h3 id="_761">本集目標</h3>
 <p>學會用底線分隔、不同進位制、型別後綴，以及浮點數字面值的各種寫法。</p>
 <blockquote>
@@ -14074,7 +14074,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>浮點數字面值必須有小數點或科學記號</li>
 </ul>
 <hr />
-<h2 id="ap1_break_return_value">附錄第 b 集：break 回傳值</h2>
+<h2 id="ap1_break_return_value">附錄一第 b 集：break 回傳值</h2>
 <h3 id="_769">本集目標</h3>
 <p>學會用 <code>break</code> 從 <code>loop</code> 迴圈中回傳值，把迴圈當作表達式使用。</p>
 <blockquote>
@@ -14133,7 +14133,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>常見用途是在迴圈中搜尋，找到後用 <code>break</code> 帶出結果</li>
 </ul>
 <hr />
-<h2 id="ap1_multiline_raw_strings">附錄第 c 集：多行字串 &amp; raw string literal</h2>
+<h2 id="ap1_multiline_raw_strings">附錄一第 c 集：多行字串 &amp; raw string literal</h2>
 <h3 id="_775">本集目標</h3>
 <p>學會在 Rust 中撰寫多行字串、行接續符號、以及不需要跳脫字元的 raw string。</p>
 <blockquote>
@@ -14227,7 +14227,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>raw string 特別適合 Windows 路徑、正則表達式、JSON、嵌入程式碼等場景</li>
 </ul>
 <hr />
-<h2 id="ap1_format_strings">附錄第 d 集：格式化字串進階</h2>
+<h2 id="ap1_format_strings">附錄一第 d 集：格式化字串進階</h2>
 <h3 id="_781">本集目標</h3>
 <p>學會 <code>println!</code> 的各種格式化技巧，包括變數捕獲簡寫、寬度、對齊、精度控制和進位制顯示。</p>
 <blockquote>
@@ -14339,7 +14339,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>要印出 <code>{</code> 和 <code>}</code> 本身，用 <code>{{</code> 和 <code>}}</code> 跳脫</li>
 </ul>
 <hr />
-<h2 id="ap1_items_in_main">附錄第 e 集：struct / enum 放在 fn 裡面</h2>
+<h2 id="ap1_items_in_main">附錄一第 e 集：struct / enum 放在 fn 裡面</h2>
 <h3 id="_792">本集目標</h3>
 <p>了解 struct、enum、fn 等「項目」可以定義在函數內部，以及它們與 <code>let</code> 綁定在順序上的根本差異。</p>
 <blockquote>
@@ -14431,7 +14431,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>原因：項目是編譯期的靜態定義，編譯器會先掃描完所有項目再處理執行期程式碼</li>
 </ul>
 <hr />
-<h2 id="ap1_struct_update_syntax">附錄第 f 集：struct update syntax</h2>
+<h2 id="ap1_struct_update_syntax">附錄一第 f 集：struct update syntax</h2>
 <h3 id="_799">本集目標</h3>
 <p>學會用 <code>..</code> 語法從既有的 struct 實例快速建立新實例，並理解 Copy 與 move 欄位的差異。</p>
 <blockquote>
@@ -14530,7 +14530,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>..Default::default()</code> 很適合用在「大部分欄位用預設值，只改幾個」的場景</li>
 </ul>
 <hr />
-<h2 id="ap1_ref_pattern_match_ergonomics">附錄第 g 集：ref pattern 與 match ergonomics</h2>
+<h2 id="ap1_ref_pattern_match_ergonomics">附錄一第 g 集：ref pattern 與 match ergonomics</h2>
 <h3 id="_804">本集目標</h3>
 <p>了解 <code>ref</code> 關鍵字在模式匹配中的作用，以及為什麼在現代 Rust 中幾乎不需要手動寫 <code>ref</code>。</p>
 <blockquote>
@@ -14626,7 +14626,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>認識 <code>ref</code> 主要是為了讀懂舊程式碼</li>
 </ul>
 <hr />
-<h2 id="ap1_panic_todo_unreachable">附錄第 h 集：panic! / todo! / unimplemented! / unreachable!</h2>
+<h2 id="ap1_panic_todo_unreachable">附錄一第 h 集：panic! / todo! / unimplemented! / unreachable!</h2>
 <h3 id="_808">本集目標</h3>
 <p>認識四種會讓程式立即終止的巨集，以及它們各自的使用時機。</p>
 <blockquote>
@@ -14760,7 +14760,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>它們都會造成 panic，差別在於傳達的<strong>意圖</strong>不同——選對的那個，讓程式碼更有表達力</li>
 </ul>
 <hr />
-<h2 id="ap1_rc_cycle_weak">附錄第 i 集：Rc 迴圈與 Weak</h2>
+<h2 id="ap1_rc_cycle_weak">附錄一第 i 集：Rc 迴圈與 Weak</h2>
 <h3 id="_813">本集目標</h3>
 <p>理解 <code>Rc</code> 參考迴圈會造成記憶體洩漏，並學會用 <code>Weak</code> 來打破迴圈。</p>
 <blockquote>
@@ -14852,7 +14852,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>Rc::strong_count()</code> 和 <code>Rc::weak_count()</code> 可以查看目前的計數</li>
 </ul>
 <hr />
-<h2 id="ap1_fully_qualified_syntax">附錄第 j 集：fully qualified syntax</h2>
+<h2 id="ap1_fully_qualified_syntax">附錄一第 j 集：fully qualified syntax</h2>
 <h3 id="_818">本集目標</h3>
 <p>學會三種不同層級的方法呼叫語法，以及在 trait 方法名稱衝突時如何消歧義。</p>
 <blockquote>
@@ -14985,7 +14985,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>也可以用來存取 <strong>associated type</strong>：<code>&lt;Type as Trait&gt;::TypeName</code></li>
 </ul>
 <hr />
-<h2 id="ap1_dst_intro">附錄第 k 集：DST 簡介</h2>
+<h2 id="ap1_dst_intro">附錄一第 k 集：DST 簡介</h2>
 <h3 id="_824">本集目標</h3>
 <p>理解什麼是動態大小型別（DST），以及 <code>Sized</code>、<code>?Sized</code> 在泛型中的意義。</p>
 <blockquote>
@@ -15162,7 +15162,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>理解記憶體位址的概念，知道指標在底層是什麼東西。</p>
 <h3 id="_830">概念說明</h3>
 <p>前面幾章我們用 <code>&amp;T</code>、<code>Box&lt;T&gt;</code>、<code>Rc&lt;T&gt;</code> 的時候，關心的是「誰擁有資料」、「誰在借」。這一集要換個角度——這些東西在記憶體裡到底是什麼。</p>
-<p>附錄第 k 集曾經提過 DST 和胖指標的概念。如果當時覺得看不太懂是正常的——因為那時候我們還沒正式介紹過指標。這一集就是要把這個基礎補上。</p>
+<p>附錄一第 k 集曾經提過 DST 和胖指標的概念。如果當時覺得看不太懂是正常的——因為那時候我們還沒正式介紹過指標。這一集就是要把這個基礎補上。</p>
 <h4 id="_831">記憶體位址</h4>
 <p>程式執行的時候，每一個變數都會被放在記憶體的某個位置，而每個位置都有一個編號，叫做<strong>位址</strong>。<code>&amp;x</code> 拿到的就是 <code>x</code> 的位址。用 <code>{:p}</code> 格式化可以把它印出來看：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
@@ -15193,7 +15193,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <p>解參考不是免費的，大部分時候這個成本很小，但知道它的存在是有意義的。</p>
 <h4 id="fat-pointer">胖指標（fat pointer）</h4>
-<p>附錄第 k 集介紹過 DST——<code>[T]</code> 和 <code>str</code> 是大小不確定的型別，沒辦法直接放在變數裡，通常要透過 <code>&amp;[T]</code>、<code>&amp;str</code>、<code>Box&lt;[T]&gt;</code> 等方式使用。但 DST 的大小不固定，光有位址不夠。想像一下：你拿到一個位址，知道從這裡開始是一段連續的 <code>i32</code> 資料——但到哪裡結束？記憶體本身不會告訴你，位址只是一個起點。所以除了位址之外，還得額外記錄長度，才知道這段資料有多長。因此 <code>&amp;[T]</code> 和 <code>&amp;str</code> 佔 16 bytes：</p>
+<p>附錄一第 k 集介紹過 DST——<code>[T]</code> 和 <code>str</code> 是大小不確定的型別，沒辦法直接放在變數裡，通常要透過 <code>&amp;[T]</code>、<code>&amp;str</code>、<code>Box&lt;[T]&gt;</code> 等方式使用。但 DST 的大小不固定，光有位址不夠。想像一下：你拿到一個位址，知道從這裡開始是一段連續的 <code>i32</code> 資料——但到哪裡結束？記憶體本身不會告訴你，位址只是一個起點。所以除了位址之外，還得額外記錄長度，才知道這段資料有多長。因此 <code>&amp;[T]</code> 和 <code>&amp;str</code> 佔 16 bytes：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">;</span>
 
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">());</span><span class="w">   </span><span class="c1">// 8（位址）</span>

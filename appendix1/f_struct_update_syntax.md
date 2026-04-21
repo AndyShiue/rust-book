@@ -1,4 +1,4 @@
-# 附錄第 f 集：struct update syntax
+# 附錄一第 f 集：struct update syntax
 
 ## 本集目標
 
