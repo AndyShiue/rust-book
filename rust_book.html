@@ -460,9 +460,10 @@
 <li><a href="#ch8_arc">第八章第 6 集：Arc&lt;T&gt;</a></li>
 <li><a href="#ch8_mutex">第八章第 7 集：Mutex&lt;T&gt;</a></li>
 <li><a href="#ch8_rwlock">第八章第 8 集：RwLock&lt;T&gt;</a></li>
-<li><a href="#ch8_mpsc">第八章第 9 集：mpsc</a></li>
-<li><a href="#ch8_deadlock">第八章第 10 集：死鎖</a></li>
-<li><a href="#ch8_thread_scope">第八章第 11 集：thread::scope 簡介</a></li>
+<li><a href="#ch8_poisoning">第八章第 9 集：Poisoning</a></li>
+<li><a href="#ch8_mpsc">第八章第 10 集：mpsc</a></li>
+<li><a href="#ch8_deadlock">第八章第 11 集：死鎖</a></li>
+<li><a href="#ch8_thread_scope">第八章第 12 集：thread::scope 簡介</a></li>
 </ul>
 </li>
 </ul>
@@ -15890,11 +15891,121 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>Mutex 簡單、開銷小，大部分情況夠用；RwLock 適合讀遠多於寫的場景，但開銷較大且有寫者飢餓的風險</li>
 </ul>
 <hr />
-<h2 id="ch8_mpsc">第八章第 9 集：mpsc</h2>
+<h2 id="ch8_poisoning">第八章第 9 集：Poisoning</h2>
 <h3 id="_870">本集目標</h3>
-<p>學會用 channel 讓執行緒之間透過傳訊息溝通，以及和共享記憶體方式的比較。</p>
+<p>理解什麼是鎖的中毒（poisoning），以及該怎麼處理它。</p>
 <h3 id="_871">概念說明</h3>
-<h4 id="_872">另一種思路</h4>
+<h4 id="lock-result">lock() 為什麼回傳 Result</h4>
+<p>前面幾集學 Mutex 和 RwLock 的時候，我們都寫 <code>.lock().expect("取得鎖失敗")</code>。但什麼時候取鎖會「失敗」？答案就是 <strong>poisoning</strong>。</p>
+<h4 id="poisoning">什麼是 poisoning</h4>
+<p>如果一個執行緒在持有鎖的期間 panic 了，鎖會被標記為「中毒」（poisoned）。之後任何執行緒再嘗試取鎖，不管是 <code>lock()</code>、<code>read()</code> 還是 <code>write()</code>，都會收到 <code>Err(PoisonError)</code>。</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]));</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">data2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">guard</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;哎呀！&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// panic 的時候 guard 還活著 → 鎖中毒</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">();</span><span class="w"> </span><span class="c1">// 收集 panic，不讓它傳播</span>
+
+<span class="w">    </span><span class="c1">// 之後再 lock → Err</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">lock</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">guard</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;正常：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">guard</span><span class="p">),</span>
+<span class="w">        </span><span class="nb">Err</span><span class="p">(</span><span class="n">poisoned</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;鎖中毒了！&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="poisoning_1">為什麼要有 poisoning</h4>
+<p>panic 通常代表程式出了預期外的錯誤。如果一個執行緒在修改資料修到一半就 panic 了，資料可能是半成品——比如 Vec push 了一半、或某兩個欄位只更新了一個。poisoning 是一個安全機制：讓你知道出事了，由你決定要不要繼續用。</p>
+<h4 id="_872">三種處理方式</h4>
+<p><strong>1. 直接 panic（最常見）</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>如果鎖中毒了，你的執行緒也跟著 panic。大部分情況這樣就好——上一個執行緒 panic 了，通常代表整個程式該結束了。</p>
+<p><strong>2. 忽略中毒，繼續用</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">PoisonError</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="n">PoisonError</span><span class="p">::</span><span class="n">into_inner</span><span class="p">);</span>
+</code></pre></div>
+
+<p><code>PoisonError::into_inner</code> 讓你拿回 guard，跳過中毒的警告。如果你確定資料的狀態沒問題，或者你不在意，可以這樣做。</p>
+<p><strong>3. 修復資料再繼續</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">lock</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">g</span><span class="p">,</span>
+<span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">poisoned</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">poisoned</span><span class="p">.</span><span class="n">into_inner</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[];</span><span class="w"> </span><span class="c1">// 重設成已知的安全狀態</span>
+<span class="w">        </span><span class="n">g</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+
+<p>拿到 guard 之後把資料修復成合理的值，然後繼續用。</p>
+<h4 id="into_inner">為什麼 into_inner() 是安全的</h4>
+<p>你可能會好奇：中毒的鎖裡面的資料可能是半成品，存取它真的沒問題嗎？</p>
+<p>從記憶體的角度來看是沒問題的。不管鎖有沒有中毒，裡面的資料都是合法的記憶體——不會存取到已經不能使用的記憶體、不會把型別搞混、沒有資料競爭。poisoning 保護的是<strong>邏輯一致性</strong>，不是<strong>記憶體安全</strong>。資料可能邏輯上不對，但從記憶體的角度看完全合法。所以可以安全地呼叫 <code>into_inner()</code>。</p>
+<h4 id="rwlock-poisoning">RwLock 的 poisoning</h4>
+<p>RwLock 的 poisoning 只在<strong>寫鎖</strong> panic 的時候觸發。讀鎖 panic 不會中毒——因為讀的時候不會修改資料，不會留下不一致的狀態。但一旦中毒了，<code>read()</code> 和 <code>write()</code> 都會回傳 <code>Err</code>。</p>
+<h3 id="_873">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">,</span><span class="w"> </span><span class="n">PoisonError</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">Mutex</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// 啟動一個會 panic 的執行緒</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">counter2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Arc</span><span class="p">::</span><span class="n">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="n">counter</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">thread</span><span class="p">::</span><span class="n">spawn</span><span class="p">(</span><span class="k">move</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter2</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;取得鎖失敗&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="o">*</span><span class="n">guard</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;糟糕，出事了！&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// 等待那個執行緒結束（那個執行緒會 panic，但我們用 let _ 忽略）</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handle</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// 嘗試取鎖——會收到 PoisonError</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">guard</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;正常取得鎖，值 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">guard</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">Err</span><span class="p">(</span><span class="n">poisoned</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;鎖中毒了！&quot;</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// 拿到資料看看</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">poisoned</span><span class="p">.</span><span class="n">into_inner</span><span class="p">();</span>
+<span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;裡面的值 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">guard</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 或者用一行忽略中毒</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counter</span><span class="p">.</span><span class="n">lock</span><span class="p">().</span><span class="n">unwrap_or_else</span><span class="p">(</span><span class="n">PoisonError</span><span class="p">::</span><span class="n">into_inner</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;忽略中毒，值 = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">guard</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_874">重點整理</h3>
+<ul>
+<li>持有鎖的執行緒 panic 了 → 鎖中毒（poisoned）</li>
+<li>之後 <code>lock()</code> / <code>read()</code> / <code>write()</code> 都回傳 <code>Err(PoisonError)</code></li>
+<li>RwLock 只有寫鎖 panic 才會中毒，讀鎖 panic 不會</li>
+<li><code>PoisonError::into_inner</code> 可以拿回 guard——記憶體安全沒問題，只是邏輯一致性的問題</li>
+<li>三種處理方式：panic（<code>unwrap()</code> 或 <code>.expect()</code>）、忽略（<code>.unwrap_or_else(PoisonError::into_inner)</code>）、修復資料再繼續</li>
+</ul>
+<hr />
+<h2 id="ch8_mpsc">第八章第 10 集：mpsc</h2>
+<h3 id="_875">本集目標</h3>
+<p>學會用 channel 讓執行緒之間透過傳訊息溝通，以及和共享記憶體方式的比較。</p>
+<h3 id="_876">概念說明</h3>
+<h4 id="_877">另一種思路</h4>
 <p>前面的 Mutex 和 RwLock 是「共享記憶體」的思路——多個執行緒存取同一份資料，用鎖來避免衝突。</p>
 <p>channel 是完全不同的思路：<strong>執行緒之間用傳訊息的方式溝通</strong>。資料直接送過去，不共享。</p>
 <h4 id="channel">建立 channel</h4>
@@ -15905,7 +16016,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p><code>mpsc</code> 代表 <strong>multiple producer, single consumer</strong>——可以有多個發送端，但接收端只有一個。</p>
-<h4 id="_873">發送和接收</h4>
+<h4 id="_878">發送和接收</h4>
 <p><code>tx.send(value)</code> 把值送出去（value 會被 move），<code>rx.recv()</code> 在另一端接收（會阻塞直到收到）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15920,7 +16031,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;收到：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">received</span><span class="p">);</span>
 </code></pre></div>
 
-<h4 id="_874">多個發送端</h4>
+<h4 id="_879">多個發送端</h4>
 <p>用 <code>tx.clone()</code> 產生新的發送端：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
@@ -15941,7 +16052,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_875">什麼時候結束</h4>
+<h4 id="_880">什麼時候結束</h4>
 <p>所有 tx 都被 drop 之後，<code>rx.recv()</code> 會先把還沒收的訊息全部收完，收完之後再呼叫 <code>recv()</code> 才會回傳 <code>Err</code>。用 <code>for msg in rx</code> 迴圈也一樣——先把剩餘的訊息全部跑完，然後才結束。這是判斷「沒有人會再發送了，而且所有訊息都已經處理完了」的方式。</p>
 <p>注意上面的例子裡的 <code>drop(tx)</code>——如果你 clone 了 tx 但沒有 drop 原始的 tx，接收端會認為還有發送端存活，永遠不會結束。</p>
 <h4 id="channel-vs">channel vs 共享記憶體</h4>
@@ -15950,7 +16061,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><strong>多個執行緒需要反覆讀寫同一份資料</strong>（例如共用的計數器、共用的快取）→ Mutex / RwLock 比較直接</li>
 <li><strong>一邊產生資料、一邊消費資料</strong>的流水線關係 → channel 更自然。資料的所有權直接轉移，不需要鎖，也不存在忘了放鎖的問題</li>
 </ul>
-<h3 id="_876">範例程式碼</h3>
+<h3 id="_881">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">mpsc</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -15981,7 +16092,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_877">重點整理</h3>
+<h3 id="_882">重點整理</h3>
 <ul>
 <li>channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享</li>
 <li><code>mpsc::channel()</code> 建立發送端 tx 和接收端 rx</li>
@@ -15991,14 +16102,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>流水線關係用 channel，反覆讀寫同一份資料用 Mutex / RwLock</li>
 </ul>
 <hr />
-<h2 id="ch8_deadlock">第八章第 10 集：死鎖</h2>
-<h3 id="_878">本集目標</h3>
+<h2 id="ch8_deadlock">第八章第 11 集：死鎖</h2>
+<h3 id="_883">本集目標</h3>
 <p>理解死鎖是什麼、為什麼 Rust 的編譯器擋不住它、以及如何避免。</p>
-<h3 id="_879">概念說明</h3>
-<h4 id="_880">什麼是死鎖</h4>
+<h3 id="_884">概念說明</h3>
+<h4 id="_885">什麼是死鎖</h4>
 <p>死鎖（deadlock）就是兩個或多個執行緒互相等待對方放鎖，結果誰都動不了，程式永遠卡住。</p>
 <p>最經典的情況：執行緒 A 拿著鎖 1 等鎖 2，執行緒 B 拿著鎖 2 等鎖 1。兩邊永遠等下去。</p>
-<h4 id="_881">程式碼示範</h4>
+<h4 id="_886">程式碼示範</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -16031,9 +16142,9 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>執行緒 A 先拿到鎖 1，然後想拿鎖 2。但鎖 2 被執行緒 B 拿走了，B 又在等鎖 1——結果誰都走不動。</p>
-<h4 id="_882">編譯器不會擋死鎖</h4>
+<h4 id="_887">編譯器不會擋死鎖</h4>
 <p>Send 和 Sync 保護的是<strong>資料競爭</strong>（data race）——多個執行緒同時存取資料造成的未定義行為。死鎖是<strong>邏輯問題</strong>，程式不會壞掉或出現未定義行為，只是永遠卡住。Rust 的編譯器無法偵測死鎖。</p>
-<h4 id="_883">同一個執行緒也會死鎖</h4>
+<h4 id="_888">同一個執行緒也會死鎖</h4>
 <p>就算只有一個執行緒，對同一個 Mutex lock 兩次也會死鎖——因為第一次 lock 還沒放開，第二次 lock 就永遠等不到：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::</span><span class="n">Mutex</span><span class="p">;</span>
 
@@ -16044,13 +16155,13 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h4 id="_884">如何避免</h4>
+<h4 id="_889">如何避免</h4>
 <ul>
 <li><strong>所有執行緒以相同順序取鎖</strong>：如果每個人都先拿鎖 1 再拿鎖 2，就不會互相卡住</li>
 <li><strong>減少同時持有多個鎖</strong>：能用一個鎖解決就不要用兩個</li>
 <li><strong>guard 不要活太久</strong>：用完趕快 drop，縮短持有鎖的時間</li>
 </ul>
-<h3 id="_885">範例程式碼</h3>
+<h3 id="_890">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">Mutex</span><span class="p">};</span>
 <span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
@@ -16082,7 +16193,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_886">重點整理</h3>
+<h3 id="_891">重點整理</h3>
 <ul>
 <li>死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住</li>
 <li>Rust 的編譯器不會擋死鎖——Send/Sync 保護的是資料競爭，死鎖是邏輯問題</li>
@@ -16090,10 +16201,10 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>避免方法：統一取鎖順序、減少同時持有多個鎖、guard 用完趕快 drop</li>
 </ul>
 <hr />
-<h2 id="ch8_thread_scope">第八章第 11 集：thread::scope 簡介</h2>
-<h3 id="_887">本集目標</h3>
+<h2 id="ch8_thread_scope">第八章第 12 集：thread::scope 簡介</h2>
+<h3 id="_892">本集目標</h3>
 <p>學會用 <code>thread::scope</code> 建立有限生命週期的執行緒，不需要 move 或 Arc 就能借用外部資料。</p>
-<h3 id="_888">概念說明</h3>
+<h3 id="_893">概念說明</h3>
 <h4 id="threadspawn">thread::spawn 的限制</h4>
 <p>前面用 <code>thread::spawn</code> 的時候，閉包裡要用外面的變數都得 move 進去，或用 Arc 包起來。這是因為 spawn 出來的執行緒可能活得比呼叫它的函數還久——Rust 沒辦法保證資料在執行緒結束前不會被丟掉。</p>
 <h4 id="spawn_2">為什麼 spawn 不能借用</h4>
@@ -16145,7 +16256,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>不需要 Arc、不需要 clone、不需要 move、不需要手動 join。</p>
-<h3 id="_889">範例程式碼</h3>
+<h3 id="_894">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
 <span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -16180,14 +16291,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="p">}</span>
 </code></pre></div>
 
-<h3 id="_890">重點整理</h3>
+<h3 id="_895">重點整理</h3>
 <ul>
 <li><code>thread::spawn</code> 要求 <code>'static</code>，所以閉包不能借用局部變數</li>
 <li><code>thread::scope</code> 保證所有 scoped thread 在 scope 結束前 join，因此可以安全借用外部資料</li>
 <li>不需要 move、不需要 Arc、不需要手動 join——程式碼簡潔很多</li>
 <li>當你只需要在一個區域內使用多執行緒，<code>thread::scope</code> 比 <code>thread::spawn</code> 方便</li>
 </ul>
-<p>恭喜你完成了第八章！🎉 這一章從指標的底層概念出發，一路學到了執行緒、Send/Sync、Arc、Mutex、RwLock、channel 和 thread::scope。多執行緒程式設計在很多語言裡是讓人頭痛的領域，但 Rust 的型別系統在編譯期就幫你擋住了 data race——你不需要靠經驗和直覺來避免這類 bug，編譯器就是你最好的隊友。下一章我們將介紹進階語言功能！</p>
+<p>恭喜你完成了第八章！🎉 這一章從指標的底層概念出發，一路學到了執行緒、Send/Sync、Arc、Mutex、RwLock、poisoning、channel 和 thread::scope。多執行緒程式設計在很多語言裡是讓人頭痛的領域，但 Rust 的型別系統在編譯期就幫你擋住了資料競爭——你不需要靠經驗和直覺來避免 bug，編譯器就是你最好的隊友。下一章我們將進入進階語言功能！</p>
 <hr />
 </main>
 
