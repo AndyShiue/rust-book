@@ -55,4 +55,4 @@ python build_book.py
 
 ## 授權
 
-本教學內容由 [Andy Shiue](https://github.com/AndyShiue
+本教學內容由 [Andy Shiue](https://github.com/AndyShiue) 撰寫。
