@@ -15433,7 +15433,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>閉包 <code>F</code> 必須是 <code>Send</code>——閉包捕捉了什麼，它的型別就包含什麼，所以如果捕捉的變數不是 <code>Send</code>，閉包本身也不會是 <code>Send</code>，spawn 就會編譯失敗。回傳值 <code>T</code> 也必須是 <code>Send</code>，因為結果要從子執行緒傳回來。</p>
-<p>還有那個 <code>'static</code>——為什麼需要它？因為我們完全不知道 spawn 出來的執行緒會活多久。你可能會 join 它，也可能不 join 讓它自己跑到 main 結束才被強制終止。Rust 的型別系統沒辦法保證你一定會在某個時間點 join，所以它要求最保守的保證：閉包和回傳值裡的所有東西都不能有會過期的借用。第五章第 28 集學過 lifetime bound，<code>T: 'a</code> 代表 <code>T</code> 裡面的所有參考都必須活得過 <code>'a</code>。<code>F: 'static</code> 就是這個概念的極端情況——閉包裡面的參考要活得跟整個程式一樣久。實務上最常見的做法就是上一集說的 <code>move</code>——把值搬進閉包之後，閉包不借用任何東西，自然滿足 <code>'static</code>。</p>
+<p>還有那個 <code>'static</code>——為什麼需要它？因為我們完全不知道 spawn 出來的執行緒會活多久。你可能會 join 它，也可能不 join 讓它自己跑到 main 結束才被強制終止。Rust 的型別系統沒辦法保證你一定會在某個時間點 join，所以它要求最保守的保證：閉包和回傳值裡的所有東西都不能有會過期的借用。第五章第 29 集學過 lifetime bound，<code>T: 'a</code> 代表 <code>T</code> 裡面的所有參考都必須活得過 <code>'a</code>。<code>F: 'static</code> 就是這個概念的極端情況——閉包裡面的參考要活得跟整個程式一樣久。實務上最常見的做法就是上一集說的 <code>move</code>——把值搬進閉包之後，閉包不借用任何東西，自然滿足 <code>'static</code>。</p>
 <h3 id="_846">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">thread</span><span class="p">;</span>
 
