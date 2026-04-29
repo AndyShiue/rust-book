@@ -57,7 +57,7 @@ println!("{:?}", scores);  // [70, 80, 90]
 
 這三種方法其實對應第四章學的三種所有權操作：
 
-| 所有權概念 | 迭代方法 | for 語法糖 |
+| 所有權概念 | 迭代方法 | for 簡寫 |
 |-----------|---------|-----------|
 | `&T`（共享借用） | `.iter()` | `for x in &v` |
 | `T`（移動所有權） | `.into_iter()` | `for x in v` |
@@ -65,7 +65,7 @@ println!("{:?}", scores);  // [70, 80, 90]
 
 ### 背後的 IntoIterator
 
-上一集學到 `for x in something` 會呼叫 `something.into_iter()`。那三種 for 語法糖是怎麼運作的？
+上一集學到 `for x in something` 會呼叫 `something.into_iter()`。那三種 for 迴圈是怎麼運作的？
 
 其實是因為 `Vec<T>`、`&Vec<T>`、`&mut Vec<T>` 分別實作了 `IntoIterator`：
 
@@ -135,8 +135,8 @@ fn main() {
     }
     // println!("{:?}", words);  // 編譯錯誤！words 被消耗了
 
-    // for 語法糖的對應
-    println!("\n--- for 語法糖 ---");
+    // 簡寫版的對應
+    println!("\n--- 簡寫版 ---");
     let nums = vec![1, 2, 3];
 
     // for x in &nums 等於 for x in nums.iter()

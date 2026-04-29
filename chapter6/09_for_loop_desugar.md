@@ -1,7 +1,7 @@
 # 第六章第 9 集：for 迴圈的真面目
 
 ## 本集目標
-揭開 `for` 迴圈的語法糖，理解它背後其實是 `IntoIterator` + `while let` 的組合。
+揭開 `for` 迴圈的真面目，理解它背後其實是 `IntoIterator` + `while let` 的組合。
 
 ## 概念說明
 
@@ -18,7 +18,7 @@ for x in v {
 
 看起來很簡單對吧？但這背後到底發生了什麼事？
 
-### 語法糖展開
+### 迴圈展開
 
 上面的 `for` 迴圈，編譯器其實會轉換成這樣：
 
@@ -125,7 +125,7 @@ impl Iterator for Countdown {
 ```
 
 ## 重點整理
-- `for x in v` 是語法糖，展開後是 `v.into_iter()` + `while let Some(x) = iter.next()`
+- `for x in v` 是簡寫，展開後是 `v.into_iter()` + `while let Some(x) = iter.next()`
 - `IntoIterator` trait 定義了「如何把自己轉成迭代器」
 - 任何實作了 `IntoIterator` 的型別都能用 `for` 迴圈
 - 每個 `Iterator` 自動實作了 `IntoIterator`
