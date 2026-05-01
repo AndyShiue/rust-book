@@ -6698,7 +6698,7 @@ c 的總和：7
 </ul>
 <p>大部分的 method 都用 <code>&amp;self</code>，因為你通常只是想「看看這個東西的狀態」，不需要消耗它。</p>
 <h4 id="clone_2">實際例子：Clone</h4>
-<p>一個很好的例子是 <code>Clone</code> trait。它定義的簡化版長這樣：</p>
+<p>一個很好的例子是 <code>Clone</code> trait。它定義的簡化版長這樣（實際上還不能通過編譯）：</p>
 <div class="highlight"><pre><span></span><code><span class="k">trait</span><span class="w"> </span><span class="nb">Clone</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="p">;</span>
 <span class="p">}</span>
@@ -17337,7 +17337,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <td><code>bitand(self, rhs)</code></td>
 </tr>
 <tr>
-<td><code>\|</code></td>
+<td><code>|</code></td>
 <td><code>BitOr</code></td>
 <td><code>bitor(self, rhs)</code></td>
 </tr>
@@ -18597,7 +18597,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 </code></pre></div>
 
 <p>match 的每個分支必須回傳同一個型別。<code>Some(v) =&gt; v</code> 回傳 <code>i32</code>，<code>None =&gt; panic!(...)</code> 回傳 <code>!</code>。因為 <code>!</code> 可以轉成任何型別，所以被當成 <code>i32</code>，match 的型別一致。</p>
-<p><code>return</code> 和 <code>continue</code> 也一樣：</p>
+<p><code>return</code>、<code>break</code> 和 <code>continue</code> 也一樣：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">option</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">Some</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">,</span>
 <span class="w">    </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="p">,</span><span class="w"> </span><span class="c1">// return 的型別是 !</span>

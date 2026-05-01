@@ -43,7 +43,7 @@ let x: i32 = match option {
 
 match 的每個分支必須回傳同一個型別。`Some(v) => v` 回傳 `i32`，`None => panic!(...)` 回傳 `!`。因為 `!` 可以轉成任何型別，所以被當成 `i32`，match 的型別一致。
 
-`return` 和 `continue` 也一樣：
+`return`、`break` 和 `continue` 也一樣：
 
 ```rust
 let x: i32 = match option {

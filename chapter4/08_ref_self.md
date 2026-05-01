@@ -39,7 +39,7 @@ impl Cat {
 
 ### 實際例子：Clone
 
-一個很好的例子是 `Clone` trait。它定義的簡化版長這樣：
+一個很好的例子是 `Clone` trait。它定義的簡化版長這樣（實際上還不能通過編譯）：
 
 ```rust
 trait Clone {
