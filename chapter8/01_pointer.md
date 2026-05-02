@@ -97,6 +97,7 @@ fn main() {
     println!("&[i32] 大小：{} bytes", size_of::<&[i32]>());
     println!("&str 大小：{} bytes", size_of::<&str>());
     println!("Box<[i32]> 大小：{} bytes", size_of::<Box<[i32]>>());
+}
 ```
 
 ## 重點整理

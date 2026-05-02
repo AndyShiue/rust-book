@@ -49,14 +49,14 @@ fn main() {
 ### 讓 C 呼叫 Rust
 
 ```rust
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 ```
 
 - `extern "C"`：用 C ABI
-- `#[no_mangle]`：不要混淆函數名稱，讓 C 能用 `add` 找到它
+- `#[unsafe(no_mangle)]`：不要混淆函數名稱，讓 C 能用 `add` 找到它。在 2024 edition 中，`no_mangle` 是 unsafe attribute，因為它改變了函數的連結方式，可能影響安全性
 
 ### extern 區塊裡也能宣告 static 變數
 
@@ -74,7 +74,7 @@ unsafe extern "C" {
     fn sqrt(x: f64) -> f64;
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn rust_add(a: i32, b: i32) -> i32 {
     a + b
 }
@@ -96,4 +96,4 @@ fn main() {
 - `unsafe extern "C" { ... }` 宣告外部 C 函數
 - 呼叫外部函數需要 unsafe；標記 `safe fn` 的除外
 - `"C"` 是 ABI，指定函數在二進位層面的呼叫方式
-- `#[no_mangle] pub extern "C" fn` 讓 C 可以呼叫 Rust
+- `#[unsafe(no_mangle)] pub extern "C" fn` 讓 C 可以呼叫 Rust

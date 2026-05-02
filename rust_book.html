@@ -15290,6 +15290,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;[i32] 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;str 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box&lt;[i32]&gt; 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h3 id="_836">重點整理</h3>
@@ -18447,7 +18448,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="c_1">"C" 是什麼</h4>
 <p><code>extern "C"</code> 的 <code>"C"</code> 指的是 <strong>ABI</strong>（Application Binary Interface）——函數在二進位層面的呼叫方式。<code>"C"</code> 是最常用的 ABI，幾乎所有語言都能跟 C ABI 互通。</p>
 <h4 id="c-rust">讓 C 呼叫 Rust</h4>
-<div class="highlight"><pre><span></span><code><span class="cp">#[no_mangle]</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#[unsafe(no_mangle)]</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
 <span class="p">}</span>
@@ -18455,7 +18456,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <ul>
 <li><code>extern "C"</code>：用 C ABI</li>
-<li><code>#[no_mangle]</code>：不要混淆函數名稱，讓 C 能用 <code>add</code> 找到它</li>
+<li><code>#[unsafe(no_mangle)]</code>：不要混淆函數名稱，讓 C 能用 <code>add</code> 找到它。在 2024 edition 中，<code>no_mangle</code> 是 unsafe attribute，因為它改變了函數的連結方式，可能影響安全性</li>
 </ul>
 <h4 id="extern-static">extern 區塊裡也能宣告 static 變數</h4>
 <div class="highlight"><pre><span></span><code><span class="k">unsafe</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -18469,7 +18470,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="cp">#[no_mangle]</span>
+<span class="cp">#[unsafe(no_mangle)]</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">rust_add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
 <span class="p">}</span>
@@ -18492,7 +18493,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>unsafe extern "C" { ... }</code> 宣告外部 C 函數</li>
 <li>呼叫外部函數需要 unsafe；標記 <code>safe fn</code> 的除外</li>
 <li><code>"C"</code> 是 ABI，指定函數在二進位層面的呼叫方式</li>
-<li><code>#[no_mangle] pub extern "C" fn</code> 讓 C 可以呼叫 Rust</li>
+<li><code>#[unsafe(no_mangle)] pub extern "C" fn</code> 讓 C 可以呼叫 Rust</li>
 </ul>
 <hr />
 <h2 id="ch9_union">第九章第 18 集：union</h2>
