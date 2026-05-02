@@ -489,6 +489,21 @@
 <li><a href="#ch9_never_type">第九章第 19 集：never type !</a></li>
 </ul>
 </li>
+<li><a href="#ch10">第十章：進階標準庫</a><ul>
+<li><a href="#ch10_asref">第十章第 1 集：AsRef / AsMut</a></li>
+<li><a href="#ch10_ordering_sort">第十章第 2 集：Ordering 與 sort</a></li>
+<li><a href="#ch10_hashmap">第十章第 3 集：HashMap</a></li>
+<li><a href="#ch10_hashset">第十章第 4 集：HashSet</a></li>
+<li><a href="#ch10_other_collections">第十章第 5 集：其他集合簡介</a></li>
+<li><a href="#ch10_env_process">第十章第 6 集：std::env / std::process</a></li>
+<li><a href="#ch10_path">第十章第 7 集：std::path</a></li>
+<li><a href="#ch10_io">第十章第 8 集：IO：stdin、檔案讀寫</a></li>
+<li><a href="#ch10_string_methods">第十章第 9 集：字串方法</a></li>
+<li><a href="#ch10_error_trait">第十章第 10 集：Error trait</a></li>
+<li><a href="#ch10_thiserror_anyhow">第十章第 11 集：thiserror / anyhow 簡介</a></li>
+<li><a href="#ch10_catch_unwind">第十章第 12 集：catch_unwind</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -8131,11 +8146,11 @@ c 的總和：7
 <p><code>?</code> 放在 <code>Result</code> 後面，做的事情就是：</p>
 <ul>
 <li>如果是 <code>Ok(v)</code>，把 <code>v</code> 取出來，繼續往下跑</li>
-<li>如果是 <code>Err(e)</code>，直接 <code>return Err(e)</code>，提前離開函數</li>
+<li>如果是 <code>Err(e)</code>，回傳 <code>Err</code>，提前離開函數</li>
 </ul>
 <p>所以 <code>?</code> 就是 match + early return 的簡寫。</p>
 <h4 id="_503">注意：錯誤型別要一致</h4>
-<p>使用 <code>Result</code> 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，就不能直接用 <code>?</code>——你得先把錯誤轉成對的型別。</p>
+<p>使用 <code>Result</code> 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致或有某種關聯（之後會講具體是哪種關聯）。如果沒有關聯，就不能直接用 <code>?</code>——你得先把錯誤轉成對的型別。</p>
 <p>比如 <code>.parse()</code> 的錯誤型別是 <code>std::num::ParseIntError</code>，但你的函數回傳 <code>Result&lt;_, String&gt;</code>。這時候你可以用 match 自己轉換，然後再手動 return：</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span><span class="p">,</span>
@@ -15275,6 +15290,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;[i32] 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&amp;str 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Box&lt;[i32]&gt; 大小：{} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="nb">Box</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">i32</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="p">}</span>
 </code></pre></div>
 
 <h3 id="_836">重點整理</h3>
@@ -16172,7 +16188,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li>之後 <code>lock()</code> / <code>read()</code> / <code>write()</code> 都回傳 <code>Err(PoisonError)</code></li>
 <li>RwLock 只有寫鎖 panic 才會中毒，讀鎖 panic 不會</li>
 <li><code>PoisonError::into_inner</code> 可以拿回 guard——記憶體安全沒問題，只是邏輯一致性的問題</li>
-<li>三種處理方式：panic（<code>unwrap()</code> 或 <code>.expect()</code>）、忽略（<code>.unwrap_or_else(PoisonError::into_inner)</code>）、修復資料再繼續</li>
+<li>三種處理方式：panic（<code>.unwrap()</code> 或 <code>.expect()</code>）、忽略（<code>.unwrap_or_else(PoisonError::into_inner)</code>）、修復資料再繼續</li>
 </ul>
 <hr />
 <h2 id="ch8_mpsc">第八章第 11 集：mpsc</h2>
@@ -18432,7 +18448,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="c_1">"C" 是什麼</h4>
 <p><code>extern "C"</code> 的 <code>"C"</code> 指的是 <strong>ABI</strong>（Application Binary Interface）——函數在二進位層面的呼叫方式。<code>"C"</code> 是最常用的 ABI，幾乎所有語言都能跟 C ABI 互通。</p>
 <h4 id="c-rust">讓 C 呼叫 Rust</h4>
-<div class="highlight"><pre><span></span><code><span class="cp">#[no_mangle]</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#[unsafe(no_mangle)]</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
 <span class="p">}</span>
@@ -18440,7 +18456,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <ul>
 <li><code>extern "C"</code>：用 C ABI</li>
-<li><code>#[no_mangle]</code>：不要混淆函數名稱，讓 C 能用 <code>add</code> 找到它</li>
+<li><code>#[unsafe(no_mangle)]</code>：不要混淆函數名稱，讓 C 能用 <code>add</code> 找到它。在 2024 edition 中，<code>no_mangle</code> 是 unsafe attribute，因為它改變了函數的連結方式，可能影響安全性</li>
 </ul>
 <h4 id="extern-static">extern 區塊裡也能宣告 static 變數</h4>
 <div class="highlight"><pre><span></span><code><span class="k">unsafe</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="p">{</span>
@@ -18454,7 +18470,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">f64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">f64</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="cp">#[no_mangle]</span>
+<span class="cp">#[unsafe(no_mangle)]</span>
 <span class="k">pub</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">rust_add</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span>
 <span class="p">}</span>
@@ -18477,7 +18493,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>unsafe extern "C" { ... }</code> 宣告外部 C 函數</li>
 <li>呼叫外部函數需要 unsafe；標記 <code>safe fn</code> 的除外</li>
 <li><code>"C"</code> 是 ABI，指定函數在二進位層面的呼叫方式</li>
-<li><code>#[no_mangle] pub extern "C" fn</code> 讓 C 可以呼叫 Rust</li>
+<li><code>#[unsafe(no_mangle)] pub extern "C" fn</code> 讓 C 可以呼叫 Rust</li>
 </ul>
 <hr />
 <h2 id="ch9_union">第九章第 18 集：union</h2>
@@ -18642,6 +18658,1225 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>!</code> 可以被強制轉換成任何型別——match 裡一條路線回傳值一條路線 panic 就是靠這個</li>
 </ul>
 <p>恭喜你完成了第九章！🎉 這一章涵蓋了 Rust 的進階語言功能——從 dyn Trait、編譯期運算、型別轉換、attribute、巨集系統，到 unsafe、static、FFI、union 和 never type。這些功能大部分在日常開發中不會天天用到，但知道它們的存在，需要的時候就能派上用場。下一章我們將看看標準庫裡的更多實用工具。</p>
+<hr />
+<h1 id="ch10">第十章：進階標準庫</h1>
+<h2 id="ch10_asref">第十章第 1 集：AsRef / AsMut</h2>
+<h3 id="_1011">本集目標</h3>
+<p>學會用 <code>AsRef</code> 和 <code>AsMut</code> 讓函數接受多種型別。</p>
+<h3 id="_1012">概念說明</h3>
+<h4 id="_1013">動機</h4>
+<p>假設你寫了一個函數接受 <code>&amp;str</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_length</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;長度：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>呼叫者手上有 <code>String</code>，因為 Deref 的關係，<code>&amp;String</code> 會自動轉成 <code>&amp;str</code>，所以沒問題。但如果你想寫一個函數，讓它同時接受 <code>String</code>、<code>&amp;str</code>、甚至其他型別呢？</p>
+<h4 id="asref">AsRef</h4>
+<p><code>AsRef&lt;T&gt;</code> trait 表示「我能便宜地借用成 <code>&amp;T</code>」：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_length</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">AsRef</span><span class="o">&lt;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;長度：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="n">print_length</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span><span class="w">              </span><span class="c1">// &amp;str</span>
+<span class="n">print_length</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">));</span><span class="w">   </span><span class="c1">// String</span>
+</code></pre></div>
+
+<p>標準庫已經幫很多型別實作了 <code>AsRef</code>：</p>
+<ul>
+<li><code>String: AsRef&lt;str&gt;</code></li>
+<li><code>String: AsRef&lt;[u8]&gt;</code></li>
+<li><code>Vec&lt;T&gt;: AsRef&lt;[T]&gt;</code></li>
+</ul>
+<h4 id="asmut">AsMut</h4>
+<p><code>AsMut&lt;T&gt;</code> 是可變版本，借用成 <code>&amp;mut T</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">fill_zeros</span><span class="p">(</span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="k">impl</span><span class="w"> </span><span class="nb">AsMut</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">u8</span><span class="p">]</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">byte</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">buf</span><span class="p">.</span><span class="n">as_mut</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
+<span class="n">fill_zeros</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span><span class="w"> </span><span class="c1">// [0, 0, 0]</span>
+</code></pre></div>
+
+<h4 id="deref">跟 Deref 的差別</h4>
+<p>Deref 是自動的——編譯器幫你加 <code>*</code>，你不用寫任何東西。AsRef 是手動呼叫 <code>.as_ref()</code>。</p>
+<p>更重要的差別：每個型別只能有一個 Deref 目標（<code>String</code> deref 成 <code>str</code>），但可以實作多個 AsRef（<code>String</code> 同時是 <code>AsRef&lt;str&gt;</code> 和 <code>AsRef&lt;[u8]&gt;</code>）。</p>
+<h4 id="_1014">什麼時候用</h4>
+<p>寫函數參數想泛化接受多種型別的時候，用 <code>impl AsRef&lt;T&gt;</code>。標準庫到處都在用，之後學到 <code>std::path</code> 和檔案 IO 的時候會看到更多例子。</p>
+<h3 id="_1015">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">describe</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">AsRef</span><span class="o">&lt;</span><span class="kt">str</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">as_ref</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;「{}」有 {} 個字元&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">count</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">count_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="nc">impl</span><span class="w"> </span><span class="nb">AsRef</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">u8</span><span class="p">]</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;共 {} bytes&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// AsRef&lt;str&gt;：接受 &amp;str 和 String</span>
+<span class="w">    </span><span class="n">describe</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">describe</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;你好&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// AsRef&lt;[u8]&gt;：接受 Vec&lt;u8&gt;、String 等</span>
+<span class="w">    </span><span class="n">count_bytes</span><span class="p">(</span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]);</span>
+<span class="w">    </span><span class="n">count_bytes</span><span class="p">(</span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1016">重點整理</h3>
+<ul>
+<li><code>AsRef&lt;T&gt;</code>：便宜地借用成 <code>&amp;T</code>，用 <code>.as_ref()</code> 呼叫</li>
+<li><code>AsMut&lt;T&gt;</code>：便宜地借用成 <code>&amp;mut T</code>，用 <code>.as_mut()</code> 呼叫</li>
+<li>一個型別可以實作多個 <code>AsRef</code>（Deref 只能一個目標）</li>
+<li>函數參數寫 <code>impl AsRef&lt;T&gt;</code> 可以接受多種型別</li>
+<li>標準庫大量使用</li>
+</ul>
+<hr />
+<h2 id="ch10_ordering_sort">第十章第 2 集：Ordering 與 sort</h2>
+<h3 id="_1017">本集目標</h3>
+<p>認識 <code>Ordering</code>、<code>min</code>/<code>max</code> 系列函數、排序方法，以及 <code>Reverse</code> 的原理。</p>
+<h3 id="_1018">概念說明</h3>
+<h4 id="ordering">Ordering</h4>
+<p>第五章學了 <code>Ord</code> trait，知道實作了 <code>Ord</code> 的型別可以比大小。<code>Ord</code> 的核心方法是 <code>cmp</code>，它比較兩個值，回傳 <code>std::cmp::Ordering</code>——一個只有三個值的 enum：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">::</span><span class="n">Ordering</span><span class="p">;</span>
+
+<span class="k">match</span><span class="w"> </span><span class="mf">5.</span><span class="n">cmp</span><span class="p">(</span><span class="o">&amp;</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Ordering</span><span class="p">::</span><span class="n">Less</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;比較小&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Ordering</span><span class="p">::</span><span class="n">Equal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;一樣&quot;</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Ordering</span><span class="p">::</span><span class="n">Greater</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;比較大&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="min-max_1">min / max</h4>
+<p><code>std::cmp::min(a, b)</code> 和 <code>std::cmp::max(a, b)</code> 回傳兩個值中比較小或大的那個，要求型別實作 <code>Ord</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">;</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">));</span><span class="w">  </span><span class="c1">// 3</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">));</span><span class="w">  </span><span class="c1">// 7</span>
+</code></pre></div>
+
+<h4 id="_1019">浮點數的問題</h4>
+<p><code>f64</code> 沒有實作 <code>Ord</code>（第五章提過，因為 <code>NAN</code> 和任何值比較都是 <code>false</code>），所以不能直接用 <code>cmp::min</code>。</p>
+<p><code>f64</code> 只有 <code>PartialOrd</code>，它的方法是 <code>partial_cmp</code>，回傳 <code>Option&lt;Ordering&gt;</code> 而不是 <code>Ordering</code>——因為碰到 NAN 的時候沒辦法比大小，只能回傳 <code>None</code>。</p>
+<p>這時候可以用 <code>min_by</code> / <code>max_by</code>，自訂比較邏輯：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min_by</span><span class="p">(</span><span class="mf">3.0_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span><span class="w"> </span><span class="c1">// 如果確定不會碰到 NaN，用 unwrap 取出 Ordering</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">smaller</span><span class="p">);</span><span class="w"> </span><span class="c1">// 2.5</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">bigger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">max_by</span><span class="p">(</span><span class="mf">3.0_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">bigger</span><span class="p">);</span><span class="w"> </span><span class="c1">// 3.0</span>
+</code></pre></div>
+
+<p><code>min_by</code> / <code>max_by</code> 的閉包回傳 <code>Ordering</code>，你自己決定怎麼比。</p>
+<h4 id="min_by_key-max_by_key">min_by_key / max_by_key</h4>
+<p>根據某個 key 來比較：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min_by_key</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hi&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">short</span><span class="p">);</span><span class="w"> </span><span class="c1">// &quot;hi&quot;</span>
+</code></pre></div>
+
+<h4 id="_1020">排序</h4>
+<p><code>Vec</code> 和切片提供了幾種排序方法：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+
+<span class="c1">// sort：由小到大，要求 Ord</span>
+<span class="n">nums</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">);</span><span class="w"> </span><span class="c1">// [1, 1, 3, 4, 5]</span>
+
+<span class="c1">// sort_by：自訂比較，傳入閉包回傳 Ordering</span>
+<span class="n">nums</span><span class="p">.</span><span class="n">sort_by</span><span class="p">(</span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">cmp</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">);</span><span class="w"> </span><span class="c1">// [5, 4, 3, 1, 1]</span>
+
+<span class="c1">// sort_by_key：根據 key 排序</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;banana&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;apple&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;fig&quot;</span><span class="p">];</span>
+<span class="n">words</span><span class="p">.</span><span class="n">sort_by_key</span><span class="p">(</span><span class="o">|</span><span class="n">w</span><span class="o">|</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">words</span><span class="p">);</span><span class="w"> </span><span class="c1">// [&quot;fig&quot;, &quot;apple&quot;, &quot;banana&quot;]</span>
+</code></pre></div>
+
+<h4 id="reverse">Reverse</h4>
+<p><code>std::cmp::Reverse</code> 可以把排序順序反過來：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">::</span><span class="n">Reverse</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">nums</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">];</span>
+<span class="n">nums</span><span class="p">.</span><span class="n">sort_by_key</span><span class="p">(</span><span class="o">|&amp;</span><span class="n">x</span><span class="o">|</span><span class="w"> </span><span class="n">Reverse</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">);</span><span class="w"> </span><span class="c1">// [5, 4, 3, 1, 1]</span>
+</code></pre></div>
+
+<p>這是怎麼做到的？<code>Reverse</code> 其實就是一個 tuple struct：</p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Reverse</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">pub</span><span class="w"> </span><span class="n">T</span><span class="p">);</span>
+</code></pre></div>
+
+<p>它的 <code>Ord</code> 實作把比較順序反了過來：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nb">Ord</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">Ord</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Reverse</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">cmp</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">other</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Reverse</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ordering</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">other</span><span class="p">.</span><span class="mf">0.</span><span class="n">cmp</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="c1">// 注意：是 other 跟 self 比，反過來了</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>正常的 <code>5.cmp(&amp;3)</code> 回傳 <code>Greater</code>，但 <code>Reverse(5).cmp(&amp;Reverse(3))</code> 內部做的是 <code>3.cmp(&amp;5)</code>，回傳 <code>Less</code>。<code>sort_by_key</code> 用 key 的 <code>cmp</code> 來決定順序，key 被 <code>Reverse</code> 包住之後比較邏輯就自動反過來了。</p>
+<p>比起 <code>sort_by(|a, b| b.cmp(a))</code>，<code>Reverse</code> 的寫法意圖更清楚。</p>
+<h3 id="_1021">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">::{</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">Reverse</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// min / max</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;min(10, 20) = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;max(10, 20) = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// 浮點數用 min_by /max_by</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min_by</span><span class="p">(</span><span class="mf">1.5_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.3</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;min_by(1.5, 2.3) = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">smaller</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 排序</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">];</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;由小到大：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">sort_by_key</span><span class="p">(</span><span class="o">|&amp;</span><span class="n">s</span><span class="o">|</span><span class="w"> </span><span class="n">Reverse</span><span class="p">(</span><span class="n">s</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;由大到小：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 根據字串長度排序</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dave&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="n">names</span><span class="p">.</span><span class="n">sort_by_key</span><span class="p">(</span><span class="o">|</span><span class="n">n</span><span class="o">|</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;依長度排：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">names</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1022">重點整理</h3>
+<ul>
+<li><code>Ordering</code> 有三個值：<code>Less</code>、<code>Equal</code>、<code>Greater</code></li>
+<li><code>cmp::min</code> / <code>cmp::max</code> 取兩者的較小/大值，要求 <code>Ord</code></li>
+<li><code>f64</code> 沒有 <code>Ord</code>，用 <code>min_by</code> / <code>max_by</code> 自訂比較</li>
+<li><code>min_by_key</code> / <code>max_by_key</code> 根據 key 比較</li>
+<li><code>sort()</code> 由小到大、<code>sort_by()</code> 自訂比較、<code>sort_by_key()</code> 根據 key 排序</li>
+<li><code>Reverse</code> 是一個 tuple struct，<code>Ord</code> 實作把比較反過來，所以排序結果跟著反轉</li>
+</ul>
+<hr />
+<h2 id="ch10_hashmap">第十章第 3 集：HashMap</h2>
+<h3 id="_1023">本集目標</h3>
+<p>學會用 <code>HashMap</code> 儲存和查詢 key-value 資料。</p>
+<h3 id="_1024">概念說明</h3>
+<h4 id="_1025">動機</h4>
+<p>如果你想用名字查分數、用 ID 查使用者，用 Vec 當然也做得到——存一堆 <code>(名字, 分數)</code> 的 tuple，要查的時候從頭走訪找到名字相符的那個。但這樣資料越多就越慢。</p>
+<p><code>HashMap&lt;K, V&gt;</code> 解決了這個問題。它用 hash 函數把 key 對應到記憶體位置，不管裡面有多少資料，查一個 key 的速度幾乎是固定的。</p>
+<h4 id="_1026">建立與基本操作</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">);</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">);</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">));</span><span class="w"> </span><span class="c1">// Some(&amp;95)</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;Eve&quot;</span><span class="p">));</span><span class="w">   </span><span class="c1">// None</span>
+</code></pre></div>
+
+<p><code>insert</code> 放入、<code>get</code> 查詢回傳 <code>Option&lt;&amp;V&gt;</code>（key 不存在就是 <code>None</code>）、<code>remove</code> 刪除並回傳 <code>Option&lt;V&gt;</code>（key 存在就回傳 <code>Some(被刪掉的值)</code>，不存在就回傳 <code>None</code>）。</p>
+<p>對同一個 key 再 <code>insert</code> 會覆蓋舊值。</p>
+<h4 id="collect_1">用 collect 從迭代器建立</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">scores</span><span class="p">:</span><span class="w"> </span><span class="nc">HashMap</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="p">,</span><span class="w"> </span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">)]</span>
+<span class="w">    </span><span class="p">.</span><span class="n">into_iter</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="n">collect</span><span class="p">();</span>
+</code></pre></div>
+
+<h4 id="_1027">走訪</h4>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>注意走訪順序是<strong>不固定</strong>的——每次跑可能不一樣。如果你需要固定順序，用 <code>BTreeMap</code>（之後會介紹）。</p>
+<h4 id="hash">Hash 是什麼</h4>
+<p>HashMap 要根據 key 快速找到對應的值。它的做法是把 key 丟進一個 <strong>hash 函數</strong>，算出一個數字（hash value），用這個數字決定值放在記憶體的哪個位置。之後要查的時候，再對 key 算一次 hash，就能直接跳到那個位置，不用一個一個找。</p>
+<p>所以 key 的型別必須實作 <code>Hash</code> trait——告訴 HashMap 怎麼對這個型別算 hash。</p>
+<h4 id="key-eq-hash">Key 的要求：Eq + Hash</h4>
+<p>Key 除了要 <code>Hash</code>，還要 <code>Eq</code>。因為不同的 key 可能被分到同一個位置，HashMap 需要用 <code>==</code> 來確認找到的確實是你要的 key。</p>
+<p>大部分基本型別（整數、<code>bool</code>、<code>char</code>、<code>&amp;str</code>、<code>String</code>）都已經實作了 <code>Eq + Hash</code>。<code>f64</code> 沒有 <code>Eq</code>（因為 NAN），所以不能當 key。</p>
+<h4 id="hash_1">幫自己的型別實作 Hash</h4>
+<p><code>Hash</code> 可以 derive：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+
+<span class="cp">#[derive(Debug, PartialEq, Eq, Hash)]</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Student</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">,</span>
+<span class="w">    </span><span class="n">grade</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">map</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">Student</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">grade</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="s">&quot;優等&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>注意你同時需要 <code>PartialEq</code>、<code>Eq</code> 和 <code>Hash</code>——因為 <code>Eq: PartialEq</code>，三個都要。</p>
+<p>一般來說，當你 derive <code>PartialEq</code> 和 <code>Eq</code> 的時候，建議也一起 derive <code>Hash</code>。這不會有額外的代價，但讓你的型別以後需要當 HashMap 的 key 的時候不用再回來改。</p>
+<h4 id="entry-api">entry API</h4>
+<p>「有就不動，沒有才插入」是很常見的需求：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="p">);</span>
+
+<span class="n">scores</span><span class="p">.</span><span class="n">entry</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">).</span><span class="n">or_insert</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// Alice 已存在，不動</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">entry</span><span class="p">(</span><span class="s">&quot;Eve&quot;</span><span class="p">).</span><span class="n">or_insert</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w">   </span><span class="c1">// Eve 不存在，插入 0</span>
+</code></pre></div>
+
+<p><code>or_insert</code> 回傳 <code>&amp;mut V</code>，可以直接修改。這在計數的時候特別好用：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rust&quot;</span><span class="p">];</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">.</span><span class="n">entry</span><span class="p">(</span><span class="n">word</span><span class="p">).</span><span class="n">or_insert</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// {&quot;hello&quot;: 2, &quot;world&quot;: 1, &quot;rust&quot;: 1}</span>
+</code></pre></div>
+
+<h4 id="_1028">其他常用方法</h4>
+<p>HashMap 還有一些常用的方法：</p>
+<ul>
+<li><code>contains_key(&amp;key)</code>：檢查 key 是否存在，回傳 <code>bool</code></li>
+<li><code>len()</code>：回傳有幾組 key-value</li>
+<li><code>is_empty()</code>：是不是空的</li>
+<li><code>keys()</code>：所有 key 的迭代器</li>
+<li><code>values()</code>：所有 value 的迭代器</li>
+</ul>
+<h3 id="_1029">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 統計每個字元出現幾次</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello world&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">char_counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">text</span><span class="p">.</span><span class="n">chars</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">&#39; &#39;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">char_counts</span><span class="p">.</span><span class="n">entry</span><span class="p">(</span><span class="n">c</span><span class="p">).</span><span class="n">or_insert</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 印出結果（順序不固定）</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">char_counts</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;&#39;{}&#39;: {} 次&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 找出出現最多次的字元</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">((</span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">char_counts</span><span class="p">.</span><span class="n">iter</span><span class="p">().</span><span class="n">max_by_key</span><span class="p">(</span><span class="o">|</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="o">|</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;出現最多的是 &#39;{}&#39;，共 {} 次&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1030">重點整理</h3>
+<ul>
+<li><code>HashMap&lt;K, V&gt;</code> 用 key 查 value，不管資料量多大查詢速度幾乎是固定的</li>
+<li><code>insert</code> 放入、<code>get</code> 查詢（回傳 <code>Option&lt;&amp;V&gt;</code>）、<code>remove</code> 刪除</li>
+<li>Key 必須實作 <code>Eq + Hash</code>，<code>Hash</code> 可以 derive</li>
+<li><code>f64</code> 不能當 key（沒有 <code>Eq</code>）</li>
+<li><code>entry().or_insert()</code> 是「沒有才插入」的慣用寫法，回傳 <code>&amp;mut V</code></li>
+<li>走訪順序不固定</li>
+</ul>
+<hr />
+<h2 id="ch10_hashset">第十章第 4 集：HashSet</h2>
+<h3 id="_1031">本集目標</h3>
+<p>學會用 <code>HashSet</code> 處理集合運算。</p>
+<h3 id="_1032">概念說明</h3>
+<h4 id="_1033">動機</h4>
+<p>HashMap 存的是 key-value 對，但有時候你只關心「有沒有」而不關心對應的值——例如追蹤哪些使用者已經上線、哪些單字出現過。這時候用 <code>HashSet</code>。</p>
+<h4 id="_1034">本質</h4>
+<p>HashSet 其實就是只有 key 沒有 value 的 HashMap。所以元素一樣要求 <code>Eq + Hash</code>。</p>
+<h4 id="_1035">基本操作</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashSet</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">fruits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HashSet</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">fruits</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;apple&quot;</span><span class="p">);</span>
+<span class="n">fruits</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">);</span>
+<span class="n">fruits</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;apple&quot;</span><span class="p">);</span><span class="w"> </span><span class="c1">// 重複，不會加進去</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fruits</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;apple&quot;</span><span class="p">));</span><span class="w"> </span><span class="c1">// true</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fruits</span><span class="p">.</span><span class="n">len</span><span class="p">());</span><span class="w">              </span><span class="c1">// 2</span>
+
+<span class="n">fruits</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<h4 id="_1036">從迭代器建立</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashSet</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">nums</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="p">);</span><span class="w"> </span><span class="c1">// {1, 2, 3}，自動去掉重複</span>
+</code></pre></div>
+
+<h4 id="_1037">集合運算</h4>
+<p>這是 HashSet 最有用的地方：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashSet</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">a</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+
+<span class="c1">// 交集：兩邊都有的</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">intersection</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">).</span><span class="n">copied</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// {2, 3}</span>
+
+<span class="c1">// 聯集：合在一起</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">union</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="k">union</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">).</span><span class="n">copied</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// {1, 2, 3, 4}</span>
+
+<span class="c1">// 差集：a 有但 b 沒有的</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">diff</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">difference</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">).</span><span class="n">copied</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// {1}</span>
+
+<span class="c1">// 對稱差集：只在其中一邊的</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">sym_diff</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">).</span><span class="n">copied</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// {1, 4}</span>
+</code></pre></div>
+
+<h4 id="_1038">運算子</h4>
+<p>第九章學了運算子重載——HashSet 就用了這個功能。你可以用 <code>&amp;</code> <code>|</code> <code>-</code> <code>^</code> 對兩個 HashSet 的參考做集合運算：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">intersection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// 交集</span>
+<span class="kd">let</span><span class="w"> </span><span class="k">union</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// 聯集</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">diff</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// 差集</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">sym_diff</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="c1">// 對稱差集</span>
+</code></pre></div>
+
+<h4 id="_1039">其他關係</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">small</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">big</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">small</span><span class="p">.</span><span class="n">is_subset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">big</span><span class="p">));</span><span class="w">    </span><span class="c1">// true</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">big</span><span class="p">.</span><span class="n">is_superset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">small</span><span class="p">));</span><span class="w">  </span><span class="c1">// true</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">small</span><span class="p">.</span><span class="n">is_disjoint</span><span class="p">(</span><span class="o">&amp;</span><span class="n">big</span><span class="p">));</span><span class="w">  </span><span class="c1">// false（有交集）</span>
+</code></pre></div>
+
+<h4 id="_1040">走訪</h4>
+<p>跟 HashMap 一樣，走訪順序不固定：</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="n">fruit</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">fruits</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">fruit</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1041">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashSet</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">class_a</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dave&quot;</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">class_b</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;Charlie&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Dave&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Eve&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Frank&quot;</span><span class="p">].</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;A 班：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">class_a</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;B 班：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">class_b</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 兩班都有的人</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">both</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_a</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_b</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;都有：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">both</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 全部的人</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_a</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_b</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;全部：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">all</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 只在 A 班的人</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">only_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_a</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">&amp;</span><span class="n">class_b</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;只在 A：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">only_a</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 去掉重複</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rust&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">unique</span><span class="p">:</span><span class="w"> </span><span class="nc">HashSet</span><span class="o">&lt;</span><span class="n">_</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">words</span><span class="p">.</span><span class="n">into_iter</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;不重複的字：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">unique</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1042">重點整理</h3>
+<ul>
+<li><code>HashSet&lt;T&gt;</code> 是只有 key 的 HashMap，元素不重複</li>
+<li>元素必須實作 <code>Eq + Hash</code></li>
+<li><code>insert</code> 加入、<code>contains</code> 檢查、<code>remove</code> 移除</li>
+<li>集合運算：<code>intersection</code>（交集）、<code>union</code>（聯集）、<code>difference</code>（差集）、<code>symmetric_difference</code>（對稱差集）</li>
+<li>也可以用運算子：<code>&amp;</code>（交集）、<code>|</code>（聯集）、<code>-</code>（差集）、<code>^</code>（對稱差集）</li>
+<li><code>is_subset</code>、<code>is_superset</code>、<code>is_disjoint</code> 判斷其他關係</li>
+</ul>
+<hr />
+<h2 id="ch10_other_collections">第十章第 5 集：其他集合簡介</h2>
+<h3 id="_1043">本集目標</h3>
+<p>認識 BTreeMap、BTreeSet 和 VecDeque。</p>
+<h3 id="_1044">概念說明</h3>
+<p>HashMap 和 HashSet 是最常用的集合，但標準庫還有其他選擇。</p>
+<h4 id="btreemap">BTreeMap</h4>
+<p>跟 HashMap 的差別：key 是<strong>有序</strong>的。走訪的時候會按照 key 的排序順序，不是隨機順序：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">BTreeMap</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BTreeMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Charlie&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">);</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">);</span>
+<span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">);</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// 一定按字母順序：Alice, Bob, Charlie</span>
+</code></pre></div>
+
+<p>代價是 key 必須實作 <code>Ord</code>（而不是 <code>Hash + Eq</code>）。查詢速度方面，HashMap 不管資料量多大幾乎是固定的，BTreeMap 資料越多會稍微慢一點，但還是很快。</p>
+<h4 id="btreeset">BTreeSet</h4>
+<p>BTreeSet 就是只有 key 的 BTreeMap，跟 HashSet 對 HashMap 的關係一樣。元素有序，走訪時按順序輸出：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">BTreeSet</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BTreeSet</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">set</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">set</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">set</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">set</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">print!</span><span class="p">(</span><span class="s">&quot;{} &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// 1 2 3</span>
+</code></pre></div>
+
+<p>HashSet 的集合運算（交集、聯集等）BTreeSet 也都有。</p>
+<h4 id="_1045">什麼時候用哪個</h4>
+<ul>
+<li>不在乎順序 → HashMap / HashSet（比較快）</li>
+<li>需要按某種順序走訪、或需要找最小/最大的 key → BTreeMap / BTreeSet</li>
+</ul>
+<h4 id="vecdeque">VecDeque</h4>
+<p>Vec 只能在尾巴高效地 push/pop。如果在頭 insert 或 remove，要把後面所有元素往後搬一格，資料越多越慢。</p>
+<p><code>VecDeque</code>（雙端佇列）在頭和尾都能高效操作，不管資料量多大速度都是固定的：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">VecDeque</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VecDeque</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">deque</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">deque</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">deque</span><span class="p">.</span><span class="n">push_front</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deque</span><span class="p">);</span><span class="w"> </span><span class="c1">// [0, 1, 2]</span>
+
+<span class="n">deque</span><span class="p">.</span><span class="n">pop_front</span><span class="p">();</span><span class="w"> </span><span class="c1">// 拿掉 0</span>
+<span class="n">deque</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span><span class="w">  </span><span class="c1">// 拿掉 2</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">deque</span><span class="p">);</span><span class="w"> </span><span class="c1">// [1]</span>
+</code></pre></div>
+
+<h4 id="vecdeque_1">什麼時候用 VecDeque</h4>
+<p>需要先進先出（FIFO）的佇列，或需要頻繁在頭尾操作的時候。如果只在尾巴操作，Vec 就夠了。</p>
+<h3 id="_1046">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::{</span><span class="n">BTreeMap</span><span class="p">,</span><span class="w"> </span><span class="n">VecDeque</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// BTreeMap：有序的 key-value</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">scores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BTreeMap</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Charlie&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">70</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Alice&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Bob&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">85</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scores</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="s">&quot;Dave&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 一定按字母順序印出</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">scores</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// VecDeque：雙端佇列</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VecDeque</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">    </span><span class="n">queue</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;第一個&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">queue</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;第二個&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">queue</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">&quot;第三個&quot;</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 從前面拿，先進先出</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">queue</span><span class="p">.</span><span class="n">pop_front</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;處理：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">item</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1047">重點整理</h3>
+<ul>
+<li><code>BTreeMap</code>：有序的 HashMap，key 必須實作 <code>Ord</code></li>
+<li><code>BTreeSet</code>：有序的 HashSet，元素必須實作 <code>Ord</code></li>
+<li>需要排序走訪用 BTree 系列，不需要就用 Hash 系列（比較快）</li>
+<li><code>VecDeque</code>：雙端佇列，頭尾操作都很快</li>
+<li>Vec 只在尾巴操作快，頭部操作慢（要搬移所有元素）</li>
+</ul>
+<hr />
+<h2 id="ch10_env_process">第十章第 6 集：std::env / std::process</h2>
+<h3 id="_1048">本集目標</h3>
+<p>學會讀取命令列參數、環境變數，以及控制程式結束。</p>
+<h3 id="_1049">概念說明</h3>
+<h4 id="_1050">命令列參數</h4>
+<p>程式執行的時候可以帶參數，例如 <code>cargo run -- hello world</code>。用 <code>std::env::args()</code> 拿到：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">env</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">args</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>第一個是程式本身的路徑，後面才是你傳的參數。通常會 <code>collect</code> 成 Vec 來用：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">env</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">args</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">args</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;請提供參數&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;你輸入的是：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+</code></pre></div>
+
+<h4 id="_1051">環境變數</h4>
+<p>環境變數是作業系統提供的一組 key-value 設定，程式可以讀取它們來取得系統資訊。如果你不熟悉環境變數，請自行搜尋相關資料。</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">env</span><span class="p">;</span>
+
+<span class="k">match</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">var</span><span class="p">(</span><span class="s">&quot;HOME&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;HOME = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">),</span>
+<span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;HOME 沒有設定&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>env::var</code> 回傳 <code>Result&lt;String, VarError&gt;</code>。環境變數不存在就會回傳 <code>Err</code>。</p>
+<h4 id="processexit">process::exit</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">process</span><span class="p">;</span>
+
+<span class="n">process</span><span class="p">::</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"> </span><span class="c1">// 立刻結束程式，回傳錯誤碼 1</span>
+</code></pre></div>
+
+<p>回傳 0 通常代表成功，非 0 代表失敗。第九章學過 <code>process::exit</code> 的回傳型別是 <code>!</code>（never type）。</p>
+<h4 id="eprintln">eprintln!</h4>
+<div class="highlight"><pre><span></span><code><span class="fm">eprintln!</span><span class="p">(</span><span class="s">&quot;這是錯誤訊息&quot;</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;這是正常輸出&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p><code>println!</code> 輸出到 <strong>stdout</strong>（標準輸出），<code>eprintln!</code> 輸出到 <strong>stderr</strong>（標準錯誤）。兩者在終端機上看起來一樣，但可以分開導向不同的地方。錯誤訊息應該用 <code>eprintln!</code>。</p>
+<h3 id="_1052">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">env</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">process</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">args</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">args</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">eprintln!</span><span class="p">(</span><span class="s">&quot;用法：{} &lt;名字&gt;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">process</span><span class="p">::</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;你好，{}！&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 印出一些環境變數</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">home</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">var</span><span class="p">(</span><span class="s">&quot;HOME&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;你的 HOME 目錄：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">home</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">var</span><span class="p">(</span><span class="s">&quot;PATH&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;PATH 的前 50 個字元：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">path</span><span class="p">[</span><span class="o">..</span><span class="n">path</span><span class="p">.</span><span class="n">len</span><span class="p">().</span><span class="n">min</span><span class="p">(</span><span class="mi">50</span><span class="p">)]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1053">重點整理</h3>
+<ul>
+<li><code>env::args()</code> 回傳命令列參數的迭代器，第一個是程式路徑</li>
+<li><code>env::var("NAME")</code> 回傳 <code>Result</code></li>
+<li><code>process::exit(code)</code> 立刻結束程式，回傳型別是 <code>!</code></li>
+<li><code>eprintln!</code> 輸出到 stderr，錯誤訊息應該用它</li>
+</ul>
+<hr />
+<h2 id="ch10_path">第十章第 7 集：std::path</h2>
+<h3 id="_1054">本集目標</h3>
+<p>學會用 <code>Path</code> 和 <code>PathBuf</code> 處理跨平台路徑。</p>
+<h3 id="_1055">概念說明</h3>
+<h4 id="_1056">動機</h4>
+<p>不同作業系統的路徑格式不一樣——Windows 用 <code>\</code>，Linux/macOS 用 <code>/</code>。如果你用字串硬拼路徑，跨平台就有可能出問題。<code>std::path</code> 幫你處理這些差異。</p>
+<h4 id="path-pathbuf">Path 和 PathBuf</h4>
+<p>跟 <code>str</code> 和 <code>String</code> 的關係一樣：</p>
+<ul>
+<li><code>Path</code> 對應 <code>str</code>——是 DST，不能直接持有，通常用 <code>&amp;Path</code></li>
+<li><code>PathBuf</code> 對應 <code>String</code>——是具所有權的版本，可以修改</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">path</span><span class="p">::{</span><span class="n">Path</span><span class="p">,</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">};</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;/home/user/file.txt&quot;</span><span class="p">);</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;/home/user&quot;</span><span class="p">);</span>
+<span class="n">buf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;documents&quot;</span><span class="p">);</span>
+<span class="n">buf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;file.txt&quot;</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">.</span><span class="n">display</span><span class="p">());</span><span class="w"> </span><span class="c1">// /home/user/documents/file.txt</span>
+</code></pre></div>
+
+<p><code>push</code> 會自動加上正確的路徑分隔符號。</p>
+<h4 id="_1057">常用方法</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;/home/user/notes.txt&quot;</span><span class="p">);</span>
+
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">parent</span><span class="p">());</span><span class="w">     </span><span class="c1">// Some(&quot;/home/user&quot;)</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">file_name</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(&quot;notes.txt&quot;)</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">extension</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(&quot;txt&quot;)</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">file_stem</span><span class="p">());</span><span class="w">  </span><span class="c1">// Some(&quot;notes&quot;)</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">exists</span><span class="p">());</span><span class="w">       </span><span class="c1">// 檢查路徑是否存在</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">is_file</span><span class="p">());</span><span class="w">      </span><span class="c1">// 是不是檔案</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">is_dir</span><span class="p">());</span><span class="w">       </span><span class="c1">// 是不是目錄</span>
+</code></pre></div>
+
+<p><code>file_name</code>、<code>extension</code>、<code>file_stem</code> 回傳的是 <code>Option&lt;&amp;OsStr&gt;</code>，不是 <code>Option&lt;&amp;str&gt;</code>——因為檔案名稱在某些作業系統上不一定是合法的 UTF-8。大部分時候可以用 <code>.to_str().unwrap()</code> 轉成 <code>&amp;str</code>。</p>
+<h4 id="join_1">join</h4>
+<p><code>join</code> 跟 <code>push</code> 類似，但不改變原本的 Path 或 PathBuf，而是回傳新的 PathBuf：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;/home/user&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dir</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;documents&quot;</span><span class="p">).</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;file.txt&quot;</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">display</span><span class="p">());</span><span class="w"> </span><span class="c1">// /home/user/documents/file.txt</span>
+</code></pre></div>
+
+<h4 id="_1058">和字串的轉換</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">path</span><span class="p">::{</span><span class="n">Path</span><span class="p">,</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">};</span>
+
+<span class="c1">// &amp;str → &amp;Path</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;hello.txt&quot;</span><span class="p">);</span>
+
+<span class="c1">// &amp;str → PathBuf</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;/some/path&quot;</span><span class="p">);</span>
+
+<span class="c1">// PathBuf → String（可能有損，非 UTF-8 字元會被替換）</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="nb">String</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buf</span><span class="p">.</span><span class="n">to_string_lossy</span><span class="p">().</span><span class="n">into_owned</span><span class="p">();</span>
+</code></pre></div>
+
+<h3 id="_1059">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">path</span><span class="p">::{</span><span class="n">Path</span><span class="p">,</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">show_info</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;路徑：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="n">display</span><span class="p">());</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="n">parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;  上層：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">display</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="n">file_name</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;  檔名：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="n">extension</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;  副檔名：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ext</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;  存在：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">show_info</span><span class="p">(</span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;/home/user/notes.txt&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// 用 PathBuf 組合路徑</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">config_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PathBuf</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;/home/user&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">config_path</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;.config&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">config_path</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;app&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">config_path</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s">&quot;settings.toml&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">show_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config_path</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// join 不改變原本的 Path</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Path</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;/var/log&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">log_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;app.log&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">show_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">log_file</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1060">重點整理</h3>
+<ul>
+<li><code>Path</code> 是 DST（對應 <code>str</code>），<code>PathBuf</code> 是擁有所有權的版本（對應 <code>String</code>）</li>
+<li><code>push</code> / <code>join</code> 自動加上正確的路徑分隔符號</li>
+<li><code>parent</code>、<code>file_name</code>、<code>extension</code>、<code>file_stem</code> 拆解路徑</li>
+<li><code>exists</code>、<code>is_file</code>、<code>is_dir</code> 檢查路徑狀態</li>
+</ul>
+<hr />
+<h2 id="ch10_io">第十章第 8 集：IO：stdin、檔案讀寫</h2>
+<h3 id="_1061">本集目標</h3>
+<p>認識 Rust 的 IO 系統，學會讀寫檔案。</p>
+<h3 id="_1062">概念說明</h3>
+<h4 id="stdin">回顧 stdin</h4>
+<p>第一章我們照抄了這三行來讀取使用者輸入：</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">stdin</span><span class="p">().</span><span class="n">read_line</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">input</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;讀取失敗&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">trim</span><span class="p">();</span>
+</code></pre></div>
+
+<p>你已經學過 <code>String</code>、<code>&amp;mut</code>、<code>Result</code> 和 <code>.expect()</code>，這段應該都看得懂了。唯一沒提過的是 <code>std::io::stdin()</code> 回傳一個 <code>Stdin</code> struct，而 <code>read_line</code> 回傳的是 <code>io::Result&lt;usize&gt;</code>——這是 <code>Result&lt;usize, io::Error&gt;</code> 的型別別名，標準庫裡很多 IO 函數都用它。</p>
+<h4 id="_1063">最簡單的檔案讀寫</h4>
+<p><code>fs::read_to_string</code> 的參數型別是 <code>impl AsRef&lt;Path&gt;</code>——第 1 集學的 AsRef 在這裡派上用場。你可以傳 <code>&amp;str</code>、<code>String</code>、<code>&amp;Path</code>、<code>PathBuf</code> 都行，不用手動轉換。</p>
+<p>讀整個檔案成字串：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="s">&quot;hello.txt&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;讀取失敗&quot;</span><span class="p">);</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">content</span><span class="p">);</span>
+</code></pre></div>
+
+<p>寫入檔案（檔案不存在會建立，存在會覆蓋）：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">;</span>
+
+<span class="n">fs</span><span class="p">::</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;output.txt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Hello, file!&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;寫入失敗&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p>這兩個函數夠簡單，但 <code>read_to_string</code> 會把整個檔案一次讀進記憶體——如果檔案很大就不適合。</p>
+<h4 id="file-bufreader">File + BufReader：逐行讀取</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">File</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::{</span><span class="n">BufRead</span><span class="p">,</span><span class="w"> </span><span class="n">BufReader</span><span class="p">};</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span><span class="p">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;data.txt&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;開啟失敗&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BufReader</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+
+<span class="k">for</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">lines</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">line</span><span class="p">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;讀取行失敗&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>File::open</code> 開啟檔案，<code>BufReader</code> 包在外面提供緩衝區，<code>lines()</code> 逐行讀取，每行是一個 <code>io::Result&lt;String&gt;</code>。</p>
+<h4 id="_1064">寫入檔案</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">File</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">Write</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span><span class="p">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;output.txt&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;建立失敗&quot;</span><span class="p">);</span>
+<span class="fm">writeln!</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;第一行&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;寫入失敗&quot;</span><span class="p">);</span>
+<span class="fm">writeln!</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;第二行&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;寫入失敗&quot;</span><span class="p">);</span>
+</code></pre></div>
+
+<p><code>File::create</code> 建立（或覆蓋）檔案，<code>writeln!</code> 跟 <code>println!</code> 很像，只是輸出目標從螢幕換成檔案。要用 <code>writeln!</code> 需要引入 <code>Write</code> trait。</p>
+<h4 id="readwritebufread">Read、Write、BufRead</h4>
+<p>標準庫用 trait 抽象化 IO：</p>
+<ul>
+<li><code>Read</code>：能讀取 bytes 的東西（<code>File</code>、<code>Stdin</code>、<code>TcpStream</code> 等）</li>
+<li><code>Write</code>：能寫入 bytes 的東西（<code>File</code>、<code>Stdout</code>、<code>TcpStream</code> 等）</li>
+<li><code>BufRead</code>：帶緩衝的讀取，提供 <code>lines()</code> 等方法。<code>BufReader</code> 可以把任何 <code>Read</code> 變成 <code>BufRead</code></li>
+</ul>
+<p>這就是為什麼很多函數的參數寫成 <code>impl Read</code> 或 <code>impl Write</code>——不管你傳檔案、stdin 還是網路連線，只要實作了對應的 trait 就能用。</p>
+<h3 id="_1065">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::{</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">File</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::{</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">BufRead</span><span class="p">,</span><span class="w"> </span><span class="n">BufReader</span><span class="p">,</span><span class="w"> </span><span class="n">Write</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">io</span><span class="p">::</span><span class="nb">Result</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 寫入檔案</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span><span class="p">::</span><span class="n">create</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Alice&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Bob&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">writeln!</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Charlie&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 一次讀取整個檔案</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;整個檔案：</span><span class="se">\n</span><span class="s">{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">all</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 逐行讀取</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span><span class="p">::</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;names.txt&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">reader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BufReader</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">reader</span><span class="p">.</span><span class="n">lines</span><span class="p">().</span><span class="n">enumerate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第 {} 行：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="o">?</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1066">重點整理</h3>
+<ul>
+<li><code>io::Result&lt;T&gt;</code> 是 <code>Result&lt;T, io::Error&gt;</code> 的型別別名</li>
+<li><code>fs::read_to_string</code> / <code>fs::write</code>：最簡單的一行讀寫</li>
+<li><code>File::open</code> + <code>BufReader</code>：逐行讀取大檔案</li>
+<li><code>File::create</code> + <code>writeln!</code>：逐行寫入</li>
+<li><code>Read</code>、<code>Write</code>、<code>BufRead</code> 是 IO 的核心 trait，讓不同來源（檔案、stdin、網路）用同一套介面
+      </li>
+</ul>
+<hr />
+<h2 id="ch10_string_methods">第十章第 9 集：字串方法</h2>
+<h3 id="_1067">本集目標</h3>
+<p>認識 <code>&amp;str</code> 和 <code>String</code> 上最常用的方法，以及 Rust 字串與 UTF-8 的關係。</p>
+<h3 id="_1068">概念說明</h3>
+<p>之前我們用過 <code>.trim()</code>、<code>.parse()</code> 和 <code>.char()</code>，但 <code>&amp;str</code> 和 <code>String</code> 上其實有非常多實用的方法。這集介紹最常用的幾個。</p>
+<h4 id="_1069">搜尋</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello, world!&quot;</span><span class="p">;</span>
+
+<span class="n">s</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">)</span><span class="w">    </span><span class="c1">// true</span>
+<span class="n">s</span><span class="p">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// true</span>
+<span class="n">s</span><span class="p">.</span><span class="n">ends_with</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span><span class="w">       </span><span class="c1">// true</span>
+<span class="n">s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">)</span><span class="w">        </span><span class="c1">// Some(7)，回傳第一次出現的位置（byte index）</span>
+</code></pre></div>
+
+<h4 id="_1070">修剪與替換</h4>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;  hello  &quot;</span><span class="p">.</span><span class="n">trim</span><span class="p">()</span><span class="w">        </span><span class="c1">// &quot;hello&quot;</span>
+<span class="s">&quot;  hello  &quot;</span><span class="p">.</span><span class="n">trim_start</span><span class="p">()</span><span class="w">  </span><span class="c1">// &quot;hello  &quot;</span>
+<span class="s">&quot;  hello  &quot;</span><span class="p">.</span><span class="n">trim_end</span><span class="p">()</span><span class="w">    </span><span class="c1">// &quot;  hello&quot;</span>
+
+<span class="s">&quot;hello world&quot;</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Rust&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">// &quot;hello Rust&quot;</span>
+</code></pre></div>
+
+<h4 id="_1071">分割</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">parts</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;a,b,c&quot;</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="sc">&#39;,&#39;</span><span class="p">).</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">words</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello  world&quot;</span><span class="p">.</span><span class="n">split_whitespace</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="c1">// [&quot;hello&quot;, &quot;world&quot;]</span>
+</code></pre></div>
+
+<p><code>split</code> 回傳迭代器，通常搭配 <code>collect</code> 使用。</p>
+<h4 id="_1072">逐字元走訪</h4>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">.</span><span class="n">chars</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><code>.chars()</code> 回傳 Unicode 字元的迭代器。也有 <code>.bytes()</code> 回傳原始 byte。</p>
+<h4 id="_1073">大小寫</h4>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;Hello&quot;</span><span class="p">.</span><span class="n">to_uppercase</span><span class="p">()</span><span class="w"> </span><span class="c1">// &quot;HELLO&quot;</span>
+<span class="s">&quot;Hello&quot;</span><span class="p">.</span><span class="n">to_lowercase</span><span class="p">()</span><span class="w"> </span><span class="c1">// &quot;hello&quot;</span>
+</code></pre></div>
+
+<h4 id="len-byte">len 是 byte 數</h4>
+<div class="highlight"><pre><span></span><code><span class="s">&quot;hello&quot;</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w">           </span><span class="c1">// 5</span>
+<span class="s">&quot;hello&quot;</span><span class="p">.</span><span class="n">is_empty</span><span class="p">()</span><span class="w">      </span><span class="c1">// false</span>
+<span class="s">&quot;hello&quot;</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">       </span><span class="c1">// &quot;hellohellohello&quot;</span>
+
+<span class="c1">// 注意：len() 回傳的是 byte 數，不是字元數</span>
+<span class="s">&quot;你好&quot;</span><span class="p">.</span><span class="n">len</span><span class="p">()</span><span class="w">            </span><span class="c1">// 6（UTF-8 byte 數）</span>
+<span class="s">&quot;你好&quot;</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">count</span><span class="p">()</span><span class="w">  </span><span class="c1">// 2（字元數）</span>
+</code></pre></div>
+
+<h3 id="_1074">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">sentence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;  Hello, Rust World!  &quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// 修剪空白</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">trimmed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sentence</span><span class="p">.</span><span class="n">trim</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;修剪後：&#39;{}&#39;&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">trimmed</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 搜尋</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;包含 Rust：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">trimmed</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Rust 的位置：{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">trimmed</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// 分割</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">words</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;&amp;</span><span class="kt">str</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trimmed</span><span class="p">.</span><span class="n">split_whitespace</span><span class="p">().</span><span class="n">collect</span><span class="p">();</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;字數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">words</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">&amp;</span><span class="n">words</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;  {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">word</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 替換</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">replaced</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trimmed</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;Rust&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;世界&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;替換後：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">replaced</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// UTF-8</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">chinese</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;你好世界&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;byte 數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">chinese</span><span class="p">.</span><span class="n">len</span><span class="p">());</span><span class="w">       </span><span class="c1">// 12</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;字元數：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">chinese</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">count</span><span class="p">());</span><span class="w"> </span><span class="c1">// 4</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">chinese</span><span class="p">.</span><span class="n">chars</span><span class="p">().</span><span class="n">enumerate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;第 {} 個字元：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1075">重點整理</h3>
+<ul>
+<li><code>contains</code>、<code>starts_with</code>、<code>ends_with</code>、<code>find</code>：搜尋</li>
+<li><code>trim</code>、<code>trim_start</code>、<code>trim_end</code>：修剪空白</li>
+<li><code>replace</code>：替換</li>
+<li><code>split</code>、<code>split_whitespace</code>：分割，回傳迭代器</li>
+<li><code>chars()</code>：逐字元走訪；<code>bytes()</code>：逐 byte 走訪</li>
+<li><code>len()</code> 回傳 byte 數，字元數要用 <code>chars().count()</code></li>
+</ul>
+<hr />
+<h2 id="ch10_error_trait">第十章第 10 集：Error trait</h2>
+<h3 id="_1076">本集目標</h3>
+<p>學會自訂錯誤型別，以及用 <code>Box&lt;dyn Error&gt;</code> 統一處理不同種類的錯誤。</p>
+<h3 id="_1077">概念說明</h3>
+<h4 id="result_2">回顧：Result 和 ?</h4>
+<p>第五章學了 <code>Result&lt;T, E&gt;</code> 和 <code>?</code> 運算子。但當時錯誤型別都很單純——一個函數只會產生一種錯誤。實際的程式常常會碰到多種錯誤：讀檔案可能失敗（<code>io::Error</code>），解析數字也可能失敗（<code>ParseIntError</code>）。如果函數裡兩種都會發生，回傳的 <code>Result</code> 的 <code>E</code> 該填什麼？</p>
+<h4 id="error-trait">Error trait</h4>
+<p>標準庫定義了 <code>std::error::Error</code> trait，所有錯誤型別的共同介面：</p>
+<div class="highlight"><pre><span></span><code><span class="k">pub</span><span class="w"> </span><span class="k">trait</span><span class="w"> </span><span class="n">Error</span><span class="p">:</span><span class="w"> </span><span class="nc">Display</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Debug</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">source</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Option</span><span class="o">&lt;&amp;</span><span class="p">(</span><span class="k">dyn</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">&#39;</span><span class="nb">static</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">None</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>要實作 <code>Error</code>，你的型別必須先實作 <code>Display</code> 和 <code>Debug</code>。<code>source()</code> 回傳造成這個錯誤的底層原因，預設是 <code>None</code>。</p>
+<h4 id="_1078">自訂錯誤型別</h4>
+<p>用一個 enum 把所有可能的錯誤包在一起：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fmt</span><span class="p">;</span>
+
+<span class="cp">#[derive(Debug)]</span>
+<span class="k">enum</span><span class="w"> </span><span class="nc">AppError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Io</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">Error</span><span class="p">),</span>
+<span class="w">    </span><span class="n">Parse</span><span class="p">(</span><span class="n">std</span><span class="p">::</span><span class="n">num</span><span class="p">::</span><span class="n">ParseIntError</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Display</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AppError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">fmt</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">fmt</span><span class="p">::</span><span class="n">Formatter</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">fmt</span><span class="p">::</span><span class="nb">Result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">AppError</span><span class="p">::</span><span class="n">Io</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;IO 錯誤：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">),</span>
+<span class="w">            </span><span class="n">AppError</span><span class="p">::</span><span class="n">Parse</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">write!</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;解析錯誤：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">error</span><span class="p">::</span><span class="n">Error</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AppError</span><span class="w"> </span><span class="p">{}</span>
+</code></pre></div>
+
+<p>第五章學了 <code>?</code>，當時說它遇到 <code>Err</code> 就提前回傳。其實 <code>?</code> 還多做了一件事：它會呼叫 <code>From::from(e)</code> 把錯誤轉換成函數回傳型別裡的 <code>E</code>。所以只要你幫底層錯誤實作了 <code>From</code>，<code>?</code> 就能自動轉換：</p>
+<div class="highlight"><pre><span></span><code><span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AppError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="nc">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">Error</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AppError</span><span class="p">::</span><span class="n">Io</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;</span><span class="n">std</span><span class="p">::</span><span class="n">num</span><span class="p">::</span><span class="n">ParseIntError</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AppError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from</span><span class="p">(</span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="nc">std</span><span class="p">::</span><span class="n">num</span><span class="p">::</span><span class="n">ParseIntError</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AppError</span><span class="p">::</span><span class="n">Parse</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>現在同一個函數裡可以用 <code>?</code> 處理兩種錯誤：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">read_number</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">AppError</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w"> </span><span class="c1">// io::Error → AppError</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">trim</span><span class="p">().</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="o">?</span><span class="p">;</span><span class="w">      </span><span class="c1">// ParseIntError → AppError</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="_1079">問題：每次都要寫這麼多？</h4>
+<p>自訂錯誤型別 + impl Display + impl Error + 每種 From... 很囉嗦。有沒有更簡單的方式？</p>
+<h4 id="boxdyn-error">Box&lt;dyn Error&gt;</h4>
+<p>如果你不需要精確區分錯誤種類，可以用 <code>Box&lt;dyn Error&gt;</code> 當通用錯誤型別：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">error</span><span class="p">::</span><span class="n">Error</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_number</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">trim</span><span class="p">().</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>任何實作了 <code>Error</code> 的型別都能自動轉成 <code>Box&lt;dyn Error&gt;</code>，所以 <code>?</code> 直接就能用，不需要手動寫 <code>From</code>。</p>
+<p>缺點是呼叫者沒辦法用 match 精確處理不同的錯誤種類——它只知道「有個錯誤」，但不知道具體是哪種。</p>
+<h4 id="_1080">什麼時候用哪個</h4>
+<ul>
+<li><strong>快速原型、腳本、main 函數</strong>：<code>Box&lt;dyn Error&gt;</code> 最省事</li>
+<li><strong>函式庫、需要讓呼叫者精確處理錯誤</strong>：自訂錯誤 enum + impl Error + From</li>
+</ul>
+<p>下一集會介紹社群 crate 怎麼大幅簡化自訂錯誤型別的寫法。</p>
+<h3 id="_1081">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">error</span><span class="p">::</span><span class="n">Error</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">first_line_number</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">first_line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">lines</span><span class="p">().</span><span class="n">next</span><span class="p">().</span><span class="n">ok_or</span><span class="p">(</span><span class="s">&quot;檔案是空的&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">first_line</span><span class="p">.</span><span class="n">trim</span><span class="p">().</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">match</span><span class="w"> </span><span class="n">first_line_number</span><span class="p">(</span><span class="s">&quot;number.txt&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;讀到的數字：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">),</span>
+<span class="w">        </span><span class="nb">Err</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;錯誤：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">),</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1082">重點整理</h3>
+<ul>
+<li><code>Error</code> trait 要求 <code>Display + Debug</code>，是所有錯誤型別的共同介面</li>
+<li>自訂錯誤：定義 enum → impl Display → impl Error → 為每種底層錯誤 impl From</li>
+<li>有了 From，<code>?</code> 就能自動把底層錯誤轉成你的自訂錯誤</li>
+<li><code>Box&lt;dyn Error&gt;</code>：通用錯誤型別，任何 Error 都能自動轉換，<code>?</code> 直接能用</li>
+<li><code>Box&lt;dyn Error&gt;</code> 適合快速開發；自訂錯誤 enum 適合函式庫</li>
+</ul>
+<hr />
+<h2 id="ch10_thiserror_anyhow">第十章第 11 集：thiserror / anyhow 簡介</h2>
+<h3 id="_1083">本集目標</h3>
+<p>認識兩個社群最常用的錯誤處理 crate。</p>
+<h3 id="_1084">概念說明</h3>
+<p>這集介紹的不是標準庫的內容，而是兩個社群 crate。但它們在 Rust 生態裡幾乎是標配，非常實用，所以放在這裡一起介紹。</p>
+<p>使用前要先安裝：</p>
+<div class="highlight"><pre><span></span><code>cargo add thiserror
+cargo add anyhow
+</code></pre></div>
+
+<h4 id="_1085">背景</h4>
+<p>上一集看到自訂錯誤要寫一堆重複的程式碼（enum + Display + Error + 每種 From）。<code>thiserror</code> 和 <code>anyhow</code> 幫你解決這個問題。</p>
+<h4 id="thiserror">thiserror：給函式庫用</h4>
+<p><code>thiserror</code> 用 derive macro 自動生成 Display、Error、From：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">thiserror</span><span class="p">::</span><span class="n">Error</span><span class="p">;</span>
+
+<span class="cp">#[derive(Debug, Error)]</span>
+<span class="k">enum</span><span class="w"> </span><span class="nc">AppError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#[error(</span><span class="s">&quot;IO 錯誤：{0}&quot;</span><span class="cp">)]</span>
+<span class="w">    </span><span class="n">Io</span><span class="p">(</span><span class="cp">#[from]</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">io</span><span class="p">::</span><span class="n">Error</span><span class="p">),</span>
+
+<span class="w">    </span><span class="cp">#[error(</span><span class="s">&quot;解析錯誤：{0}&quot;</span><span class="cp">)]</span>
+<span class="w">    </span><span class="n">Parse</span><span class="p">(</span><span class="cp">#[from]</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">num</span><span class="p">::</span><span class="n">ParseIntError</span><span class="p">),</span>
+
+<span class="w">    </span><span class="cp">#[error(</span><span class="s">&quot;自訂錯誤：{0}&quot;</span><span class="cp">)]</span>
+<span class="w">    </span><span class="n">Custom</span><span class="p">(</span><span class="nb">String</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li><code>#[error("...")]</code> 自動生成 <code>Display</code> 的實作</li>
+<li><code>#[from]</code> 自動生成 <code>From</code> 的實作</li>
+<li>上一集手動寫了幾十行的東西，現在幾行就搞定</li>
+</ul>
+<p>使用方式跟上一集一樣——<code>?</code> 會自動轉換：</p>
+<div class="highlight"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">read_number</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">AppError</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">trim</span><span class="p">().</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>呼叫端一樣可以 match 精確處理每種錯誤。</p>
+<h4 id="anyhow">anyhow：給應用程式用</h4>
+<p>如果你不需要讓呼叫者區分錯誤種類（例如 main 函數、CLI 工具），<code>anyhow</code> 更簡單：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">anyhow</span><span class="p">::{</span><span class="n">Context</span><span class="p">,</span><span class="w"> </span><span class="nb">Result</span><span class="p">};</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_number</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;讀取檔案失敗&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">trim</span><span class="p">().</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;解析數字失敗&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li><code>anyhow::Result&lt;T&gt;</code> 就是 <code>Result&lt;T, anyhow::Error&gt;</code></li>
+<li><code>anyhow::Error</code> 類似 <code>Box&lt;dyn Error&gt;</code>，但更好用</li>
+<li><code>.context("...")</code> 幫錯誤加上額外說明，方便除錯</li>
+<li>不用定義任何錯誤型別，任何 Error 都能自動轉換</li>
+</ul>
+<h4 id="_1086">兩者的關係</h4>
+<ul>
+<li><strong>thiserror</strong>：幫你定義精確的錯誤型別，省去手寫重複的程式碼。適合函式庫——使用者能 match 你的錯誤。</li>
+<li><strong>anyhow</strong>：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理。</li>
+</ul>
+<p>兩者可以搭配使用：函式庫用 thiserror 定義錯誤，應用程式用 anyhow 統一接收。</p>
+<h3 id="_1087">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// 這個範例展示 anyhow 的用法</span>
+
+<span class="k">use</span><span class="w"> </span><span class="n">anyhow</span><span class="p">::{</span><span class="n">Context</span><span class="p">,</span><span class="w"> </span><span class="nb">Result</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">fs</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_config</span><span class="p">(</span><span class="n">path</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="kt">str</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="p">(</span><span class="nb">String</span><span class="p">,</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fs</span><span class="p">::</span><span class="n">read_to_string</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;無法讀取設定檔&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">lines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">content</span><span class="p">.</span><span class="n">lines</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lines</span><span class="p">.</span><span class="n">next</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;設定檔是空的&quot;</span><span class="p">)</span><span class="o">?</span>
+<span class="w">        </span><span class="p">.</span><span class="n">to_string</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lines</span><span class="p">.</span><span class="n">next</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;缺少第二行&quot;</span><span class="p">)</span><span class="o">?</span>
+<span class="w">        </span><span class="p">.</span><span class="n">trim</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">parse</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">context</span><span class="p">(</span><span class="s">&quot;第二行不是有效的數字&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">Ok</span><span class="p">((</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">read_config</span><span class="p">(</span><span class="s">&quot;config.txt&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;名稱：{}，值：{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1088">重點整理</h3>
+<ul>
+<li><code>thiserror</code>：用 derive macro 自動生成 Display、Error、From，適合函式庫</li>
+<li><code>#[error("...")]</code> 生成 Display，<code>#[from]</code> 生成 From</li>
+<li><code>anyhow</code>：通用錯誤型別，不用定義錯誤 enum，適合應用程式</li>
+<li><code>.context("...")</code> 幫錯誤加上額外說明</li>
+<li>函式庫用 thiserror，應用程式用 anyhow，兩者可以搭配</li>
+</ul>
+<hr />
+<h2 id="ch10_catch_unwind">第十章第 12 集：catch_unwind</h2>
+<h3 id="_1089">本集目標</h3>
+<p>學會用 <code>catch_unwind</code> 攔截 panic。</p>
+<h3 id="_1090">概念說明</h3>
+<h4 id="_1091">動機</h4>
+<p>正常情況下 panic 會讓整個程式（或當前執行緒）直接中止。但有些場景你不希望這樣：</p>
+<ul>
+<li><strong>FFI 邊界</strong>：如果 Rust 的程式碼是被 C 呼叫的（第九章提過 FFI），panic 不能往上傳到 C 那邊，否則是未定義行為。必須在 Rust 這邊就攔住</li>
+<li><strong>多執行緒任務</strong>：如果你的程式 spawn 了很多執行緒各自跑不同的任務，不希望其中一個任務 panic 就讓整個程式掛掉</li>
+</ul>
+<h4 id="_1092">基本用法</h4>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">panic</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">panic</span><span class="p">::</span><span class="n">catch_unwind</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;正常執行&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="mi">42</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w"> </span><span class="c1">// Ok(42)</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">panic</span><span class="p">::</span><span class="n">catch_unwind</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;出事了阿北&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{:?}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span><span class="w"> </span><span class="c1">// Err(...)</span>
+</code></pre></div>
+
+<p><code>catch_unwind</code> 接受一個閉包，如果閉包正常回傳就得到 <code>Ok(值)</code>，如果 panic 了就得到 <code>Err</code>。</p>
+<h4 id="unwindsafe">UnwindSafe</h4>
+<p><code>catch_unwind</code> 要求閉包是 <code>UnwindSafe</code> 的。為什麼？因為 panic 的時候，閉包裡的操作可能做到一半，資料處於不一致的狀態——跟第八章 poisoning 的道理一樣。</p>
+<p><code>&amp;mut T</code> 不是 <code>UnwindSafe</code>：如果你透過 <code>&amp;mut</code> 修改資料修到一半 panic 了，catch 之後那份資料可能是半成品。<code>&amp;T</code>、<code>i32</code> 等不可變的東西是 <code>UnwindSafe</code> 的。</p>
+<h4 id="assertunwindsafe">AssertUnwindSafe</h4>
+<p>如果你確定沒問題，可以用 <code>AssertUnwindSafe</code> 包起來繞過檢查：</p>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">panic</span><span class="p">::{</span><span class="n">catch_unwind</span><span class="p">,</span><span class="w"> </span><span class="n">AssertUnwindSafe</span><span class="p">};</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">catch_unwind</span><span class="p">(</span><span class="n">AssertUnwindSafe</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="p">}));</span>
+</code></pre></div>
+
+<p>這跟 unsafe 或 poisoning 的精神類似——你自己負責保證正確性。</p>
+<h4 id="panic-abort">panic = "abort"</h4>
+<p><code>Cargo.toml</code> 可以設定 <code>panic = "abort"</code>，這樣 panic 會直接終止程式，不會執行任何清理工作（包括 drop）。在這個設定下 <code>catch_unwind</code> 沒有用——panic 就是直接結束，沒有東西可以 catch。</p>
+<div class="highlight"><pre><span></span><code><span class="k">[profile.release]</span>
+<span class="n">panic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;abort&quot;</span>
+</code></pre></div>
+
+<h4 id="_1093">注意</h4>
+<p><code>catch_unwind</code> 不是用來做一般的錯誤處理的——那是 <code>Result</code> 的工作。<code>catch_unwind</code> 只用在上面提到的那些特殊場景。</p>
+<h3 id="_1094">範例程式碼</h3>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">panic</span><span class="p">;</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">might_fail</span><span class="p">(</span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">i32</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="fm">panic!</span><span class="p">(</span><span class="s">&quot;不能是零！&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="mi">100</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">x</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">];</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">inputs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">panic</span><span class="p">::</span><span class="n">catch_unwind</span><span class="p">(</span><span class="o">||</span><span class="w"> </span><span class="n">might_fail</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nb">Ok</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;100 / {} = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">),</span>
+<span class="w">            </span><span class="nb">Err</span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;處理 {} 時 panic 了，跳過&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;程式繼續執行&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="_1095">重點整理</h3>
+<ul>
+<li><code>catch_unwind</code> 攔截 panic，回傳 <code>Ok(值)</code> 或 <code>Err</code></li>
+<li>用途：FFI 邊界、多執行緒任務隔離</li>
+<li><code>UnwindSafe</code>：<code>&amp;mut T</code> 不是 UnwindSafe（資料可能是半成品）</li>
+<li><code>AssertUnwindSafe</code>：手動保證安全，繞過 UnwindSafe 檢查</li>
+<li><code>panic = "abort"</code> 設定下 <code>catch_unwind</code> 無效</li>
+<li>不要用 <code>catch_unwind</code> 做一般的錯誤處理——那是 <code>Result</code> 的工作</li>
+</ul>
+<p>恭喜你完成了第十章！🎉 這一章介紹了標準庫和社群裡的各種實用工具——從 AsRef、排序、集合，到檔案 IO、字串方法、錯誤處理，再到 catch_unwind。</p>
 <hr />
 </main>
 

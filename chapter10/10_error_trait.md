@@ -1,4 +1,4 @@
-# 第十章第 10 集：Error trait 與 Box<dyn Error>
+# 第十章第 10 集：Error trait
 
 ## 本集目標
 學會自訂錯誤型別，以及用 `Box<dyn Error>` 統一處理不同種類的錯誤。

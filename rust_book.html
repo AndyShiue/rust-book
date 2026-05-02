@@ -499,7 +499,7 @@
 <li><a href="#ch10_path">第十章第 7 集：std::path</a></li>
 <li><a href="#ch10_io">第十章第 8 集：IO：stdin、檔案讀寫</a></li>
 <li><a href="#ch10_string_methods">第十章第 9 集：字串方法</a></li>
-<li><a href="#ch10_error_trait">第十章第 10 集：Error trait 與 Box&lt;dyn Error&gt;</a></li>
+<li><a href="#ch10_error_trait">第十章第 10 集：Error trait</a></li>
 <li><a href="#ch10_thiserror_anyhow">第十章第 11 集：thiserror / anyhow 簡介</a></li>
 <li><a href="#ch10_catch_unwind">第十章第 12 集：catch_unwind</a></li>
 </ul>
@@ -18762,16 +18762,21 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="_1019">浮點數的問題</h4>
 <p><code>f64</code> 沒有實作 <code>Ord</code>（第五章提過，因為 <code>NAN</code> 和任何值比較都是 <code>false</code>），所以不能直接用 <code>cmp::min</code>。</p>
 <p><code>f64</code> 只有 <code>PartialOrd</code>，它的方法是 <code>partial_cmp</code>，回傳 <code>Option&lt;Ordering&gt;</code> 而不是 <code>Ordering</code>——因為碰到 NAN 的時候沒辦法比大小，只能回傳 <code>None</code>。</p>
-<p>這時候可以用 <code>min_by</code>，自訂比較邏輯：</p>
+<p>這時候可以用 <code>min_by</code> / <code>max_by</code>，自訂比較邏輯：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">;</span>
 
 <span class="kd">let</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min_by</span><span class="p">(</span><span class="mf">3.0_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span><span class="w"> </span><span class="c1">// 如果確定不會碰到 NaN，用 unwrap 取出 Ordering</span>
 <span class="p">});</span>
 <span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">smaller</span><span class="p">);</span><span class="w"> </span><span class="c1">// 2.5</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">bigger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">max_by</span><span class="p">(</span><span class="mf">3.0_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span>
+<span class="p">});</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">bigger</span><span class="p">);</span><span class="w"> </span><span class="c1">// 3.0</span>
 </code></pre></div>
 
-<p><code>min_by</code> 的閉包回傳 <code>Ordering</code>，你自己決定怎麼比。</p>
+<p><code>min_by</code> / <code>max_by</code> 的閉包回傳 <code>Ordering</code>，你自己決定怎麼比。</p>
 <h4 id="min_by_key-max_by_key">min_by_key / max_by_key</h4>
 <p>根據某個 key 來比較：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cmp</span><span class="p">;</span>
@@ -18829,7 +18834,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;min(10, 20) = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">));</span>
 <span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;max(10, 20) = {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">max</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">));</span>
 
-<span class="w">    </span><span class="c1">// 浮點數用 min_by</span>
+<span class="w">    </span><span class="c1">// 浮點數用 min_by /max_by</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">smaller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">::</span><span class="n">min_by</span><span class="p">(</span><span class="mf">1.5_</span><span class="k">f64</span><span class="p">,</span><span class="w"> </span><span class="mf">2.3</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">a</span><span class="p">.</span><span class="n">partial_cmp</span><span class="p">(</span><span class="n">b</span><span class="p">).</span><span class="n">unwrap</span><span class="p">()</span>
 <span class="w">    </span><span class="p">});</span>
@@ -18854,7 +18859,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <ul>
 <li><code>Ordering</code> 有三個值：<code>Less</code>、<code>Equal</code>、<code>Greater</code></li>
 <li><code>cmp::min</code> / <code>cmp::max</code> 取兩者的較小/大值，要求 <code>Ord</code></li>
-<li><code>f64</code> 沒有 <code>Ord</code>，用 <code>min_by</code> 自訂比較</li>
+<li><code>f64</code> 沒有 <code>Ord</code>，用 <code>min_by</code> / <code>max_by</code> 自訂比較</li>
 <li><code>min_by_key</code> / <code>max_by_key</code> 根據 key 比較</li>
 <li><code>sort()</code> 由小到大、<code>sort_by()</code> 自訂比較、<code>sort_by_key()</code> 根據 key 排序</li>
 <li><code>Reverse</code> 是一個 tuple struct，<code>Ord</code> 實作把比較反過來，所以排序結果跟著反轉</li>
@@ -18865,8 +18870,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <p>學會用 <code>HashMap</code> 儲存和查詢 key-value 資料。</p>
 <h3 id="_1024">概念說明</h3>
 <h4 id="_1025">動機</h4>
-<p>如果你想用名字查分數、用 ID 查使用者，用 Vec 當然也做得到——存一堆 <code>(名字, 分數)</code> 的 tuple，要查的時候從頭走訪找到名字相符的那個。但這樣每次查詢都要走訪整個 Vec，資料越多越慢。</p>
-<p><code>HashMap</code> 解決了這個問題。它用 hash 函數把 key 對應到記憶體位置，不管裡面有多少資料，查一個 key 的速度幾乎是固定的。</p>
+<p>如果你想用名字查分數、用 ID 查使用者，用 Vec 當然也做得到——存一堆 <code>(名字, 分數)</code> 的 tuple，要查的時候從頭走訪找到名字相符的那個。但這樣資料越多就越慢。</p>
+<p><code>HashMap&lt;K, V&gt;</code> 解決了這個問題。它用 hash 函數把 key 對應到記憶體位置，不管裡面有多少資料，查一個 key 的速度幾乎是固定的。</p>
 <h4 id="_1026">建立與基本操作</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">collections</span><span class="p">::</span><span class="n">HashMap</span><span class="p">;</span>
 
@@ -19374,7 +19379,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 
 <h3 id="_1060">重點整理</h3>
 <ul>
-<li><code>Path</code> 是 DST（對應 <code>str</code>），<code>PathBuf</code> 是擁有的版本（對應 <code>String</code>）</li>
+<li><code>Path</code> 是 DST（對應 <code>str</code>），<code>PathBuf</code> 是擁有所有權的版本（對應 <code>String</code>）</li>
 <li><code>push</code> / <code>join</code> 自動加上正確的路徑分隔符號</li>
 <li><code>parent</code>、<code>file_name</code>、<code>extension</code>、<code>file_stem</code> 拆解路徑</li>
 <li><code>exists</code>、<code>is_file</code>、<code>is_dir</code> 檢查路徑狀態</li>
@@ -19480,7 +19485,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_1067">本集目標</h3>
 <p>認識 <code>&amp;str</code> 和 <code>String</code> 上最常用的方法，以及 Rust 字串與 UTF-8 的關係。</p>
 <h3 id="_1068">概念說明</h3>
-<p>之前我們用過 <code>.trim()</code> 和 <code>.parse()</code>，但 <code>&amp;str</code> 和 <code>String</code> 上其實有非常多實用的方法。這集介紹最常用的幾個。</p>
+<p>之前我們用過 <code>.trim()</code>、<code>.parse()</code> 和 <code>.char()</code>，但 <code>&amp;str</code> 和 <code>String</code> 上其實有非常多實用的方法。這集介紹最常用的幾個。</p>
 <h4 id="_1069">搜尋</h4>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello, world!&quot;</span><span class="p">;</span>
 
@@ -19573,7 +19578,7 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>len()</code> 回傳 byte 數，字元數要用 <code>chars().count()</code></li>
 </ul>
 <hr />
-<h2 id="ch10_error_trait">第十章第 10 集：Error trait 與 Box&lt;dyn Error&gt;</h2>
+<h2 id="ch10_error_trait">第十章第 10 集：Error trait</h2>
 <h3 id="_1076">本集目標</h3>
 <p>學會自訂錯誤型別，以及用 <code>Box&lt;dyn Error&gt;</code> 統一處理不同種類的錯誤。</p>
 <h3 id="_1077">概念說明</h3>
@@ -19684,7 +19689,14 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h3 id="_1083">本集目標</h3>
 <p>認識兩個社群最常用的錯誤處理 crate。</p>
 <h3 id="_1084">概念說明</h3>
-<p>上一集看到自訂錯誤要寫一堆 boilerplate（enum + Display + Error + 每種 From）。Rust 社群有兩個非常流行的 crate 幫你解決這個問題。</p>
+<p>這集介紹的不是標準庫的內容，而是兩個社群 crate。但它們在 Rust 生態裡幾乎是標配，非常實用，所以放在這裡一起介紹。</p>
+<p>使用前要先安裝：</p>
+<div class="highlight"><pre><span></span><code>cargo add thiserror
+cargo add anyhow
+</code></pre></div>
+
+<h4 id="_1085">背景</h4>
+<p>上一集看到自訂錯誤要寫一堆重複的程式碼（enum + Display + Error + 每種 From）。<code>thiserror</code> 和 <code>anyhow</code> 幫你解決這個問題。</p>
 <h4 id="thiserror">thiserror：給函式庫用</h4>
 <p><code>thiserror</code> 用 derive macro 自動生成 Display、Error、From：</p>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">thiserror</span><span class="p">::</span><span class="n">Error</span><span class="p">;</span>
@@ -19735,17 +19747,12 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <li><code>.context("...")</code> 幫錯誤加上額外說明，方便除錯</li>
 <li>不用定義任何錯誤型別，任何 Error 都能自動轉換</li>
 </ul>
-<h4 id="_1085">兩者的關係</h4>
+<h4 id="_1086">兩者的關係</h4>
 <ul>
-<li><strong>thiserror</strong>：幫你定義精確的錯誤型別，省去手寫 boilerplate。適合函式庫——使用者能 match 你的錯誤</li>
-<li><strong>anyhow</strong>：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理</li>
+<li><strong>thiserror</strong>：幫你定義精確的錯誤型別，省去手寫重複的程式碼。適合函式庫——使用者能 match 你的錯誤。</li>
+<li><strong>anyhow</strong>：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理。</li>
 </ul>
 <p>兩者可以搭配使用：函式庫用 thiserror 定義錯誤，應用程式用 anyhow 統一接收。</p>
-<h4 id="_1086">安裝</h4>
-<div class="highlight"><pre><span></span><code>cargo add thiserror
-cargo add anyhow
-</code></pre></div>
-
 <h3 id="_1087">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// 這個範例展示 anyhow 的用法</span>
 
@@ -19794,8 +19801,8 @@ cargo add anyhow
 <h4 id="_1091">動機</h4>
 <p>正常情況下 panic 會讓整個程式（或當前執行緒）直接中止。但有些場景你不希望這樣：</p>
 <ul>
-<li><strong>FFI 邊界</strong>：如果 Rust 的程式碼是被 C 呼叫的（第九章提過 FFI），panic 不能往上傳到 C 那邊，否則是未定義行為。必須在 Rust 這邊就攔住。</li>
-<li><strong>多執行緒任務</strong>：如果你的程式 spawn 了很多執行緒各自跑不同的任務，不希望其中一個任務 panic 就讓整個程式掛掉。</li>
+<li><strong>FFI 邊界</strong>：如果 Rust 的程式碼是被 C 呼叫的（第九章提過 FFI），panic 不能往上傳到 C 那邊，否則是未定義行為。必須在 Rust 這邊就攔住</li>
+<li><strong>多執行緒任務</strong>：如果你的程式 spawn 了很多執行緒各自跑不同的任務，不希望其中一個任務 panic 就讓整個程式掛掉</li>
 </ul>
 <h4 id="_1092">基本用法</h4>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">panic</span><span class="p">;</span>
@@ -19869,6 +19876,7 @@ cargo add anyhow
 <li><code>panic = "abort"</code> 設定下 <code>catch_unwind</code> 無效</li>
 <li>不要用 <code>catch_unwind</code> 做一般的錯誤處理——那是 <code>Result</code> 的工作</li>
 </ul>
+<p>恭喜你完成了第十章！🎉 這一章介紹了標準庫和社群裡的各種實用工具——從 AsRef、排序、集合，到檔案 IO、字串方法、錯誤處理，再到 catch_unwind。</p>
 <hr />
 </main>
 

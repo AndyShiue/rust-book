@@ -5,7 +5,18 @@
 
 ## 概念說明
 
-上一集看到自訂錯誤要寫一堆 boilerplate（enum + Display + Error + 每種 From）。Rust 社群有兩個非常流行的 crate 幫你解決這個問題。
+這集介紹的不是標準庫的內容，而是兩個社群 crate。但它們在 Rust 生態裡幾乎是標配，非常實用，所以放在這裡一起介紹。
+
+使用前要先安裝：
+
+```
+cargo add thiserror
+cargo add anyhow
+```
+
+### 背景
+
+上一集看到自訂錯誤要寫一堆重複的程式碼（enum + Display + Error + 每種 From）。`thiserror` 和 `anyhow` 幫你解決這個問題。
 
 ### thiserror：給函式庫用
 
@@ -66,17 +77,10 @@ fn read_number(path: &str) -> Result<i32> {
 
 ### 兩者的關係
 
-- **thiserror**：幫你定義精確的錯誤型別，省去手寫 boilerplate。適合函式庫——使用者能 match 你的錯誤
-- **anyhow**：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理
+- **thiserror**：幫你定義精確的錯誤型別，省去手寫重複的程式碼。適合函式庫——使用者能 match 你的錯誤。
+- **anyhow**：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理。
 
 兩者可以搭配使用：函式庫用 thiserror 定義錯誤，應用程式用 anyhow 統一接收。
-
-### 安裝
-
-```
-cargo add thiserror
-cargo add anyhow
-```
 
 ## 範例程式碼
 

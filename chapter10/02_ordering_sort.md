@@ -36,7 +36,7 @@ println!("{}", cmp::max(3, 7));  // 7
 
 `f64` 只有 `PartialOrd`，它的方法是 `partial_cmp`，回傳 `Option<Ordering>` 而不是 `Ordering`——因為碰到 NAN 的時候沒辦法比大小，只能回傳 `None`。
 
-這時候可以用 `min_by`，自訂比較邏輯：
+這時候可以用 `min_by` / `max_by`，自訂比較邏輯：
 
 ```rust
 use std::cmp;
@@ -45,9 +45,14 @@ let smaller = cmp::min_by(3.0_f64, 2.5, |a, b| {
     a.partial_cmp(b).unwrap() // 如果確定不會碰到 NaN，用 unwrap 取出 Ordering
 });
 println!("{}", smaller); // 2.5
+
+let bigger = cmp::max_by(3.0_f64, 2.5, |a, b| {
+    a.partial_cmp(b).unwrap()
+});
+println!("{}", bigger); // 3.0
 ```
 
-`min_by` 的閉包回傳 `Ordering`，你自己決定怎麼比。
+`min_by` / `max_by` 的閉包回傳 `Ordering`，你自己決定怎麼比。
 
 ### min_by_key / max_by_key
 
@@ -123,7 +128,7 @@ fn main() {
     println!("min(10, 20) = {}", cmp::min(10, 20));
     println!("max(10, 20) = {}", cmp::max(10, 20));
 
-    // 浮點數用 min_by
+    // 浮點數用 min_by /max_by
     let smaller = cmp::min_by(1.5_f64, 2.3, |a, b| {
         a.partial_cmp(b).unwrap()
     });
@@ -147,7 +152,7 @@ fn main() {
 ## 重點整理
 - `Ordering` 有三個值：`Less`、`Equal`、`Greater`
 - `cmp::min` / `cmp::max` 取兩者的較小/大值，要求 `Ord`
-- `f64` 沒有 `Ord`，用 `min_by` 自訂比較
+- `f64` 沒有 `Ord`，用 `min_by` / `max_by` 自訂比較
 - `min_by_key` / `max_by_key` 根據 key 比較
 - `sort()` 由小到大、`sort_by()` 自訂比較、`sort_by_key()` 根據 key 排序
 - `Reverse` 是一個 tuple struct，`Ord` 實作把比較反過來，所以排序結果跟著反轉

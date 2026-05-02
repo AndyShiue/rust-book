@@ -108,7 +108,7 @@ fn main() {
 ```
 
 ## 重點整理
-- `Path` 是 DST（對應 `str`），`PathBuf` 是擁有的版本（對應 `String`）
+- `Path` 是 DST（對應 `str`），`PathBuf` 是擁有所有權的版本（對應 `String`）
 - `push` / `join` 自動加上正確的路徑分隔符號
 - `parent`、`file_name`、`extension`、`file_stem` 拆解路徑
 - `exists`、`is_file`、`is_dir` 檢查路徑狀態
