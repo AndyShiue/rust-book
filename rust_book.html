@@ -10389,8 +10389,8 @@ c 的總和：7
 <p>不管是哪種，<code>Cow&lt;str&gt;</code> 都可以當 <code>&amp;str</code> 來用。</p>
 <h4 id="_615">常用方法</h4>
 <ul>
-<li><strong><code>to_mut()</code></strong>：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。</li>
-<li><strong><code>into_owned()</code></strong>：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走。</li>
+<li><strong><code>to_mut()</code></strong>：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心</li>
+<li><strong><code>into_owned()</code></strong>：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走</li>
 </ul>
 <h3 id="_616">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">borrow</span><span class="p">::</span><span class="n">Cow</span><span class="p">;</span>
@@ -11026,8 +11026,8 @@ name2 現在是：Bob!!!
 </ul>
 <p>為什麼是這個方向？</p>
 <ul>
-<li><strong>Fn → FnMut</strong>：如果一個閉包只需要 <code>&amp;self</code> 就能執行，那給它 <code>&amp;mut self</code> 當然也行（只是多給了它不需要的修改權限）。</li>
-<li><strong>FnMut → FnOnce</strong>：如果一個閉包用 <code>&amp;mut self</code> 就能執行，那給它 <code>self</code>（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次。</li>
+<li><strong>Fn → FnMut</strong>：如果一個閉包只需要 <code>&amp;self</code> 就能執行，那給它 <code>&amp;mut self</code> 當然也行（只是多給了它不需要的修改權限）</li>
+<li><strong>FnMut → FnOnce</strong>：如果一個閉包用 <code>&amp;mut self</code> 就能執行，那給它 <code>self</code>（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次</li>
 </ul>
 <p>反過來就不行——一個需要消耗自己（FnOnce）的閉包，不能保證多次呼叫（FnMut）。</p>
 <h4 id="impl-trait_3">用 impl Trait 接受閉包</h4>
@@ -13333,9 +13333,9 @@ note: iterators are lazy and do nothing unless consumed
 
 <p>幾個重點：</p>
 <ul>
-<li><code>#[cfg(test)]</code> 告訴編譯器：這個 mod <strong>只在跑測試時才編譯</strong>。正式發布的程式不會包含測試程式碼。</li>
-<li><code>mod tests</code> 是一個普通的 mod，只是慣例叫 <code>tests</code>。</li>
-<li><code>use super::*;</code> 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 <code>add</code>、<code>multiply</code> 等函數。</li>
+<li><code>#[cfg(test)]</code> 告訴編譯器：這個 mod <strong>只在跑測試時才編譯</strong>。正式發布的程式不會包含測試程式碼</li>
+<li><code>mod tests</code> 是一個普通的 mod，只是慣例叫 <code>tests</code></li>
+<li><code>use super::*;</code> 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 <code>add</code>、<code>multiply</code> 等函數</li>
 </ul>
 <h4 id="cargo-test">cargo test</h4>
 <div class="highlight"><pre><span></span><code>cargo<span class="w"> </span><span class="nb">test</span>
@@ -15055,8 +15055,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="dst">常見的 DST</h4>
 <p>你其實已經見過它們了：</p>
 <ul>
-<li><strong><code>str</code></strong>：字串切片的「內容」型別。<code>"hello"</code> 是 5 bytes，<code>"哈囉"</code> 是 6 bytes，長度不固定。</li>
-<li><strong><code>[T]</code></strong>：陣列切片的「內容」型別。<code>[i32]</code> 可能是 3 個元素也可能是 100 個。</li>
+<li><strong><code>str</code></strong>：字串切片的「內容」型別。<code>"hello"</code> 是 5 bytes，<code>"哈囉"</code> 是 6 bytes，長度不固定</li>
+<li><strong><code>[T]</code></strong>：陣列切片的「內容」型別。<code>[i32]</code> 可能是 3 個元素也可能是 100 個</li>
 </ul>
 <p>因為大小不固定，你<strong>不能</strong>直接把它們當作值使用：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// let s: str = &quot;hello&quot;;        // 編譯錯誤！</span>
@@ -16030,8 +16030,8 @@ cargo<span class="w"> </span>publish<span class="w">        </span><span class="
 <h4 id="mutex-vs-rwlock">Mutex vs RwLock</h4>
 <p>什麼時候用哪個？</p>
 <ul>
-<li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了。</li>
-<li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者飢餓</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖。</li>
+<li><strong>Mutex</strong>：簡單、開銷小。適合讀寫都頻繁，或鎖持有時間很短的場景。大部分情況下 Mutex 就夠了</li>
+<li><strong>RwLock</strong>：在讀遠多於寫的時候有優勢，因為多個讀者可以同時進行。但鎖本身的開銷比 Mutex 大，而且有<strong>寫者飢餓</strong>（writer starvation）的風險——如果讀者一直源源不斷，寫者可能永遠拿不到鎖</li>
 </ul>
 <h3 id="_875">範例程式碼</h3>
 <div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">sync</span><span class="p">::{</span><span class="n">Arc</span><span class="p">,</span><span class="w"> </span><span class="n">RwLock</span><span class="p">};</span>
@@ -19749,8 +19749,8 @@ cargo add anyhow
 </ul>
 <h4 id="_1086">兩者的關係</h4>
 <ul>
-<li><strong>thiserror</strong>：幫你定義精確的錯誤型別，省去手寫重複的程式碼。適合函式庫——使用者能 match 你的錯誤。</li>
-<li><strong>anyhow</strong>：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理。</li>
+<li><strong>thiserror</strong>：幫你定義精確的錯誤型別，省去手寫重複的程式碼。適合函式庫——使用者能 match 你的錯誤</li>
+<li><strong>anyhow</strong>：完全不用定義錯誤型別，所有錯誤統一處理。適合應用程式——只需要報告錯誤，不需要讓別人程式化處理</li>
 </ul>
 <p>兩者可以搭配使用：函式庫用 thiserror 定義錯誤，應用程式用 anyhow 統一接收。</p>
 <h3 id="_1087">範例程式碼</h3>

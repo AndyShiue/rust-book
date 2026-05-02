@@ -91,9 +91,9 @@ mod tests {
 
 幾個重點：
 
-- `#[cfg(test)]` 告訴編譯器：這個 mod **只在跑測試時才編譯**。正式發布的程式不會包含測試程式碼。
-- `mod tests` 是一個普通的 mod，只是慣例叫 `tests`。
-- `use super::*;` 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 `add`、`multiply` 等函數。
+- `#[cfg(test)]` 告訴編譯器：這個 mod **只在跑測試時才編譯**。正式發布的程式不會包含測試程式碼
+- `mod tests` 是一個普通的 mod，只是慣例叫 `tests`
+- `use super::*;` 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 `add`、`multiply` 等函數
 
 ### cargo test
 

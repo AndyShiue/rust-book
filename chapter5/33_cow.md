@@ -49,8 +49,8 @@ where
 
 ### 常用方法
 
-- **`to_mut()`**：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心。
-- **`into_owned()`**：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走。
+- **`to_mut()`**：如果是 Borrowed，先 clone 成 Owned，然後回傳可變參考。如果已經是 Owned，直接回傳。這就是「寫入時才複製」的核心
+- **`into_owned()`**：不管是 Borrowed 還是 Owned，都轉成擁有的值。Borrowed 會 clone 一份，Owned 則直接拿走
 
 ## 範例程式碼
 
