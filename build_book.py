@@ -17,6 +17,7 @@ CHAPTERS = [
     ("附錄一", "appendix1"),
     ("第八章：多執行緒", "chapter8"),
     ("第九章：進階語言功能", "chapter9"),
+    ("第十章：進階標準庫", "chapter10"),
 ]
 
 CHAPTER_PREFIX = {
@@ -30,6 +31,7 @@ CHAPTER_PREFIX = {
     "appendix1": "ap1",
     "chapter8": "ch8",
     "chapter9": "ch9",
+    "chapter10": "ch10",
 }
 
 

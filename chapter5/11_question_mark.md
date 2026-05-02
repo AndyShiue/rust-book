@@ -28,13 +28,13 @@ fn do_stuff() -> Result<i32, String> {
 `?` 放在 `Result` 後面，做的事情就是：
 
 - 如果是 `Ok(v)`，把 `v` 取出來，繼續往下跑
-- 如果是 `Err(e)`，直接 `return Err(e)`，提前離開函數
+- 如果是 `Err(e)`，回傳 `Err`，提前離開函數
 
 所以 `?` 就是 match + early return 的簡寫。
 
 ### 注意：錯誤型別要一致
 
-使用 `Result` 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致。如果不一致，就不能直接用 `?`——你得先把錯誤轉成對的型別。
+使用 `Result` 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致或有某種關聯（之後會講具體是哪種關聯）。如果沒有關聯，就不能直接用 `?`——你得先把錯誤轉成對的型別。
 
 比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`。這時候你可以用 match 自己轉換，然後再手動 return：
 
