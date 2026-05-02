@@ -30,7 +30,7 @@ error: `(i32, i32, i32)` doesn't implement `std::fmt::Display`
 
 翻譯成白話：「這個型別沒有實作 Display，我不知道要怎麼用『好看的方式』印出來。」
 
-### 解決方法：用 {:?}
+### 解決方法：用 `{:?}`
 
 ```rust
 fn main() {
