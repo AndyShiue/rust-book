@@ -15,7 +15,7 @@
 ### 第三章：Struct、Enum 與 Pattern Matching（30 集）
 自訂型別、match 表達式、各種 pattern（tuple、slice、nested、guard 等）、method 與 associated function。
 
-### 第四章：所有權與借用（14 集）
+### 第四章：所有權與借用（13 集）
 Rust 最核心的概念——所有權、move、借用規則、String vs &str、Vec。
 
 ### 第五章：泛型、Trait Bound 與生命週期（33 集）
@@ -30,13 +30,13 @@ Cargo 專案管理、use/mod、可見性、cargo test、發布 crate。
 ### 附錄一（11 集）
 數字字面值、格式化字串、break 回傳值、raw string、struct 放 main 裡、struct update syntax、ref/match ergonomics、panic!/todo!/unreachable!、Rc 迴圈與 Weak、fully qualified syntax、DST 簡介。
 
-### 第八章：多執行緒（13 集）
+### 第九章：多執行緒（13 集）
 指標與記憶體位址、thread::spawn、Send/Sync、RefCell 與 Rc 在多執行緒下的限制、Arc、Atomic 型別、Mutex、RwLock、poisoning、mpsc channel、死鎖、thread::scope。
 
-### 第九章：進階語言功能（19 集）
+### 第十章：進階語言功能（19 集）
 dyn Trait、dyn compatibility、const fn、associated const、const generics、預設參數、運算子重載、型別轉換 as、enum discriminant、attribute 總覽、cfg! macro、macro_rules!、proc macro、unsafe、static 變數、LazyLock、extern blocks、union、never type。
 
-### 第十章：進階標準庫（12 集）
+### 第十一章：進階標準庫（12 集）
 AsRef/AsMut、Ordering 與 sort、HashMap、HashSet、其他集合（BTreeMap、VecDeque）、std::env/std::process、std::path、IO（stdin、檔案讀寫）、字串方法與 UTF-8、Error trait 與 Box&lt;dyn Error&gt;、thiserror/anyhow、catch_unwind。
 
 ## 特色
@@ -47,17 +47,6 @@ AsRef/AsMut、Ordering 與 sort、HashMap、HashSet、其他集合（BTreeMap、
 - 不會用到還沒教過的概念
 - 範例程式碼都能編譯通過
 - Rust edition 2024
-
-## 本地建置
-
-需要 Python 3 和 `markdown` 套件：
-
-```bash
-pip install markdown
-python build_book.py
-```
-
-會產出 `rust_book.html`，用瀏覽器開啟即可。
 
 ## 授權
 
