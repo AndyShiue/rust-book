@@ -1,0 +1,13 @@
+[book]
+title = "Rust 教學"
+authors = ["Andy Shiue"]
+language = "zh-TW"
+
+[rust]
+edition = "2024"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/AndyShiue/rust-book"
+site-url = "https://andyshiue.github.io/rust-book/"
