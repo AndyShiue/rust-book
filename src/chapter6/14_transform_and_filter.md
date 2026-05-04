@@ -18,6 +18,20 @@
 
 注意！`.iter()` 產出 `&T`，所以閉包的參數是 `&i32`。如果不想處理參考，可以搭配 `.copied()`（等等會講）。
 
+### .flat_map() —— map + flatten
+
+`flat_map` 等於先 `map` 再 `flatten`（上一集學的）。每個元素經過閉包轉換成一個迭代器（或 Option/Result），然後全部攤平：
+
+```rust,no_run
+# fn main() {
+    let words = vec!["hello world", "foo bar"];
+    let chars: Vec<char> = words.iter().flat_map(|s| s.chars()).collect();
+    // ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', ' ', 'f', 'o', 'o', ' ', 'b', 'a', 'r']
+# }
+```
+
+還記得第 7 集 `Option` 和 `Result` 的 `and_then` 嗎？`flat_map` 在迭代器上做的事情本質上一樣——「轉換，但因為轉換結果本身也是容器，就攤平」。
+
 ### .filter() —— 過濾元素
 
 `filter` 只保留閉包回傳 `true` 的元素：
@@ -30,19 +44,6 @@
 ```
 
 `filter` 的閉包接收 `&&T`（因為 `.iter()` 已經是 `&T`，`filter` 再借用一次就是 `&&T`）。這是初學者常被搞混的地方，但寫多了就習慣了。
-
-### .enumerate() —— 帶上索引
-
-```rust,no_run
-# fn main() {
-    let names = vec!["Alice", "Bob", "Charlie"];
-    for (i, name) in names.iter().enumerate() {
-        println!("第 {} 個：{}", i, name);
-    }
-# }
-```
-
-`enumerate` 把每個元素包成 `(index, element)` 的 tuple，索引從 0 開始。
 
 ### .copied() 和 .cloned()
 
@@ -111,16 +112,19 @@ fn main() {
     let adjusted: Vec<i32> = scores.iter().map(|s| s + 5).collect();
     println!("加分後：{:?}", adjusted);
 
+    // .flat_map() —— 每個字拆成字元
+    let words = vec!["Rust", "好棒"];
+    let all_chars: Vec<char> = words.iter().flat_map(|w| w.chars()).collect();
+    println!("所有字元：{:?}", all_chars);
+
+    // .flat_map() 類似 and_then —— 解析成功的留下，失敗的丟掉
+    let inputs = vec!["42", "not_a_number", "7"];
+    let parsed: Vec<i32> = inputs.iter().flat_map(|s| s.parse::<i32>()).collect();
+    println!("成功解析的：{:?}", parsed);
+
     // .filter() —— 篩出及格的
     let passing: Vec<i32> = scores.iter().copied().filter(|&s| s >= 60).collect();
     println!("及格的：{:?}", passing);
-
-    // .enumerate() —— 帶索引
-    println!("\n--- 成績單 ---");
-    for (i, &score) in scores.iter().enumerate() {
-        let status = if score >= 60 { "及格" } else { "不及格" };
-        println!("第 {} 號：{} 分（{}）", i + 1, score, status);
-    }
 
     // .copied() —— 從 &i32 變成 i32
     let max_score: Option<i32> = scores.iter().copied().max();
@@ -157,7 +161,7 @@ fn main() {
 
 ## 重點整理
 - `.map()` 轉換每個元素，`.filter()` 過濾不符合條件的元素
-- `.enumerate()` 為每個元素加上從 0 開始的索引
+- `.flat_map()` = `.map()` + `.flatten()`，概念上跟 Option/Result 的 `and_then` 類似
 - `.copied()` 把 `&T` 轉成 `T`（需要 T: Copy），`.cloned()` 類似但用 Clone
 - `.rev()` 反轉迭代順序，需要 `DoubleEndedIterator`
 - 這些方法可以自由鏈式呼叫，形成清晰的資料處理管道

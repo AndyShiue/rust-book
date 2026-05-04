@@ -1,11 +1,9 @@
 # 組合與截取
 
 ## 本集目標
-學會用 `.zip()`、`.chain()`、`.take()`、`.skip()`、`.flatten()`、`.flat_map()` 來組合和截取迭代器。
+學會用 `.zip()`、`.enumerate()`、`.chain()`、`.take()`、`.skip()`、`.flatten()` 來組合和截取迭代器。
 
 ## 概念說明
-
-這集會用到下一集才正式介紹的 `.map()`，但對讀到這裡的你來說肯定不是難事吧～它就是「對每個元素做一個轉換」，看程式碼就懂了。
 
 ### .zip() —— 把兩個迭代器配對
 
@@ -21,6 +19,19 @@
 ```
 
 如果兩個迭代器長度不同，`zip` 在較短的那個結束時就停止。
+
+### .enumerate() —— 帶上索引
+
+```rust,no_run
+# fn main() {
+    let names = vec!["Alice", "Bob", "Charlie"];
+    for (i, name) in names.iter().enumerate() {
+        println!("第 {} 個：{}", i, name);
+    }
+# }
+```
+
+`enumerate` 把每個元素包成 `(index, element)` 的 tuple，索引從 0 開始。
 
 ### .chain() —— 串接兩個迭代器
 
@@ -77,20 +88,6 @@
 # }
 ```
 
-### .flat_map() —— map + flatten
-
-`flat_map` 等於先 `map` 再 `flatten`。每個元素經過閉包轉換成一個迭代器（或 Option/Result），然後全部攤平：
-
-```rust,no_run
-# fn main() {
-    let words = vec!["hello world", "foo bar"];
-    let chars: Vec<char> = words.iter().flat_map(|s| s.chars()).collect();
-    // ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', ' ', 'f', 'o', 'o', ' ', 'b', 'a', 'r']
-# }
-```
-
-還記得第 6 集 `Option` 和 `Result` 的 `and_then` 嗎？`flat_map` 在迭代器上做的事情本質上一樣——「轉換，但因為轉換結果本身也是容器那就攤平」。
-
 ## 範例程式碼
 
 ```rust
@@ -101,6 +98,13 @@ fn main() {
     println!("--- zip ---");
     for (name, grade) in students.iter().zip(grades.iter()) {
         println!("{}：{} 分", name, grade);
+    }
+
+    // .enumerate() —— 帶索引
+    println!("\n--- enumerate ---");
+    let fruits = vec!["蘋果", "香蕉", "櫻桃"];
+    for (i, fruit) in fruits.iter().enumerate() {
+        println!("第 {} 個：{}", i, fruit);
     }
 
     // .chain() —— 串接兩個 Vec
@@ -134,20 +138,7 @@ fn main() {
     let real_values: Vec<i32> = maybe_values.into_iter().flatten().collect();
     println!("有值的：{:?}", real_values);
 
-    // .flat_map() —— 每個字拆成字元
-    let words = vec!["Rust", "好棒"];
-    let all_chars: Vec<char> = words.iter().flat_map(|w| w.chars()).collect();
-    println!("\n所有字元：{:?}", all_chars);
-
-    // .flat_map() 類似 and_then
-    let inputs = vec!["42", "not_a_number", "7"];
-    let parsed: Vec<i32> = inputs
-        .iter()
-        .flat_map(|s| s.parse::<i32>())
-        .collect();
-    println!("成功解析的：{:?}", parsed);
-
-    // .zip() + .map() 組合
+    // .zip() + .map() 組合，下集就會教 .map()
     println!("\n--- zip + map ---");
     let prices = vec![100, 200, 300];
     let quantities = vec![2, 1, 4];
@@ -161,8 +152,8 @@ fn main() {
 
 ## 重點整理
 - `.zip()` 把兩個迭代器配對成 tuple，以較短的為準
+- `.enumerate()` 為每個元素加上從 0 開始的索引
 - `.chain()` 把兩個迭代器首尾串接
 - `.take(n)` 只取前 n 個元素，`.skip(n)` 跳過前 n 個
 - `.flatten()` 把巢狀結構攤平一層（`Vec<Vec<T>>` → `Vec<T>`，也適用於 Option）
-- `.flat_map()` = `.map()` + `.flatten()`，概念上跟 Option/Result 的 `and_then` 類似
 - 這些方法可以自由組合，打造出強大的資料處理管道
