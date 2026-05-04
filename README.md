@@ -37,7 +37,7 @@ Cargo 專案管理、use/mod、可見性、cargo test、發布 crate。
 dyn Trait、dyn compatibility、const fn、associated const、const generics、預設參數、運算子重載、型別轉換 as、enum discriminant、attribute 總覽、cfg! macro、macro_rules!、proc macro、unsafe、static 變數、LazyLock、extern blocks、union、never type。
 
 ### 進階標準庫（12 集）
-AsRef/AsMut、Ordering 與 sort、HashMap、HashSet、其他集合（BTreeMap、VecDeque）、std::env/std::process、std::path、IO（stdin、檔案讀寫）、字串方法與 UTF-8、Error trait 與 Box&lt;dyn Error&gt;、thiserror/anyhow、catch_unwind。
+AsRef/AsMut、Ordering 與 sort、HashMap、HashSet、其他集合（BTreeMap、VecDeque）、std::env/std::process、std::path、字串方法與 UTF-8、IO（stdin、檔案讀寫）、Error trait 與 Box&lt;dyn Error&gt;、thiserror/anyhow、catch_unwind。
 
 ## 特色
 

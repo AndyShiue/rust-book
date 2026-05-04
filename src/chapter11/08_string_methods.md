@@ -71,9 +71,9 @@
 
 ```rust,no_run
 # fn main() {
-    "hello".len();          // 5
-    "hello".is_empty();     // false
-    "hello".repeat(3);      // "hellohellohello"
+    "hello".len();         // 5
+    "hello".is_empty();    // false
+    "hello".repeat(3);     // "hellohellohello"
 
     // 注意：len() 回傳的是 byte 數，不是字元數
     "你好".len();           // 6（UTF-8 byte 數）
