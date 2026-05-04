@@ -60,7 +60,7 @@ impl Add for Point {
 | `-x` | `Neg` | `neg(self)` |
 | `!x` | `Not` | `not(self)` |
 | `&` | `BitAnd` | `bitand(self, rhs)` |
-| `|` | `BitOr` | `bitor(self, rhs)` |
+| `\|` | `BitOr` | `bitor(self, rhs)` |
 | `^` | `BitXor` | `bitxor(self, rhs)` |
 | `<<` | `Shl` | `shl(self, rhs)` |
 | `>>` | `Shr` | `shr(self, rhs)` |
