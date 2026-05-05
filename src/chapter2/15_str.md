@@ -22,7 +22,7 @@ fn main() {
 
 ```rust
 fn main() {
-    let s: &str = "hello";  // 明確標出型別
+    let s: &str = "hello"; // 明確標出型別
     println!("{}", s);
 }
 ```
