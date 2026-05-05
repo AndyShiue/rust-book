@@ -1,7 +1,7 @@
 # tuple pattern
 
 ## 本集目標
-學會在 match 裡解構一般的 tuple 與 tuple struct。
+學會用 match 對一般的 tuple 與 tuple struct 進行模式匹配。
 
 ## 概念說明
 
@@ -57,7 +57,7 @@ fn main() {
 
 ## tuple struct 也能用同樣的方式
 
-還記得第 2 集學的 tuple struct 嗎？它的解構方式和一般 tuple 一模一樣：
+還記得第 2 集學的 tuple struct 嗎？它的模式匹配方式和一般 tuple 一模一樣：
 
 ```rust
 struct Point(i32, i32);
@@ -78,4 +78,4 @@ fn main() {
 
 ## 重點整理
 - 一般的 tuple 也可以拿來 match
-- tuple struct 也能用同樣的方式解構，只是前面要加型別名稱：`Point(x, y)`
+- tuple struct 也能用同樣的方式進行模式匹配，只是前面要加型別名稱：`Point(x, y)`
