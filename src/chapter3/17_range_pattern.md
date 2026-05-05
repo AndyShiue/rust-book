@@ -9,7 +9,7 @@
 
 Rust 提供了 **range pattern**，讓你在 match 裡用範圍來比對：
 
-```rust,no_run
+```rust
 # fn main() {
 #     let score = 12;
     match score {
@@ -23,7 +23,7 @@ Rust 提供了 **range pattern**，讓你在 match 裡用範圍來比對：
 
 除了 `..=`（包含結尾），也可以用 `..`（不包含結尾）：
 
-```rust,no_run
+```rust
 # fn main() {
 #     let score = 65;
     match score {
