@@ -46,6 +46,8 @@ fn main() {
 ### 差別三：const 不能用 mut
 
 ```rust,compile_fail
+# #![allow(unused)]
+#
 # fn main() {
     const mut MAX: i32 = 100; // ❌ 不存在這種東西
     let mut x = 5;            // ✅ 這個可以
