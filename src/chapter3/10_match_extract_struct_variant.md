@@ -58,7 +58,7 @@ fn main() {
 
 ## 一般的 struct 也能用同樣的方式
 
-不只 enum 的 struct variant，一般的 named field struct 也可以在 match 裡解構：
+不只 enum 的 struct variant，一般的 named-field struct 也可以在 match 裡解構：
 
 ```rust
 struct Point {
@@ -85,4 +85,4 @@ fn main() {
 - `Shape::Circle { radius: r }` → 把 radius 欄位取出來叫做 `r`
 - 冒號左邊是欄位名（必須和定義一樣），右邊是你自己取的變數名
 - 所有欄位都要寫出來（目前是這樣，之後會學怎麼忽略）
-- 一般的 named field struct 也能用同樣的方式在 match 裡解構
+- 一般的 named-field struct 也能用同樣的方式在 match 裡解構

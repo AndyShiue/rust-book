@@ -45,9 +45,9 @@ enum Shape {
 }
 
 enum Message {
-    Quit,                    // 不帶資料（就像 C-style）
-    Echo(i32),               // 帶一個 i32
-    Move(i32, i32),          // 帶兩個 i32
+    Quit,           // 不帶資料（就像 C-style）
+    Echo(i32),      // 帶一個 i32
+    Move(i32, i32), // 帶兩個 i32
 }
 
 fn main() {
