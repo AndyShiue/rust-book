@@ -31,31 +31,31 @@ fn main() {
 
 `Player { hp: 0, .. }` 表示「hp 是 0，其他欄位我不管」。不用每個不要的欄位都寫 `_`。
 
-enum 的 struct variant 也能這樣匹配——只要 variant 裡有命名欄位，用法完全一樣。
+enum 的 struct variant 也能這樣匹配，用法完全一樣。
 
 ### 在 match tuple 時使用
 
 ```rust
 # fn main() {
-let scores = (90, 85, 78, 92, 88);
+    let scores = (90, 85, 78, 92, 88);
 
-match scores {
-    (first, ..) => println!("第一科：{}", first),
-}
+    match scores {
+        (first, ..) => println!("第一科：{}", first),
+    }
 
-match scores {
-    (.., last) => println!("最後一科：{}", last),
-}
+    match scores {
+        (.., last) => println!("最後一科：{}", last),
+    }
 
-match scores {
-    (first, .., last) => println!("第一科 {}，最後一科 {}", first, last),
-}
+    match scores {
+        (first, .., last) => println!("第一科 {}，最後一科 {}", first, last),
+    }
 # }
 ```
 
 `(first, ..)` 只取第一個，`(.., last)` 只取最後一個，`(first, .., last)` 取頭和尾。
 
-tuple struct 和 enum 的 tuple variant 也能用類似的方式匹配，只是寫法上要帶上型別名稱，例如 `MyStruct(first, ..)` 或 `MyEnum::Variant(first, ..)`。
+tuple struct 和 enum 的 tuple variant 也能用類似的方式匹配，例如 `MyStruct(first, ..)` 或 `MyEnum::Variant(first, ..)`。
 
 ### 在陣列和切片裡使用
 
@@ -75,7 +75,7 @@ match data {
 
 ### 注意：`..` 只能出現一次
 
-`..` 在一個模式裡只能出現一次，因為如果出現兩次，Rust 會不知道中間的值怎麼分配。
+`..` 在一層的模式裡只能出現一次，因為如果出現兩次，Rust 會不知道中間的值怎麼分配。
 
 ## 範例程式碼
 
