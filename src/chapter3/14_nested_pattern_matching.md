@@ -31,20 +31,14 @@ Rust 的 pattern matching 可以一次解構好幾層，就像剝洋蔥一樣，
 ## 範例程式碼
 
 ```rust
-enum Color {
-    Red,
-    Green,
-    Blue,
+enum Shape {
+    Circle(f64),
+    Rectangle(i32, i32),
 }
 
 struct Point {
     x: i32,
     y: i32,
-}
-
-enum Shape {
-    Circle(f64),
-    Rectangle(i32, i32),
 }
 
 fn main() {
@@ -67,15 +61,6 @@ fn main() {
         (name, Point { x, y }) => {
             println!("{}：座標 ({}, {})", name, x, y);
         }
-    }
-
-    // 範例三：tuple 裡面包 enum 和 i32
-    let colored_value = (Color::Red, 42);
-
-    match colored_value {
-        (Color::Red, n) => println!("紅色，數值 {}", n),
-        (Color::Green, n) => println!("綠色，數值 {}", n),
-        (Color::Blue, n) => println!("藍色，數值 {}", n),
     }
 }
 ```
