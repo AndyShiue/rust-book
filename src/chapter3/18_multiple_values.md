@@ -9,9 +9,9 @@
 
 Rust 用 `|`（直線符號）來表示「或」：
 
-```rust,no_run
+```rust
 # fn main() {
-#     let day = 1;
+    let day = 1;
     match day {
         6 | 7 => println!("假日"),
         _ => println!("工作日"),
@@ -21,9 +21,9 @@ Rust 用 `|`（直線符號）來表示「或」：
 
 `6 | 7` 的意思是「6 或 7」。你可以用 `|` 串接任意多個值：
 
-```rust,no_run
+```rust
 # fn main() {
-#     let n = 3;
+    let n = 3;
     match n {
         1 | 2 | 3 => println!("前三名"),
         _ => println!("其他"),
@@ -33,7 +33,7 @@ Rust 用 `|`（直線符號）來表示「或」：
 
 也可以搭配 enum 使用：
 
-```rust,no_run
+```rust
 # enum Color {
 #     Red,
 #     Green,
@@ -41,7 +41,7 @@ Rust 用 `|`（直線符號）來表示「或」：
 # }
 #
 # fn main() {
-#     let color = Color::Red;
+    let color = Color::Red;
     match color {
         Color::Red | Color::Blue => println!("冷暖色"),
         Color::Green => println!("綠色"),

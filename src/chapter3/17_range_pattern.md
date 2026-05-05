@@ -11,7 +11,7 @@ Rust 提供了 **range pattern**，讓你在 match 裡用範圍來比對：
 
 ```rust
 # fn main() {
-#     let score = 12;
+    let score = 12;
     match score {
         1..=5 => println!("低分"),
         _ => {}
@@ -25,7 +25,7 @@ Rust 提供了 **range pattern**，讓你在 match 裡用範圍來比對：
 
 ```rust
 # fn main() {
-#     let score = 65;
+    let score = 65;
     match score {
         0..50 => println!("不及格"),  // 0 到 49
         50..=100 => println!("及格"), // 50 到 100（包含）
@@ -49,7 +49,7 @@ range pattern 也支援只寫一邊：
 
 ```rust
 # fn main() {
-#     let temperature = 25;
+    let temperature = 25;
     match temperature {
         ..0 => println!("零下"),        // 小於 0
         0..=30 => println!("普通"),     // 0 到 30
@@ -64,7 +64,7 @@ range pattern 不只能用在數字，也能用在 `char`：
 
 ```rust
 # fn main() {
-#     let c = '哼';
+    let c = '哼';
     match c {
         'a'..='z' => println!("小寫英文字母"),
         'A'..='Z' => println!("大寫英文字母"),
