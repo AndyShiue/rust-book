@@ -1,13 +1,13 @@
 # slice pattern
 
 ## 本集目標
-學會在 match 裡解構陣列和切片，用 slice pattern 取出元素。
+學會對陣列和切片進行模式匹配，用 slice pattern 取出元素。
 
 ## 概念說明
 
-### 在 match 裡解構陣列
+### 對陣列進行模式匹配
 
-上一集我們學了在 match 裡解構 tuple，其實陣列和切片也可以！語法就是用 `[a, b, c]` 來比對陣列的每個元素：
+上一集我們學了如何對 tuple 進行模式匹配，其實我們也可以對陣列和切片做！就是用 `[a, b, c]` 這種語法來比對陣列的每個元素：
 
 ```rust
 # fn main() {
@@ -78,5 +78,5 @@ fn main() {
 ```
 
 ## 重點整理
-- 陣列可以在 match 裡用 `[a, b, c]` 解構，跟 tuple pattern 類似
+- 遇到陣列的時候，可以在 match 時用 `[a, b, c]` 這種 slice pattern，跟 tuple pattern 類似
 - 切片 `&[T]` 長度不固定，可以用不同長度的模式來匹配（`[]`、`[x]`、`[x, y]`……）
