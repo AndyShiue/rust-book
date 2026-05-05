@@ -40,8 +40,8 @@ fn main() {
 
 ```rust
 # fn main() {
-# let a = 10;
-# let b = 3;
+#     let a = 10;
+#     let b = 3;
     println!("{} + {} = {}", a, b, a + b);
 # }
 ```
