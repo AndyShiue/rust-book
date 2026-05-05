@@ -15,7 +15,7 @@
 
 ```rust
 # fn main() {
-#     let score = 95;
+    let score = 95;
     match score {
         100 => println!("滿分！"),
         _ => println!("不是滿分"),
