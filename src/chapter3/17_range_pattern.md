@@ -47,7 +47,7 @@ Rust 編譯器會根據前後文判斷是哪一種，不會搞混。但初學時
 
 range pattern 也支援只寫一邊：
 
-```rust,no_run
+```rust
 # fn main() {
 #     let temperature = 25;
     match temperature {
@@ -62,7 +62,7 @@ range pattern 也支援只寫一邊：
 
 range pattern 不只能用在數字，也能用在 `char`：
 
-```rust,no_run
+```rust
 # fn main() {
 #     let c = '哼';
     match c {
