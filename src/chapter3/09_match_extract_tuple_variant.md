@@ -1,7 +1,7 @@
-# match 取出 tuple variant 資料
+# match 解構 tuple variant
 
 ## 本集目標
-學會用 match 取出 enum tuple variant 裡面攜帶的資料。
+學會用 match 解構 enum tuple variant，取出裡面攜帶的資料。
 
 ## 概念說明
 
@@ -25,7 +25,7 @@
 
 `Shape::Circle(r)` 裡的 `r` 不是固定的名字——你可以取任何名字。它的意思是「如果 s 是 Circle，就把裡面的那個 f64 值取出來，叫做 r」。
 
-這就是所謂的**模式比對**（pattern matching）：match 不只是比對「是哪個 variant」，還能同時把裡面的資料取出來給你用。
+這個動作叫做**解構**（destructuring）——把一個複合的東西拆開，取出裡面的各個部分。match 不只是比對「是哪個 variant」，還能同時把裡面的資料解構出來給你用。
 
 ## 範例程式碼
 

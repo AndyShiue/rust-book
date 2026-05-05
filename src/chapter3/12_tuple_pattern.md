@@ -1,11 +1,11 @@
 # tuple pattern
 
 ## 本集目標
-學會用 match 對一般的 tuple 與 tuple struct 進行模式匹配。
+學會在 match 裡解構一般的 tuple 與 tuple struct。
 
 ## 概念說明
 
-第 9 集學了怎麼在 match 裡取出 enum variant 的資料。其實不只 enum，一般的 **tuple** 也可以拿來 match！
+第 9 集學了怎麼在 match 裡解構 enum variant。其實不只 enum，我們也能用 match 解構一般的 **tuple**！
 
 ```rust
 # fn main() {

@@ -1,11 +1,11 @@
-# match 取出 struct variant 資料
+# match 解構 struct variant
 
 ## 本集目標
-學會用 match 取出 enum struct variant 裡面攜帶的有名字欄位。
+學會用 match 解構 enum struct variant，取出裡面的有名字欄位。
 
 ## 概念說明
 
-第 9 集學了怎麼取出 tuple variant 的資料（用位置），現在來學取出 **struct variant** 的資料（用欄位名）。
+第 9 集學了怎麼解構 tuple variant（用位置），現在來學著解構 struct variant（用欄位名）。
 
 語法是在模式裡用 `欄位名: 變數名` 的寫法：
 
@@ -58,7 +58,7 @@ fn main() {
 
 ## 一般的 struct 也能用同樣的方式
 
-不只 enum 的 struct variant，一般的 named-field struct 也可以在 match 裡解構：
+不只 enum 的 struct variant，一般的 named-field struct 也能用同樣的方式解構：
 
 ```rust
 struct Point {
@@ -83,7 +83,7 @@ fn main() {
 注意上面的模式混用了**固定的值**和**變數**：`Point { x: 0, y: b }` 裡面 `x: 0` 是固定值（只在 x 等於 0 的時候才符合），`y: b` 是變數（把 y 的值取出來叫 b）。這個技巧在 match 裡很常用。match 會從上到下依序比對每個模式。一旦比對成功，就執行右手邊的程式碼，執行完後直接離開整個 match——不會繼續往下比對。
 
 ## 重點整理
-- struct variant 在 match 裡用 `欄位名: 變數名` 來取出資料
+- 在 match 裡用 `欄位名: 變數名` 來解構 struct variant
 - `Shape::Circle { radius: r }` → 把 radius 欄位取出來叫做 `r`
 - 冒號左邊是欄位名（必須和定義一樣），右邊是你自己取的變數名
 - 模式裡可以混用固定值和變數：`Point { x: 0, y: b }` 表示「x 必須是 0，y 取出來叫 b」

@@ -1,7 +1,7 @@
 # field shorthand
 
 ## 本集目標
-學會用 field shorthand 簡化 struct 的建立和模式比對。
+學會用 field shorthand 簡化 struct 的建立和模式匹配。
 
 ## 概念說明
 
