@@ -28,6 +28,8 @@
 既然 let 解構就是在做 binding，自然也可以對個別變數加 `mut`：
 
 ```rust,compile_fail
+# #![allow(unused)]
+#
 # fn main() {
     let (mut a, b) = (1, 2);
     a += 10; // OK，a 是可變的
