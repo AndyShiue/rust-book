@@ -1,6 +1,9 @@
 # Summary
 
 [前言](foreword.md)
+
+# 第壹部
+
 - [基礎](chapter1/README.md)
     - [安裝 Rust](chapter1/01_install_rust.md)
     - [第一個程式](chapter1/02_first_program.md)
@@ -163,6 +166,9 @@
     - [Rc 迴圈與 Weak](appendix1/i_rc_cycle_weak.md)
     - [fully qualified syntax](appendix1/j_fully_qualified_syntax.md)
     - [DST 簡介](appendix1/k_dst_intro.md)
+
+# 第貳部
+
 - [多執行緒](chapter9/README.md)
     - [指標](chapter9/01_pointer.md)
     - [thread::spawn](chapter9/02_thread_spawn.md)

@@ -83,10 +83,19 @@ impl<T> Pair<T> {
 
 第四章教 trait 的時候，我們幫具體型別實作了 trait，像 `impl Describe for Cat`。如果你想幫一個泛型型別實作 trait，語法也是一樣——在 `impl` 後面加上 `<T>` 來宣告型別參數：
 
-```rust,ignore
+```rust,no_run
+# trait SomeTrait {}
+#
+# struct Pair<T> {
+#     first: T,
+#     second: T,
+# }
+#
 impl<T> SomeTrait for Pair<T> {
     // ...
 }
+#
+# fn main() {}
 ```
 
 一樣是「對於任何型別 T，幫 `Pair<T>` 實作這個 trait」。

@@ -38,7 +38,7 @@ enum Result<T, E> {
 
 還記得第一章的 `.expect("讀取失敗")` 和 `.parse::<i32>().expect("請輸入數字")` 嗎？
 
-`.parse()` 回傳的就是 `Result`。`expect` 的行為和 Option 的 expect 一模一樣——成功就取出 `Ok` 的值，失敗就 panic 並印出你的訊息。
+`.parse()` 回傳的就是 `Result`。`expect` 的行為和 `Option` 的 `expect` 一模一樣——成功就取出 `Ok` 的值，失敗就 panic 並印出你的訊息。
 
 現在我們終於能完整理解第一章的那段「黑盒子」程式碼了。
 
@@ -82,7 +82,7 @@ fn main() {
 
     // 回顧第一章：parse 回傳 Result
     let input = "42";
-    let num: Result<i32, _> = input.parse::<i32>();
+    let num: Result<i32, _> = input.parse();
     match num {
         Ok(n) => println!("解析成功：{}", n),
         Err(e) => println!("解析失敗：{:?}", e),
@@ -99,4 +99,4 @@ fn main() {
 - `Ok(T)` 對應成功，`Err(E)` 對應失敗
 - `Result`、`Ok`、`Err` 和 Option 一樣，是 Rust 預設就引入每個檔案的
 - `unwrap()`、`expect()`、`unwrap_or()` 的用法和 Option 完全對稱
-- 第一章的 `.parse().expect(...)` 就是在用 Result——現在我們完全理解了
+- 第一章的 `.parse().expect(...)` 就是在用 Result——現在我們能理解了

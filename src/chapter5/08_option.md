@@ -7,7 +7,7 @@
 
 ### null 的問題
 
-在某些程式語言裡，任何變數都可能是 `null`（空值）。這導致一個經典問題：你以為變數有值，用了它，結果 runtime 炸掉——「null pointer exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
+在某些程式語言裡，任何變數都可能是 `null`（空值）。這導致一個經典問題：你以為變數有值，用了它，結果執行時炸掉——「null pointer exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
 
 Rust 的解法很簡單：**沒有 null。**
 
@@ -93,6 +93,6 @@ fn main() {
 ## 重點整理
 - `Option<T>` 是 Rust 用來表達「可能沒有值」的泛型 enum，取代了其他語言的 null
 - `Some(T)` 表示有值，`None` 表示沒有值
-- 編譯器強制你處理 `None` 的情況，runtime 不會有 null pointer exception
+- 編譯器強制你處理 `None` 的情況，執行時期不會有 null pointer exception
 - `Option`、`Some`、`None` 太常用，Rust 預設就引入了，不需要額外路徑
 - niche optimization：`Option<&T>` 和 `&T` 大小相同，零額外成本
