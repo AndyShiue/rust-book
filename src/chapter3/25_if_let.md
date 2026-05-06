@@ -153,4 +153,4 @@ fn main() {
 - 可以加 `else` 處理不符合的情況
 - 可以在模式裡取出資料，像 `if let Shape::Circle(r) = s`
 - 比起寫 match + `_ => {}`，`if let` 更簡潔
-- `if let` 也能用在 match guard：`模式 if let 模式2 = 表達式 =>`
+- `if let` 也能用在 match guard：`模式 if let 模式2 = 表達式 => ...`
