@@ -8,7 +8,7 @@
 
 我們從第一章開始就在用 `cargo new` 和 `cargo run`。其實 `cargo run` 背後做了兩件事：先**編譯**你的程式碼，再**執行**編譯出來的執行檔。如果你只想編譯但不執行，可以用 `cargo build`——它只會產生執行檔，放在 `target/debug/` 資料夾裡。
 
-這一集我們要把 Cargo 的全貌攤開來看，特別是怎麼引入外部套件。
+這一集我們來多認識一些 Cargo 的功能，特別是怎麼引入外部套件。
 
 ### debug build vs release build
 
