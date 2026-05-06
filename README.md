@@ -1,5 +1,7 @@
 # Rust 教學
 
+[![Deploy mdBook](https://github.com/AndyShiue/rust-book/actions/workflows/deploy.yml/badge.svg)](https://github.com/AndyShiue/rust-book/actions/workflows/deploy.yml)
+
 用繁體中文寫的 Rust 程式語言教學，口語化風格，每集 10 分鐘內讀完。
 
 📖 **線上閱讀**：[https://andyshiue.github.io/rust-book/](https://andyshiue.github.io/rust-book/)
