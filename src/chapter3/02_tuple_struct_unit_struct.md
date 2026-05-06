@@ -55,4 +55,4 @@ fn main() {
 - **unit struct**：`struct Marker;`，沒有任何欄位
 - tuple struct 適合欄位意義明顯、不需要命名的情況
 - unit struct 適合當標記用，本身不攜帶資料
-- 即使兩個 tuple struct 的欄位型別完全一樣，它們也是不同的型別（例如 `Point(i32, i32)` 和 `Color(i32, i32, i32)` 是不同型別）
+- 即使兩個 tuple struct 的欄位型別完全一樣，它們也是不同的型別（例如 `Point(i32, i32)` 和 `Size(i32, i32)` 不能互換）
