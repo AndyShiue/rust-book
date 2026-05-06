@@ -90,21 +90,6 @@ fn main() {
 
 大部分情況你應該用 `for x in &v`，除非你確定不再需要這個 Vec。
 
-### String 也是一樣的
-
-順帶一提，String 和 for 迴圈也有類似的行為。如果你要走訪 String 的字元，用 `.chars()`：
-
-```rust
-# fn main() {
-    let s = String::from("你好");
-    for c in s.chars() {
-        println!("{}", c);
-    }
-    // s 還在！因為 .chars() 的參數是 &self，只是借用 s，不會 move
-    println!("{}", s);
-# }
-```
-
 ## 範例程式碼
 
 ```rust
@@ -186,6 +171,5 @@ fn main() {
 - `for x in v`：**move**，消耗整個 Vec
 - `for x in &v`：**borrow**，只是借用，Vec 還在
 - 大部分情況用 `for x in &v`，除非你確定不再需要這個 Vec
-- `s.chars()` 也是借用——它不會 move String
 
 恭喜你完成了第四章！🎉 這一章你學會了 Rust 最核心的概念——所有權、move、clone、copy、borrowing，還有 String 和 Vec 這兩個最常用的非 Copy 型別。這些概念是 Rust 和其他語言最大的不同，也是 Rust 能在不需要垃圾回收的情況下保證記憶體安全的關鍵。下一章我們將進入泛型、trait bound 和生命週期——讓你的程式碼能處理任意型別，同時保持型別安全！
