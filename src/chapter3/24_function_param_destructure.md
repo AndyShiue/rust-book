@@ -59,6 +59,7 @@ fn add_coordinates((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> (i32, i32) {
 }
 
 // 函數參數解構 struct
+// 當然這邊你也能選擇用 match
 fn describe_point(Point { x, y }: Point) {
     if x == 0 && y == 0 {
         println!("原點");
@@ -89,7 +90,7 @@ fn main() {
 
 ## 為什麼 tuple 和 struct 能用 let 解構？
 
-你可能會好奇：為什麼 tuple 和 struct 可以在 `let`、`for` 和函數參數裡直接解構？
+你可能會好奇：為什麼 tuple 和 struct 就可以在 `let`、`for` 和函數參數裡直接解構？
 
 ```rust,compile_fail
 # struct Point {
@@ -97,32 +98,30 @@ fn main() {
 #     y: i32,
 # }
 #
-# enum Color {
-#     Red,
-#     Green,
-#     Blue,
+# enum Shape {
+#     Circle { radius: f64 },
+#     Rectangle { width: i32, height: i32 },
 # }
 #
 # fn main() {
 #     let p = Point { x: 6, y: 7 };
-#     let c = Color::Red;
+#     let s = Shape::Circle { radius: 6.7 };
     let (x, y) = (1, 2);    // OK
     let Point { x, y } = p; // OK
-    let Color::Red = c;     // 不行！
+    let Shape::Circle { radius: f64 } = s; // 不行！
 # }
 ```
 
 答案是：**tuple 和 struct 的解構不會失敗**。一個 `(i32, i32)` 一定有兩個值，一個 `Point` 一定有 `x` 和 `y`——沒有其他可能。
 
-但 enum 不一樣。一個 `Color` 可能是 `Red`、`Green`、或 `Blue`。如果你寫 `let Color::Red = c`，但 `c` 其實是 `Green` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
+但 enum 不一樣。一個 `Shape` 可能是 `Circle` 或 `Rectangle`。如果你寫 `let Shape::Circle { radius: f64 } = s;`，但 `s` 其實是 `Rectangle` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
 
-這種一定會成功的模式叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
+比對時一定會成功的模式被叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
 
 想處理可能失敗的模式？下一集會教 `if let`。
 
 ## 重點整理
-- 函數參數可以直接用模式解構：`fn foo((x, y): (i32, i32))`
-- 語法是 `模式: 型別`，模式在前，型別在後
+- 函數參數也可以直接用模式解構：`fn foo((x, y): (i32, i32))`
 - tuple 和 struct 都可以在參數位置解構
 - 呼叫時和平常一樣傳值，解構是函數內部的事
-- `let`、`for` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 不行
+- `let`、`for` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 會有問題

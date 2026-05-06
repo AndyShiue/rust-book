@@ -11,14 +11,14 @@ Rust 的 pattern matching 可以一次解構好幾層，就像剝洋蔥一樣，
 
 比如說，你有一個 tuple `(i32, Shape)`，你可以在 match 裡同時解構 tuple 和裡面的 Shape：
 
-```rust,no_run
+```rust
 # enum Shape {
 #     Circle(f64),
 #     Rectangle(i32, i32),
 # }
 #
 # fn main() {
-#     let data = (666, Shape::Circle(42.0));
+    let data = (666, Shape::Circle(42.0));
     match data {
         (id, Shape::Circle(r)) => println!("#{} 是圓形，半徑 {}", id, r),
         (id, Shape::Rectangle(w, h)) => println!("#{} 是長方形 {}x{}", id, w, h),

@@ -27,9 +27,9 @@
 
 在 tuple 或 enum 的模式裡，用 `_` 佔住不需要的位置：
 
-```rust,no_run
+```rust
 # fn main() {
-#     let point = (5, 5);
+    let point = (5, 5);
     match point {
         (0, _) => println!("在 y 軸上"), // 不關心第二個值
         (_, 0) => println!("在 x 軸上"), // 不關心第一個值
