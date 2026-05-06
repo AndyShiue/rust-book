@@ -51,7 +51,7 @@ impl Greet for Cat {
 
 ### derive：自動產生實作的捷徑
 
-有些 trait 的實作方式很固定，Rust 可以幫你自動產生。這時候就用 `#[derive(...)]`：
+有些 trait 的實作方式很固定，Rust 編譯器可以幫你自動產生。這時候就用 `#[derive(...)]`：
 
 ```rust,no_run
 #[derive(Debug)]
