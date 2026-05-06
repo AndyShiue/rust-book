@@ -18,6 +18,8 @@
 在同一個時間點，一個值最多只能有**一個**可變借用：
 
 ```rust,compile_fail
+# #![allow(unused_variables)]
+#
 # fn main() {
     let mut x = 10;
     let r1 = &mut x;
