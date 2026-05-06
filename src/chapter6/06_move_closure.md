@@ -81,7 +81,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 ### 閉包自動實作的 trait
 
-閉包能不能 Clone 或 Copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 Copy，整體就能 Copy：
+閉包能不能 clone 或 copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 copy，整體就能 copy：
 
 - 所有捕捉的變數都是 Copy → 閉包也是 Copy
 - 所有捕捉的變數都是 Clone → 閉包也是 Clone
@@ -154,5 +154,5 @@ fn main() {
 - `move` 強制閉包以捕捉所有外部變數的所有權
 - 回傳閉包時通常需要 `move`，避免懸垂參考
 - `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼**使用**捕捉的值
-- 閉包能否 Clone / Copy 取決於捕捉的變數是否 Clone / Copy
+- 閉包能否 clone / copy 取決於捕捉的變數是否 Clone / Copy
 - `move` 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景
