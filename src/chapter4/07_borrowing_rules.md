@@ -33,6 +33,8 @@
 如果有人在讀（`&`），就不能有人在改（`&mut`）；反過來也是：
 
 ```rust,compile_fail
+# #![allow(unused_variables)]
+#
 # fn main() {
     let mut x = 10;
     let r1 = &x;     // 唯讀借用
