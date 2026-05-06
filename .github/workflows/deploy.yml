@@ -16,6 +16,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v6
+      - run: rustup update stable
       - run: cargo install mdbook
       - run: mdbook test
       - run: mdbook build
