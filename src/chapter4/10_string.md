@@ -11,7 +11,7 @@
 
 ```rust,no_run
 # fn main() {
-    let greeting = "你好";
+    let greeting: &str = "你好";
 # }
 ```
 
