@@ -121,7 +121,7 @@ fn main() -> Result<(), String> {
 
 ## 重點整理
 - `?` 是 match + early return 的簡寫
-- `Result` 上用 `?`：Ok 取值，Err 提前回傳
-- `Option` 上用 `?`：Some 取值，None 提前回傳
+- `Result` 上用 `?`：`Ok` 取值，`Err` 提前回傳
+- `Option` 上用 `?`：`Some` 取值，`None` 提前回傳
 - 使用 `?` 時，錯誤型別必須和函數回傳型別一致——不一致時要另外處理
 - `fn main() -> Result<(), String>` 讓 main 也能使用 `?`
