@@ -252,6 +252,6 @@ fn main() {
 - 閉包背後就是一個匿名 struct，捕捉的變數變成 struct 的欄位
 - **三種閉包的差別在方法怎麼接收 self**：`self`（FnOnce）、`&mut self`（FnMut）、`&self`（Fn）
 - 閉包體就是 struct 上方法的實作內容
-- `f()` 會被編譯器轉換成方法呼叫：`self.call_once()` / `self.call_mut()` / `self.call()`
+- `f()` 會被編譯器轉換成方法呼叫：`f.call_once()` / `f.call_mut()` / `f.call()`
 - Fn：只讀取，不修改不消耗，可以無限次呼叫
 - 下一集會講編譯器是怎麼**自動判斷**一個閉包該歸類為 FnOnce、FnMut 還是 Fn
