@@ -27,15 +27,15 @@
 # }
 ```
 
-注意 `.sum()` 和 `.product()` 需要知道回傳型別，因為不同數字型別的加法/乘法結果不同。通常用型別標註解決。
+跟 `.collect()` 一樣，`.sum()` 和 `.product()` 需要你指定回傳型別，通常用型別標註解決。
 
 ### .min() 和 .max()
 
 ```rust,no_run
 # fn main() {
     let v = vec![3, 1, 4, 1, 5, 9, 2, 6];
-    let smallest = v.iter().min();  // Some(&1)
-    let largest = v.iter().max();   // Some(&9)
+    let smallest = v.iter().min(); // Some(&1)
+    let largest = v.iter().max();  // Some(&9)
 # }
 ```
 
