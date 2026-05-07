@@ -53,7 +53,7 @@
 # }
 ```
 
-跟 `unwrap_or` 不同，`unwrap_or_else` 的預設值是**懶惰計算**的——只有在真的是 None 的時候才會執行閉包。
+跟 `unwrap_or` 不同，`unwrap_or_else` 的預設值是**惰性計算**的——只有在真的是 None 的時候才會執行閉包。
 
 #### filter —— 條件過濾
 
