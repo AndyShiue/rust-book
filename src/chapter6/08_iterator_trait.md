@@ -46,8 +46,6 @@ trait Iterator {
 
 `Iterator` trait 提供了大量的**預設實作**（還記得第五章嗎？）。因為所有的迭代操作本質上都是「不斷呼叫 next 直到 None」，所以只要你實作了 `next()`，像 `map`、`filter`、`count`、`sum` 等幾十個方法全部自動可用。
 
-這就是 trait default method 的威力！
-
 ### 自訂 Iterator
 
 讓我們自己做一個迭代器。假設我們想要一個「倒數計時器」：
