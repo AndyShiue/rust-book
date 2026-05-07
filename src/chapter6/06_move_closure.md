@@ -90,9 +90,9 @@ fn make_greeter(name: String) -> impl Fn() {
 ```rust
 # fn main() {
     let x = 42;
-    let f = move || x + 1;  // x 是 i32（Copy），所以 f 也是 Copy
-    let g = f;  // Copy 了 f
-    println!("{}", f());  // f 還能用
+    let f = move || x + 1; // x 是 i32（Copy），所以 f 也是 Copy
+    let g = f; // Copy 了 f
+    println!("{}", f()); // f 還能用
     println!("{}", g());
 # }
 ```
