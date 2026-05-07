@@ -130,7 +130,7 @@ fn main() {
     println!("NAN > 1.0: {}", nan > 1.0);  // false！
 
     // f64 沒有 Ord，所以不能用 .sort()
-    // let mut floats = vec![1.0_f64, 2.0, f64::NAN];
+    // let mut floats = vec![1.0, 2.0, f64::NAN];
     // floats.sort(); // 編譯錯誤！f64 沒有實作 Ord
 
     // Default
@@ -144,5 +144,5 @@ fn main() {
 - `PartialEq`：`==`、`!=` 比較；`Eq`：保證自反性（NAN 是例外）
 - `PartialOrd`：`<`、`>`、`<=`、`>=` 比較；`Ord`：保證完整排序
 - `f64` 因為 NAN 的存在，只有 Partial 版本，沒有完整版
-- derive 的 Ord 按欄位宣告順序逐一比較
+- derive 的 `Ord` 按欄位宣告順序逐一比較
 - `Default`：提供預設值（數字 `0`、bool `false`、String 空字串）

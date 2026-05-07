@@ -27,9 +27,9 @@ fn main() {
 
 `Cell<T>` 的 `.get()` 會把值**複製一份**出來（不是借用）。所以 `T` 必須實作 Copy。
 
-你不能 `Cell<String>`，因為 String 不是 Copy。只能用 Copy 的型別（i32、f64、bool 等）。
+你不能用 `Cell<String>`，因為 String 不是 Copy。只能用 Copy 的型別（i32、f64、bool 等）。
 
-### 為什麼不用 mut？
+### 為什麼不要用 mut？
 
 有些情況下你不方便拿到 `&mut`。比如一個 struct 被多處共享參考（`&self`），但你想修改裡面的某個計數器。Cell 就很適合這種場景。
 

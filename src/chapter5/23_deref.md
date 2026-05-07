@@ -74,7 +74,7 @@ let b = Box::new(42);
 
 **Deref coercion** 是 Rust 在需要的時候自動透過 Deref 轉換參考型別的機制。這不只發生在 method call，任何需要型別匹配的地方都可能觸發。
 
-例如，一個函數接受 `&i32`，你可以直接傳 `&Box<i32>` 進去，Rust 會自動透過 Deref 把 `&Box<i32>` 轉成 `&i32`：
+例如，一個函數接受 `&i32`，你可以直接傳 `&Box<i32>` 進去，Rust 會自動透過 `Deref` 把 `&Box<i32>` 轉成 `&i32`：
 
 ```rust
 fn show(val: &i32) {

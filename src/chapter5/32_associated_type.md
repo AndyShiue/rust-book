@@ -40,7 +40,6 @@ trait Container {
 ```rust,no_run
 # trait Container {
 #     type Item;
-#     // 要使用 Self 的 associated type，用 Self::Type 的語法
 #     fn first(&self) -> Option<&Self::Item>;
 # }
 #

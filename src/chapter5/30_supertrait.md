@@ -17,11 +17,11 @@ trait Summarize: std::fmt::Display {
 # fn main() {}
 ```
 
-`Summarize: Display` 的意思是：「要實作 Summarize，你必須先實作 Display。」Display 就是 Summarize 的 **supertrait**，反過來說，Summarize 是 Display 的 **subtrait**。
+`Summarize: Display` 的意思是：「要實作 `Summarize`，你必須先實作 `Display`。」`Display` 就是 `Summarize` 的 **supertrait**，反過來說，`Summarize` 是 `Display` 的 **subtrait**。
 
-好處是在 Summarize 的預設實作或使用者程式碼裡，可以確定 `self` 一定有 Display 的功能。
+好處是在 `Summarize` 的預設實作或使用者程式碼裡，可以確定 `self` 一定有 `Display` 的功能。
 
-注意：**實作 Summarize 不會自動幫你實作 Display**。你必須自己手動 impl Display，然後才能 impl Summarize。supertrait 只是一個「前提條件」，不是「自動贈送」。
+注意：**實作 Summarize 不會自動幫你實作 Display**。你必須自己手動實作 `Display`，然後才能實作 `Summarize`。supertrait 只是一個「前提條件」，不是「自動贈送」。
 
 ### Copy: Clone
 
@@ -104,7 +104,7 @@ fn main() {
     // 用 Display（supertrait）
     println!("完整：{}", article);
 
-    // 用 Summarize（預設實作會用 Display）
+    // 用 Summarize（預設實作會用到 Display）
     println!("摘要：{}", article.summary());
 
     // Copy 需要 Clone 的示範
@@ -116,9 +116,9 @@ fn main() {
 ```
 
 ## 重點整理
-- `trait A: B` 表示「要實作 A，必須先實作 B」——B 是 A 的 supertrait
+- `trait A: B` 表示「要實作 A，必須先實作 B」——B 是 A 的 supertrait，A 是 B 的 subtrait
 - `Copy: Clone`——Copy 要求 Clone，所以 derive 時必須同時寫兩個
 - `DerefMut: Deref`——要能可變解參考，必須先能不可變解參考
-- 實作 subtrait 不會自動實作 supertrait——你必須自己先 impl supertrait
+- 實作 subtrait 不會自動實作 supertrait——你必須自己先寫 `impl Supertrait`
 - subtrait 的預設實作裡可以使用 supertrait 的方法
 

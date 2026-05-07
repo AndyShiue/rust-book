@@ -98,7 +98,7 @@ fn main() {
     let trimmed = trim_hello(&greeting);
     println!("{}", trimmed);
 
-    // 規則三：method 不用寫生命週期
+    // 規則三：method 接收參考不用寫生命週期
     let article = Article::new(
         String::from("Rust 生命週期"),
         String::from("其實沒那麼可怕"),

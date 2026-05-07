@@ -1,7 +1,7 @@
 # Display trait
 
 ## 本集目標
-學會為自訂型別實作 `Display` trait，理解 Display 和 Debug 的差別，以及 Display 和 ToString 的關係。
+學會為自訂型別實作 `Display` trait，理解 `Display` 和 `Debug` 的差別，以及 `Display` 和 `ToString` 的關係。
 
 ## 概念說明
 
@@ -20,7 +20,7 @@
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;
-
+#
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -35,7 +35,7 @@ impl Display for Point {
 # fn main() {}
 ```
 
-`fmt` 方法接收一個 `Formatter`，你用 `write!` 巨集把想要的格式寫進去。`write!` 的用法和 `println!` 幾乎一樣，只是第一個參數是 `f`。
+`fmt` 方法接收一個 `&mut Formatter`，你用 `write!` 巨集把想要的格式寫進去。`write!` 的用法和 `println!` 幾乎一樣，只是第一個參數是 `&mut Formatter`。
 
 ### Display 和 ToString 的關係
 

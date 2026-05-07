@@ -1,7 +1,7 @@
 # 生命週期基礎
 
 ## 本集目標
-理解為什麼需要生命週期標注 `'a`，學會在函數回傳借用時標注生命週期。
+理解為什麼需要生命週期標注 `'a`，學會在函數回傳參考時標注生命週期。
 
 ## 概念說明
 
@@ -93,11 +93,11 @@ fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
     let s1 = String::from("hello world"); // s1 的壽命比較長
     let result;
     {
-        let s2 = String::from("hi");       // s2 的壽命比較短
+        let s2 = String::from("hi");      // s2 的壽命比較短
         result = longer(&s1, &s2);
-        println!("{}", result);            // ✓ 這裡 s1 和 s2 都還活著
+        println!("{}", result);           // ✅ 這裡 s1 和 s2 都還活著
     } // s2 在這裡被釋放
-    // println!("{}", result);             // ✗ 不行！'a 是取 s1 和 s2 的交集，s2 已經死了
+    // println!("{}", result);            // ❌ 不行！'a 是取 s1 和 s2 的交集，s2 已經死了
 # }
 ```
 
@@ -122,7 +122,7 @@ fn replace<'a>(target: &'a mut String, new_value: &str) {
 
 ### 不是所有函數都要標
 
-如果函數只有一個參考參數，Rust 能自動推斷（下一集會詳細講）：
+如果函數只有一個參考參數，Rust 通常能自動推斷（下一集會詳細講）：
 
 ```rust,no_run
 fn first_char(s: &str) -> &str {
@@ -168,9 +168,9 @@ fn main() {
     {
         let s4 = String::from("hi");
         r = longer(&s3, &s4);
-        println!("在作用域內：{}", r); // ✓ s3 和 s4 都還活著
+        println!("在作用域內：{}", r); // ✅ s3 和 s4 都還活著
     }
-    // println!("{}", r); // ✗ 編譯錯誤！s4 已經被釋放，r 的生命週期不夠長
+    // println!("{}", r); // ❌ 編譯錯誤！s4 已經被釋放，r 的生命週期不夠長
 
     // 例子三：回傳值只借用其中一個參數
     let s5 = String::from("我會被回傳");
@@ -180,7 +180,7 @@ fn main() {
         r2 = always_first(&s5, &s6);
     }
     // r2 只借用 s5，所以即使 s6 被釋放也沒關係
-    println!("{}", r2); // ✓ s5 還活著，r2 可以用
+    println!("{}", r2); // ✅ s5 還活著，r2 可以用
 
     // 'static 生命週期
     let s: &'static str = "我是靜態字串，活到程式結束";

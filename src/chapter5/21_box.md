@@ -7,7 +7,7 @@
 
 還記得第四章的保險箱比喻嗎？鑰匙圈上掛著鑰匙，鑰匙可以打開保險箱，保險箱裡放著真正的東西。
 
-`Box<T>` 就是那個保險箱——它把資料放在 heap（堆積）上，然後在 stack（堆疊）上留一把鑰匙（指標）。
+`Box<T>` 就是那個保險箱——它把資料放在 heap 上，然後在 stack 上留一把鑰匙（指標）。
 
 ### 為什麼需要 Box？
 
@@ -87,10 +87,10 @@ fn main() {
 
     // 一步一步建立連結串列：3 -> 2 -> 1 -> end
     // 從最後面開始建立
-    let list = List::Empty;                          // end
-    let list = List::Node(1, Box::new(list));         // 1 -> end
-    let list = List::Node(2, Box::new(list));         // 2 -> 1 -> end
-    let list = List::Node(3, Box::new(list));         // 3 -> 2 -> 1 -> end
+    let list = List::Empty;                   // end
+    let list = List::Node(1, Box::new(list)); // 1 -> end
+    let list = List::Node(2, Box::new(list)); // 2 -> 1 -> end
+    let list = List::Node(3, Box::new(list)); // 3 -> 2 -> 1 -> end
 
     print_list(&list);
 
