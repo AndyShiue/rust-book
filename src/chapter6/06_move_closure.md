@@ -44,7 +44,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 ### move 閉包的匿名 struct
 
-回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有的值**（`T`）：
+回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有所有權的值**（`T`）：
 
 ```rust,no_run
 # fn main() {
@@ -151,8 +151,7 @@ fn main() {
 ```
 
 ## 重點整理
-- `move` 強制閉包以捕捉所有外部變數的所有權
+- `move` 強制閉包獲得所有捕捉變數的所有權，不依賴外部借用，適合需要長壽命的場景
 - 回傳閉包時通常需要 `move`，避免懸垂參考
-- `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包怎麼**使用**捕捉的值
-- 閉包能否 clone / copy 取決於捕捉的變數是否 Clone / Copy
-- `move` 閉包擁有所有捕捉的值，不依賴外部借用，適合需要長壽命的場景
+- `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包**怎麼使用**捕捉的值
+- 閉包能否 clone / copy 取決於捕捉的變數是否全為 Clone / Copy
