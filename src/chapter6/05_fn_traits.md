@@ -102,7 +102,7 @@ fn main() {
     // FnOnce：閉包消耗了捕捉的值
     let name = String::from("Rust");
     consume_and_print(|| {
-        let s = name;  // move name
+        let s = name; // move name
         format!("Hello, {}!", s)
     });
 
@@ -129,7 +129,7 @@ fn main() {
     // Fn 的閉包也可以傳給 FnOnce 的參數（因為 Fn: FnMut: FnOnce）
     let greeting = String::from("哈囉");
     consume_and_print(|| {
-        format!("{}, 世界！", greeting)  // 只是讀取 greeting，是 Fn
+        format!("{}, 世界！", greeting) // 只是讀取 greeting，是 Fn
     });
     // greeting 還活著，因為閉包只是借用了它
     println!("greeting 還在：{}", greeting);
