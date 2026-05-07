@@ -53,7 +53,7 @@
 
 ```rust,no_run
 struct GreetOnce {
-    name: String,  // 擁有 name（owned）
+    name: String, // 擁有 name（owned）
 }
 
 // 建立閉包 = 把捕捉的變數塞進 struct
@@ -62,7 +62,7 @@ struct GreetOnce {
 impl GreetOnce {
     // 呼叫閉包 = 呼叫 struct 上的方法
     fn call_once(self) {
-        let s = self.name;  // 把 name 從 struct 裡移出來
+        let s = self.name; // 把 name 從 struct 裡移出來
         println!("Hello, {}!", s);
     }
 }
