@@ -128,7 +128,7 @@ impl Iterator for Fibonacci {
         let new_b = self.a + self.b;
         self.a = self.b;
         self.b = new_b;
-        Some(current)  // 永遠不回傳 None
+        Some(current) // 永遠不回傳 None
     }
 }
 
@@ -144,20 +144,20 @@ fn main() {
     // 自訂 Iterator：費氏數列（手動呼叫 next）
     println!("\n費氏數列：");
     let mut fib = Fibonacci::new();
-    println!("{:?}", fib.next());  // Some(0)
-    println!("{:?}", fib.next());  // Some(1)
-    println!("{:?}", fib.next());  // Some(1)
-    println!("{:?}", fib.next());  // Some(2)
-    println!("{:?}", fib.next());  // Some(3)
-    println!("{:?}", fib.next());  // Some(5)
+    println!("{:?}", fib.next()); // Some(0)
+    println!("{:?}", fib.next()); // Some(1)
+    println!("{:?}", fib.next()); // Some(1)
+    println!("{:?}", fib.next()); // Some(2)
+    println!("{:?}", fib.next()); // Some(3)
+    println!("{:?}", fib.next()); // Some(5)
     // 永遠不會 None——這是一個無限迭代器
 
     // std::iter::repeat：無限重複
     let mut threes = iter::repeat(3);
     println!("\nrepeat(3)：");
-    println!("{:?}", threes.next());  // Some(3)
-    println!("{:?}", threes.next());  // Some(3)
-    println!("{:?}", threes.next());  // Some(3)（永遠不會 None）
+    println!("{:?}", threes.next()); // Some(3)
+    println!("{:?}", threes.next()); // Some(3)
+    println!("{:?}", threes.next()); // Some(3)（永遠不會 None）
 
     // std::iter::from_fn：用閉包控制產出
     let mut n = 0;
@@ -170,10 +170,10 @@ fn main() {
         }
     });
     println!("\nfrom_fn（前 3 個平方數）：");
-    println!("{:?}", squares.next());  // Some(1)
-    println!("{:?}", squares.next());  // Some(4)
-    println!("{:?}", squares.next());  // Some(9)
-    println!("{:?}", squares.next());  // None
+    println!("{:?}", squares.next()); // Some(1)
+    println!("{:?}", squares.next()); // Some(4)
+    println!("{:?}", squares.next()); // Some(9)
+    println!("{:?}", squares.next()); // None
 }
 ```
 
