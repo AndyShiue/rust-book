@@ -32,7 +32,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 加上 `move` 就解決了：
 
-```rust,no_run
+```rust
 fn make_greeter(name: String) -> impl Fn() {
     move || println!("Hello, {}!", name)
 }
