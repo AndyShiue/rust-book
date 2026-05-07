@@ -41,7 +41,7 @@
 
 回傳 `Option`，因為迭代器可能是空的（空的就回傳 None）。
 
-### .fold() —— 最通用的聚合
+### .fold(init, f) —— 最通用的聚合
 
 `fold` 是所有聚合方法的「老大」。它的型別：
 
@@ -90,7 +90,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 # }
 ```
 
-### .reduce() —— 沒有初始值的 fold
+### .reduce(f) —— 沒有初始值的 fold
 
 `reduce` 跟 `fold` 很像，但它用第一個元素當初始值：
 
