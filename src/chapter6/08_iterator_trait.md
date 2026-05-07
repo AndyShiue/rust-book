@@ -179,8 +179,8 @@ fn main() {
 
 ## 重點整理
 - `Iterator` trait 的核心是 `next(&mut self) -> Option<Self::Item>`
-- 只需實作 `next()`，就能免費獲得數十個 default method（接下來幾集會陸續學到）
-- 自訂 struct 實作 `Iterator` 很簡單——定義 `type Item` 和 `next()` 就好
+- 只需實作 `next()`，就能免費獲得數十個預設實作（接下來會陸續學到）
+- 自己幫型別實作 `Iterator` 很簡單——定義 `type Item` 和 `next()` 就好
 - `std::iter::repeat(value)` 建立無限重複的迭代器
 - `std::iter::from_fn(closure)` 用閉包來控制每次產出的值
 - 迭代器可以是無限的（永不回傳 None）
