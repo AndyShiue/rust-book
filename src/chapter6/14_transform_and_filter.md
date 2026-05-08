@@ -108,35 +108,35 @@
 fn main() {
     let scores = vec![55, 82, 91, 47, 73, 88, 69, 95];
 
-    // .map() —— 每個分數加 5 分（加分調整）
+    // map —— 每個分數加 5 分（加分調整）
     let adjusted: Vec<i32> = scores.iter().map(|s| s + 5).collect();
     println!("加分後：{:?}", adjusted);
 
-    // .flat_map() —— 每個字拆成字元
+    // flat_map —— 每個字拆成字元
     let words = vec!["Rust", "好棒"];
     let all_chars: Vec<char> = words.iter().flat_map(|w| w.chars()).collect();
     println!("所有字元：{:?}", all_chars);
 
-    // .flat_map() 類似 and_then —— 解析成功的留下，失敗的丟掉
+    // flat_map 類似 and_then —— 解析成功的留下，失敗的丟掉
     let inputs = vec!["42", "not_a_number", "7"];
     let parsed: Vec<i32> = inputs.iter().flat_map(|s| s.parse::<i32>()).collect();
     println!("成功解析的：{:?}", parsed);
 
-    // .filter() —— 篩出及格的
+    // filter —— 篩出及格的
     let passing: Vec<i32> = scores.iter().copied().filter(|&s| s >= 60).collect();
     println!("及格的：{:?}", passing);
 
-    // .copied() —— 從 &i32 變成 i32
+    // copied —— 從 &i32 變成 i32
     let max_score: Option<i32> = scores.iter().copied().max();
     println!("\n最高分：{:?}", max_score);
 
-    // .cloned() —— 從 &String 變成 String
+    // cloned —— 從 &String 變成 String
     let names = vec![String::from("Alice"), String::from("Bob")];
     let cloned_names: Vec<String> = names.iter().cloned().collect();
     println!("cloned: {:?}", cloned_names);
     println!("原本還在：{:?}", names);
 
-    // .rev() —— 反轉
+    // rev —— 反轉
     let countdown: Vec<i32> = (1..=5).rev().collect();
     println!("\n倒數：{:?}", countdown);
 

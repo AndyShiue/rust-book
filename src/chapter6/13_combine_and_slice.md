@@ -92,7 +92,7 @@
 
 ```rust
 fn main() {
-    // .zip() —— 名字和分數配對
+    // zip —— 名字和分數配對
     let students = vec!["小明", "小華", "小美"];
     let grades = vec![88, 95, 72];
     println!("--- zip ---");
@@ -100,31 +100,31 @@ fn main() {
         println!("{}：{} 分", name, grade);
     }
 
-    // .enumerate() —— 帶索引
+    // enumerate —— 帶索引
     println!("\n--- enumerate ---");
     let fruits = vec!["蘋果", "香蕉", "櫻桃"];
     for (i, fruit) in fruits.iter().enumerate() {
         println!("第 {} 個：{}", i + 1, fruit);
     }
 
-    // .chain() —— 串接兩個 Vec
+    // chain —— 串接兩個 Vec
     let morning = vec!["開會", "寫報告"];
     let afternoon = vec!["寫程式", "code review"];
     let all_tasks: Vec<&&str> = morning.iter().chain(afternoon.iter()).collect();
     println!("\n今日行程：{:?}", all_tasks);
 
-    // .take() 和 .skip()
+    // take 和 skip
     let numbers: Vec<i32> = (1..=20).collect();
     let first_five: Vec<&i32> = numbers.iter().take(5).collect();
     let last_five: Vec<&i32> = numbers.iter().skip(15).collect();
     println!("\n前 5 個：{:?}", first_five);
     println!("跳過 15 個後：{:?}", last_five);
 
-    // .take() + .skip() 組合：取中間的
+    // take + skip 組合：取中間的
     let middle: Vec<&i32> = numbers.iter().skip(5).take(5).collect();
     println!("第 6~10 個：{:?}", middle);
 
-    // .flatten() —— 攤平巢狀 Vec
+    // flatten —— 攤平巢狀 Vec
     let matrix = vec![
         vec![1, 2, 3],
         vec![4, 5, 6],
@@ -133,12 +133,12 @@ fn main() {
     let flat: Vec<i32> = matrix.into_iter().flatten().collect();
     println!("\n攤平矩陣：{:?}", flat);
 
-    // .flatten() —— 過濾 Option
+    // flatten —— 過濾 Option
     let maybe_values = vec![Some(10), None, Some(30), None, Some(50)];
     let real_values: Vec<i32> = maybe_values.into_iter().flatten().collect();
     println!("有值的：{:?}", real_values);
 
-    // .zip() + .map() 組合，下集就會教 .map()
+    // zip + map 組合，下集就會教迭代器的 map
     println!("\n--- zip + map ---");
     let prices = vec![100, 200, 300];
     let quantities = vec![2, 1, 4];
