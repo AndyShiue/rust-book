@@ -115,6 +115,6 @@ fn main() {
 - `Cargo.toml` 用 TOML 格式，`[package]` 記專案資訊，`[dependencies]` 記外部套件
 - `edition` 是 Rust 語言規格的版本（2015、2018、2021、2024），不同 edition 的 crate 可以互相搭配
 - `cargo add <套件名>` 是加入外部套件最快的方式
-- crates.io 是 Rust 的官方套件庫，docs.rs 提供自動產生的文件
+- [crates.io](https://crates.io) 是 Rust 的官方套件庫，[docs.rs](https://docs.rs) 提供自動產生的文件
 - 版本號 `"1.0"` 等同 `"^1.0"`，允許相容升級；`"=1.0.0"` 鎖定精確版本
 - `features` 可以開啟套件的可選功能
