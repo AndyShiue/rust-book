@@ -12,24 +12,69 @@
 
 ### 第一種：方法語法
 
-```rust,ignore
-dog.speak();
+```rust,no_run
+# trait Animal {
+#     fn speak(&self);
+# }
+#
+# struct Dog;
+#
+# impl Animal for Dog {
+#     fn speak(&self) {
+#         println!("汪！");
+#     }
+# }
+#
+# fn main() {
+#     let dog = Dog;
+    dog.speak();
+# }
 ```
 
 最常用的寫法。編譯器會自動找到對應的方法。
 
 ### 第二種：指定 Trait 或型別
 
-```rust,ignore
-Animal::speak(&dog);
+```rust,no_run
+# trait Animal {
+#     fn speak(&self);
+# }
+#
+# struct Dog;
+#
+# impl Animal for Dog {
+#     fn speak(&self) {
+#         println!("汪！");
+#     }
+# }
+#
+# fn main() {
+#     let dog = Dog;
+    Animal::speak(&dog);
+# }
 ```
 
 明確告訴編譯器「我要呼叫 `Animal` trait 上的 `speak`」。`&dog` 就是原本的 `&self`。
 
 ### 第三種：完全限定語法（fully qualified syntax）
 
-```rust,ignore
-<Dog as Animal>::speak(&dog);
+```rust,no_run
+# trait Animal {
+#     fn speak(&self);
+# }
+#
+# struct Dog;
+#
+# impl Animal for Dog {
+#     fn speak(&self) {
+#         println!("汪！");
+#     }
+# }
+#
+# fn main() {
+#     let dog = Dog;
+    <Dog as Animal>::speak(&dog);
+# }
 ```
 
 最明確的寫法：「在 `Dog` 實作的 `Animal` trait 上，呼叫 `speak` 方法，傳入 `&dog`」。
@@ -56,9 +101,33 @@ trait Robot {
 
 如果是沒有 `self` 參數的 **associated function**，因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
 
-```rust,ignore
-// 如果多個 trait 都有 create() 這個 associated function
-let x = <MyType as TraitA>::create();
+```rust,no_run
+# trait TraitA {
+#     fn create() -> i32;
+# }
+#
+# trait TraitB {
+#     fn create() -> i32;
+# }
+#
+# struct MyType;
+#
+# impl TraitA for MyType {
+#     fn create() -> i32 {
+#         0
+#     }
+# }
+#
+# impl TraitB for MyType {
+#     fn create() -> i32 {
+#         1
+#     }
+# }
+#
+# fn main() {
+    // 如果多個 trait 都有 create() 這個 associated function
+    let x = <MyType as TraitA>::create();
+# }
 ```
 
 ### 存取 associated type

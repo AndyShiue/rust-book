@@ -14,100 +14,155 @@
 
 ### 什麼是參考迴圈？
 
-想像 A 持有 `Rc` 指向 B，B 也持有 `Rc` 指向 A。當我們不再需要它們的時候：
+想像兩個節點 A 和 B，A 持有 `Rc` 指向 B，B 也持有 `Rc` 指向 A。當外部不再持有它們的時候：
 
-1. A 的 `Rc` 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放
-2. B 的 `Rc` 被 drop → B 的計數減一，但 A 還在指向 B → 計數不為零 → B 不釋放
+1. A 的外部 `Rc` 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放
+2. B 的外部 `Rc` 被 drop → B 的計數減一，但 A 還在指向 B → 計數不為零 → B 不釋放
 
-結果：A 和 B **永遠不會被釋放**，這就是記憶體洩漏。
+結果：A 和 B **永遠不會被釋放**，這就是記憶體洩漏。從外面看不見、卻互相撐著的環——這才是迴圈問題的本質。
 
-### Weak 救場
+### Weak 是什麼
 
-`Weak<T>` 是一種「弱參考」——它指向同一筆資料，但**不會增加強參考計數（strong count）**。這意味著 `Weak` 不會阻止資料被釋放。
-
-用法：
+`Weak<T>` 是一種「弱參考」——它指向同一筆資料，但**不會增加 strong count**。
 
 ```rust,no_run
-use std::rc::{Rc, Weak};
-
-fn main() {
+# use std::rc::{Rc, Weak};
+#
+# fn main() {
     let strong = Rc::new(42);
     let weak: Weak<i32> = Rc::downgrade(&strong);
-}
+# }
 ```
 
-`Rc::downgrade` 把 `Rc` 降級成 `Weak`。
+`Rc::downgrade` 把 `Rc` 降級成 `Weak`。Rc 內部有**兩個**計數器：strong count 和 weak count。`Rc::clone()` 增加 strong count，`Rc::downgrade()` 只增加 weak count。Rc 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。
 
-為什麼 `downgrade` 不會增加 strong count？因為 Rc 內部有**兩個**計數器：strong count 和 weak count。`clone()` 增加 strong count，`downgrade()` 只增加 weak count。而 Rc 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。這就是 `Weak` 不會阻止釋放的原因。
+因為 `Weak` 指向的資料可能已經被釋放了，你不能直接存取。必須先 `upgrade()`：
 
-### 使用 Weak 的值
-
-因為 `Weak` 指向的資料可能已經被釋放了（strong count 歸零），所以你不能直接存取。必須先 `upgrade()`：
-
-```rust,ignore
+```rust
+# use std::rc::{Rc, Weak};
+#
+# fn main() {
+#     let strong = Rc::new(42);
+#     let weak: Weak<i32> = Rc::downgrade(&strong);
+#
     match weak.upgrade() {
         Some(rc) => println!("還在：{}", rc),
         None => println!("已經被釋放了"),
     }
+# }
 ```
 
 `upgrade()` 回傳 `Option<Rc<T>>`——如果資料還在，給你一個 `Rc`；如果已經釋放，回傳 `None`。
 
 ### 用 Weak 打破迴圈
 
-回到剛才 A 和 B 的例子：只要把其中一個方向改成 `Weak`，就能打破迴圈。通常的做法是：
+回到剛才的例子。關鍵問題是：strong count 構成的圖上有環。只要把其中一個方向改成 `Weak`，strong count 的圖上就沒有環了——因為 Weak 不貢獻 strong count。
 
-- 父 → 子：用 `Rc`（父親擁有子女）
-- 子 → 父：用 `Weak`（子女知道父親存在，但不擁有）
+用一個具體的例子來說明。假設我們想建一個**雙向鏈結串列（doubly linked list）**——每個節點同時指向前一個和後一個節點。如果兩個方向都用 `Rc`，相鄰的兩個節點就形成迴圈。
 
-這樣當外部的 `Rc` 都 drop 之後，strong count 能夠正常歸零，記憶體就能正確釋放。
+解法是：`next`（往後）用 `Rc`，`prev`（往前）用 `Weak`：
+
+```rust,no_run
+use std::rc::{Rc, Weak};
+use std::cell::RefCell;
+
+struct Node<T> {
+    value: T,
+    next: Option<Rc<RefCell<Node<T>>>>,
+    prev: Option<Weak<RefCell<Node<T>>>>,
+}
+#
+# fn main() {}
+```
+
+為什麼這樣就不會迴圈？看 strong count 的圖：
+
+```text
+外部 ──Rc──→ A ──Rc──→ B ──Rc──→ C
+              ←·Weak·←   ←·Weak·←
+```
+
+Weak 那些邊不算在 strong count 裡。strong count 的圖只有從左到右的箭頭，是一條鏈，沒有環。
+
+外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → … 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
+
+### upgrade 出來的 Rc 會造成問題嗎？
+
+你可能會想：「如果我 upgrade 一個 Weak 拿到 Rc 之後一直握著不放，不就多了一個 strong count 嗎？」
+
+沒錯，upgrade 出來的 `Rc` 確實會讓 strong count +1。但這個 `Rc` 是一個**獨立的變數**——它的 strong count 貢獻記在「持有那個 Rc 的變數」頭上，不是記在原本的 `Weak` 欄位上。`Weak` 欄位本身對 strong count 的貢獻永遠是 0。
+
+迴圈問題在資料結構建好的當下就已經被解決或沒被解決了，跟你之後怎麼 upgrade 完全無關。
 
 ## 範例程式碼
 
 ```rust
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
+use std::cell::RefCell;
+
+struct Node<T> {
+    value: T,
+    next: Option<Rc<RefCell<Node<T>>>>,
+    prev: Option<Weak<RefCell<Node<T>>>>,
+}
+
+impl<T> Node<T> {
+    fn new(value: T) -> Rc<RefCell<Node<T>>> {
+        Rc::new(RefCell::new(Node { value, next: None, prev: None }))
+    }
+}
+
+/// 把 b 接在 a 後面
+fn link<T>(a: &Rc<RefCell<Node<T>>>, b: &Rc<RefCell<Node<T>>>) {
+    a.borrow_mut().next = Some(Rc::clone(b));
+    b.borrow_mut().prev = Some(Rc::downgrade(a));
+}
 
 fn main() {
-    // ===== 基本 Weak 用法 =====
-    let strong = Rc::new(String::from("Hello"));
-    println!("strong count = {}", Rc::strong_count(&strong));
+    let a = Node::new(1);
+    let b = Node::new(2);
+    let c = Node::new(3);
 
-    let weak = Rc::downgrade(&strong);
-    println!("strong count = {}", Rc::strong_count(&strong)); // 還是 1
-    println!("weak count = {}", Rc::weak_count(&strong));     // 1
+    link(&a, &b);
+    link(&b, &c);
 
-    // upgrade：Weak → Option<Rc<T>>
-    match weak.upgrade() {
-        Some(rc) => println!("upgrade 成功：{}", rc),
-        None => println!("已被釋放"),
+    // 從前往後走（用 Rc）
+    print!("往後走：");
+    let mut current = Some(Rc::clone(&a));
+    while let Some(node) = current {
+        print!("{} ", node.borrow().value);
+        // next 是 Option<Rc<...>>，as_ref 變成 Option<&Rc<...>>，再 map clone 出新的 Rc
+        current = node.borrow().next.as_ref().map(Rc::clone);
     }
+    println!();
 
-    // drop 強參考
-    drop(strong);
-
-    // 再次 upgrade
-    match weak.upgrade() {
-        Some(rc) => println!("upgrade 成功：{}", rc),
-        None => println!("已被釋放——strong 沒了，Weak 也拿不到了"),
+    // 從後往前走（用 Weak，需要 upgrade）
+    print!("往前走：");
+    let mut current = Some(Rc::clone(&c));
+    while let Some(node) = current {
+        print!("{} ", node.borrow().value);
+        current = node.borrow().prev.as_ref().and_then(Weak::upgrade);
     }
+    println!();
 
-    // ===== Weak 的生命週期 =====
-    let weak_ref;
-    {
-        let temporary = Rc::new(100);
-        weak_ref = Rc::downgrade(&temporary);
-        println!("scope 內 upgrade：{:?}", weak_ref.upgrade()); // Some(100)
-    }
-    // temporary 已被 drop
-    println!("scope 外 upgrade：{:?}", weak_ref.upgrade()); // None
+    // 檢查計數
+    // strong count 記在被指向的節點上：a.next 指向 b → b 的 strong +1，b.next 指向 c → c 的 strong +1
+    // weak count 也記在被指向的節點上：b.prev 指向 a → a 的 weak +1，c.prev 指向 b → b 的 weak +1
+    // a: strong=1（變數 a），weak=1（b.prev）
+    // b: strong=2（變數 b + a.next），weak=1（c.prev）
+    // c: strong=2（變數 c + b.next），weak=0（沒有節點的 prev 指向 c）
+    println!("a strong={}, weak={}", Rc::strong_count(&a), Rc::weak_count(&a));
+    println!("b strong={}, weak={}", Rc::strong_count(&b), Rc::weak_count(&b));
+    println!("c strong={}, weak={}", Rc::strong_count(&c), Rc::weak_count(&c));
 }
 ```
 
 ## 重點整理
 
-- `Rc` 的參考迴圈會造成記憶體洩漏——計數永遠不會歸零，記憶體永遠不會釋放
-- `Rc::downgrade(&rc)` 建立 `Weak<T>`，**不增加 strong count**
-- `weak.upgrade()` 回傳 `Option<Rc<T>>`——資料還在就給你 `Some(rc)`，被釋放了就是 `None`
-- 用 `Weak` 打破迴圈的常見模式：強方向用 `Rc`，反向用 `Weak`
-- 典型應用：樹狀結構中「父 → 子」用 `Rc`，「子 → 父」用 `Weak`
+- `Rc` 的參考迴圈會造成記憶體洩漏——strong count 永遠無法歸零
+- `Weak` 不增加 strong count，所以不會阻止資料被釋放
+- `Rc::downgrade(&rc)` 建立 `Weak<T>`，`weak.upgrade()` 回傳 `Option<Rc<T>>`
+- 用 `Weak` 打破迴圈：讓 strong count 構成的圖上不會有環
+- 雙向鏈結串列的做法：`next` 用 `Rc`（擁有後繼），`prev` 用 `Weak`（觀察前驅）
+- `Weak` 欄位對 strong count 的貢獻永遠是 0，upgrade 出來的 `Rc` 是獨立的變數
 - `Rc::strong_count()` 和 `Rc::weak_count()` 可以查看目前的計數
