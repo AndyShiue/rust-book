@@ -179,11 +179,11 @@ fn show_pointer_sizes() {
     use std::mem::size_of;
 
     println!("--- 指標大小比較 ---");
-    println!("&i32      = {} bytes", size_of::<&i32>());     // 8
-    println!("&[i32]    = {} bytes", size_of::<&[i32]>());   // 16（胖指標）
-    println!("&str      = {} bytes", size_of::<&str>());     // 16（胖指標）
-    println!("Box<i32>  = {} bytes", size_of::<Box<i32>>()); // 8
-    println!("Box<str>  = {} bytes", size_of::<Box<str>>()); // 16（胖指標）
+    println!("&i32     = {} bytes", size_of::<&i32>());     // 8
+    println!("&[i32]   = {} bytes", size_of::<&[i32]>());   // 16（胖指標）
+    println!("&str     = {} bytes", size_of::<&str>());     // 16（胖指標）
+    println!("Box<i32> = {} bytes", size_of::<Box<i32>>()); // 8
+    println!("Box<str> = {} bytes", size_of::<Box<str>>()); // 16（胖指標）
 }
 
 fn main() {
