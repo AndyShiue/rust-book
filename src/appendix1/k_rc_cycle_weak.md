@@ -84,7 +84,7 @@ struct Node<T> {
 
 Weak 那些邊不算在 strong count 裡。strong count 的圖只有從左到右的箭頭，是一條鏈，沒有環。
 
-外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → … 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
+外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → …… 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
 
 ### upgrade 出來的 Rc 會造成問題嗎？
 
