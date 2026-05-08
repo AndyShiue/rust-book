@@ -223,10 +223,10 @@ mod tests {
 發布指令流程：
 
 ```bash
-cargo test           # 確認測試通過
-cargo doc --open     # 檢查文件
-cargo package        # 模擬打包
-cargo publish        # 正式發布！
+cargo test       # 確認測試通過
+cargo doc --open # 檢查文件
+cargo package    # 模擬打包
+cargo publish    # 正式發布！
 ```
 
 ## 重點整理
