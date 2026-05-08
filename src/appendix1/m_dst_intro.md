@@ -71,9 +71,9 @@ fn print_it<T: ?Sized>(val: &T) { ... }
 
 ### Trait 裡的 Self 預設是 `?Sized`
 
-前面說泛型參數 `T` 預設有 `Sized` bound。但 trait 裡的 `Self` 是個例外——它預設是 `?Sized` 的，也就是說 `Self` 不一定是 Sized。
+前面說泛型參數 `T` 預設有 `Sized` bound。但 trait 裡的 `Self` 是個例外——它預設是 `?Sized` 的，也就是說 `Self` 不一定是 `Sized`。
 
-還記得第四章第 8 集介紹的 `Clone` 嗎？它的方法是 `fn clone(&self) -> Self`——直接回傳 `Self`。由於 `Self` 預設可能不是 Sized，而回傳的型別必須有已知大小，所以 `Clone` 實際上的定義是：
+還記得第四章第 8 集介紹的 `Clone` 嗎？它的方法是 `fn clone(&self) -> Self`——直接回傳 `Self`。由於 `Self` 預設可能不是 `Sized`，而回傳的型別必須有已知大小，所以 `Clone` 實際上的定義是：
 
 ```rust,no_run
 trait Clone: Sized {
