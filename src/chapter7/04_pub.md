@@ -199,9 +199,9 @@ mod shapes {
 
 ```rust,compile_fail
 mod database {
+    // 整個 crate 內部都能呼叫，但如果這是 library，
+    // 使用你 library 的人看不到這個函數
     pub(crate) fn connect() -> String {
-        // 整個 crate 內部都能呼叫，但如果這是 library，
-        // 使用你 library 的人看不到這個函數
         String::from("connected")
     }
 
