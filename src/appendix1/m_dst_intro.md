@@ -100,7 +100,7 @@ where
 # fn main() {}
 ```
 
-如果你試過要把 `str` 或 `[T]` 放進 `Cow`——例如寫 `Cow<str>`——你會發現編譯不過。因為泛型參數 `B` 預設要求 `Sized`，而 `str` 不是 `Sized`。
+如果你試過要把 `str` 或 `[T]` 放進 `Cow`——例如寫 `Cow<'_, str>`——你會發現編譯不過。因為泛型參數 `B` 預設要求 `Sized`，而 `str` 不是 `Sized`。
 
 加上 `?Sized` 就能解決：
 
