@@ -185,6 +185,8 @@ mod shapes {
         }
     }
 }
+#
+# fn main() {}
 ```
 
 ### pub(crate)、pub(super)、pub(in path)
