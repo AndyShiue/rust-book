@@ -160,13 +160,13 @@ mod tests {
     #[test]
     fn test_clamp() {
         assert_eq!(clamp(5, 0, 10), 5);   // 在範圍內，不變
-        assert_eq!(clamp(-3, 0, 10), 0);   // 低於下限，變成 min
-        assert_eq!(clamp(15, 0, 10), 10);  // 超過上限，變成 max
+        assert_eq!(clamp(-3, 0, 10), 0);  // 低於下限，變成 min
+        assert_eq!(clamp(15, 0, 10), 10); // 超過上限，變成 max
     }
 
     #[test]
     fn test_not_equal() {
-        assert_ne!(abs(-5), -5);  // abs(-5) 應該是 5，不是 -5
+        assert_ne!(abs(-5), -5); // abs(-5) 應該是 5，不是 -5
     }
 
     // 測試預期中的 panic
