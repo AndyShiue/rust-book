@@ -35,7 +35,7 @@ where
 - **`B: 'a`**：lifetime bound（前幾集學的），B 裡面的參考必須活得過 `'a`
 - **`B: ToOwned`**：trait bound，B 必須實作 `ToOwned`
 - **`Borrowed(&'a B)`**：借用的版本，存一個 `&'a B`
-- **`Owned(...)`**：擁有的版本，型別由 `ToOwned` 的 associated type `Owned` 決定
+- **`Owned(...)`**：擁有所有權的版本，型別由 `ToOwned` 的 associated type `Owned` 決定
 
 `ToOwned` 是一個 trait，它有一個 associated type `Owned`，代表「擁有所有權版本的型別」。
 
