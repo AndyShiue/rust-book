@@ -38,7 +38,7 @@ Animal::speak(&dog);
 
 大部分時候第一種就夠了。但當**多個 trait 定義了同名方法**的時候，編譯器不知道你要呼叫哪一個，就需要更明確的語法：
 
-```rust
+```rust,no_run
 trait Animal {
     fn name(&self) -> &str;
 }

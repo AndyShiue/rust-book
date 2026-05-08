@@ -116,14 +116,14 @@ fn describe_score(score: u32) -> &'static str {
 }
 
 trait Storage {
-    fn save(&self, data: &str);
+    fn save(&mut self, data: &str);
     fn load(&self) -> String;
 }
 
 struct LocalStorage;
 
 impl Storage for LocalStorage {
-    fn save(&self, data: &str) {
+    fn save(&mut self, data: &str) {
         println!("儲存到本地：{}", data);
     }
 
@@ -150,7 +150,7 @@ fn main() {
     println!("85 分的評等：{}", grade);
 
     // unimplemented! — 沒有實作的功能
-    let storage = LocalStorage;
+    let mut storage = LocalStorage;
     storage.save("hello");
     // storage.load(); // 取消註解會 panic：not implemented
 
