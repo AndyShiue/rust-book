@@ -12,7 +12,7 @@
 
 假設你有一個 `math` mod，想把它搬到自己的檔案。做法很簡單：
 
-1. 在 `main.rs`（或 `lib.rs`）裡寫 `mod math;`（注意是分號，不是大括號）
+1. 在 `main.rs`（或 `lib.rs`）裡寫 `mod math;`（注意結尾是分號，不是大括號）
 2. 建立 `math.rs`，把 mod 的內容放進去
 
 ```ignore
