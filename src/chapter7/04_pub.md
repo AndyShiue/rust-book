@@ -209,13 +209,13 @@ mod database {
     // 那裡面的東西即使標了 pub(super) 也沒用，
     // 因為外面根本看不到這個 mod，更別說裡面的東西了。
     pub mod queries {
+        // 只有 database mod（父 mod）能看到
         pub(super) fn raw_query() -> String {
-            // 只有 database mod（父 mod）能看到
             String::from("SELECT * FROM users")
         }
 
         pub fn safe_query() -> String {
-            let raw = raw_query();  // 同 mod 內可以呼叫
+            let raw = raw_query(); // 同 mod 內可以呼叫
             format!("SAFE: {}", raw)
         }
     }
@@ -232,7 +232,7 @@ mod app {
         }
 
         pub fn get_key() -> &'static str {
-            internal::secret_key()  // OK，我們在 app::api 裡
+            internal::secret_key() // OK，我們在 app::api 裡
         }
     }
 }
