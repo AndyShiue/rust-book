@@ -58,7 +58,7 @@
 
 回到剛才的例子。關鍵問題是：strong count 構成的圖上有環。只要把其中一個方向改成 `Weak`，strong count 的圖上就沒有環了——因為 Weak 不貢獻 strong count。
 
-用一個具體的例子來說明。假設我們想建一個**雙向鏈結串列（doubly linked list）**——每個節點同時指向前一個和後一個節點。如果兩個方向都用 `Rc`，相鄰的兩個節點就形成迴圈。
+用一個具體的例子來說明。假設我們想建一個**雙向鏈結串列（doubly linked list）**——每個節點同時指向前一個和後一個節點，這樣我們要從頭走到尾還是從尾走到頭都很容易。如果兩個方向都用 `Rc`，相鄰的兩個節點就形成迴圈。
 
 解法是：`next`（往後）用 `Rc`，`prev`（往前）用 `Weak`：
 
@@ -84,7 +84,7 @@ struct Node<T> {
 
 Weak 那些邊不算在 strong count 裡。strong count 的圖只有從左到右的箭頭，是一條鏈，沒有環。
 
-外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → … 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
+外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → …… 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
 
 ### upgrade 出來的 Rc 會造成問題嗎？
 
