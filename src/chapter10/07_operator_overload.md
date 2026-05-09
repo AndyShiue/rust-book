@@ -11,7 +11,7 @@ Rust 裡 `a + b` 其實是 `a.add(b)` 的簡寫——`+` 對應 `std::ops::Add` 
 
 ### Add trait 的定義
 
-```rust,no_run
+```rust,noplayground
 trait Add<Rhs = Self> {
     type Output;
     fn add(self, rhs: Rhs) -> Self::Output;
@@ -27,7 +27,7 @@ trait Add<Rhs = Self> {
 
 ### 幫 Point 實作 Add
 
-```rust,no_run
+```rust,noplayground
 use std::ops::Add;
 
 #[derive(Debug)]
@@ -88,7 +88,7 @@ impl Add for Point {
 
 Vec 能用 `v[i]` 就是因為它實作了 `Index`：
 
-```rust,no_run
+```rust,noplayground
 use std::ops::Index;
 
 struct MyVec(Vec<i32>);
@@ -107,7 +107,7 @@ impl Index<usize> for MyVec {
 
 覆蓋 `Rhs` 的預設值：
 
-```rust,no_run
+```rust,noplayground
 use std::ops::Add;
 
 struct Meters(f64);

@@ -9,7 +9,7 @@
 
 除了方法和 associated type，trait 裡也能定義常數：
 
-```rust,no_run
+```rust,noplayground
 trait HasLimit {
     const LIMIT: i32;
 }

@@ -9,7 +9,7 @@
 
 struct 的每個欄位各佔一塊記憶體。union 不一樣——**所有欄位共享同一塊記憶體**：
 
-```rust,no_run
+```rust,noplayground
 union IntOrFloat {
     i: i32,
     f: f32,
@@ -22,7 +22,7 @@ union IntOrFloat {
 
 ### 寫入不需要 unsafe，讀取需要
 
-```rust,no_run
+```rust,noplayground
 # union IntOrFloat {
 #     i: i32,
 #     f: f32,

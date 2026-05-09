@@ -46,7 +46,7 @@ Rust 的所有權和借用規則能防止很多問題——例如同時不能有
 
 你不需要手動實作 Send 或 Sync。它們是所謂的 **auto trait**——編譯器會自動幫你的型別實作。規則很簡單：如果一個型別裡存的資料都是 Send，那它本身預設就是 Send。Sync 同理。
 
-```rust,no_run
+```rust,noplayground
 struct MyData {
     x: i32,    // Send + Sync
     s: String, // Send + Sync

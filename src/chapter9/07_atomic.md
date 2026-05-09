@@ -24,7 +24,7 @@
 
 標準庫在 `std::sync::atomic` 提供了幾種 atomic 型別，最常用的是整數和布林：
 
-```rust,no_run
+```rust,noplayground
 use std::sync::atomic::{AtomicI32, AtomicBool, Ordering};
 
 fn main() {
@@ -35,7 +35,7 @@ fn main() {
 
 ### 基本操作
 
-```rust,no_run
+```rust,noplayground
 use std::sync::atomic::{AtomicI32, Ordering};
 
 fn main() {

@@ -67,7 +67,7 @@ fn main() {
 
 ### 和字串的轉換
 
-```rust,no_run
+```rust,noplayground
 use std::path::{Path, PathBuf};
 
 fn main() {

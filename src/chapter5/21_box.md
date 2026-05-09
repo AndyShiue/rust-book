@@ -36,7 +36,7 @@ Rust 需要在編譯時知道每個型別的大小。但這裡有個問題：要
 
 解法就是用 Box：
 
-```rust,no_run
+```rust,noplayground
 enum List {
     Node(i32, Box<List>),
     Empty,

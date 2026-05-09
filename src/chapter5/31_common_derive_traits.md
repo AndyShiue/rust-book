@@ -11,7 +11,7 @@
 
 `PartialEq` 讓你的型別可以用 `==` 和 `!=` 比較。
 
-```rust,no_run
+```rust,noplayground
 #[derive(PartialEq)]
 struct Point { x: i32, y: i32 }
 #
@@ -73,7 +73,7 @@ pub trait Ord: PartialOrd + Eq { ... }
 
 如果 struct 的每個欄位都有 `Default`，你就可以 derive 它：
 
-```rust,no_run
+```rust,noplayground
 #[derive(Debug, Default)]
 struct Config {
     width: i32,

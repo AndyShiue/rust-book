@@ -21,7 +21,7 @@ struct Excerpt {
 
 解法是加上生命週期參數：
 
-```rust,no_run
+```rust,noplayground
 struct Excerpt<'a> {
     text: &'a str,
 }
@@ -33,7 +33,7 @@ struct Excerpt<'a> {
 
 enum 也一樣——如果 variant 攜帶參考，就需要生命週期：
 
-```rust,no_run
+```rust,noplayground
 enum Token<'a> {
     Word(&'a str),
     Number(i32),
@@ -46,7 +46,7 @@ enum Token<'a> {
 
 ### 使用帶生命週期的型別
 
-```rust,no_run
+```rust,noplayground
 # struct Excerpt<'a> {
 #     text: &'a str,
 # }
@@ -63,7 +63,7 @@ enum Token<'a> {
 
 當生命週期可以被推斷的時候，你可以用 `'_` 來簡化：
 
-```rust,no_run
+```rust,noplayground
 # struct Excerpt<'a> {
 #     text: &'a str,
 # }
@@ -79,7 +79,7 @@ fn print_excerpt(e: &Excerpt<'_>) {
 
 ### impl 帶生命週期的 struct
 
-```rust,no_run
+```rust,noplayground
 # struct Excerpt<'a> {
 #     text: &'a str,
 # }
@@ -101,7 +101,7 @@ impl<'a> Excerpt<'a> {
 
 如果函數接收帶 lifetime 的型別，可以搭配 `'_` 讓編譯器推斷：
 
-```rust,no_run
+```rust,noplayground
 # struct Excerpt<'a> {
 #     text: &'a str,
 # }
@@ -117,7 +117,7 @@ fn into_text(e: Excerpt<'_>) -> &str {
 
 完整寫出來是：
 
-```rust,no_run
+```rust,noplayground
 # struct Excerpt<'a> {
 #     text: &'a str,
 # }

@@ -17,7 +17,7 @@
 
 ### & 就是「借」
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -66,7 +66,7 @@ fn main() {
 
 所以像這樣的函數：
 
-```rust,no_run
+```rust,noplayground
 fn sum(nums: &[i32]) -> i32 {
     let mut total = 0;
     for x in nums {

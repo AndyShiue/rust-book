@@ -11,7 +11,7 @@
 
 假設我們想做一個「也許有值」的型別，裡面可能有東西，也可能是空的：
 
-```rust,no_run
+```rust,noplayground
 enum Maybe<T> {
     Something(T),
     Nothing,
@@ -24,7 +24,7 @@ enum Maybe<T> {
 
 泛型 enum 也可以有多個型別參數。比如一個「二選一」的型別：
 
-```rust,no_run
+```rust,noplayground
 enum Either<L, R> {
     Left(L),
     Right(R),

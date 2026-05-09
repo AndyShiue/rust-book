@@ -60,7 +60,7 @@ fn longer(a: &str, b: &str) -> &str {
 
 解法是用生命週期標注，明確描述回傳值和參數的關係：
 
-```rust,no_run
+```rust,noplayground
 fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
     if a.len() > b.len() {
         a
@@ -107,7 +107,7 @@ fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
 
 可變參考也可以加生命週期標注，寫成 `&'a mut T`——就是把 `'a` 放在 `&` 和 `mut` 之間。`'a` 一樣描述這個參考能活多久。
 
-```rust,no_run
+```rust,noplayground
 fn replace<'a>(target: &'a mut String, new_value: &str) {
     target.clear();
     target.push_str(new_value);
@@ -124,7 +124,7 @@ fn replace<'a>(target: &'a mut String, new_value: &str) {
 
 如果函數只有一個參考參數，Rust 通常能自動推斷（下一集會詳細講）：
 
-```rust,no_run
+```rust,noplayground
 fn first_char(s: &str) -> &str {
     &s[..1] // 回傳值的壽命顯然和 s 一樣，不用手動標
 }

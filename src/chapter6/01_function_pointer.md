@@ -11,7 +11,7 @@
 
 假設你有一個函數：
 
-```rust,no_run
+```rust,noplayground
 fn add_one(x: i32) -> i32 {
     x + 1
 }
@@ -25,7 +25,7 @@ fn add_one(x: i32) -> i32 {
 
 你可以把函數名稱直接賦值給一個變數：
 
-```rust,no_run
+```rust,noplayground
 # fn add_one(x: i32) -> i32 {
 #     x + 1
 # }
@@ -41,7 +41,7 @@ fn add_one(x: i32) -> i32 {
 
 函數指標最常用的場景之一，就是「把一個函數傳給另一個函數」：
 
-```rust,no_run
+```rust,noplayground
 fn apply(f: fn(i32) -> i32, value: i32) -> i32 {
     f(value)
 }

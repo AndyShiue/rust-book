@@ -11,7 +11,7 @@
 
 ### 帶其他型別參數的 trait
 
-```rust,no_run
+```rust,noplayground
 trait Convert<T> {
     fn convert(self) -> T;
 }
@@ -23,7 +23,7 @@ trait Convert<T> {
 
 ### 實作多參數 Trait
 
-```rust,no_run
+```rust,noplayground
 # trait Convert<T> {
 #     fn convert(self) -> T;
 # }
@@ -41,7 +41,7 @@ impl Convert<(i32,)> for i32 {
 
 同一個型別可以實作多次，只要型別參數不同：
 
-```rust,no_run
+```rust,noplayground
 # trait Convert<T> {
 #     fn convert(self) -> T;
 # }

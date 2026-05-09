@@ -130,7 +130,7 @@ categories = ["mathematics"]
 
 **src/lib.rs：**
 
-```rust,no_run
+```rust,noplayground
 //! # My Math Lib
 //!
 //! 提供簡單好用的數學函數。

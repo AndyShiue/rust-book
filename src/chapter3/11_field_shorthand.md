@@ -9,7 +9,7 @@
 
 Rust 提供了一個簡寫：如果變數名和欄位名一樣，可以只寫一次：
 
-```rust,no_run
+```rust,noplayground
 # enum Shape {
 #     Circle { radius: f64 },
 #     Rectangle { width: i32, height: i32 },
@@ -26,7 +26,7 @@ Rust 提供了一個簡寫：如果變數名和欄位名一樣，可以只寫一
 
 這個簡寫不只在 match 裡可以用，**建立 struct 的時候也可以用**：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

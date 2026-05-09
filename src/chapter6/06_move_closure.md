@@ -46,7 +46,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有所有權的值**（`T`）：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // 沒有 move：閉包借用 name，struct 裡存的是參考
     let name = String::from("Alice");

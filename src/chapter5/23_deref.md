@@ -139,7 +139,7 @@ Rust 從外往內找方法：外層智慧指標自身的方法優先於內層型
 
 一個常見的例子是 `clone`。`Rc` 本身有 `clone` 方法（增加參考計數），`T` 可能也有 `clone` 方法（深度複製資料）。直接呼叫 `.clone()` 會拿到 Rc 的 clone：
 
-```rust,no_run
+```rust,noplayground
 use std::rc::Rc;
 
 fn main() {
@@ -150,7 +150,7 @@ fn main() {
 
 如果你想呼叫內層 String 的 clone，可以明確寫出來：
 
-```rust,no_run
+```rust,noplayground
 # use std::rc::Rc;
 #
 # fn main() {

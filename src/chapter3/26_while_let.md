@@ -19,7 +19,7 @@ while let 模式 = 值 {
 
 為了示範 `while let`，我們用一個自訂 enum 來模擬「可能有值、可能結束」的情況：
 
-```rust,no_run
+```rust,noplayground
 enum Step {
     Value(i32),
     Done,

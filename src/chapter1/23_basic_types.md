@@ -39,7 +39,7 @@ fn main() {
 
 因為 Rust 很聰明！它會看你給的值，自動**推斷**型別：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let x = 5;    // Rust 自動判斷：這是 i32
     let y = 3.14; // Rust 自動判斷：這是 f64

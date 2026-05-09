@@ -46,7 +46,7 @@ fn main() {
 
 `Rc<T>` 可以共享資料，但不能改。`RefCell<T>` 可以改，但不能共享。把它們組合起來：
 
-```rust,no_run
+```rust,noplayground
 use std::rc::Rc;
 use std::cell::RefCell;
 

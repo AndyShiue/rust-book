@@ -11,7 +11,7 @@
 
 `From<T>` 的定義（簡化版）：
 
-```rust,no_run
+```rust,noplayground
 trait From<T> {
     fn from(value: T) -> Self;
 }
@@ -23,7 +23,7 @@ trait From<T> {
 
 你一定見過這個：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let s = String::from("hello");
 # }
@@ -35,7 +35,7 @@ trait From<T> {
 
 `Into<T>` 是 `From` 的反方向：
 
-```rust,no_run
+```rust,noplayground
 trait Into<T> {
     fn into(self) -> T;
 }

@@ -9,7 +9,7 @@
 
 比如說，「形狀」可以是圓形或長方形。圓形需要一個半徑，長方形需要寬和高——它們需要的資料不一樣。在 Rust 裡，你可以讓每個 variant 攜帶資料：
 
-```rust,no_run
+```rust,noplayground
 enum Shape {
     Circle(f64),         // 攜帶一個 f64（半徑）
     Rectangle(i32, i32), // 攜帶兩個 i32（寬、高）
@@ -22,7 +22,7 @@ enum Shape {
 
 建立值的方式就像呼叫函數一樣，把資料放在括號裡：
 
-```rust,no_run
+```rust,noplayground
 # enum Shape {
 #     Circle(f64),
 #     Rectangle(i32, i32),

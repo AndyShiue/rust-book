@@ -9,7 +9,7 @@
 
 大部分函數執行完會回傳一個值。但有些函數**永遠不會回傳**：
 
-```rust,no_run
+```rust,noplayground
 fn forever() -> ! {
     loop {
         // 永遠跑下去
@@ -36,7 +36,7 @@ fn forever() -> ! {
 
 你其實一直在用這個特性：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let option = Some(1);
     let x: i32 = match option {

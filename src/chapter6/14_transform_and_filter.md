@@ -9,7 +9,7 @@
 
 `map` 對每個元素套用閉包，產出轉換後的新元素：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let doubled: Vec<i32> = vec![1, 2, 3].iter().map(|x| x * 2).collect();
     // [2, 4, 6]
@@ -22,7 +22,7 @@
 
 `flat_map` 等於先 `map` 再 `flatten`（上一集學的）。每個元素經過閉包轉換成一個迭代器，然後全部攤平：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let words = vec!["abc", "de", "f"];
     let chars: Vec<char> = words.iter().flat_map(|s| s.chars()).collect();
@@ -36,7 +36,7 @@
 
 `filter` 只保留閉包回傳 `true` 的元素：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let evens: Vec<&i32> = vec![1, 2, 3, 4, 5].iter().filter(|&&x| x % 2 == 0).collect();
     // [&2, &4]
@@ -52,7 +52,7 @@
 - `.copied()` —— 要求 `T: Copy`，對每個 `&T` 做 copy 得到 `T`
 - `.cloned()` —— 要求 `T: Clone`，對每個 `&T` 呼叫 `.clone()` 得到 `T`
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let numbers = vec![1, 2, 3];
     let owned: Vec<i32> = numbers.iter().copied().collect();
@@ -62,7 +62,7 @@
 
 `.copied()` 常搭配 `.filter()` 一起用，可以避免 `&&T` 的困擾：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let evens: Vec<i32> = vec![1, 2, 3, 4, 5]
         .iter()
@@ -75,7 +75,7 @@
 
 ### .rev() —— 反轉迭代順序
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let reversed: Vec<i32> = (1..=5).rev().collect();
     // [5, 4, 3, 2, 1]
@@ -88,7 +88,7 @@
 
 迭代器的方法可以自由串接，形成資料處理管道：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let names = vec!["Andy", "Bob", "Cindy", "David"];
     let result: Vec<String> = names

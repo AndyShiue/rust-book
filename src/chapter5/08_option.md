@@ -17,7 +17,7 @@ Rust 的解法很簡單：**沒有 null。**
 
 `Option<T>` 長這樣（標準庫已經幫你定義好了）：
 
-```rust,no_run
+```rust,noplayground
 enum Option<T> {
     Some(T),
     None,
@@ -37,7 +37,7 @@ enum Option<T> {
 
 這就是用 `match` 的時候了：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let maybe_value = Some("bruh");
     match maybe_value {

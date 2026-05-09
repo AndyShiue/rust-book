@@ -25,7 +25,7 @@ String 擁有一段文字，&str 借用一段文字。Vec 擁有一組元素，&
 
 Vec 的資料在 heap 上，所以它不是 Copy。賦值和傳入函數都會 move：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let v1 = vec![1, 2, 3];
     let v2 = v1; // move！v1 不能再用了

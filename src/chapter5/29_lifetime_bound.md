@@ -11,7 +11,7 @@
 
 看這個 struct：
 
-```rust,no_run
+```rust,noplayground
 struct Ref<'a, T> {
     value: &'a T,
 }
@@ -32,7 +32,7 @@ struct Ref<'a, T> {
 
 在很多情況下，編譯器看到 `&'a T` 就知道需要 `T: 'a`，會自動幫你加上。但在某些 trait 定義或比較複雜的泛型結構裡，你可能需要手動寫：
 
-```rust,no_run
+```rust,noplayground
 struct Ref<'a, T: 'a> {
     value: &'a T,
 }

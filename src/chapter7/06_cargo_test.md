@@ -13,7 +13,7 @@
 
 在函數上面加 `#[test]`，它就變成測試函數：
 
-```rust,no_run
+```rust,noplayground
 #[test]
 fn it_works() {
     assert_eq!(2 + 2, 4);
@@ -40,7 +40,7 @@ fn it_works() {
 
 有時候你想反過來確認某段程式碼**會** panic——比如存取超出範圍的索引。這時候用 `#[should_panic]`：
 
-```rust,no_run
+```rust,noplayground
 #[test]
 #[should_panic]
 fn test_out_of_bounds() {
@@ -55,7 +55,7 @@ fn test_out_of_bounds() {
 
 你還可以用 `expected` 參數指定 panic 訊息必須包含什麼字串，確保 panic 的原因是對的：
 
-```rust,no_run
+```rust,noplayground
 #[test]
 #[should_panic(expected = "index out of bounds")]
 fn test_out_of_bounds_message() {
@@ -70,7 +70,7 @@ fn test_out_of_bounds_message() {
 
 上一集學了 `use super::*;`——測試最常這樣用。慣例是在檔案底部加一個測試 mod：
 
-```rust,no_run
+```rust,noplayground
 fn add(a: i32, b: i32) -> i32 {
     a + b
 }

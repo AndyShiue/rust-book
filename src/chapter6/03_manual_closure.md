@@ -51,7 +51,7 @@
 
 編譯器會產生類似這樣的東西：
 
-```rust,no_run
+```rust,noplayground
 struct GreetOnce {
     name: String, // 擁有 name
 }
@@ -90,7 +90,7 @@ impl GreetOnce {
 
 編譯器產生的東西：
 
-```rust,no_run
+```rust,noplayground
 struct GreetMut<'a> {
     name: &'a mut String, // 可變借用 name
 }
@@ -109,7 +109,7 @@ impl<'a> GreetMut<'a> {
 
 **為什麼 struct 存 `&mut`，方法又接 `&mut self`？** 因為一個閉包可能捕捉多個變數。假設閉包同時修改了 `a`、`b`、`c` 三個變數，struct 裡就會有三個欄位：
 
-```rust,no_run
+```rust,noplayground
 struct SomeClosure<'a> {
     a: &'a mut i32,
     b: &'a mut String,
@@ -138,7 +138,7 @@ struct SomeClosure<'a> {
 
 編譯器產生的東西：
 
-```rust,no_run
+```rust,noplayground
 struct GreetRef<'a> {
     name: &'a String, // 唯讀借用 name
 }

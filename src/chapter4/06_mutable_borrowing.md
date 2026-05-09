@@ -46,7 +46,7 @@ fn main() {
 
 對 struct 也一樣：
 
-```rust,no_run
+```rust,noplayground
 # #[derive(Debug)]
 # struct Point {
 #     x: i32,

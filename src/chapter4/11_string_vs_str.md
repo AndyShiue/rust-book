@@ -35,7 +35,7 @@ fn main() {
 
 如果你的函數只需要「讀」一段文字，不需要擁有它，參數型別就寫 `&str`：
 
-```rust,no_run
+```rust,noplayground
 fn count_chars(s: &str) -> i32 {
     let mut count = 0;
     for _c in s.chars() {

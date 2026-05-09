@@ -9,7 +9,7 @@
 
 ### 搜尋
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let s = "hello, world!";
 
@@ -22,7 +22,7 @@
 
 ### 修剪與替換
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     "  hello  ".trim();       // "hello"
     "  hello  ".trim_start(); // "hello  "
@@ -34,7 +34,7 @@
 
 ### 分割
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let parts: Vec<&str> = "a,b,c".split(',').collect();
     // ["a", "b", "c"]
@@ -60,7 +60,7 @@
 
 ### 大小寫
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     "Hello".to_uppercase(); // "HELLO"
     "Hello".to_lowercase(); // "hello"
@@ -69,7 +69,7 @@
 
 ### len 是 byte 數
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     "hello".len();         // 5
     "hello".is_empty();    // false

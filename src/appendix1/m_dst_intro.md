@@ -75,7 +75,7 @@ fn print_it<T: ?Sized>(val: &T) { ... }
 
 還記得第四章第 8 集介紹的 `Clone` 嗎？它的方法是 `fn clone(&self) -> Self`——直接回傳 `Self`。由於 `Self` 預設可能不是 `Sized`，而回傳的型別必須有已知大小，所以 `Clone` 實際上的定義是：
 
-```rust,no_run
+```rust,noplayground
 trait Clone: Sized {
     fn clone(&self) -> Self;
 }
@@ -87,7 +87,7 @@ trait Clone: Sized {
 
 第五章最後一集教 `Cow` 的時候，我們用的也是簡化版的定義：
 
-```rust,no_run
+```rust,noplayground
 // 第五章提供的簡化版
 pub enum Cow<'a, B>
 where
@@ -104,7 +104,7 @@ where
 
 加上 `?Sized` 就能解決：
 
-```rust,no_run
+```rust,noplayground
 pub enum Cow<'a, B>
 where
     B: 'a + ToOwned + ?Sized,
@@ -122,7 +122,7 @@ where
 
 DST 也可以拿可變參考。`&mut [T]` 很實用——你可以修改切片裡的元素：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let mut arr = [1, 2, 3, 4, 5];
     let slice: &mut [i32] = &mut arr[1..4];

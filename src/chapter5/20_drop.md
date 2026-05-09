@@ -11,7 +11,7 @@
 
 `Drop` trait 讓你自訂「被丟棄時要做什麼」：
 
-```rust,no_run
+```rust,noplayground
 # struct MyType { name: String }
 #
 impl Drop for MyType {

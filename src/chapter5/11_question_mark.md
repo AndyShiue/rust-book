@@ -7,7 +7,7 @@
 
 上一集學了 Result，我們用 match 來處理成功和失敗。但如果一個函數裡有好幾個可能失敗的操作呢？
 
-```rust,no_run
+```rust,noplayground
 fn do_stuff() -> Result<i32, String> {
     let a = match "42".parse::<i32>() {
         Ok(n) => n,
@@ -40,7 +40,7 @@ fn do_stuff() -> Result<i32, String> {
 
 比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`。這時候你可以用 match 自己轉換，然後再手動 return：
 
-```rust,no_run
+```rust,noplayground
 # fn stringify_err() -> Result<i32, String> {
 #     let input = "1";
     let n = match input.parse::<i32>() {

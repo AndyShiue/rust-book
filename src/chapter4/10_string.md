@@ -9,7 +9,7 @@
 
 從第一章開始，我們一直在用 `&str` 這個型別：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let greeting: &str = "你好";
 # }
@@ -23,7 +23,7 @@
 
 用 `String::from()` 來建立：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let s = String::from("你好");
 # }
@@ -62,7 +62,7 @@ String 可以修改！用 `push_str` 來接上更多文字：
 
 因為 String 的資料在 heap 上，所以它**不是 Copy**。賦值和傳入函數都會 move：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let s1 = String::from("hello");
     let s2 = s1; // move！s1 不能再用了

@@ -11,7 +11,7 @@
 
 ### .count() —— 數有幾個
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let names = vec!["Alice", "Bob", "Charlie"];
     let count = names.iter().count(); // 3
@@ -20,7 +20,7 @@
 
 ### .sum() 和 .product()
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let total: i32 = (1..=10).sum();         // 55
     let factorial: i64 = (1..=10).product(); // 3628800
@@ -31,7 +31,7 @@
 
 ### .min() 和 .max()
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let v = vec![3, 1, 4, 1, 5, 9, 2, 6];
     let smallest = v.iter().min(); // Some(&1)
@@ -51,7 +51,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 接受一個初始值 `init`（型別 `B`）和一個閉包，每一步把「累積值」和「當前元素」組合成新的累積值：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let sum = (1..=5).fold(0, |acc, x| acc + x);
     // 步驟：0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15
@@ -60,7 +60,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 其實本集介紹的其他方法都能用 `fold` 實作：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // count = fold 從 0 開始，每次 +1
     let count = (1..=5).fold(0, |acc, _x| acc + 1);
@@ -77,7 +77,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 `fold` 還能做更靈活的事情。想把數字串成字串？想同時追蹤多個值？都可以：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let text = (1..=5).fold(String::new(), |mut acc, x| {
         if !acc.is_empty() {
@@ -94,7 +94,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 `reduce` 跟 `fold` 很像，但它用第一個元素當初始值：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let product = vec![2, 3, 4].into_iter().reduce(|acc, x| acc * x);
     // Some(24)：2*3=6, 6*4=24
@@ -105,7 +105,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 用 `reduce` 實作 min 和 max 就很自然：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let min = vec![3, 1, 4, 1, 5].into_iter()
         .reduce(|a, b| if a < b { a } else { b });

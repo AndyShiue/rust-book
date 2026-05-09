@@ -7,7 +7,7 @@
 
 之前我們學了在 match 裡解構 tuple，像是 `(x, y) => ...`。但其實**不用 match，用 let 就可以直接解構**！
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let (x, y) = (1, 2);
 # }

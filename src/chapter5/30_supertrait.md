@@ -9,7 +9,7 @@
 
 ### supertrait 語法
 
-```rust,no_run
+```rust,noplayground
 trait Summarize: std::fmt::Display {
     fn summary(&self) -> String;
 }
@@ -27,7 +27,7 @@ trait Summarize: std::fmt::Display {
 
 第四章學過 Copy 和 Clone。它們之間就是 supertrait 的關係：
 
-```rust,no_run
+```rust,noplayground
 trait Copy: Clone { }
 #
 # fn main() {}

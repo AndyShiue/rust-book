@@ -43,7 +43,7 @@
 
 `IntoIterator` 是一個 trait，定義了「如何把自己轉成迭代器」：
 
-```rust,no_run
+```rust,noplayground
 trait IntoIterator {
     type Item;
     type IntoIter: Iterator<Item = Self::Item>;

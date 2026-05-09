@@ -9,7 +9,7 @@
 
 Rust 用 `impl` 區塊讓你把函數「附加」到型別上：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -26,7 +26,7 @@ impl Point {
 
 這樣定義的函數叫做 **associated function**（關聯函數），因為它和 `Point` 這個型別「關聯」在一起。呼叫的時候用 `::`：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

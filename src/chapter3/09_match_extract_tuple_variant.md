@@ -9,7 +9,7 @@
 
 在 match 的模式裡，你可以用變數名來「接住」variant 裡的資料：
 
-```rust,no_run
+```rust,noplayground
 # enum Shape {
 #     Circle(f64),
 #     Rectangle(i32, i32),

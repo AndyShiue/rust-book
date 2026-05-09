@@ -12,7 +12,7 @@
 
 ### 第一種：方法語法
 
-```rust,no_run
+```rust,noplayground
 # trait Animal {
 #     fn speak(&self);
 # }
@@ -35,7 +35,7 @@
 
 ### 第二種：指定 Trait 或型別
 
-```rust,no_run
+```rust,noplayground
 # trait Animal {
 #     fn speak(&self);
 # }
@@ -58,7 +58,7 @@
 
 ### 第三種：完全限定語法（fully qualified syntax）
 
-```rust,no_run
+```rust,noplayground
 # trait Animal {
 #     fn speak(&self);
 # }
@@ -83,7 +83,7 @@
 
 大部分時候第一種就夠了。但當**多個 trait 定義了同名方法**的時候，編譯器不知道你要呼叫哪一個，就需要更明確的語法：
 
-```rust,no_run
+```rust,noplayground
 trait Animal {
     fn name(&self) -> &str;
 }
@@ -101,7 +101,7 @@ trait Robot {
 
 如果是沒有 `self` 參數的 **associated function**，因為沒有接收者可以讓編譯器推斷，更容易需要完全限定語法：
 
-```rust,no_run
+```rust,noplayground
 # trait TraitA {
 #     fn create() -> i32;
 # }
@@ -134,7 +134,7 @@ trait Robot {
 
 完全限定語法也可以用來存取某個型別在特定 trait 上的 **associated type**：
 
-```rust,no_run
+```rust,noplayground
 // Iterator trait 有一個 associated type 叫 Item
 // 用完全限定語法取得它的具體型別：
 type MyItem = <Vec<i32> as Iterator>::Item; // i32

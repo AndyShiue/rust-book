@@ -81,7 +81,7 @@ fn greet() {  // 後定義
 
 Rust 的函數名用**蛇形命名法**（snake_case）：全小寫，單字之間用底線 `_` 隔開。
 
-```rust,no_run
+```rust,noplayground
 fn say_hello() { // ✅ 蛇形命名
     println!("Hello!");
 }

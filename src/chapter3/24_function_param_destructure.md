@@ -9,7 +9,7 @@
 
 假設你有一個函數，接收一個 tuple `(i32, i32)` 代表座標。與其在函數內再拆開，不如直接在參數位置就拆好：
 
-```rust,no_run
+```rust,noplayground
 fn print_point((x, y): (i32, i32)) {
     println!("({}, {})", x, y);
 }
@@ -32,7 +32,7 @@ fn print_point((x, y): (i32, i32)) {
 
 struct 也可以在參數位置解構：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

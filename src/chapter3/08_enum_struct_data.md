@@ -9,7 +9,7 @@
 
 Rust 允許你用類似 named-field struct 的寫法，讓 variant 的每個欄位都有名字：
 
-```rust,no_run
+```rust,noplayground
 enum Shape {
     Circle { radius: f64 },
     Rectangle { width: i32, height: i32 },
@@ -20,7 +20,7 @@ enum Shape {
 
 建立值的時候就像建立 struct 一樣：
 
-```rust,no_run
+```rust,noplayground
 # enum Shape {
 #     Circle { radius: f64 },
 #     Rectangle { width: i32, height: i32 },

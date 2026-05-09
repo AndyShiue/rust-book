@@ -32,7 +32,7 @@ fn main() {
 
 兩種回傳方式的比較：
 
-```rust,no_run
+```rust,noplayground
 // 方式一：用 return（通常用在「提前離開」）
 fn abs_v1(x: i32) -> i32 {
     if x >= 0 {
@@ -104,7 +104,7 @@ fn main() {
 
 雖然每個回傳值都寫 `return` 也能跑，但在 Rust 裡這不是好習慣：
 
-```rust,no_run
+```rust,noplayground
 // 不太 Rust 的寫法
 fn add_v1(a: i32, b: i32) -> i32 {
     return a + b; // 可以跑，但沒必要

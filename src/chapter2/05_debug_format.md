@@ -57,7 +57,7 @@ fn main() {
 
 Rust 還有一個很方便的偵錯工具 `dbg!`：
 
-```rust,no_run
+```rust,noplayground
 fn main() {
     let x = 5;
     dbg!(x);

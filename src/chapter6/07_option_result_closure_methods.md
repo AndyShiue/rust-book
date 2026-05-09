@@ -13,7 +13,7 @@
 
 #### map —— 轉換 Some 裡的值
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Option<T> 上的方法：
     // fn map<U>(self, f: impl FnOnce(T) -> U) -> Option<U>
@@ -28,7 +28,7 @@
 
 `map` 的閉包回傳普通值，但如果你的轉換本身也可能回傳 `None` 呢？用 `and_then`：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Option<T> 上的方法：
     // fn and_then<U>(self, f: impl FnOnce(T) -> Option<U>) -> Option<U>
@@ -57,7 +57,7 @@
 
 #### filter —— 條件過濾
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Option<T> 上的方法：
     // fn filter(self, predicate: impl FnOnce(&T) -> bool) -> Option<T>
@@ -73,7 +73,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 
 #### map —— 轉換 Ok 的值
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Result<T, E> 上的方法：
     // fn map<U>(self, f: impl FnOnce(T) -> U) -> Result<U, E>
@@ -86,7 +86,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 
 跟 `map` 相反——`map` 對 Ok 做事、Err 不動；`map_err` 對 Err 做事、Ok 不動。
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Result<T, E> 上的方法：
     // fn map_err<F>(self, f: impl FnOnce(E) -> F) -> Result<T, F>
@@ -97,7 +97,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 
 #### and_then —— 鏈式操作
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     // Result<T, E> 上的方法：
     // fn and_then<U>(self, f: impl FnOnce(T) -> Result<U, E>) -> Result<U, E>
@@ -131,7 +131,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 ### 跟 match 的比較
 
 用 match：
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let opt = Some(1);
     let result = match opt {
@@ -142,7 +142,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 ```
 
 用閉包方法：
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let opt = Some(1);
     let result = opt.map(|v| v * 2);

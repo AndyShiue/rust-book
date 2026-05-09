@@ -9,7 +9,7 @@
 
 第三章學了 C-style enum。每個 variant 背後都有一個整數，叫做 **discriminant**。Rust 用它來區分目前是哪個 variant。
 
-```rust,no_run
+```rust,noplayground
 enum Color {
     Red,   // 0
     Green, // 1
@@ -57,7 +57,7 @@ fn main() {
 
 沒指定的 variant 從前一個 +1：
 
-```rust,no_run
+```rust,noplayground
 enum Level {
     Low = 1,
     Medium,    // 2
@@ -71,7 +71,7 @@ enum Level {
 
 預設的底層型別由編譯器決定。用 `#[repr]` 明確指定：
 
-```rust,no_run
+```rust,noplayground
 #[repr(u8)]
 enum Direction {
     North, // 0_u8

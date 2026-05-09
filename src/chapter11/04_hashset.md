@@ -46,7 +46,7 @@ fn main() {
 
 這是 HashSet 最有用的地方：
 
-```rust,no_run
+```rust,noplayground
 use std::collections::HashSet;
 
 fn main() {
@@ -75,7 +75,7 @@ fn main() {
 
 進階語言功能那章學了運算子重載——HashSet 就用了這個功能。你可以用 `&` `|` `-` `^` 對兩個 HashSet 的參考做集合運算：
 
-```rust,no_run
+```rust,noplayground
 # use std::collections::HashSet;
 #
 # fn main() {
@@ -107,7 +107,7 @@ fn main() {
 
 跟 HashMap 一樣，走訪順序不固定：
 
-```rust,no_run
+```rust,noplayground
 # use std::collections::HashSet;
 #
 # fn main() {

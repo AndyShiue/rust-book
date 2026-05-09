@@ -11,7 +11,7 @@
 
 以標準庫的 `PartialEq` 為例：
 
-```rust,no_run
+```rust,noplayground
 trait PartialEq<Rhs = Self> {
     fn eq(&self, other: &Rhs) -> bool;
 }
@@ -23,7 +23,7 @@ trait PartialEq<Rhs = Self> {
 
 如果偶爾想比較不同型別，覆蓋就行：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -42,7 +42,7 @@ impl PartialEq<(i32, i32)> for Point {
 
 用 `=` 在泛型定義裡給預設值：
 
-```rust,no_run
+```rust,noplayground
 struct Container<T = String> {
     value: T,
 }
@@ -55,7 +55,7 @@ fn main() {
 
 ### const generics 的預設值
 
-```rust,no_run
+```rust,noplayground
 struct Buffer<const N: usize = 1024> {
     data: [u8; N],
 }
@@ -68,7 +68,7 @@ fn main() {
 
 ### 有預設值的參數必須放後面
 
-```rust,no_run
+```rust,noplayground
 struct Pair<T, U = T> {   // OK：U 有預設值，放在 T 後面
     first: T,
     second: U,

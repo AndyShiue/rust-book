@@ -72,7 +72,7 @@ fn main() {
 
 當你有一個值是**固定不變**的，而且你在寫程式的時候就知道它是多少，就用 `const`。比如：
 
-```rust,no_run
+```rust,noplayground
 const TAX_RATE: f64 = 0.05;
 const MAX_RETRY: i32 = 3;
 #

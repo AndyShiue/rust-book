@@ -34,7 +34,7 @@ fn main() {
 
 **回傳固定長度的陣列：**
 
-```rust,no_run
+```rust,noplayground
 fn zeros<const N: usize>() -> [i32; N] {
     [0; N]
 }
@@ -49,7 +49,7 @@ slice 沒辦法回傳 `[T]`（DST），但 `[T; N]` 可以。
 
 **在型別層面保證長度：**
 
-```rust,no_run
+```rust,noplayground
 fn add_arrays<const N: usize>(a: [i32; N], b: [i32; N]) -> [i32; N] {
     let mut result = [0; N];
     for i in 0..N {
@@ -65,7 +65,7 @@ fn add_arrays<const N: usize>(a: [i32; N], b: [i32; N]) -> [i32; N] {
 
 ### 用在 struct 上
 
-```rust,no_run
+```rust,noplayground
 struct Matrix<const ROWS: usize, const COLS: usize> {
     data: [[f64; COLS]; ROWS],
 }
@@ -77,7 +77,7 @@ struct Matrix<const ROWS: usize, const COLS: usize> {
 
 如果 const generic 的位置不是簡單的字面值或路徑，要用 `{}` 包起來：
 
-```rust,no_run
+```rust,noplayground
 fn example<const N: usize>() -> [i32; N] { [0; N] }
 
 fn main() {
@@ -90,7 +90,7 @@ fn main() {
 
 前面學的 const fn 也能當 const generic 的值：
 
-```rust,no_run
+```rust,noplayground
 const fn double(n: usize) -> usize { n * 2 }
 
 fn zeros<const N: usize>() -> [i32; N] { [0; N] }

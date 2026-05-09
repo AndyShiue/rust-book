@@ -11,7 +11,7 @@
 
 ### Result 的定義
 
-```rust,no_run
+```rust,noplayground
 enum Result<T, E> {
     Ok(T),
     Err(E),

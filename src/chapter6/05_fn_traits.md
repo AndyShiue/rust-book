@@ -41,7 +41,7 @@ Fn : FnMut : FnOnce
 
 還記得第五章的 `impl Trait` 嗎？用它來接受閉包參數：
 
-```rust,no_run
+```rust,noplayground
 fn call_once(f: impl FnOnce() -> String) -> String {
     f()
 }

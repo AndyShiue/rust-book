@@ -9,7 +9,7 @@
 
 回想第三章，impl struct 是這樣寫的：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -28,7 +28,7 @@ impl Point {
 
 ### `impl<T>` 的語法
 
-```rust,no_run
+```rust,noplayground
 # #[derive(Debug)]
 # struct Pair<T> {
 #     first: T,
@@ -59,7 +59,7 @@ impl<T> Pair<T> {
 
 宣告了 `T` 之後，在整個 `impl` 區塊裡都可以使用它：
 
-```rust,no_run
+```rust,noplayground
 # #[derive(Debug)]
 # struct Pair<T> {
 #     first: T,
@@ -83,7 +83,7 @@ impl<T> Pair<T> {
 
 第四章教 trait 的時候，我們幫具體型別實作了 trait，像 `impl Describe for Cat`。如果你想幫一個泛型型別實作 trait，語法也是一樣——在 `impl` 後面加上 `<T>` 來宣告型別參數：
 
-```rust,no_run
+```rust,noplayground
 # trait SomeTrait {}
 #
 # struct Pair<T> {

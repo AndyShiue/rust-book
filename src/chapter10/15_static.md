@@ -9,7 +9,7 @@
 
 第二章學了 `const`——編譯期常數，值被直接嵌進使用它的地方。`static` 看起來很像，但有一個根本差異：**static 變數有固定的記憶體位址**。
 
-```rust,no_run
+```rust,noplayground
 static GREETING: &str = "Hello, world!";
 static MAX_SIZE: usize = 1024;
 #
@@ -27,7 +27,7 @@ static MAX_SIZE: usize = 1024;
 
 Rust 允許可變的 static——但讀寫都需要 `unsafe`：
 
-```rust,no_run
+```rust,noplayground
 static mut COUNTER: i32 = 0;
 
 fn increment() {

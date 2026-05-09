@@ -37,7 +37,7 @@ fn duplicate<T: Clone>(x: &T) -> (T, T) {
 
 trait bound 不只能用在函數上。幾乎所有有泛型參數的地方都能加——struct、enum、impl 定義裡都可以：
 
-```rust,no_run
+```rust,noplayground
 struct Wrapper<T: Clone> {
     value: T,
 }
@@ -49,7 +49,7 @@ struct Wrapper<T: Clone> {
 
 其中最實用的是在 `impl` 區塊上加 trait bound。這叫做**條件式 impl**——只有當型別參數符合某些條件時，才提供特定的方法。
 
-```rust,no_run
+```rust,noplayground
 # #[derive(Debug)]
 # struct Pair<T> {
 #     first: T,

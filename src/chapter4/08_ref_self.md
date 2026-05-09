@@ -9,7 +9,7 @@
 
 在第三章，我們學了 `impl` 和 method，當時所有的 method 都用 `self` 傳值：
 
-```rust,no_run
+```rust,noplayground
 # struct Cat;
 #
 impl Cat {

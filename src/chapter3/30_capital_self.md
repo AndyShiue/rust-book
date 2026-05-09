@@ -7,7 +7,7 @@
 
 上一集我們在 impl 裡面寫了這樣的程式碼：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -26,7 +26,7 @@ impl Point {
 
 Rust 提供了大寫 `Self`（注意 S 是大寫的！），它在 `impl` 區塊裡面代表「目前正在 impl 的型別」。所以上面的程式碼可以改成：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

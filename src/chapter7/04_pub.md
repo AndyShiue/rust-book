@@ -168,7 +168,7 @@ fn main() {
 
 `impl` 區塊本身**不需要也不能加 `pub`**。對於 `impl Type`（不是 `impl Trait for Type`），裡面的 fn 各自用 `pub` 控制可見性：
 
-```rust,no_run
+```rust,noplayground
 mod shapes {
     pub struct Circle {
         pub radius: f64,

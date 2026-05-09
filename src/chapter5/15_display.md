@@ -16,7 +16,7 @@
 
 ### 實作 Display
 
-```rust,no_run
+```rust,noplayground
 use std::fmt::Display;
 use std::fmt::Formatter;
 use std::fmt::Result;

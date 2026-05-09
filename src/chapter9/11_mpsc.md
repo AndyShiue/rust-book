@@ -15,7 +15,7 @@ channel 是完全不同的思路：**執行緒之間用傳訊息的方式溝通*
 
 `std::sync::mpsc::channel()` 建立一對發送端（tx）和接收端（rx）：
 
-```rust,no_run
+```rust,noplayground
 use std::sync::mpsc;
 
 fn main() {

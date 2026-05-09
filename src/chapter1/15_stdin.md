@@ -9,7 +9,7 @@
 
 ### 先照抄這段程式碼
 
-```rust,no_run
+```rust,noplayground
 fn main() {
     println!("請輸入你的名字：");
 
@@ -50,7 +50,7 @@ Andy
 
 每次要讀使用者輸入，就把這三行拿去用：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).expect("讀取失敗");

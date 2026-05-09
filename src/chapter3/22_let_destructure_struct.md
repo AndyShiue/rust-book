@@ -7,7 +7,7 @@
 
 上一集學了 let 解構 tuple，現在來解構 struct。概念完全一樣——用 let 把 struct 的欄位一次拆開：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -23,7 +23,7 @@
 
 如果你想要的變數名和欄位名不同，可以用 `欄位名: 變數名` 的寫法：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -38,7 +38,7 @@
 
 之前學的 `..` 也可以用，只取你需要的欄位：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

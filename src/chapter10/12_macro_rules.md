@@ -80,7 +80,7 @@ fn main() {
 - `,` 是分隔符號——每個重複項之間要有逗號。分隔符號不一定要是逗號，也可以用 `;` 等其他符號，或是省略不用
 - `*` 表示零個或更多個。也可以用 `+` 表示一個或更多個
 
-```rust,no_run
+```rust,noplayground
 macro_rules! make_vec {
     ($($element:expr),*) => {
         {
@@ -119,7 +119,7 @@ v.push(3);
 
 如果想讓巨集可以被其他 crate 使用，在前面加 `#[macro_export]`。在巨集內部引用定義巨集的 crate 的東西時，用 `$crate` 路徑——這樣不管使用者的 crate 怎麼命名你的 crate，路徑都能正確指向：
 
-```rust,no_run
+```rust,noplayground
 // 在 my_lib crate 裡
 
 pub fn _log_impl(msg: &str) {

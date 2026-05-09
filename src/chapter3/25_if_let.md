@@ -7,7 +7,7 @@
 
 有時候你只關心 enum 的某一個 variant，其他的都不在意。用 match 寫的話，必須處理所有情況，就算你只想處理一個：
 
-```rust,no_run
+```rust,noplayground
 # enum Color {
 #     Red,
 #     Green,
@@ -25,7 +25,7 @@
 
 那個 `_ => {}` 看起來很多餘。Rust 提供了 `if let` 語法來簡化這種情況：
 
-```rust,no_run
+```rust,noplayground
 # enum Color {
 #     Red,
 #     Green,
@@ -44,7 +44,7 @@
 
 你也可以加上 `else` 處理不符合的情況：
 
-```rust,no_run
+```rust,noplayground
 # enum Color {
 #     Red,
 #     Green,

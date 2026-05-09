@@ -28,7 +28,7 @@
 
 不只固定長度的陣列，切片（`&[T]`）也能用 slice pattern。差別在於切片的長度在編譯期是未知的，所以你可以用不同長度的模式來匹配：
 
-```rust,no_run
+```rust,noplayground
 fn describe(numbers: &[i32]) {
     match numbers {
         [] => println!("空的"),

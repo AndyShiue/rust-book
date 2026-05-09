@@ -17,7 +17,7 @@
 
 最簡單的方式是用 `vec!` 巨集：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let nums = vec![1, 2, 3, 4, 5];
 # }
@@ -27,7 +27,7 @@
 
 你也可以建立空的 Vec，然後一個一個加：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {   
     let mut nums = Vec::new();
     nums.push(10);

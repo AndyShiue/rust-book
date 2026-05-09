@@ -11,7 +11,7 @@
 
 想像一個「容器」的 trait。容器裡面裝什麼型別的元素？用多參數 trait 的話：
 
-```rust,no_run
+```rust,noplayground
 trait Container<T> {
     fn first(&self) -> Option<&T>;
 }
@@ -25,7 +25,7 @@ trait Container<T> {
 
 associated type 解決了這個問題：
 
-```rust,no_run
+```rust,noplayground
 trait Container {
     type Item;
     // 要使用 Self 的 associated type，用 Self::Type 的語法
@@ -37,7 +37,7 @@ trait Container {
 
 `type Item;` 宣告了一個 associated type。實作的時候必須指定它是什麼：
 
-```rust,no_run
+```rust,noplayground
 # trait Container {
 #     type Item;
 #     fn first(&self) -> Option<&Self::Item>;
@@ -78,7 +78,7 @@ impl Container for NumberList {
 
 第 23 集學的 `Deref` trait 就用了 associated type：
 
-```rust,no_run
+```rust,noplayground
 trait Deref {
     type Target;
     fn deref(&self) -> &Self::Target;

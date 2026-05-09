@@ -75,7 +75,7 @@ use ::rand::Rng;  // 明確表示 rand 是外部 crate，不是本地 mod
 - `super::`：往上一層，指向**父 mod**
 - `self::`：指向**當前 mod**（通常省略，但有時在 `use` 中有用）
 
-```rust,no_run
+```rust,noplayground
 mod outer {
     pub fn greet() -> String {
         String::from("Hello from outer")
@@ -95,7 +95,7 @@ mod outer {
 
 匯入同一個路徑底下的多個東西，可以用大括號合併：
 
-```rust,no_run
+```rust,noplayground
 use std::io::{self, Read, Write};
 // 等同於：
 // use std::io;
@@ -111,7 +111,7 @@ use std::io::{self, Read, Write};
 
 如果兩個不同地方有同名的東西，可以用 `as` 取別名：
 
-```rust,no_run
+```rust,noplayground
 use std::fmt::Result as FmtResult;
 use std::io::Result as IoResult;
 
@@ -174,7 +174,7 @@ fn main() {
 
 `*` 會把 mod 底下所有 pub 的東西全部帶進來：
 
-```rust,no_run
+```rust,noplayground
 use std::collections::*; // HashMap, HashSet, BTreeMap... 全部可用
 #
 # fn main() {}
@@ -186,7 +186,7 @@ use std::collections::*; // HashMap, HashSet, BTreeMap... 全部可用
 
 `use` 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：
 
-```rust,no_run
+```rust,noplayground
 use std::cmp::Ordering::{Less, Equal, Greater};
 
 fn compare(a: i32, b: i32) {

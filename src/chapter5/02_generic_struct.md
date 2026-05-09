@@ -11,7 +11,7 @@
 
 ### 定義泛型 Struct
 
-```rust,no_run
+```rust,noplayground
 struct Pair<T> {
     first: T,
     second: T,
@@ -24,7 +24,7 @@ struct Pair<T> {
 
 使用的時候：
 
-```rust,no_run
+```rust,noplayground
 # struct Pair<T> {
 #     first: T,
 #     second: T,
@@ -40,7 +40,7 @@ struct Pair<T> {
 
 如果你希望 `first` 和 `second` 可以是不同型別，就用兩個型別參數：
 
-```rust,no_run
+```rust,noplayground
 struct MixedPair<T, U> {
     first: T,
     second: U,

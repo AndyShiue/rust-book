@@ -9,7 +9,7 @@
 
 `zip` 把兩個迭代器「拉鍊式」地配對起來，產出 tuple：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let names = vec!["Alice", "Bob", "Charlie"];
     let scores = vec![90, 85, 92];
@@ -22,7 +22,7 @@
 
 ### .enumerate() —— 帶上索引
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let names = vec!["Alice", "Bob", "Charlie"];
     for (i, name) in names.iter().enumerate() {
@@ -37,7 +37,7 @@
 
 `chain` 把兩個迭代器首尾相接：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let first = vec![1, 2, 3];
     let second = vec![4, 5, 6];
@@ -48,7 +48,7 @@
 
 ### .take(n) —— 只取前 n 個
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let first_three: Vec<i32> = (1..=100).take(3).collect();
     // [1, 2, 3]
@@ -57,7 +57,7 @@
 
 ### .skip(n) —— 跳過前 n 個
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let after_skip: Vec<i32> = (1..=10).skip(7).collect();
     // [8, 9, 10]
@@ -68,7 +68,7 @@
 
 如果迭代器的元素本身也是迭代器（或 `Option`、`Vec` 等），`flatten` 可以把它攤平一層：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let nested = vec![vec![1, 2], vec![3, 4], vec![5]];
     let flat: Vec<i32> = nested.into_iter().flatten().collect();
@@ -78,7 +78,7 @@
 
 `Option` 也可以 flatten——`Some(value)` 被取出，`None` 被忽略：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let options = vec![Some(1), None, Some(3), None, Some(5)];
     let values: Vec<i32> = options.into_iter().flatten().collect();

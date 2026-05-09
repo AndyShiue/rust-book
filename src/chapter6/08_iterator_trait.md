@@ -9,7 +9,7 @@
 
 `Iterator` trait 的核心簡單到不行：
 
-```rust,no_run
+```rust,noplayground
 trait Iterator {
     type Item;
     fn next(&mut self) -> Option<Self::Item>;
@@ -50,7 +50,7 @@ trait Iterator {
 
 讓我們自己做一個迭代器。假設我們想要一個「倒數計時器」：
 
-```rust,no_run
+```rust,noplayground
 struct Countdown {
     value: i32,
 }

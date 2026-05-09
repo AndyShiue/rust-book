@@ -57,7 +57,7 @@
 
 如果你的型別裡面所有值都是 Copy 的型別，那你的型別也可以加上 `#[derive(Copy, Clone)]`：
 
-```rust,no_run
+```rust,noplayground
 #[derive(Debug, Copy, Clone)]
 struct Point {
     x: i32,

@@ -12,7 +12,7 @@
 
 最簡單的用法：直接在檔案裡用 `mod` 關鍵字建立一個區塊。
 
-```rust,no_run
+```rust,noplayground
 mod math {
     pub fn add(a: i32, b: i32) -> i32 {
         a + b
@@ -28,7 +28,7 @@ mod math {
 
 要呼叫 mod 裡的函數，用 `::` 路徑語法：
 
-```rust,no_run
+```rust,noplayground
 # mod math {
 #     pub fn add(a: i32, b: i32) -> i32 {
 #         a + b
@@ -50,7 +50,7 @@ mod math {
 
 mod 可以一層一層巢狀：
 
-```rust,no_run
+```rust,noplayground
 mod math {
     pub mod basic {
         pub fn add(a: i32, b: i32) -> i32 {
@@ -74,7 +74,7 @@ mod math {
 
 呼叫的時候就用完整路徑：
 
-```rust,no_run
+```rust,noplayground
 # mod math {
 #     pub mod basic {
 #         pub fn add(a: i32, b: i32) -> i32 {

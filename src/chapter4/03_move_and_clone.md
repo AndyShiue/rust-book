@@ -11,7 +11,7 @@
 
 在 Rust 裡，當你把一個 struct 的值賦給另一個變數，原本的變數就**不能再用了**。這就是第 1 集講的「把鑰匙圈交出去」：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -55,7 +55,7 @@ fn main() {
 
 首先，你的型別要加上 `#[derive(Clone)]`（當然也可以順便加 `Debug`）：
 
-```rust,no_run
+```rust,noplayground
 #[derive(Debug, Clone)]
 struct Point {
     x: i32,

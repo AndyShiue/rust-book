@@ -11,7 +11,7 @@
 
 用 `+` 把多個 trait bound 串起來：
 
-```rust,no_run
+```rust,noplayground
 fn show_clone<T: Clone + std::fmt::Display>(x: &T) {
     let cloned = x.clone();
     println!("原始：{}", x);
@@ -27,7 +27,7 @@ fn show_clone<T: Clone + std::fmt::Display>(x: &T) {
 
 當 trait bound 很長的時候，寫在 `<>` 裡面會很擠。Rust 提供 `where` 子句，放在函數簽名後面：
 
-```rust,no_run
+```rust,noplayground
 fn show_clone<T>(x: &T)
 where
     T: Clone + std::fmt::Display,
@@ -46,7 +46,7 @@ where
 
 `where` 子句的冒號前面不只能放 `T`，還能放更複雜的東西。比如一個 tuple 型別：
 
-```rust,no_run
+```rust,noplayground
 fn clone_pair<T, U>(pair: &(T, U)) -> (T, U)
 where
     (T, U): Clone,

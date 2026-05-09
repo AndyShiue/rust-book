@@ -12,7 +12,7 @@ Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來
 
 三個斜線 `///` 是用來為**接下來的項目**（函數、struct、enum、trait 等）寫文件：
 
-```rust,no_run
+```rust,noplayground
 /// 計算兩個整數的最大公因數。
 ///
 /// 使用歐幾里得演算法，效率為 O(log(min(a, b)))。
@@ -41,7 +41,7 @@ pub fn gcd(mut a: u64, mut b: u64) -> u64 {
 
 兩個斜線加驚嘆號 `//!` 是為**包含它的項目**寫文件，通常放在檔案最頂端：
 
-```rust,no_run
+```rust,noplayground
 //! # Math Library
 //!
 //! 這個 library 提供基本的數學運算函數。

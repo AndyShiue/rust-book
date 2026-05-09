@@ -9,7 +9,7 @@
 
 ### 多個方法
 
-```rust,no_run
+```rust,noplayground
 trait Describe {
     fn name(&self) -> String;
     fn description(&self) -> String;
@@ -40,7 +40,7 @@ impl Describe for Cat {
 
 有些方法可以先寫好一個合理的預設版本：
 
-```rust,no_run
+```rust,noplayground
 trait Describe {
     fn name(&self) -> String;
 

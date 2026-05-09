@@ -9,7 +9,7 @@
 
 這就是 **method**（方法）——參數列表的第一個位置放 `self`，代表「呼叫這個方法的那個值本身」：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -26,7 +26,7 @@ impl Point {
 
 呼叫的時候用 `.`（點）而不是 `::`：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -53,7 +53,7 @@ impl Point {
 
 method 除了 `self` 之外，還可以有一個或更多其他的參數——就跟一般函數一樣：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -73,7 +73,7 @@ impl Point {
 
 呼叫時，`self` 由 `.` 前面的值自動帶入，你只需要傳其他的參數：
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,

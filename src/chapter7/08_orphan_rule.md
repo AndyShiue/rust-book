@@ -46,7 +46,7 @@ Rust 有一條規則：
 
 以下這些都是合法的：
 
-```rust,no_run
+```rust,noplayground
 // 情況 1：你的型別 + 外部 trait
 struct MyPoint {
     x: f64,
@@ -77,7 +77,7 @@ impl Describable for Vec<i32> {
 
 如果你真的需要為外部型別實作外部 trait，可以用 **newtype pattern**——建立一個 tuple struct 把外部型別包起來：
 
-```rust,no_run
+```rust,noplayground
 use std::fmt;
 
 struct MyVec(Vec<i32>);

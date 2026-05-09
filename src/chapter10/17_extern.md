@@ -49,7 +49,7 @@ fn main() {
 
 ### 讓 C 呼叫 Rust
 
-```rust,no_run
+```rust,noplayground
 #[unsafe(no_mangle)]
 pub extern "C" fn add(a: i32, b: i32) -> i32 {
     a + b
@@ -63,7 +63,7 @@ pub extern "C" fn add(a: i32, b: i32) -> i32 {
 
 ### extern 區塊裡也能宣告 static 變數
 
-```rust,no_run
+```rust,noplayground
 unsafe extern "C" {
     static errno: i32; // C 那邊的全域變數
 }

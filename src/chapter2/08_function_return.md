@@ -29,7 +29,7 @@ fn main() {
 
 這是 Rust 最獨特的設計之一。函數最後一行如果**不加分號**，它的值就會自動被當成回傳值：
 
-```rust,no_run
+```rust,noplayground
 fn double(x: i32) -> i32 {
     x * 2 // ✅ 沒有分號，這就是回傳值
 }
@@ -55,7 +55,7 @@ fn double(x: i32) -> i32 {
 
 回頭看本章第 6 集的 `greet` 函數，它沒有寫 `->` 回傳值：
 
-```rust,no_run
+```rust,noplayground
 fn greet() {
     println!("你好！");
 }
@@ -65,7 +65,7 @@ fn greet() {
 
 在 Rust 裡，所有函數都有回傳值。沒寫 `->` 的話，就等同於寫 `-> ()`：
 
-```rust,no_run
+```rust,noplayground
 fn greet() -> () {
     println!("你好！");
 }

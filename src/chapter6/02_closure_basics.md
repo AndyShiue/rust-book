@@ -19,7 +19,7 @@
 
 你也可以加上型別標註，跟函數一樣明確：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let add_one = |x: i32| -> i32 { x + 1 };
 # }
@@ -34,7 +34,7 @@
 - **只有一個表達式**的時候，可以省略大括號：`|x| x + 1`
 - **有多行程式碼**或**需要 `let` 之類語句**的時候，要用大括號包起來：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let process = |x: i32| {
         let doubled = x * 2;
@@ -48,7 +48,7 @@
 
 另外，如果有加型別標註（`-> i32`），就一定要加大括號：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let add_one = |x: i32| -> i32 { x + 1 }; // 有 -> 就必須有 {}
     let add_one = |x: i32| x + 1;            // 沒有 -> 可以省略 {}
@@ -145,7 +145,7 @@
 
 如果一個閉包沒有捕捉任何外部變數，它就跟普通函數沒什麼差別。Rust 允許它自動轉型成函數指標 `fn`：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let add_one: fn(i32) -> i32 = |x| x + 1; // 沒有捕捉，可以轉成 fn
 # }

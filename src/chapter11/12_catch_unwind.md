@@ -43,7 +43,7 @@ fn main() {
 
 如果你確定沒問題，可以用 `AssertUnwindSafe` 包起來繞過檢查：
 
-```rust,no_run
+```rust,noplayground
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
 fn main() {

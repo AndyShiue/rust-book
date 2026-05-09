@@ -9,7 +9,7 @@
 
 假設你寫了一個函數接受 `&str`：
 
-```rust,no_run
+```rust,noplayground
 fn print_length(s: &str) {
     println!("長度：{}", s.len());
 }

@@ -15,7 +15,7 @@
 
 假設你想寫一個函數，傳入兩個值，回傳第一個：
 
-```rust,no_run
+```rust,noplayground
 fn first_i32(a: i32, b: i32) -> i32 {
     a
 }
@@ -27,7 +27,7 @@ fn first_i32(a: i32, b: i32) -> i32 {
 
 泛型就是解決這個問題的。我們用一個「型別參數」`T` 來代替具體的型別：
 
-```rust,no_run
+```rust,noplayground
 fn first<T>(a: T, b: T) -> T {
     a
 }

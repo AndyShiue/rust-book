@@ -9,7 +9,7 @@
 
 ### unwrap：暴力取值
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let x: Option<i32> = Some(42);
     let value = x.unwrap(); // 42
@@ -33,7 +33,7 @@
 
 ### unwrap_or：提供預設值
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let x: Option<i32> = None;
     let value = x.unwrap_or(0); // 0
@@ -46,7 +46,7 @@
 
 有時候你會碰到 `Option<Option<T>>` 這種巢狀結構：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let nested: Option<Option<i32>> = Some(Some(42));
     let flat: Option<i32> = nested.flatten(); // Some(42)

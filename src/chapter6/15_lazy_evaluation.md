@@ -26,7 +26,7 @@
 
 每次呼叫 `.map(f)` 或 `.filter(pred)`，你其實是在迭代器外面「套一層」。就像俄羅斯套娃：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
 #     let v = vec![2, 7, 1, 8, 2, 8];
     v.iter()                 // 最內層：原始迭代器
@@ -37,7 +37,7 @@
 
 每一層都是一個 struct，裡面存著內層的迭代器和自己的閉包。標準庫的 `Map` 和 `Filter` 大致長這樣：
 
-```rust,no_run
+```rust,noplayground
 struct Map<I, F> {
     iter: I, // 內層迭代器
     f: F,    // 要套用的閉包
@@ -53,7 +53,7 @@ struct Filter<I, P> {
 
 它們的 `next()` 實作也很直覺：
 
-```rust,no_run
+```rust,noplayground
 # struct Map<I, F> {
 #     iter: I, // 內層迭代器
 #     f: F,    // 要套用的閉包
@@ -112,7 +112,7 @@ impl<I: Iterator, P: FnMut(&I::Item) -> bool> Iterator for Filter<I, P> {
 
 因為是惰性的，迭代器可以是**無限的**。`std::iter::repeat` 和 `std::iter::from_fn` 都可以產生永遠不回傳 None 的迭代器：
 
-```rust,no_run
+```rust,noplayground
 use std::iter;
 
 fn main() {
@@ -131,7 +131,7 @@ fn main() {
 
 用 `.take(n)` 就能從無限迭代器中取出有限個元素：
 
-```rust,no_run
+```rust,noplayground
 # use std::iter;
 #
 # fn main() {

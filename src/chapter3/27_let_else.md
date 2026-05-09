@@ -11,7 +11,7 @@
 
 假設我們有這個 enum：
 
-```rust,no_run
+```rust,noplayground
 enum Color {
     Red,
     Green,
@@ -24,7 +24,7 @@ enum Color {
 
 用 `if let` 寫的話：
 
-```rust,no_run
+```rust,noplayground
 # enum Color {
 #     Red,
 #     Green,
@@ -51,7 +51,7 @@ fn describe(color: Color) {
 
 `let...else` 讓綁定的變數活在後面的程式碼裡，而不是只活在 `{}` 裡面：
 
-```rust,no_run
+```rust,noplayground
 # enum Color {
 #     Red,
 #     Green,

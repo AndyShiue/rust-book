@@ -13,7 +13,7 @@ Vec<Vec<Vec<i32>>>
 
 每次都寫完整型別有點累，而且不好讀。Rust 提供了 `type` 關鍵字來建立**型別別名**：
 
-```rust,no_run
+```rust,noplayground
 type Grid3D = Vec<Vec<Vec<i32>>>;
 #
 # fn main() {}
@@ -23,7 +23,7 @@ type Grid3D = Vec<Vec<Vec<i32>>>;
 
 ### 簡單的別名
 
-```rust,no_run
+```rust,noplayground
 type Name = String;
 #
 # fn main() {}
@@ -35,7 +35,7 @@ type Name = String;
 
 型別別名也可以帶泛型參數：
 
-```rust,no_run
+```rust,noplayground
 type Pair<T> = (T, T);
 #
 # fn main() {}

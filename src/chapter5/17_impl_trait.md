@@ -9,7 +9,7 @@
 
 ### 參數位置的 impl Trait
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt::Display;
 #
 fn show(x: &impl Display) {
@@ -25,7 +25,7 @@ fn show(x: &impl Display) {
 
 重要觀念：參數中的每個 `impl Trait` 代表一個**獨立的**型別。
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt::Display;
 #
 fn show_two(a: &impl Display, b: &impl Display) {
@@ -39,7 +39,7 @@ fn show_two(a: &impl Display, b: &impl Display) {
 
 如果你要求 `a` 和 `b` **必須是同一個型別**，就要用具名的型別參數：
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt::Display;
 #
 fn show_same<T: Display>(a: &T, b: &T) {
@@ -53,7 +53,7 @@ fn show_same<T: Display>(a: &T, b: &T) {
 
 `impl Trait` 也可以用在回傳值：
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt::Display;
 #
 fn greeting() -> impl Display {

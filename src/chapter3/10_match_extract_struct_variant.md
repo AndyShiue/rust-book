@@ -9,7 +9,7 @@
 
 語法是在模式裡用 `欄位名: 變數名` 的寫法：
 
-```rust,no_run
+```rust,noplayground
 # enum Shape {
 #     Circle { radius: f64 },
 #     Rectangle { width: i32, height: i32 },

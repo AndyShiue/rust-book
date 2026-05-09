@@ -13,7 +13,7 @@
 
 標準庫定義了 `std::error::Error` trait，所有錯誤型別的共同介面：
 
-```rust,no_run
+```rust,noplayground
 pub trait Error: std::fmt::Display + std::fmt::Debug {
     fn source(&self) -> Option<&(dyn Error + 'static)> { None }
 }
@@ -27,7 +27,7 @@ pub trait Error: std::fmt::Display + std::fmt::Debug {
 
 用一個 enum 把所有可能的錯誤包在一起：
 
-```rust,no_run
+```rust,noplayground
 use std::fmt;
 
 #[derive(Debug)]
@@ -52,7 +52,7 @@ impl std::error::Error for AppError {}
 
 第五章學了 `?`，當時說它遇到 `Err` 就提前回傳。其實 `?` 還多做了一件事：它會呼叫 `From::from(e)` 把錯誤轉換成函數回傳型別裡的 `E`。所以只要你幫底層錯誤實作了 `From`，`?` 就能自動轉換：
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt;
 #
 # #[derive(Debug)]
@@ -89,7 +89,7 @@ impl From<std::num::ParseIntError> for AppError {
 
 現在同一個函數裡可以用 `?` 處理兩種錯誤：
 
-```rust,no_run
+```rust,noplayground
 # use std::fmt;
 #
 # #[derive(Debug)]
@@ -136,7 +136,7 @@ fn read_number(path: &str) -> Result<i32, AppError> {
 
 如果你不需要精確區分錯誤種類，可以用 `Box<dyn Error>` 當通用錯誤型別：
 
-```rust,no_run
+```rust,noplayground
 use std::error::Error;
 
 fn read_number(path: &str) -> Result<i32, Box<dyn Error>> {
