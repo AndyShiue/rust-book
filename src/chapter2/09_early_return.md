@@ -54,8 +54,8 @@ fn abs_v2(x: i32) -> i32 {
 ```
 
 兩種都對！Rust 社群的慣例是：
-- **能用表達式寫的，就用表達式**（方式二）
-- **有「我想要提前離開」的意思時才用 return**（方式一）
+- **有「我想要提前離開」的意思時用 return**（方式一）
+- **其他時候都用表達式**（方式二）
 
 ### 實用場景：提前擋掉不合法的輸入
 
@@ -84,17 +84,17 @@ fn main() {
 如果函數沒有寫 `-> 型別`（也就是回傳 `()`），`return` 後面不用寫值：
 
 ```rust
-fn greet(name: &str) {
-    if name == "" {
-        println!("名字不能是空的！");
+fn check_age(age: i32) {
+    if age < 0 {
+        println!("年齡不能是負數！");
         return; // 等同於 return ();
     }
-    println!("你好，{}！", name);
+    println!("你的年齡是 {}", age);
 }
 
 fn main() {
-    greet("Alice");
-    greet("");
+    check_age(25);
+    check_age(-3);
 }
 ```
 
@@ -126,4 +126,4 @@ fn add_v2(a: i32, b: i32) -> i32 {
 - 最後一行不加分號的自然回傳是 Rust 的慣用寫法
 - `return` 最常用在 guard clause：先檢查條件，不對就提前走人
 - 沒有回傳值的函數裡，`return;` 是 `return ();` 的簡寫
-- 不要每個回傳值都寫 `return`，只在需要提前離開時才用
+- 不要每個回傳值都寫 `return`，只在需要提前離�
