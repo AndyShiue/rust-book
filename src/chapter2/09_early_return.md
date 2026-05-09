@@ -79,6 +79,27 @@ fn main() {
 
 這種「先檢查、不對就提前走人」的寫法叫做 **guard clause**（守衛子句），在實務中非常常見。
 
+### 沒有回傳值的 return
+
+如果函數沒有寫 `-> 型別`（也就是回傳 `()`），`return` 後面不用寫值：
+
+```rust
+fn greet(name: &str) {
+    if name == "" {
+        println!("名字不能是空的！");
+        return; // 等同於 return ();
+    }
+    println!("你好，{}！", name);
+}
+
+fn main() {
+    greet("Alice");
+    greet("");
+}
+```
+
+`return;` 是 `return ();` 的簡寫——因為回傳的是 `()`（unit type），省略不寫更簡潔。
+
 ### 不要到處用 return
 
 雖然每個回傳值都寫 `return` 也能跑，但在 Rust 裡這不是好習慣：
@@ -104,4 +125,5 @@ fn add_v2(a: i32, b: i32) -> i32 {
 - `return 值;` 可以在函數中途提前回傳（記得加分號）
 - 最後一行不加分號的自然回傳是 Rust 的慣用寫法
 - `return` 最常用在 guard clause：先檢查條件，不對就提前走人
+- 沒有回傳值的函數裡，`return;` 是 `return ();` 的簡寫
 - 不要每個回傳值都寫 `return`，只在需要提前離開時才用
