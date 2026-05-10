@@ -18,7 +18,7 @@ union IntOrFloat {
 # fn main() {}
 ```
 
-`IntOrFloat` 的大小是最大欄位的大小（4 bytes）。`i` 和 `f` 佔的是同一塊——寫入 `i` 會覆蓋 `f` 的內容。
+`IntOrFloat` 的大小是最大欄位的大小（4 bytes）。`i` 和 `f` 佔的是同一塊記憶體——寫入 `i` 會覆蓋 `f` 的內容。
 
 ### 寫入不需要 unsafe，讀取需要
 

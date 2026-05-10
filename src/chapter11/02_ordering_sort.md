@@ -140,7 +140,7 @@ fn main() {
     println!("min(10, 20) = {}", cmp::min(10, 20));
     println!("max(10, 20) = {}", cmp::max(10, 20));
 
-    // 浮點數用 min_by /max_by
+    // 浮點數用 min_by / max_by
     let smaller = cmp::min_by(1.5_f64, 2.3, |a, b| {
         a.partial_cmp(b).unwrap()
     });

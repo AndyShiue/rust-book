@@ -58,7 +58,7 @@ fn main() {
     // {2, 3}
 
     // 聯集：合在一起
-    let union: HashSet<_> = a.union(&b).copied().collect();
+    let union_set: HashSet<_> = a.union(&b).copied().collect();
     // {1, 2, 3, 4}
 
     // 差集：a 有但 b 沒有的

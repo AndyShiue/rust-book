@@ -168,7 +168,7 @@ fn main() {
 ## 重點整理
 - `HashMap<K, V>` 用 key 查 value，不管資料量多大查詢速度幾乎是固定的
 - `insert` 放入、`get` 查詢（回傳 `Option<&V>`）、`remove` 刪除
-- Key 必須實作 `Eq + Hash`，`Hash` 可以 derive
+- Key 必須實作 `Eq + Hash`，`Hash` 也可以 derive
 - `f64` 不能當 key（沒有 `Eq`）
 - `entry().or_insert()` 是「沒有才插入」的慣用寫法，回傳 `&mut V`
 - 走訪順序不固定
