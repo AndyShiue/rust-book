@@ -39,7 +39,7 @@ enum AppError {
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            AppError::Io(e) => write!(f, "IO 錯誤：{}", e),
+            AppError::Io(e) => write!(f, "輸入輸出錯誤：{}", e),
             AppError::Parse(e) => write!(f, "解析錯誤：{}", e),
         }
     }
@@ -64,7 +64,7 @@ impl std::error::Error for AppError {}
 # impl fmt::Display for AppError {
 #     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 #         match self {
-#             AppError::Io(e) => write!(f, "IO 錯誤：{}", e),
+#             AppError::Io(e) => write!(f, "輸入輸出錯誤：{}", e),
 #             AppError::Parse(e) => write!(f, "解析錯誤：{}", e),
 #         }
 #     }
@@ -101,7 +101,7 @@ impl From<std::num::ParseIntError> for AppError {
 # impl fmt::Display for AppError {
 #     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 #         match self {
-#             AppError::Io(e) => write!(f, "IO 錯誤：{}", e),
+#             AppError::Io(e) => write!(f, "輸入輸出錯誤：{}", e),
 #             AppError::Parse(e) => write!(f, "解析錯誤：{}", e),
 #         }
 #     }

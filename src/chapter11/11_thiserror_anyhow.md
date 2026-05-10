@@ -27,7 +27,7 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 enum AppError {
-    #[error("IO 錯誤：{0}")]
+    #[error("輸入輸出錯誤：{0}")]
     Io(#[from] std::io::Error),
 
     #[error("解析錯誤：{0}")]
@@ -49,7 +49,7 @@ enum AppError {
 #
 # #[derive(Debug, Error)]
 # enum AppError {
-#     #[error("IO 錯誤：{0}")]
+#     #[error("輸入輸出錯誤：{0}")]
 #     Io(#[from] std::io::Error),
 #
 #     #[error("解析錯誤：{0}")]
