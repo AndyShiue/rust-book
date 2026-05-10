@@ -112,7 +112,7 @@ fn main() {
     println!("字元數：{}", chinese.chars().count()); // 4
 
     for (i, c) in chinese.chars().enumerate() {
-        println!("第 {} 個字元：{}", i, c);
+        println!("第 {} 個字元：{}", i + 1, c);
     }
 }
 ```
