@@ -102,8 +102,8 @@ fn main() {
 ```
 
 ```rust,ignore
-#[non_exhaustive]  // 告訴其他 crate 這個 enum/struct 未來可能加新的東西
-#[deprecated]      // 標記已棄用
+#[non_exhaustive] // 告訴其他 crate 這個 enum/struct 未來可能加新的東西
+#[deprecated]     // 標記已棄用
 #[deprecated(since = "2.0", note = "請用 new_function")]
 ```
 

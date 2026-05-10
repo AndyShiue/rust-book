@@ -96,7 +96,7 @@ enum Shape {
 }
 
 fn main() {
-    Shape::Circle(3.0) as i32 // 編譯錯誤！
+    Shape::Circle(3.0) as i32; // 編譯錯誤！
 }
 ```
 
@@ -124,15 +124,6 @@ fn main() {
 
     println!("Spring = {}", Season::Spring as i32);
     println!("Winter = {}", Season::Winter as i32);
-
-    // 用在 match 裡
-    let cmd = Command::Move;
-    match cmd {
-        Command::Quit => println!("退出"),
-        Command::Move => println!("移動"),
-        Command::Write => println!("寫入"),
-        Command::ChangeColor => println!("改顏色"),
-    }
 }
 ```
 
