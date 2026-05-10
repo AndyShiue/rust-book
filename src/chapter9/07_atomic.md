@@ -58,12 +58,12 @@ fn main() {
 
 ```rust,ignore
 // 執行緒 A
-data.push(42);                          // 第 1 步：寫入資料
-ready.store(true, Ordering::Relaxed);   // 第 2 步：設旗標
+data.push(42);                        // 第 1 步：寫入資料
+ready.store(true, Ordering::Relaxed); // 第 2 步：設旗標
 
 // 執行緒 B
-if ready.load(Ordering::Relaxed) {      // 看到 true
-    println!("{}", data[0]);            // 但資料可能還沒寫進去！
+if ready.load(Ordering::Relaxed) {    // 看到 true
+    println!("{}", data[0]);          // 但資料可能還沒寫進去！
 }
 ```
 
@@ -80,9 +80,9 @@ if ready.load(Ordering::Relaxed) {      // 看到 true
 
 注意看上面的程式碼——`store` 和 `fetch_add` 明明在修改值，卻不需要 `&mut self`，只要 `&self` 就行。這跟第五章學的 Cell 一樣，是 interior mutability。
 
-為什麼一定要這樣設計？因為如果要 `&mut self` 才能修改，那就只有一個執行緒能拿到 `&mut`，其他執行緒根本碰不到這個值——那還跨什麼執行緒？Atomic 的重點就是讓多個執行緒透過 `&` 同時存取同一個值，所以必須是 interior mutability。
+為什麼一定要這樣設計？因為如果要 `&mut self` 才能修改，那就只有一個執行緒能拿到 `&mut`，其他執行緒根本碰不到這個值——那還跨什麼執行緒？Atomic 的重點就是讓多個執行緒透過 `&` 同時存取同一個值，所以必須有 interior mutability。
 
-Cell 也是 interior mutability，但 Cell 不是 Sync（不能跨執行緒共享）。Atomic 是 Sync——因為底層硬體保證了操作的原子性，多個執行緒同時透過 `&` 修改也不會出問題。
+Cell 也有 interior mutability，但 Cell 不是 Sync（不能跨執行緒共享）。Atomic 是 Sync——因為底層硬體保證了操作的原子性，多個執行緒同時透過 `&` 修改也不會出問題。
 
 ### 搭配 Arc 使用
 
