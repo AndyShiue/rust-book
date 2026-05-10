@@ -123,7 +123,7 @@ impl From<std::num::ParseIntError> for AppError {
 #
 fn read_number(path: &str) -> Result<i32, AppError> {
     let content = std::fs::read_to_string(path)?; // io::Error → AppError
-    let num = content.trim().parse::<i32>()?;      // ParseIntError → AppError
+    let num = content.trim().parse::<i32>()?;     // ParseIntError → AppError
     Ok(num)
 }
 ```
