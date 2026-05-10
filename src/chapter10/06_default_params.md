@@ -69,7 +69,7 @@ fn main() {
 ### 有預設值的參數必須放後面
 
 ```rust,noplayground
-struct Pair<T, U = T> {   // OK：U 有預設值，放在 T 後面
+struct Pair<T, U = T> { // OK：U 有預設值，放在 T 後面
     first: T,
     second: U,
 }

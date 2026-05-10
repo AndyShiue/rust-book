@@ -116,8 +116,8 @@ fn filled<T: Copy, const N: usize>(value: T) -> [T; N] {
 }
 
 fn main() {
-    println!("sum([1,2,3]) = {}", sum([1, 2, 3]));
-    println!("sum([10,20]) = {}", sum([10, 20]));
+    println!("sum([1, 2, 3]) = {}", sum([1, 2, 3]));
+    println!("sum([10, 20]) = {}", sum([10, 20]));
 
     let ones: [i32; 5] = filled(1);
     println!("{:?}", ones);

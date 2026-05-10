@@ -214,7 +214,7 @@
     - [std::env / std::process](chapter11/06_env_process.md)
     - [std::path](chapter11/07_path.md)
     - [字串方法](chapter11/08_string_methods.md)
-    - [IO：stdin、檔案讀寫](chapter11/09_io.md)
+    - [輸入輸出：stdin、檔案讀寫](chapter11/09_io.md)
     - [Error trait](chapter11/10_error_trait.md)
     - [thiserror / anyhow 簡介](chapter11/11_thiserror_anyhow.md)
     - [catch_unwind](chapter11/12_catch_unwind.md)

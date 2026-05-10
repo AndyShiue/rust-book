@@ -151,7 +151,7 @@ fn main() {
 ## 重點整理
 - unsafe 讓你做編譯器無法驗證的操作，但不是關掉所有檢查
 - 五種 unsafe 操作：解參考原始指標、呼叫 unsafe fn、impl unsafe trait、存取 static mut、存取 union 欄位
-- 原始指標 `*const T` / `*mut T`：建立不需要 unsafe，解參考需要
+- 原始指標 `*const T` / `*mut T`：沒有借用規則保護的指標，不保證指向有效的資料。建立不需要 unsafe，解參考需要
 - `&raw const x` / `&raw mut x`：直接拿原始指標，不經過參考
 - unsafe fn 在 2024 edition 後也要寫 `unsafe { }` 區塊
 - unsafe trait 的危險在實作，不在使用（呼叫方法不需要 unsafe）
