@@ -68,6 +68,8 @@ fn main() {
 **3. 修復資料再繼續**
 
 ```rust,ignore
+# use std::sync::PoisonError;
+#
 # fn main() {
     let guard = match data.lock() {
         Ok(g) => g,
