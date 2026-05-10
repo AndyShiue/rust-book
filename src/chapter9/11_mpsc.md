@@ -27,7 +27,7 @@ fn main() {
 
 ### 發送和接收
 
-`tx.send(value)` 把值送出去（value 會被 move），`rx.recv()` 在另一端接收（會阻塞直到收到）：
+`tx.send(value)` 把值送出去（會 move 值），`rx.recv()` 在另一端接收（會阻塞直到收到）：
 
 ```rust
 use std::sync::mpsc;
