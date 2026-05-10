@@ -96,7 +96,7 @@ enum Shape {
 }
 
 fn main() {
-    Shape::Circle(3.0) as i32 // 編譯錯誤！
+    Shape::Circle(3.0) as i32; // 編譯錯誤！
 }
 ```
 
