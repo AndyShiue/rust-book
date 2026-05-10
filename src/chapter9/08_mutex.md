@@ -11,7 +11,7 @@
 
 ### Mutex：多執行緒版的 interior mutability
 
-`Mutex<T>` 和 RefCell 有些像——都是一種 interior mutability，讓你在不需要 `&mut` 的情況下修改值。差別在於：
+`Mutex<T>` 和 RefCell 有些像——都提供一種 interior mutability，讓你在不需要 `&mut` 的情況下修改值。差別在於：
 
 - **RefCell**：單執行緒，用普通整數做借用檢查
 - **Mutex**：多執行緒，用作業系統的鎖（lock）保護資料
