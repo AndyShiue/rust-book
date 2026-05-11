@@ -1,6 +1,7 @@
 # attribute 總覽
 
 ## 本集目標
+
 整理 Rust 常見的 attribute，理解 outer 和 inner 的差別。
 
 ## 概念說明
@@ -153,6 +154,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `#[...]`（outer）修飾下面的項目，`#![...]`（inner）修飾包含它的項目
 - `#[derive(...)]`：自動實作 trait
 - `#[allow/warn/deny(...)]`：控制警告

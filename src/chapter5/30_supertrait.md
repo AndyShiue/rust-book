@@ -1,6 +1,7 @@
 # supertrait
 
 ## 本集目標
+
 學會用 supertrait 定義 trait 之間的依賴關係，理解 `Copy: Clone` 以及 `DerefMut: Deref` 的設計原理。
 
 ## 概念說明
@@ -116,6 +117,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `trait A: B` 表示「要實作 A，必須先實作 B」——B 是 A 的 supertrait，A 是 B 的 subtrait
 - `Copy: Clone`——Copy 要求 Clone，所以 derive 時必須同時寫兩個
 - `DerefMut: Deref`——要能可變解參考，必須先能不可變解參考

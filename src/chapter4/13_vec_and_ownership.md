@@ -1,6 +1,7 @@
 # Vec 與所有權
 
 ## 本集目標
+
 理解 Vec 的所有權行為，以及它和 String/&str 的對稱關係。
 
 ## 概念說明
@@ -164,6 +165,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - **Vec 和 String 的所有權行為完全對稱**：都在 heap 上，都會 move，都可以 clone
 - `String` ↔ `&str` 就像 `Vec` ↔ `&[T]`（擁有 ↔ 借用）
 - `&Vec` 會自動轉成 `&[T]`（跟 `&String` 自動轉 `&str` 一樣）

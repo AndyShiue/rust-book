@@ -1,6 +1,7 @@
 # poisoning
 
 ## 本集目標
+
 理解什麼是鎖的中毒（poisoning），以及該怎麼處理它。
 
 ## 概念說明
@@ -140,6 +141,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 持有鎖的執行緒 panic 了 → 鎖中毒（poisoned）
 - 之後 `lock()` / `read()` / `write()` 都回傳 `Err(PoisonError)`
 - RwLock 只有寫鎖 panic 才會中毒，讀鎖 panic 不會

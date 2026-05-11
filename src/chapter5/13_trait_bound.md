@@ -1,6 +1,7 @@
 # trait bound
 
 ## 本集目標
+
 學會用 trait bound 限制泛型參數的能力，以及用條件式 `impl` 為符合條件的型別加方法。
 
 ## 概念說明
@@ -146,6 +147,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - trait bound `T: Clone` 限制 T 必須實作特定 trait
 - trait bound 可以加在函數、struct、enum、impl 等各種泛型參數上
 - 沒有 trait bound 的話，泛型函數/方法不能假設 T 有任何能力

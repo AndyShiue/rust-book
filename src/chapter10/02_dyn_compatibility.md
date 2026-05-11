@@ -1,6 +1,7 @@
 # dyn compatibility
 
 ## 本集目標
+
 理解哪些 trait 可以用 `dyn`、哪些不行，以及背後的原因。
 
 ## 概念說明
@@ -165,6 +166,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 不是所有 trait 都能用 `dyn`——必須是 dyn compatible 的
 - 核心概念：編譯器自動生成 `impl Trait for dyn Trait`，`Self` = `dyn Trait`（DST）
 - `Self` 不能出現在 `self` 之外的型別中——具體型別已被抹掉

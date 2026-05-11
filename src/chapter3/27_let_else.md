@@ -1,6 +1,7 @@
 # let else
 
 ## 本集目標
+
 學會用 `let...else` 在 pattern 不匹配時提前離開，寫出更扁平的程式碼。
 
 ## 概念說明
@@ -134,6 +135,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `let pattern = expr else { return/break/continue };` 在匹配失敗時提前離開
 - `else` 裡面必須離開當前流程（`return` / `break` / `continue`）
 - 匹配成功的話，綁定的變數在後續程式碼還能使用

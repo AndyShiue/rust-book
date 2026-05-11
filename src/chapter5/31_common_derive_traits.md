@@ -1,6 +1,7 @@
 # 常見的 derive trait
 
 ## 本集目標
+
 學會 `PartialEq`、`Eq`、`PartialOrd`、`Ord`、`Default` 等常見 derive trait 的用途和差別。
 
 ## 概念說明
@@ -141,6 +142,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `PartialEq`：`==`、`!=` 比較；`Eq`：保證自反性（NAN 是例外）
 - `PartialOrd`：`<`、`>`、`<=`、`>=` 比較；`Ord`：保證完整排序
 - `f64` 因為 NAN 的存在，只有 Partial 版本，沒有完整版

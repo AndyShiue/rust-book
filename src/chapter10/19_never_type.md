@@ -1,6 +1,7 @@
 # never type `!`
 
 ## 本集目標
+
 認識 `!` 型別——代表永遠不會產生值。
 
 ## 概念說明
@@ -95,6 +96,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `!` 是 never type，代表永遠不會產生值
 - `-> !` 的函數永遠不會回傳
 - `panic!`、`process::exit`、`return`、`break`、`continue` 的型別都是 `!`

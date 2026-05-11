@@ -1,6 +1,7 @@
 # enum discriminant
 
 ## 本集目標
+
 了解 enum variant 背後的整數值，以及如何自訂它。
 
 ## 概念說明
@@ -128,6 +129,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 每個 enum variant 都有一個整數 discriminant，預設從 0 遞增
 - C-style enum 可以用 `as` 轉成整數看到 discriminant
 - 手動指定值用 `= 數字`，沒指定的從前一個 +1

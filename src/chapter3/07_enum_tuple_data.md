@@ -1,6 +1,7 @@
 # enum 攜帶 tuple variant
 
 ## 本集目標
+
 學會讓 enum 的 variant 攜帶額外的資料，像 tuple 一樣。
 
 ## 概念說明
@@ -68,6 +69,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - enum variant 可以攜帶資料：`Circle(f64)` 表示 Circle 帶一個 f64
 - 建立帶資料的 variant：`Shape::Circle(5.0)`
 - 同一個 enum 裡，不同 variant 可以帶不同的資料

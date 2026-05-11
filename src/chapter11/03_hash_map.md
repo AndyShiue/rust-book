@@ -1,6 +1,7 @@
 # `HashMap<K, V>`
 
 ## 本集目標
+
 學會用 `HashMap` 儲存和查詢 key-value 資料。
 
 ## 概念說明
@@ -166,6 +167,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `HashMap<K, V>` 用 key 查 value，不管資料量多大查詢速度幾乎是固定的
 - `insert` 放入、`get` 查詢（回傳 `Option<&V>`）、`remove` 刪除
 - Key 必須實作 `Eq + Hash`，`Hash` 也可以 derive

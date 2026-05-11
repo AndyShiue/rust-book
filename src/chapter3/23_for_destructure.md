@@ -1,6 +1,7 @@
 # for 迴圈解構
 
 ## 本集目標
+
 學會在 `for` 迴圈的變數位置直接解構 tuple 或 struct。
 
 ## 概念說明
@@ -81,6 +82,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `for` 迴圈的變數位置可以直接寫解構模式
 - 走訪 tuple 的陣列：`for (a, b) in pairs`
 - 走訪 struct 的陣列：`for Point { x, y } in points`

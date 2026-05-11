@@ -132,6 +132,7 @@ src/
 ```
 
 **main.rs：**
+
 ```rust,ignore
 mod math;
 
@@ -145,12 +146,14 @@ fn main() {
 ```
 
 **math.rs：**
+
 ```rust,ignore
 pub mod basic;
 pub mod advanced;
 ```
 
 **math/basic.rs：**
+
 ```rust,ignore
 pub fn add(a: i32, b: i32) -> i32 {
     a + b
@@ -158,6 +161,7 @@ pub fn add(a: i32, b: i32) -> i32 {
 ```
 
 **math/advanced.rs：**
+
 ```rust,ignore
 pub fn power(base: i32, exp: u32) -> i32 {
     let mut result = 1;

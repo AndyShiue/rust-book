@@ -1,6 +1,7 @@
 # 多個 trait bound 與 where
 
 ## 本集目標
+
 學會用 `+` 組合多個 trait bound，以及用 `where` 子句讓複雜的 bound 更好讀。
 
 ## 概念說明
@@ -109,6 +110,7 @@ where
 此外，`where` 也能出現在 struct、enum 和 trait 的定義上。目前知道就好了，之後需要用到的時候自然會想起來。
 
 ## 重點整理
+
 - 用 `+` 組合多個 trait bound：`T: Clone + Display`
 - `where` 子句是另一種寫 trait bound 的方式，更好讀
 - `where` 比角括號更靈活，冒號前面可以放 tuple 等複雜型別（如 `(T, U): Clone`）

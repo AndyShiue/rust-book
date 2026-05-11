@@ -1,6 +1,7 @@
 # thiserror / anyhow 簡介
 
 ## 本集目標
+
 認識兩個社群最常用的錯誤處理 crate。
 
 ## 概念說明
@@ -133,6 +134,7 @@ fn main() -> Result<()> {
 ```
 
 ## 重點整理
+
 - `thiserror`：用 derive macro 自動生成 Display、Error、From，適合函式庫
 - `#[error("...")]` 生成 Display，`#[from]` 生成 From
 - `anyhow`：通用錯誤型別，不用定義錯誤 enum，適合應用程式

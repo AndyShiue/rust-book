@@ -1,6 +1,7 @@
 # match 解構 tuple variant
 
 ## 本集目標
+
 學會用 match 解構 enum tuple variant，取出裡面攜帶的資料。
 
 ## 概念說明
@@ -71,6 +72,7 @@ enum Action {
 ```
 
 ## 重點整理
+
 - **解構**（destructuring）：把複合的東西拆開，取出裡面的各個部分
 - 在 match 模式裡，可以在括號中使用變數名解構 tuple variant
 - `Shape::Circle(r)` → 把 Circle 裡的值取出來叫做 `r`

@@ -1,6 +1,7 @@
 # static 變數
 
 ## 本集目標
+
 了解 `static` 和 `const` 的差別，以及為什麼 `static mut` 幾乎不該用。
 
 ## 概念說明
@@ -75,6 +76,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `static` 有固定記憶體位址，整個程式共用一份
 - `const` 沒有固定位址，值被嵌入使用的地方；大部分情況用 `const` 就好
 - `static mut` 讀寫都需要 unsafe，幾乎永遠不該用

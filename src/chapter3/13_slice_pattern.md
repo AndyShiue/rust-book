@@ -1,6 +1,7 @@
 # slice pattern
 
 ## 本集目標
+
 學會用 slice pattern 解構陣列和切片。
 
 ## 概念說明
@@ -78,5 +79,6 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 遇到陣列的時候，可以在 match 時用 `[a, b, c]` 這種 slice pattern，跟 tuple pattern 類似
 - 切片 `&[T]` 長度不固定，可以用不同長度的模式來匹配（`[]`、`[x]`、`[x, y]`……）

@@ -1,6 +1,7 @@
 # use 基礎
 
 ## 本集目標
+
 學會用 `use` 把長路徑縮短，並理解為什麼之前不用 `use` 就能用 `Option`、`Vec` 等型別。
 
 ## 概念說明
@@ -42,6 +43,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `use std::fmt::Display;` 把長路徑縮短，之後直接寫 `Display`
 - `use` 只是路徑的簡寫，不引入新功能
 - Rust 的編譯器預設引入 prelude 的常用型別和 trait（Vec、String、Option、Clone 等）

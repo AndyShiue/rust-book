@@ -1,6 +1,7 @@
 # std::path
 
 ## 本集目標
+
 學會用 `Path` 和 `PathBuf` 處理跨平台路徑。
 
 ## 概念說明
@@ -122,6 +123,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Path` 是 DST（對應 `str`），`PathBuf` 是擁有所有權的版本（對應 `String`）
 - `push` / `join` 自動加上正確的路徑分隔符號
 - `parent`、`file_name`、`extension`、`file_stem` 拆解路徑

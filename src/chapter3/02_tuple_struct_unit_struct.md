@@ -1,6 +1,7 @@
 # tuple struct 與 unit struct
 
 ## 本集目標
+
 學會用 tuple struct 定義沒有欄位名的 struct，以及完全沒有欄位的 unit struct。
 
 ## 概念說明
@@ -51,6 +52,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - **tuple struct**：`struct Point(i32, i32);`，用 `.0`、`.1` 取值
 - **unit struct**：`struct Marker;`，沒有任何欄位
 - tuple struct 適合欄位意義明顯、不需要命名的情況

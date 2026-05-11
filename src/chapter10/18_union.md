@@ -1,6 +1,7 @@
 # union
 
 ## 本集目標
+
 認識 union——所有欄位共享同一塊記憶體。
 
 ## 概念說明
@@ -79,6 +80,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `union` 的所有欄位共享同一塊記憶體
 - 寫入不需要 unsafe，讀取需要——因為 Rust 不知道裡面存的是哪個欄位
 - 跟 enum 不同：union 沒有 discriminant，不追蹤目前是哪個 variant

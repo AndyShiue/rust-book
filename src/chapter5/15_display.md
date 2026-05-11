@@ -1,6 +1,7 @@
 # Display trait
 
 ## 本集目標
+
 學會為自訂型別實作 `Display` trait，理解 `Display` 和 `Debug` 的差別，以及 `Display` 和 `ToString` 的關係。
 
 ## 概念說明
@@ -113,6 +114,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Display` trait 讓你的型別可以用 `{}` 格式印出
 - `Debug`（`{:?}`）給開發者看，可以 derive；`Display`（`{}`）給使用者看，必須手動實作
 - 實作方式：`impl Display for MyType`，在 `fmt` 方法裡用 `write!` 寫格式

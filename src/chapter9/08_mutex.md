@@ -1,6 +1,7 @@
 # `Mutex<T>`
 
 ## 本集目標
+
 學會用 `Mutex<T>` 讓多個執行緒安全地修改共享資料。
 
 ## 概念說明
@@ -128,6 +129,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Mutex<T>` 是多執行緒版的 interior mutability，用鎖保護資料
 - `lock().expect(...)` 回傳 `MutexGuard`，透過 DerefMut 直接當 `&mut T` 用
 - 同一時間只有一個執行緒能持有鎖，其他執行緒會等待

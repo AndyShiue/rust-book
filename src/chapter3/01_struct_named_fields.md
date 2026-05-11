@@ -1,6 +1,7 @@
 # struct（named fields）
 
 ## 本集目標
+
 學會用 struct 把多個相關的值組合在一起，形成一個自訂型別。
 
 ## 概念說明
@@ -69,6 +70,7 @@ Rust 允許在 struct 定義、struct 建立、函數呼叫等地方的最後一
 Rust 社群慣例是**加上 trailing comma**。
 
 ## 重點整理
+
 - `struct` 讓你定義一個有名字欄位的自訂型別
 - struct 定義一般放在 `fn main()` 外面，上面或下面都可以（和函數一樣）
 - 建立 struct 值的語法：`Point { x: 1, y: 2 }`

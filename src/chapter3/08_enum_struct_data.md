@@ -1,6 +1,7 @@
 # enum 攜帶 struct variant
 
 ## 本集目標
+
 學會讓 enum 的 variant 用類似 struct 的方式攜帶有名字的欄位。
 
 ## 概念說明
@@ -65,6 +66,7 @@ enum Event {
 ```
 
 ## 重點整理
+
 - variant 可以用 struct 形式攜帶有名字的欄位：`Circle { radius: f64 }`
 - 建立值：`Shape::Circle { radius: 5.0 }`
 - 同一個 enum 可以混搭：有的用 tuple 形式、有的用 struct 形式、有的不帶資料

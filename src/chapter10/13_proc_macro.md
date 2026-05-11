@@ -1,6 +1,7 @@
 # proc macro
 
 ## 本集目標
+
 認識三種 proc macro，理解它們的運作原理。這集只是大概介紹 proc macro 的概念和骨架，不會帶你實際寫一個完整的 proc macro。如果有需要，請自行搜尋相關教學。
 
 ## 概念說明
@@ -134,6 +135,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - proc macro 分三種：derive、attribute、function-like
 - 本質是接收 `TokenStream`、回傳 `TokenStream` 的編譯期函數
 - derive 附加程式碼、attribute 取代項目、function-like 展開內容

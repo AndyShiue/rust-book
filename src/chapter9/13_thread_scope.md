@@ -1,6 +1,7 @@
 # thread::scope 簡介
 
 ## 本集目標
+
 學會用 `thread::scope` 建立有限生命週期的執行緒，不需要 move 或 Arc 就能借用外部資料。
 
 ## 概念說明
@@ -112,6 +113,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `thread::spawn` 要求 `'static`，所以閉包不能借用局部變數
 - `thread::scope` 保證所有 scoped thread 在 scope 結束前 join，因此可以安全借用外部資料
 - 不需要 move、不需要 Arc、不需要手動 join——程式碼簡潔很多

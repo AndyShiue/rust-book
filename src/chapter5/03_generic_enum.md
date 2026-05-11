@@ -1,6 +1,7 @@
 # 泛型 enum
 
 ## 本集目標
+
 學會定義帶型別參數的 enum。
 
 ## 概念說明
@@ -75,6 +76,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - enum 也可以帶型別參數：`enum Maybe<T> { ... }`
 - variant 攜帶的資料型別可以用 `T` 來泛化
 - 可以有多個型別參數：`enum Either<L, R> { Left(L), Right(R) }`

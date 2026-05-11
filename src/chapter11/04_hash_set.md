@@ -1,6 +1,7 @@
 # `HashSet<T>`
 
 ## 本集目標
+
 學會用 `HashSet` 處理集合運算。
 
 ## 概念說明
@@ -150,6 +151,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `HashSet<T>` 是只有 key 的 HashMap，元素不重複
 - 元素必須實作 `Eq + Hash`
 - `insert` 加入、`contains` 檢查、`remove` 移除

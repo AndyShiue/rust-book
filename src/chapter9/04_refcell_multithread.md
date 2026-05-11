@@ -1,6 +1,7 @@
 # RefCell 在多執行緒
 
 ## 本集目標
+
 理解為什麼 interior mutability 在多執行緒下是危險的，以及 RefCell 的 Send / Sync 特性。
 
 ## 概念說明
@@ -71,6 +72,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - interior mutability 讓 `&T` 能修改內容，但這在多執行緒下很危險
 - atomic 操作 = 不可分割的操作，要嘛完整執行完，要嘛完全沒發生，不會被其他執行緒打斷到一半
 - RefCell 的 borrow 計數是普通整數，不是 atomic，多執行緒同時操作可能繞過檢查

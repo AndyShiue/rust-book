@@ -1,6 +1,7 @@
 # trait 簡介
 
 ## 本集目標
+
 學會定義 trait 和為型別實作 trait，並認識 `#[derive]` 這個自動產生實作的捷徑。
 
 ## 概念說明
@@ -113,6 +114,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - **trait** 是一組行為的規格定義，像是一張「能力清單」
 - 用 `impl TraitName for TypeName` 來幫型別實作 trait（例如 `impl Greet for Cat`）
 - `#[derive(Debug)]` 讓 Rust 自動幫你的 struct/enum 實作 `Debug` trait

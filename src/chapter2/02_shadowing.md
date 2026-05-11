@@ -1,6 +1,7 @@
 # shadowing
 
 ## 本集目標
+
 用 `let` 重新宣告同名變數（shadowing），以及它和 `mut` 的關鍵差別。
 
 ## 正文

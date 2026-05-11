@@ -137,6 +137,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Fn`、`FnMut`、`FnOnce` 是 **trait**，不是型別；`fn` 才是函數指標型別
 - 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（FnOnce 能接受所有閉包，Fn 只接受不修改的）
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數

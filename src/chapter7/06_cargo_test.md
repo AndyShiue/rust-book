@@ -1,6 +1,7 @@
 # cargo test
 
 ## 本集目標
+
 學會用 `#[test]` 寫測試、用 `assert!` 系列巨集驗證結果、用 `cargo test` 跑測試。
 
 ## 概念說明
@@ -110,6 +111,7 @@ cargo test
 ```
 
 這個指令會：
+
 1. 編譯你的程式碼（包含測試）
 2. 執行所有 `#[test]` 函數
 3. 報告哪些通過、哪些失敗
@@ -187,6 +189,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `#[test]` 標記測試函數，`cargo test` 自動找到並執行所有測試
 - `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果（debug 和 release 都會執行）
 - `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!` 只在 debug 模式執行，release 時會被忽略

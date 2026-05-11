@@ -1,6 +1,7 @@
 # macro_rules!
 
 ## 本集目標
+
 學會用 `macro_rules!` 定義自己的宣告式巨集。
 
 ## 概念說明
@@ -179,6 +180,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 能用函數就不要用巨集
 - `macro_rules!` 定義宣告式巨集：`(pattern) => { expansion }`
 - 用 `$name:expr` 等接收參數，常見 kind：`expr`、`ty`、`ident`、`tt`

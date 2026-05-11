@@ -1,6 +1,7 @@
 # 字串方法
 
 ## 本集目標
+
 認識 `&str` 和 `String` 上最常用的方法，以及 Rust 字串與 UTF-8 的關係。
 
 ## 概念說明
@@ -118,6 +119,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `contains`、`starts_with`、`ends_with`、`find`：搜尋
 - `trim`、`trim_start`、`trim_end`：修剪空白
 - `replace`：替換

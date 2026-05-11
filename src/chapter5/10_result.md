@@ -1,6 +1,7 @@
 # `Result<T, E>`
 
 ## 本集目標
+
 學會使用 `Result<T, E>` 處理可能失敗的操作，理解它和 Option 的對稱關係。
 
 ## 概念說明
@@ -95,6 +96,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Result<T, E>` 表示「成功（Ok）或失敗（Err）」，比 Option 多了錯誤資訊
 - `Ok(T)` 對應成功，`Err(E)` 對應失敗
 - `Result`、`Ok`、`Err` 和 Option 一樣，是 Rust 預設就引入每個檔案的

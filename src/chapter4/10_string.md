@@ -1,6 +1,7 @@
 # String
 
 ## 本集目標
+
 認識 Rust 的 `String` 型別——一個擁有資料、可以修改的字串。
 
 ## 概念說明
@@ -113,6 +114,7 @@ fn print_string(s: &String) {
 ```
 
 ## 重點整理
+
 - `String` 是擁有資料的字串型別，資料存在 heap 上
 - `String::from("...")` 建立新的 String
 - `push_str` 在字串後面接上更多文字（需要 `let mut`）

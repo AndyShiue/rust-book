@@ -1,6 +1,7 @@
 # Error trait
 
 ## 本集目標
+
 學會自訂錯誤型別，以及用 `Box<dyn Error>` 統一處理不同種類的錯誤。
 
 ## 概念說明
@@ -181,6 +182,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Error` trait 要求 `Display + Debug`，是所有錯誤型別的共同介面
 - 自訂錯誤：定義 enum → impl Display → impl Error → 為每種底層錯誤 impl From
 - 有了 From，`?` 就能自動把底層錯誤轉成你的自訂錯誤

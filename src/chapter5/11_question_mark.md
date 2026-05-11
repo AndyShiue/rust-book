@@ -1,6 +1,7 @@
 # `?` 運算子
 
 ## 本集目標
+
 學會用 `?` 運算子簡化錯誤傳播，避免一次又一次的 match。
 
 ## 概念說明
@@ -120,6 +121,7 @@ fn main() -> Result<(), String> {
 ```
 
 ## 重點整理
+
 - `?` 是 match + early return 的簡寫
 - `Result` 上用 `?`：`Ok` 取值，`Err` 提前回傳
 - `Option` 上用 `?`：`Some` 取值，`None` 提前回傳

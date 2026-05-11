@@ -1,6 +1,7 @@
 # 收集
 
 ## 本集目標
+
 學會用 `.collect()` 把迭代器收集成各種集合型別。
 
 ## 概念說明
@@ -72,6 +73,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - range 不僅實作了 `IntoIterator`，其實它本身就是一個 `Iterator`
 - `.collect()` 把迭代器的元素收集成目標集合型別
 - 用型別標註 `let v: Vec<i32>` 或 turbofish `.collect::<Vec<i32>>()` 告訴 Rust 目標型別

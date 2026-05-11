@@ -1,6 +1,7 @@
 # 組合與截取
 
 ## 本集目標
+
 學會用 `zip`、`enumerate`、`chain`、`take`、`skip`、`flatten` 來組合和截取迭代器。
 
 ## 概念說明
@@ -151,6 +152,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `.zip(iter)` 把兩個迭代器配對成 tuple，以較短的為準
 - `.enumerate()` 為每個元素加上從 0 開始的索引
 - `.chain(iter)` 把兩個迭代器首尾串接

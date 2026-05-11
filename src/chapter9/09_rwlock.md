@@ -1,6 +1,7 @@
 # `RwLock<T>`
 
 ## 本集目標
+
 學會用 `RwLock<T>` 實現讀寫分離的鎖，以及和 Mutex 的比較。
 
 ## 概念說明
@@ -100,6 +101,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `RwLock<T>` 區分讀鎖和寫鎖：多個讀者可以同時讀，寫者獨佔
 - `read().expect(...)` 取得讀鎖，`write().expect(...)` 取得寫鎖
 - Guard 透過 Deref 操作內容，drop 時自動放鎖

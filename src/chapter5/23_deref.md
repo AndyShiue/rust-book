@@ -1,6 +1,7 @@
 # Deref 與自動解參考
 
 ## 本集目標
+
 理解 `Deref` trait 和 Rust 的自動解參考機制，以及智慧指標為什麼能直接呼叫內部型別的方法。
 
 ## 概念說明
@@ -202,6 +203,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 在 Rust 中，實作了 `Deref` 的型別常被稱為智慧指標；`*v` 展開為 `*(Deref::deref(&v))`，所以解參考 `Box<T>` 得到 `T`
 - `DerefMut` 是 `Deref` 的可變版本；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
 - Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）

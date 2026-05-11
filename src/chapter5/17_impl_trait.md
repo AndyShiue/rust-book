@@ -1,6 +1,7 @@
 # impl Trait 語法
 
 ## 本集目標
+
 學會用 `impl Trait` 作為 trait bound 的簡寫，理解它在參數和回傳值中的不同含義。
 
 ## 概念說明
@@ -117,6 +118,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `fn foo(x: &impl Display)` 是 `fn foo<T: Display>(x: &T)` 的簡寫
 - 每個 `impl Trait` 參數代表獨立的型別——兩個 `impl Display` 可以是不同型別
 - 要求同型別，用具名的型別參數 `<T: Display>`

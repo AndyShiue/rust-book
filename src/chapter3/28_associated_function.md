@@ -1,6 +1,7 @@
 # associated function
 
 ## 本集目標
+
 學會用 `impl` 為 struct 或 enum 定義 associated function（關聯函數），以及用 `::` 呼叫。
 
 ## 概念說明
@@ -103,6 +104,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `impl 型別名 { ... }` 為型別定義 associated function
 - associated function 用 `型別名::函數名()` 呼叫
 - 最常見的用途是 `new` 函數，作為建構函數

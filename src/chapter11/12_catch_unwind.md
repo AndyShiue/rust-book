@@ -1,6 +1,7 @@
 # catch_unwind
 
 ## 本集目標
+
 學會用 `catch_unwind` 攔截 panic。
 
 ## 概念說明
@@ -97,6 +98,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `catch_unwind` 攔截 panic，回傳 `Ok(值)` 或 `Err`
 - 用途：FFI 邊界、多執行緒任務隔離
 - `UnwindSafe`：`&mut T` 不是 UnwindSafe（資料可能是半成品）

@@ -1,6 +1,7 @@
 # method
 
 ## 本集目標
+
 學會用 `self` 定義 method（方法），讓函數可以用 `.` 在值上面呼叫。
 
 ## 概念說明
@@ -100,6 +101,7 @@ impl Point {
 ```
 
 ### associated function vs method 的差別：
+
 - associated function：沒有 `self`，用 `::` 呼叫 → `Point::new(3, 7)`
 - method：第一個參數是 `self`，用 `.` 呼叫 → `p.sum()`
 
@@ -177,6 +179,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - method 的第一個參數是 `self`，代表值本身
 - method 用 `.` 呼叫：`p.sum()`，`.` 前面的值自動成為 `self`，不需要手動傳入
 - method 除了 `self` 還可以有其他參數：`fn add(self, other: Point) -> Point`，呼叫時括號內只寫 `self` 以外的參數

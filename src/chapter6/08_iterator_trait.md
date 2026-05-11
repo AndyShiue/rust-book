@@ -1,6 +1,7 @@
 # Iterator trait
 
 ## 本集目標
+
 認識 `Iterator` trait 的核心——只要實作 `next()` 方法，就能免費獲得數十個好用的方法。
 
 ## 概念說明
@@ -19,6 +20,7 @@ trait Iterator {
 ```
 
 就這樣。只有一個必須實作的方法 `next()`，它每次被呼叫就回傳：
+
 - `Some(值)` —— 還有下一個元素
 - `None` —— 迭代結束了
 
@@ -178,6 +180,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Iterator` trait 的核心是 `next(&mut self) -> Option<Self::Item>`
 - 只需實作 `next()`，就能免費獲得數十個預設實作（接下來會陸續學到）
 - 自己幫型別實作 `Iterator` 很簡單——定義 `type Item` 和 `next()` 就好

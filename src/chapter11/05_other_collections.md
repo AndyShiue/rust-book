@@ -1,6 +1,7 @@
 # 其他集合簡介
 
 ## 本集目標
+
 認識 BTreeMap、BTreeSet 和 VecDeque。
 
 ## 概念說明
@@ -115,6 +116,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `BTreeMap`：有序的 HashMap，key 必須實作 `Ord`
 - `BTreeSet`：有序的 HashSet，元素必須實作 `Ord`
 - 需要排序走訪用 BTree 系列，不需要就用 Hash 系列（比較快）

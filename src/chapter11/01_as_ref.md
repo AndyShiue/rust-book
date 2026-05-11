@@ -1,6 +1,7 @@
 # AsRef / AsMut
 
 ## 本集目標
+
 學會用 `AsRef` 和 `AsMut` 讓函數接受多種型別。
 
 ## 概念說明
@@ -92,6 +93,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `AsRef<T>`：便宜地借用成 `&T`，用 `.as_ref()` 呼叫
 - `AsMut<T>`：便宜地借用成 `&mut T`，用 `.as_mut()` 呼叫
 - 一個型別可以實作多個 `AsRef`（Deref 只能一個目標）

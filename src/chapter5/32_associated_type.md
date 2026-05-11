@@ -1,6 +1,7 @@
 # associated type
 
 ## 本集目標
+
 學會在 trait 中定義 associated type（關聯型別），理解它和泛型參數的差別。
 
 ## 概念說明
@@ -191,6 +192,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `type Item;` 在 trait 中定義 associated type
 - 用 `Self::Item` 的語法可以在 trait 定義中讀取 Self 的 associated type
 - 實作時用 `type Item = i32;` 指定具體型別

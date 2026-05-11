@@ -1,6 +1,7 @@
 # 運算子重載
 
 ## 本集目標
+
 學會幫自己的型別實作 `+`、`-` 等運算子。
 
 ## 概念說明
@@ -21,6 +22,7 @@ trait Add<Rhs = Self> {
 ```
 
 三個重點：
+
 - `Rhs = Self`：上一集學的預設參數，加法右邊預設和左邊同型別
 - `type Output`：第五章學的 associated type，加法的結果不一定跟輸入同型別
 - `self` 不是 `&self`：`add` 會消耗左邊的值（Copy 的型別不受影響）
@@ -155,6 +157,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `a + b` 是 `Add::add(a, b)` 的簡寫，其他運算子同理
 - `Add` 的簽名用了預設參數（`Rhs = Self`）和 associated type（`Output`）
 - `AddAssign`（`+=`）是就地修改（`&mut self`），`Add`（`+`）是產生新值（`self`）

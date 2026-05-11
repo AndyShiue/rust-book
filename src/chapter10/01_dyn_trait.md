@@ -1,6 +1,7 @@
 # dyn Trait 基礎
 
 ## 本集目標
+
 學會用 `dyn Trait` 在同一個位置存放不同型別的值，理解動態分派的原理。
 
 ## 概念說明
@@ -305,6 +306,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `dyn Trait` 代表「某個實作了 Trait 的型別，具體是什麼不知道」
 - `dyn Trait` 是 DST，必須放在指標後面：`&dyn Trait`、`Box<dyn Trait>`
 - `&dyn Trait` 是胖指標：資料位址 + vtable 指標

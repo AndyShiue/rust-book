@@ -1,6 +1,7 @@
 # field shorthand
 
 ## 本集目標
+
 學會用 field shorthand 簡化 struct 的建立和模式匹配。
 
 ## 概念說明
@@ -81,6 +82,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - 當變數名和欄位名相同時，可以只寫一次：`Point { x, y }` 等同於 `Point { x: x, y: y }`
 - 這個簡寫叫做 **field shorthand**
 - 建立 struct / enum variant 時可以用

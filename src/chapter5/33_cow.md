@@ -1,6 +1,7 @@
 # `Cow<'a, B>`
 
 ## 本集目標
+
 學會使用 `Cow<'a, str>` 實現「能借就借，需要時才 clone」的彈性策略。
 
 ## 概念說明
@@ -124,6 +125,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Cow<'a, str>` 可以是借用（`&str`）或擁有（`String`），視情況而定
 - Cow 利用 `ToOwned` trait 的 associated type 來決定擁有版本的型別（`str` → `String`、`[T]` → `Vec<T>`）
 - Cow 實作了 `Deref`，`Cow<'a, str>` 不管是 `Borrowed` 還是 `Owned` 都能直接當 `&str` 用——這是它最大的優點

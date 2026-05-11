@@ -92,6 +92,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `&&`：左邊是 `false` 就不看右邊，整個結果直接是 `false`
 - `||`：左邊是 `true` 就不看右邊，整個結果直接是 `true`
 - 這叫短路行為（short-circuit evaluation）

@@ -12,7 +12,7 @@
 
 ### 基本語法
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let result = loop {
         break 42;

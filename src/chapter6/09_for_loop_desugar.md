@@ -1,6 +1,7 @@
 # for 迴圈的真面目
 
 ## 本集目標
+
 揭開 `for` 迴圈的真面目，理解它背後其實是 `IntoIterator` + `while let` 的組合。
 
 ## 概念說明
@@ -35,6 +36,7 @@
 ```
 
 三個步驟：
+
 1. 呼叫 `v.into_iter()` 把 `v` 轉成迭代器
 2. 反覆呼叫 `iter.next()`
 3. 用 `while let Some(x)` 解構（還記得第三章的 while let 嗎？），直到拿到 `None` 就結束
@@ -134,6 +136,7 @@ impl Iterator for Countdown {
 ```
 
 ## 重點整理
+
 - `for x in v` 是簡寫，展開後是 `v.into_iter()` + `while let Some(x) = iter.next()`
 - `IntoIterator` trait 定義了「如何把自己轉成迭代器」
 - 任何實作了 `IntoIterator` 的型別都能用 `for` 迴圈

@@ -118,6 +118,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - channel 讓執行緒之間用傳訊息溝通，資料直接送過去，不共享
 - `mpsc::channel()` 建立發送端 tx 和接收端 rx
 - `tx.send(value)` 會 move value，`rx.recv()` 阻塞直到收到

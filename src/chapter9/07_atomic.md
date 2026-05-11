@@ -1,6 +1,7 @@
 # atomic 型別
 
 ## 本集目標
+
 學會用 atomic 型別在多個執行緒之間安全地讀寫簡單的值。
 
 ## 概念說明
@@ -157,6 +158,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - atomic 操作把讀、改、寫合成一個不可分割的動作，多個執行緒同時做也不會出錯
 - 常用型別：`AtomicI32`、`AtomicUsize`、`AtomicBool`
 - 常用方法：`load`（讀）、`store`（寫）、`fetch_add`（加並回傳舊值）

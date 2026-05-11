@@ -1,6 +1,7 @@
 # Ordering 與 sort
 
 ## 本集目標
+
 認識 `Ordering`、`min`/`max` 系列函數、排序方法，以及 `Reverse` 的原理。
 
 ## 概念說明
@@ -162,6 +163,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Ordering` 有三個值：`Less`、`Equal`、`Greater`
 - `cmp::min` / `cmp::max` 取兩者的較小/大值，要求 `Ord`
 - `f64` 沒有 `Ord`，用 `min_by` / `max_by` 自訂比較

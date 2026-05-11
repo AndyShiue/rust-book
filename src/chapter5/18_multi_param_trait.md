@@ -1,6 +1,7 @@
 # 多參數 trait
 
 ## 本集目標
+
 學會定義帶其他型別參數的 trait，讓同一個型別可以針對不同目標型別實作同一個 trait。
 
 ## 概念說明
@@ -113,6 +114,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - Trait 可以帶其他型別參數：`trait Convert<T> { ... }`
 - 同一個型別可以對不同的 `T` 實作同一個 trait（例如 `Convert<String>` 和 `Convert<(i32,)>`）
 - 這和沒有其他參數的 trait 不同——一個型別只能實作一次那些 trait

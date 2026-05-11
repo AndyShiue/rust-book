@@ -1,6 +1,7 @@
 # unsafe
 
 ## 本集目標
+
 理解 unsafe 的意義、能做什麼、以及寫 unsafe 程式碼時該注意什麼。
 
 ## 概念說明
@@ -149,6 +150,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - unsafe 讓你做編譯器無法驗證的操作，但不是關掉所有檢查
 - 五種 unsafe 操作：解參考原始指標、呼叫 unsafe fn、實作 unsafe trait、存取 static mut、存取 union 欄位
 - 原始指標 `*const T` / `*mut T`：沒有借用規則保護的指標，不保證指向有效的資料。建立不需要 unsafe，解參考需要

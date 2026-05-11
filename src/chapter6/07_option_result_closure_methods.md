@@ -1,6 +1,7 @@
 # Option / Result 的閉包方法
 
 ## 本集目標
+
 認識 Option 和 Result 上接受閉包的常用方法，體會閉包如何讓程式碼更簡潔流暢。
 
 ## 概念說明
@@ -229,6 +230,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Option` 和 `Result` 的 `map` 對內部值做轉換，`None` / `Err` 時不執行
 - `and_then` 用於閉包本身也回傳 `Option` / `Result` 的情況，避免巢狀
 - `unwrap_or_else` 懶惰計算預設值，只在 `None` / `Err` 時才執行閉包

@@ -1,6 +1,7 @@
 # `Option<T>`
 
 ## 本集目標
+
 認識 Rust 標準庫最重要的泛型 enum——`Option<T>`，理解它如何取代 null 並防止 runtime 錯誤。
 
 ## 概念說明
@@ -91,6 +92,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `Option<T>` 是 Rust 用來表達「可能沒有值」的泛型 enum，取代了其他語言的 null
 - `Some(T)` 表示有值，`None` 表示沒有值
 - 編譯器強制你處理 `None` 的情況，執行時期不會有 null pointer exception

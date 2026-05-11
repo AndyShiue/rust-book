@@ -1,6 +1,7 @@
 # self vs &self vs &mut self
 
 ## 本集目標
+
 學會在 method 中選擇 `self`、`&self`、`&mut self`，以及函數參數的 `T` / `&T` / `&mut T` 怎麼選。
 
 ## 概念說明
@@ -68,6 +69,7 @@ trait Clone {
 | `p: &mut Point` | 可變借用 |
 
 選擇的原則一樣：
+
 - 只讀 → `&T`
 - 要改 → `&mut T`
 - 要消耗 → `T`
@@ -151,6 +153,7 @@ fn main() {
 你可能注意到了——呼叫的時候我們只寫 `c.display()`、`c.increment()`，不用寫 `(&c).display()` 或 `(&mut c).increment()`。Rust 會根據 method 的 `self` 參數自動幫你加上 `&` 或 `&mut`。你當然也能寫 `(&c).display()` 或 `(&mut c).increment()`，但沒有必要。
 
 ## 重點整理
+
 - `&self`：唯讀借用，最常用，呼叫後還能繼續用
 - `&mut self`：可變借用，可以修改欄位，呼叫後還能繼續用
 - `self`：消耗所有權，呼叫後變數就不能再用了

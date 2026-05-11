@@ -1,6 +1,7 @@
 # Option 常用方法
 
 ## 本集目標
+
 學會 `Option` 的常用方法：`unwrap`、`expect`、`unwrap_or`、`flatten`，以及用 `if let` 取值。
 
 ## 概念說明
@@ -100,6 +101,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `unwrap()`：取出 Some 的值，None 時 panic——小心使用
 - `expect("訊息")`：和 unwrap 一樣，但 panic 時印出自訂訊息
 - `unwrap_or(預設值)`：None 時回傳預設值，不會 panic

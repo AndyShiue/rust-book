@@ -1,6 +1,7 @@
 # From / Into
 
 ## 本集目標
+
 學會使用標準庫的 `From` 和 `Into` trait 做型別轉換，理解「實作 From 就自動獲得 Into」的機制。
 
 ## 概念說明
@@ -122,6 +123,7 @@ fn main() {
 ```
 
 ## 重點整理
+
 - `From<T>` 定義「從 T 轉換而來」：`String::from("hello")` 就是這個
 - 實作 `From` 就自動獲得 `Into`——不需要另外實作
 - `into()` 是 `from()` 的反方向：`let f: Fahrenheit = celsius.into();`
