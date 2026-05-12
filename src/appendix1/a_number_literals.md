@@ -14,7 +14,7 @@
 
 當數字很大的時候，`1000000` 和 `1_000_000` 哪個比較好讀？Rust 允許你在數字字面值的任意位置插入底線 `_`，編譯器會直接忽略它們：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let million = 1_000_000;
     let weird_but_legal = 1_00_00_00; // 合法，但別這樣寫
@@ -35,7 +35,7 @@
 
 你可以直接在數字後面加上型別：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let byte = 0xFFu8;      // 十六進位 + u8
     let big = 1_000_000i64; // 底線 + i64
@@ -49,7 +49,7 @@
 
 浮點數有幾種寫法：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let a = 3.14;        // 一般小數，預設 f64
     let b = 3.14f32;     // 指定 f32

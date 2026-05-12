@@ -28,7 +28,7 @@
 
 「我還沒寫完，先放個佔位符」。開發中最常用，讓你先把程式架構搭好，細節之後再填：
 
-```rust,no_run
+```rust,noplayground
 fn calculate_tax(income: f64) -> f64 {
     todo!() // 之後再實作
 }

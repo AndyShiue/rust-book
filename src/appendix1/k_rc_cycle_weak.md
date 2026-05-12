@@ -25,7 +25,7 @@
 
 `Weak<T>` 是一種「弱參考」——它指向同一筆資料，但**不會增加 strong count**。
 
-```rust,no_run
+```rust,noplayground
 # use std::rc::{Rc, Weak};
 #
 # fn main() {
@@ -62,7 +62,7 @@
 
 解法是：`next`（往後）用 `Rc`，`prev`（往前）用 `Weak`：
 
-```rust,no_run
+```rust,noplayground
 use std::rc::{Rc, Weak};
 use std::cell::RefCell;
 

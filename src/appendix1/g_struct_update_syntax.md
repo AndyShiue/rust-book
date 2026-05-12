@@ -12,7 +12,7 @@
 
 ### 基本語法
 
-```rust,no_run
+```rust,noplayground
 # struct Point {
 #     x: i32,
 #     y: i32,
@@ -41,7 +41,7 @@
 
 如果你的 `struct` 有實作 `Default` `trait`，可以用 `..Default::default()` 來建立「只指定幾個欄位，其他用預設值」的實例：
 
-```rust,no_run
+```rust,noplayground
 # #[derive(Default)]
 # struct Config {
 #     debug: bool,

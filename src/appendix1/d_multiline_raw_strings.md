@@ -14,7 +14,7 @@
 
 在 Rust 裡，字串字面值可以直接跨行：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let poem = "床前明月光，
 疑是地上霜。";
@@ -27,7 +27,7 @@
 
 如果你想把很長的字串分行寫，但**不要**換行符號出現在結果裡，可以在行尾加 `\`。它會吃掉換行以及下一行開頭的空白：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let long = "這是一段很長的句子，\
                 但其實只有一行。";
@@ -39,7 +39,7 @@
 
 有時候字串裡有很多反斜線（例如 Windows 路徑），每個都要跳脫很煩。`r"..."` 語法讓你完全不需要跳脫：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let path = r"C:\Users\test\documents";
     // 不需要寫成 "C:\\Users\\test\\documents"
@@ -50,7 +50,7 @@
 
 如果 raw string 裡面需要有雙引號怎麼辦？用 `r#"..."#` 語法：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let json = r#"{"name": "Andy", "age": 29}"#;
 # }
@@ -58,7 +58,7 @@
 
 如果字串裡面連 `"#` 都有？那就多加幾層 `#`：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let tricky = r##"這裡有 "#" 符號"##;
 # }

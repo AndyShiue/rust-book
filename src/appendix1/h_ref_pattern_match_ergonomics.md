@@ -14,7 +14,7 @@
 
 在模式中，`ref` 會把綁定的變數變成一個參考，而不是取得所有權：
 
-```rust,no_run
+```rust,noplayground
 # fn main() {
     let val = String::from("hello");
     let ref r = val; // r 的型別是 &String
