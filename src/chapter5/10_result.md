@@ -28,10 +28,10 @@ enum Result<T, E> {
 
 ### `Result` 和 `Option` 的對稱
 
-| Option | Result |
-|--------|--------|
-| Some(T) | Ok(T) |
-| None | Err(E) |
+| `Option` | `Result` |
+|----------|----------|
+| `Some(T)` | `Ok(T)` |
+| `None` | `Err(E)` |
 
 `Option` 只知道「有或沒有」，`Result` 還知道「為什麼沒有」。
 

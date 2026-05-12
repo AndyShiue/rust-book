@@ -15,7 +15,7 @@ fn main() {
 }
 ```
 
-數字、bool 這些基本型別用 `{}` 都沒問題。但如果你試著用 `{}` 印一個 tuple：
+數字、`bool` 這些基本型別用 `{}` 都沒問題。但如果你試著用 `{}` 印一個 tuple：
 
 ```rust,compile_fail
 fn main() {

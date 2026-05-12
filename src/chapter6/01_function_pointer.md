@@ -58,7 +58,7 @@ fn apply(f: fn(i32) -> i32, value: i32) -> i32 {
 
 - 沒有參數、沒有回傳值：`fn()`
 - 兩個參數：`fn(i32, i32) -> i32`
-- 回傳 String：`fn(&str) -> String`
+- 回傳 `String`：`fn(&str) -> String`
 
 ### 函數指標 vs 下一集的閉包
 

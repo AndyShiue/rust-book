@@ -34,7 +34,7 @@
 
 ### `push_str`：在後面加上文字
 
-String 可以修改！用 `push_str` 來接上更多文字：
+`String` 可以修改！用 `push_str` 來接上更多文字：
 
 ```rust
 # fn main() {
