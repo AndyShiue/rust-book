@@ -88,7 +88,7 @@ impl Add for Point {
 
 ### `Index` / `IndexMut`
 
-Vec 能用 `v[i]` 就是因為它實作了 `Index`：
+`Vec` 能用 `v[i]` 就是因為它實作了 `Index`：
 
 ```rust,noplayground
 use std::ops::Index;

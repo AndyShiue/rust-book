@@ -44,7 +44,7 @@ fn main() {
 
 一樣要注意 guard 不要活太久。
 
-### 和 RefCell 的對照
+### 和 `RefCell` 的對照
 
 |  | `RefCell` | `RwLock` |
 |--|-----------|----------|

@@ -29,7 +29,7 @@
 
 ### `RefCell` 是 `Send`
 
-但 RefCell 可以被 **move** 到另一個執行緒。為什麼？因為 move 之後，只有那一個執行緒擁有這個 `RefCell`，不存在多個執行緒同時操作的問題。
+但 `RefCell` 可以被 **move** 到另一個執行緒。為什麼？因為 move 之後，只有那一個執行緒擁有這個 `RefCell`，不存在多個執行緒同時操作的問題。
 
 ```rust
 use std::cell::RefCell;

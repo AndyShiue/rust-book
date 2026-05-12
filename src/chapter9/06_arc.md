@@ -49,7 +49,7 @@ fn main() {
 
 ### `T` 必須是 `Send + Sync`
 
-Arc 要求 `T: Send + Sync`。為什麼？
+`Arc` 要求 `T: Send + Sync`。為什麼？
 
 **`Sync`**：多個執行緒透過各自的 `Arc` 同時存取同一份 `T`。第五章學了 `Deref`——`Arc` 實作了 `Deref`，所以你可以透過 `Arc` 直接存取 `T` 的內容。這等於多個執行緒同時持有 `T` 的不可變參考，所以 `T` 必須是 Sync。
 
@@ -86,6 +86,6 @@ fn main() {
 ## 重點整理
 
 - `Arc<T>` 是 `Rc<T>` 的多執行緒版本，參考計數用 atomic 操作
-- 用法跟 Rc 幾乎一樣：`Arc::new()`、`Arc::clone()`
+- 用法跟 `Rc` 幾乎一樣：`Arc::new()`、`Arc::clone()`
 - `Arc::clone` 後把 `clone` move 到其他執行緒，就能共享資料
 - `T` 必須是 `Send + Sync`：`Sync` 因為多執行緒同時存取，`Send` 因為 `drop` 可能發生在任何執行緒

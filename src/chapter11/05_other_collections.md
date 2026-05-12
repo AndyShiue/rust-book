@@ -8,7 +8,7 @@
 
 `HashMap` 和 `HashSet` 是最常用的集合，但標準庫還有其他選擇。
 
-### BTreeMap
+### `BTreeMap`
 
 跟 `HashMap` 的差別：key 是**有序**的。走訪的時候會按照 key 的排序順序，不是隨機順序：
 
@@ -30,7 +30,7 @@ fn main() {
 
 代價是 key 必須實作 `Ord`（而不是 `Hash + Eq`）。查詢速度方面，`HashMap` 不管資料量多大幾乎是固定的，`BTreeMap` 資料越多會稍微慢一點，但還是很快。
 
-### BTreeSet
+### `BTreeSet`
 
 `BTreeSet` 就是只有 key 的 `BTreeMap`，跟 `HashSet` 對 `HashMap` 的關係一樣。元素有序，走訪時按順序輸出：
 
