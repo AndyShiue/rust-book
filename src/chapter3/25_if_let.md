@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會用 `if let` 來簡化「只關心一種模式」的 match。
+學會用 `if let` 來簡化「只關心一種模式」的 `match`。
 
 ## 概念說明
 
-有時候你只關心 enum 的某一個 variant，其他的都不在意。用 match 寫的話，必須處理所有情況，就算你只想處理一個：
+有時候你只關心 `enum` 的某一個 variant，其他的都不在意。用 `match` 寫的話，必須處理所有情況，就算你只想處理一個：
 
 ```rust,noplayground
 # enum Color {
@@ -116,9 +116,9 @@ fn main() {
 }
 ```
 
-## if let guard
+## `if let` guard
 
-`if let` 也可以用在 match 的 guard 位置（第 20 集學的 match guard）。語法是 `模式 if let 模式2 = 表達式 =>`：
+`if let` 也可以用在 `match` 的 guard 位置（第 20 集學的 `match` guard）。語法是 `模式 if let 模式2 = 表達式 =>`：
 
 ```rust
 enum Wrapper {
@@ -146,13 +146,13 @@ fn main() {
 
 `x if let Wrapper::Value(v) = lookup(x)` 的意思是：先把值綁定到 `x`，然後用 `lookup(x)` 的結果再做一次模式比對——只有結果是 `Wrapper::Value(v)` 的時候這個分支才成立。
 
-這個例子其實用一般的 `if let` 也寫得出來。但當程式邏輯更複雜——例如外層的 match 已經在比對其他模式，而你又需要在某個分支裡對另一個值做模式比對——if let guard 有時可以讓程式碼更好讀，不用在 match 的分支裡面再套一層 if let。
+這個例子其實用一般的 `if let` 也寫得出來。但當程式邏輯更複雜——例如外層的 `match` 已經在比對其他模式，而你又需要在某個分支裡對另一個值做模式比對——`if let` guard 有時可以讓程式碼更好讀，不用在 `match` 的分支裡面再套一層 `if let`。
 
 ## 重點整理
 
-- `if let 模式 = 值 { ... }` 是 match 只有一個分支時的簡寫
+- `if let 模式 = 值 { ... }` 是 `match` 只有一個分支時的簡寫
 - 只在值符合模式時執行大括號裡的程式碼
 - 可以加 `else` 處理不符合的情況
 - 可以在模式裡取出資料，像 `if let Shape::Circle(r) = s`
-- 比起寫 match + `_ => {}`，`if let` 更簡潔
-- `if let` 也能用在 match guard：`模式 if let 模式2 = 表達式 => ...`
+- 比起寫 `match` + `_ => {}`，`if let` 更簡潔
+- `if let` 也能用在 `match` guard：`模式 if let 模式2 = 表達式 => ...`

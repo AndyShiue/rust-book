@@ -2,29 +2,29 @@
 
 ## 本集目標
 
-理解 Vec 的所有權行為，以及它和 String/&str 的對稱關係。
+理解 `Vec` 的所有權行為，以及它和 `String` / `&str` 的對稱關係。
 
 ## 概念說明
 
-### Vec 和 String 是一對
+### `Vec` 和 `String` 是一對
 
-在前面幾集，我們學了 String 和 &str 的關係：
+在前面幾集，我們學了 `String` 和 `&str` 的關係：
 
 | 擁有版本 | 借用版本 |
 |---|---|
-| String | &str |
+| `String` | `&str` |
 
 Vec 也有完全一樣的對應：
 
 | 擁有版本 | 借用版本 |
 |---|---|
-| Vec | &[T]（切片） |
+| `Vec` | `&[T]`（切片） |
 
-String 擁有一段文字，&str 借用一段文字。Vec 擁有一組元素，&[T] 借用一組元素。**概念完全對稱。**
+`String` 擁有一段文字，`&str` 借用一段文字。`Vec` 擁有一組元素，`&[T]` 借用一組元素。**概念完全對稱。**
 
-### Vec 會 move
+### `Vec` 會 move
 
-Vec 的資料在 heap 上，所以它不是 Copy。賦值和傳入函數都會 move：
+`Vec` 的資料在 heap 上，所以它不是 `Copy`。賦值和傳入函數都會 move：
 
 ```rust,noplayground
 # fn main() {
@@ -33,11 +33,11 @@ Vec 的資料在 heap 上，所以它不是 Copy。賦值和傳入函數都會 m
 # }
 ```
 
-跟 String 一模一樣。
+跟 `String` 一模一樣。
 
-### 函數參數用切片 &[T]
+### 函數參數用切片 `&[T]`
 
-跟 String/&str 的建議一樣——如果函數只需要讀取 `i32` 的 Vec 的內容，用切片 `&[i32]`：
+跟 `String` / `&str` 的建議一樣——如果函數只需要讀取 `i32` 的 `Vec` 的內容，用切片 `&[i32]`：
 
 ```rust
 fn sum(nums: &[i32]) -> i32 {
@@ -57,9 +57,9 @@ fn main() {
 
 就像 `&String` 會自動轉成 `&str`，`i32` 的 `&Vec` 也會自動轉成 `&[i32]`。
 
-### for 迴圈與所有權
+### `for` 迴圈與所有權
 
-這是很重要的一點：`for` 迴圈走訪 Vec 時，可以選擇要 move 還是 borrow：
+這是很重要的一點：`for` 迴圈走訪 `Vec` 時，可以選擇要 move 還是 borrow：
 
 **`for x in v`——move！**
 
@@ -73,7 +73,7 @@ fn main() {
 # }
 ```
 
-`for x in v` 會消耗整個 Vec。迴圈結束後，v 就不存在了。
+`for x in v` 會消耗整個 `Vec`。迴圈結束後，`v` 就不存在了。
 
 **`for x in &v`——borrow！**
 
@@ -87,9 +87,9 @@ fn main() {
 # }
 ```
 
-`for x in &v` 只是借用，v 不會被消耗。
+`for x in &v` 只是借用，`v` 不會被消耗。
 
-大部分情況你應該用 `for x in &v`，除非你確定不再需要這個 Vec。
+大部分情況你應該用 `for x in &v`，除非你確定不再需要這個 `Vec`。
 
 ## 範例程式碼
 
@@ -166,12 +166,12 @@ fn main() {
 
 ## 重點整理
 
-- **Vec 和 String 的所有權行為完全對稱**：都在 heap 上，都會 move，都可以 clone
+- **`Vec` 和 `String` 的所有權行為完全對稱**：都在 heap 上，都會 move，都可以 `clone`
 - `String` ↔ `&str` 就像 `Vec` ↔ `&[T]`（擁有 ↔ 借用）
 - `&Vec` 會自動轉成 `&[T]`（跟 `&String` 自動轉 `&str` 一樣）
 - 函數參數偏好用切片 `&[T]` 而不是 `&Vec`
-- `for x in v`：**move**，消耗整個 Vec
-- `for x in &v`：**borrow**，只是借用，Vec 還在
-- 大部分情況用 `for x in &v`，除非你確定不再需要這個 Vec
+- `for x in v`：**move**，消耗整個 `Vec`
+- `for x in &v`：**borrow**，只是借用，`Vec` 還在
+- 大部分情況用 `for x in &v`，除非你確定不再需要這個 `Vec`
 
-恭喜你完成了第四章！🎉 這一章你學會了 Rust 最核心的概念——所有權、move、clone、copy、borrowing，還有 String 和 Vec 這兩個最常用的非 Copy 型別。這些概念是 Rust 和其他語言最大的不同，也是 Rust 能在不需要犧牲效能的情況下保證記憶體安全的關鍵。下一章我們將進入泛型、trait bound 和生命週期——讓你的程式碼能處理任意型別，同時保持型別安全！
+恭喜你完成了第四章！🎉 這一章你學會了 Rust 最核心的概念——所有權、move、`clone`、copy、borrowing，還有 `String` 和 `Vec` 這兩個最常用的非 `Copy` 型別。這些概念是 Rust 和其他語言最大的不同，也是 Rust 能在不需要犧牲效能的情況下保證記憶體安全的關鍵。下一章我們將進入泛型、`trait` bound 和生命週期——讓你的程式碼能處理任意型別，同時保持型別安全！

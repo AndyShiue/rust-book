@@ -46,7 +46,7 @@ fn make_greeter(name: String) -> impl Fn() {
 
 ### move 閉包的匿名 struct
 
-回想前幾集——閉包是匿名 struct。沒有 `move` 的時候，struct 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有所有權的值**（`T`）：
+回想前幾集——閉包是匿名 `struct`。沒有 `move` 的時候，`struct` 的欄位可能是參考（`&T` 或 `&mut T`）；加了 `move` 之後，**所有欄位都變成擁有所有權的值**（`T`）：
 
 ```rust,noplayground
 # fn main() {
@@ -62,9 +62,9 @@ fn make_greeter(name: String) -> impl Fn() {
 # }
 ```
 
-因為所有欄位都是 owned 的，這個 struct 不借用任何東西，所以沒有 lifetime 的問題——可以安全地從函數回傳、存進 struct。
+因為所有欄位都是擁有所有權的，這個 `struct` 不借用任何東西，所以沒有 lifetime 的問題——可以安全地從函數回傳、存進 `struct`。
 
-### move 不影響閉包是哪種 Fn trait
+### `move` 不影響閉包是哪種 `Fn` `trait`
 
 很多人會搞混：`move` 閉包不代表它是 `FnOnce`！
 
@@ -81,13 +81,13 @@ fn make_greeter(name: String) -> impl Fn() {
 # }
 ```
 
-### 閉包自動實作的 trait
+### 閉包自動實作的 `trait`
 
-閉包能不能 clone 或 copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 copy，整體就能 copy：
+閉包能不能 `clone` 或 copy，取決於它捕捉的變數——跟 tuple 類似，如果裡面的東西都能 copy，整體就能 copy：
 
-- 所有捕捉的變數都是 Copy → 閉包也是 Copy
-- 所有捕捉的變數都是 Clone → 閉包也是 Clone
-- 其他某些 trait 也是同理
+- 所有捕捉的變數都是 `Copy` → 閉包也是 `Copy`
+- 所有捕捉的變數都是 `Clone` → 閉包也是 `Clone`
+- 其他某些 `trait` 也是同理
 
 ```rust
 # fn main() {
@@ -156,5 +156,5 @@ fn main() {
 
 - `move` 強制閉包獲得所有捕捉變數的所有權，不依賴外部借用，適合需要長壽命的場景
 - 回傳閉包時通常需要 `move`，避免懸垂參考
-- `move` **不影響**閉包是 Fn / FnMut / FnOnce——那取決於閉包**怎麼使用**捕捉的值
-- 閉包能否 clone / copy 取決於捕捉的變數是否全為 Clone / Copy
+- `move` **不影響**閉包是 `Fn` / `FnMut` / `FnOnce`——那取決於閉包**怎麼使用**捕捉的值
+- 閉包能否 `clone` / copy 取決於捕捉的變數是否全為 `Clone` / `Copy`

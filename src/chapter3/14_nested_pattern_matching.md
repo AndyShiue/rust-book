@@ -2,15 +2,15 @@
 
 ## 本集目標
 
-學會在 match 裡面再解構更深層的結構——巢狀的模式比對。
+學會在 `match` 裡面再解構更深層的結構——巢狀的模式比對。
 
 ## 概念說明
 
-到目前為止，我們的 match 都只解構一層。但如果資料結構是巢狀的呢？比如一個 tuple 裡面包著 enum，或是一個 enum 裡面包著另一個 struct？
+到目前為止，我們的 `match` 都只解構一層。但如果資料結構是巢狀的呢？比如一個 tuple 裡面包著 `enum`，或是一個 `enum` 裡面包著另一個 `struct`？
 
 Rust 的 pattern matching 可以一次解構好幾層，就像剝洋蔥一樣，一層一層往裡面拿。
 
-比如說，你有一個 tuple `(i32, Shape)`，你可以在 match 裡同時解構 tuple 和裡面的 Shape：
+比如說，你有一個 tuple `(i32, Shape)`，你可以在 `match` 裡同時解構 tuple 和裡面的 `Shape`：
 
 ```rust
 # enum Shape {
@@ -69,6 +69,6 @@ fn main() {
 ## 重點整理
 
 - Rust 的 pattern matching 可以解構多層巢狀結構
-- 可以在一個模式裡同時解構 tuple + enum、tuple + struct 等
-- 巢狀解構讓你不需要寫多個 match，一次就能把所有資料取出來
+- 可以在一個模式裡同時解構 tuple + `enum`、tuple + `struct` 等
+- 巢狀解構讓你不需要寫多個 `match`，一次就能把所有資料取出來
 - 寫法就是把模式一層一層嵌進去，和資料的結構對應

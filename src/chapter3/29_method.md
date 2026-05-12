@@ -6,7 +6,7 @@
 
 ## 概念說明
 
-上一集學了 associated function，它是用 `::` 呼叫的，和「型別」相關。但有時候我們想對一個**已經存在的值**做操作，比如「算出這個 Point 的 x + y」。
+上一集學了 associated function，它是用 `::` 呼叫的，和「型別」相關。但有時候我們想對一個**已經存在的值**做操作，比如「算出這個 `Point` 的 `x + y`」。
 
 這就是 **method**（方法）——參數列表的第一個位置放 `self`，代表「呼叫這個方法的那個值本身」：
 
@@ -25,7 +25,7 @@ impl Point {
 # fn main() {}
 ```
 
-呼叫的時候用 `.`（點）而不是 `::`：
+呼叫的時候用 `.` 而不是 `::`：
 
 ```rust,noplayground
 # struct Point {
@@ -183,4 +183,4 @@ fn main() {
 - method 的第一個參數是 `self`，代表值本身
 - method 用 `.` 呼叫：`p.sum()`，`.` 前面的值自動成為 `self`，不需要手動傳入
 - method 除了 `self` 還可以有其他參數：`fn add(self, other: Point) -> Point`，呼叫時括號內只寫 `self` 以外的參數
-- struct 和 enum 都可以有 method
+- `struct` 和 `enum` 都可以有 method

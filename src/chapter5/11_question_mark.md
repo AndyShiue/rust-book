@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會用 `?` 運算子簡化錯誤傳播，避免一次又一次的 match。
+學會用 `?` 運算子簡化錯誤傳播，避免一次又一次的 `match`。
 
 ## 概念說明
 
-上一集學了 Result，我們用 match 來處理成功和失敗。但如果一個函數裡有好幾個可能失敗的操作呢？
+上一集學了 `Result`，我們用 `match` 來處理成功和失敗。但如果一個函數裡有好幾個可能失敗的操作呢？
 
 ```rust,noplayground
 fn do_stuff() -> Result<i32, String> {
@@ -24,7 +24,7 @@ fn do_stuff() -> Result<i32, String> {
 # fn main() {}
 ```
 
-每個 parse 都要 match 一次，太囉嗦了。`?` 運算子就是用來解決這個問題的。
+每個 `parse` 都要 `match` 一次，太囉嗦了。`?` 運算子就是用來解決這個問題的。
 
 ### `?` 的本質
 
@@ -33,13 +33,13 @@ fn do_stuff() -> Result<i32, String> {
 - 如果是 `Ok(v)`，把 `v` 取出來，繼續往下跑
 - 如果是 `Err(e)`，回傳 `Err`，提前離開函數
 
-所以 `?` 就是 match + early return 的簡寫。
+所以 `?` 就是 `match` + early `return` 的簡寫。
 
 ### 注意：錯誤型別要一致
 
-使用 `Result` 的時候，Err 裡的型別必須和函數回傳的 Err 型別一致或有某種關聯（之後會講具體是哪種關聯）。如果沒有關聯，就不能直接用 `?`——你得先把錯誤轉成對的型別。
+使用 `Result` 的時候，`Err` 裡的型別必須和函數回傳的 `Err` 型別一致或有某種關聯（之後會講具體是哪種關聯）。如果沒有關聯，就不能直接用 `?`——你得先把錯誤轉成對的型別。
 
-比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`。這時候你可以用 match 自己轉換，然後再手動 return：
+比如 `.parse()` 的錯誤型別是 `std::num::ParseIntError`，但你的函數回傳 `Result<_, String>`。這時候你可以用 `match` 自己轉換，然後再手動 `return`：
 
 ```rust,noplayground
 # fn stringify_err() -> Result<i32, String> {
@@ -58,11 +58,11 @@ fn do_stuff() -> Result<i32, String> {
 
 後面我們會教到更方便處理這種狀況的做法，不用每次都自己手動轉換錯誤型別。
 
-### `?` 也能用在 Option
+### `?` 也能用在 `Option`
 
-`?` 不只能用在 Result 上，也能用在 Option 上——如果是 `None`，就直接 `return None`。
+`?` 不只能用在 `Result` 上，也能用在 `Option` 上——如果是 `None`，就直接 `return None`。
 
-### main 也能回傳 Result
+### `main` 也能回傳 `Result`
 
 如果 `main` 函數回傳 `Result<(), String>`，你就可以在 main 裡使用 `?`。
 
@@ -122,8 +122,8 @@ fn main() -> Result<(), String> {
 
 ## 重點整理
 
-- `?` 是 match + early return 的簡寫
+- `?` 是 `match` + early `return` 的簡寫
 - `Result` 上用 `?`：`Ok` 取值，`Err` 提前回傳
 - `Option` 上用 `?`：`Some` 取值，`None` 提前回傳
 - 使用 `?` 時，錯誤型別必須和函數回傳型別一致——不一致時要另外處理
-- `fn main() -> Result<(), String>` 讓 main 也能使用 `?`
+- `fn main() -> Result<(), String>` 讓 `main` 也能使用 `?`

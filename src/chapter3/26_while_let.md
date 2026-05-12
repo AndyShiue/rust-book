@@ -18,7 +18,7 @@ while let 模式 = 值 {
 
 每次迴圈開始前，Rust 會檢查「值是否符合模式」。符合就繼續跑，不符合就停下來。
 
-為了示範 `while let`，我們用一個自訂 enum 來模擬「可能有值、可能結束」的情況：
+為了示範 `while let`，我們用一個自訂 `enum` 來模擬「可能有值、可能結束」的情況：
 
 ```rust,noplayground
 enum Step {

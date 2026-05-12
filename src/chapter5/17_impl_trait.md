@@ -2,13 +2,13 @@
 
 ## 本集目標
 
-學會用 `impl Trait` 作為 trait bound 的簡寫，理解它在參數和回傳值中的不同含義。
+學會用 `impl Trait` 作為 `trait` bound 的簡寫，理解它在參數和回傳值中的不同含義。
 
 ## 概念說明
 
-我們前面學了 trait bound：`fn foo<T: Display>(x: &T)`。Rust 還提供了一種更簡潔的寫法：`impl Trait`。
+我們前面學了 `trait` bound：`fn foo<T: Display>(x: &T)`。Rust 還提供了一種更簡潔的寫法：`impl Trait`。
 
-### 參數位置的 impl Trait
+### 參數位置的 `impl Trait`
 
 ```rust,noplayground
 # use std::fmt::Display;
@@ -20,9 +20,9 @@ fn show(x: &impl Display) {
 # fn main() {}
 ```
 
-這和 `fn show<T: Display>(x: &T)` 完全等價——都是說「x 的型別必須實作 Display」。只是寫法更簡潔。
+這和 `fn show<T: Display>(x: &T)` 完全等價——都是說「`x` 的型別必須實作 `Display`」。只是寫法更簡潔。
 
-### 每個 impl Trait 是獨立的型別
+### 每個 `impl Trait` 是獨立的型別
 
 重要觀念：參數中的每個 `impl Trait` 代表一個**獨立的**型別。
 
@@ -36,7 +36,7 @@ fn show_two(a: &impl Display, b: &impl Display) {
 # fn main() {}
 ```
 
-`a` 和 `b` 可以是**不同的型別**——只要它們都實作了 Display。比如 `a` 可以是 `i32`，`b` 可以是 `String`。
+`a` 和 `b` 可以是**不同的型別**——只要它們都實作了 `Display`。比如 `a` 可以是 `i32`，`b` 可以是 `String`。
 
 如果你要求 `a` 和 `b` **必須是同一個型別**，就要用具名的型別參數：
 
@@ -50,7 +50,7 @@ fn show_same<T: Display>(a: &T, b: &T) {
 # fn main() {}
 ```
 
-### 回傳位置的 impl Trait
+### 回傳位置的 `impl Trait`
 
 `impl Trait` 也可以用在回傳值：
 
@@ -64,7 +64,7 @@ fn greeting() -> impl Display {
 # fn main() {}
 ```
 
-這表示「我會回傳一個實作了 Display 的型別，但不告訴你具體是什麼型別」。呼叫者只知道回傳值可以用 Display 的方法（像 `println!("{}", greeting())`），不知道具體是 `String` 還是其他什麼。
+這表示「我會回傳一個實作了 `Display` 的型別，但不告訴你具體是什麼型別」。呼叫者只知道回傳值可以用 `Display` 的方法（像 `println!("{}", greeting())`），不知道具體是 `String` 還是其他什麼。
 
 ## 範例程式碼
 
@@ -122,4 +122,4 @@ fn main() {
 - `fn foo(x: &impl Display)` 是 `fn foo<T: Display>(x: &T)` 的簡寫
 - 每個 `impl Trait` 參數代表獨立的型別——兩個 `impl Display` 可以是不同型別
 - 要求同型別，用具名的型別參數 `<T: Display>`
-- 回傳位置的 `-> impl Trait` 隱藏具體型別，呼叫者只知道它實作了什麼 trait
+- 回傳位置的 `-> impl Trait` 隱藏具體型別，呼叫者只知道它實作了什麼 `trait`

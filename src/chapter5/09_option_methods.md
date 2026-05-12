@@ -6,9 +6,9 @@
 
 ## 概念說明
 
-上一集我們用 match 來處理 `Option`，這是最安全的方式。但每次都寫 match 有時候太囉嗦了。Rust 提供了一些方便的方法。
+上一集我們用 `match` 來處理 `Option`，這是最安全的方式。但每次都寫 `match` 有時候太囉嗦了。Rust 提供了一些方便的方法。
 
-### unwrap：暴力取值
+### `unwrap`：暴力取值
 
 ```rust,noplayground
 # fn main() {
@@ -17,9 +17,9 @@
 # }
 ```
 
-如果是 `Some`，直接拿到裡面的值。但如果是 `None`，程式會 panic（崩潰）！所以 `unwrap` 要小心用——只在你**確定**不會是 None 的時候才用。
+如果是 `Some`，直接拿到裡面的值。但如果是 `None`，程式會 panic（崩潰）！所以 `unwrap` 要小心用——只在你**確定**不會是 `None` 的時候才用。
 
-### expect：帶訊息的 unwrap
+### `expect`：帶訊息的 `unwrap`
 
 ```rust,should_panic
 # #![allow(unused_variables)]
@@ -32,7 +32,7 @@
 
 和 `unwrap` 一樣，但 panic 時會印出你自訂的訊息，方便除錯。
 
-### unwrap_or：提供預設值
+### `unwrap_or`：提供預設值
 
 ```rust,noplayground
 # fn main() {
@@ -43,7 +43,7 @@
 
 如果是 `Some` 就取出值，如果是 `None` 就用你給的預設值。不會 panic，很安全。
 
-### flatten：把巢狀 Option 壓平
+### `flatten`：把巢狀 `Option` 壓平
 
 有時候你會碰到 `Option<Option<T>>` 這種巢狀結構：
 
@@ -54,7 +54,7 @@
 # }
 ```
 
-`flatten` 把兩層 Option 壓成一層。如果外層或內層是 `None`，結果就是 `None`。
+`flatten` 把兩層 `Option` 壓成一層。如果外層或內層是 `None`，結果就是 `None`。
 
 ## 範例程式碼
 
@@ -102,8 +102,8 @@ fn main() {
 
 ## 重點整理
 
-- `unwrap()`：取出 Some 的值，None 時 panic——小心使用
-- `expect("訊息")`：和 unwrap 一樣，但 panic 時印出自訂訊息
-- `unwrap_or(預設值)`：None 時回傳預設值，不會 panic
+- `unwrap()`：取出 `Some` 的值，`None` 時 panic——小心使用
+- `expect("訊息")`：和 `unwrap` 一樣，但 panic 時印出自訂訊息
+- `unwrap_or(預設值)`：`None` 時回傳預設值，不會 panic
 - `flatten()`：把 `Option<Option<T>>` 壓成 `Option<T>`
 - 搭配 `if let Some(x) = ...`（第三章學的）也很方便

@@ -8,9 +8,9 @@
 
 ### 什麼是聚合？
 
-前幾集我們學了怎麼建立迭代器、怎麼 collect 成集合。但有時候你不需要一個集合，你要的是一個**單一的值**——總和、最大值、個數⋯⋯這就是聚合（aggregation）。
+前幾集我們學了怎麼建立迭代器、怎麼 `collect` 成集合。但有時候你不需要一個集合，你要的是一個**單一的值**——總和、最大值、個數⋯⋯這就是聚合（aggregation）。
 
-### .count() —— 數有幾個
+### `.count()` —— 數有幾個
 
 ```rust,noplayground
 # fn main() {
@@ -19,7 +19,7 @@
 # }
 ```
 
-### .sum() 和 .product()
+### `.sum()` 和 `.product()`
 
 ```rust,noplayground
 # fn main() {
@@ -30,7 +30,7 @@
 
 跟 `.collect()` 一樣，`.sum()` 和 `.product()` 需要你指定回傳型別，通常用型別標註解決。
 
-### .min() 和 .max()
+### `.min()` 和 `.max()`
 
 ```rust,noplayground
 # fn main() {
@@ -40,9 +40,9 @@
 # }
 ```
 
-回傳 `Option`，因為迭代器可能是空的（空的就回傳 None）。
+回傳 `Option`，因為迭代器可能是空的（空的就回傳 `None`）。
 
-### .fold(init, f) —— 最通用的聚合
+### `.fold(init, f)` —— 最通用的聚合
 
 `fold` 是所有聚合方法的「老大」。它的型別：
 
@@ -91,7 +91,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 # }
 ```
 
-### .reduce(f) —— 沒有初始值的 fold
+### `.reduce(f)` —— 沒有初始值的 `fold`
 
 `reduce` 跟 `fold` 很像，但它用第一個元素當初始值：
 
@@ -104,7 +104,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 因為可能沒有第一個元素（迭代器是空的），所以 `reduce` 回傳 `Option`。
 
-用 `reduce` 實作 min 和 max 就很自然：
+用 `reduce` 實作 `min` 和 `max` 就很自然：
 
 ```rust,noplayground
 # fn main() {
@@ -180,5 +180,5 @@ fn main() {
 - `.sum()` 和 `.product()` 計算總和與乘積，需要標註回傳型別
 - `.min()` 和 `.max()` 回傳 `Option`，因為迭代器可能是空的
 - `.fold(init, |acc, x| ...)` 是最通用的聚合——用初始值和閉包逐步累積
-- `.reduce(|acc, x| ...)` 類似 fold 但用第一個元素當初始值，回傳 `Option`
+- `.reduce(|acc, x| ...)` 類似 `fold` 但用第一個元素當初始值，回傳 `Option`
 - 聚合方法會消耗整個迭代器，產出一個單一的值

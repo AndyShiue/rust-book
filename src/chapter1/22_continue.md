@@ -31,7 +31,7 @@ fn main() {
 - `i = 3` → 奇數，印出 3
 - ……以此類推
 
-### break vs continue
+### `break` vs `continue`
 
 - **`break`**：整個迴圈結束，不再跑了
 - **`continue`**：這一次跳過，但迴圈繼續跑下一次

@@ -18,7 +18,7 @@
 
 `"你好"` 這個字串是直接寫在程式碼裡的，它的資料被編譯進程式本身。`&str` 是一個借用——你只是在看這段文字，但你**不擁有**它，也**不能修改**它。
 
-### String：你擁有的字串
+### `String`：你擁有的字串
 
 `String` 是一個你可以擁有、可以修改的字串型別。它的資料存在 heap 上。
 
@@ -30,9 +30,9 @@
 # }
 ```
 
-`String::from` 是一個 associated function（跟第三章學的一樣，用 `::` 呼叫），它會把 `&str` 的內容複製一份到 heap 上，建立一個你擁有的 String。
+`String::from` 是一個 associated function（跟第三章學的一樣，用 `::` 呼叫），它會把 `&str` 的內容複製一份到 heap 上，建立一個你擁有的 `String`。
 
-### push_str：在後面加上文字
+### `push_str`：在後面加上文字
 
 String 可以修改！用 `push_str` 來接上更多文字：
 
@@ -46,9 +46,9 @@ String 可以修改！用 `push_str` 來接上更多文字：
 
 注意變數要宣告成 `let mut`，因為我們要修改它。
 
-### format!：組合多個值成字串
+### `format!`：組合多個值成字串
 
-`format!` 跟 `println!` 的用法一模一樣，只是它不會印出來，而是回傳一個 String：
+`format!` 跟 `println!` 的用法一模一樣，只是它不會印出來，而是回傳一個 `String`：
 
 ```rust
 # fn main() {
@@ -59,9 +59,9 @@ String 可以修改！用 `push_str` 來接上更多文字：
 # }
 ```
 
-### String 也適用所有權規則
+### `String` 也適用所有權規則
 
-因為 String 的資料在 heap 上，所以它**不是 Copy**。賦值和傳入函數都會 move：
+因為 `String` 的資料在 heap 上，所以它**不是 `Copy`**。賦值和傳入函數都會 move：
 
 ```rust,noplayground
 # fn main() {
@@ -70,7 +70,7 @@ String 可以修改！用 `push_str` 來接上更多文字：
 # }
 ```
 
-這跟之前學的一樣——想保留 s1 就用 `.clone()` 或 `&` 借用。
+這跟之前學的一樣——想保留 `s1` 就用 `.clone()` 或 `&` 借用。
 
 ## 範例程式碼
 
@@ -116,8 +116,8 @@ fn print_string(s: &String) {
 ## 重點整理
 
 - `String` 是擁有資料的字串型別，資料存在 heap 上
-- `String::from("...")` 建立新的 String
+- `String::from("...")` 建立新的 `String`
 - `push_str` 在字串後面接上更多文字（需要 `let mut`）
-- `format!` 跟 `println!` 語法一樣，但回傳 String 而不是印出來
-- String **不是 Copy**，賦值和傳入函數會 move
-- 要保留原本的 String，用 `.clone()` 或 `&` 借用
+- `format!` 跟 `println!` 語法一樣，但回傳 `String` 而不是印出來
+- String **不是 `Copy`**，賦值和傳入函數會 move
+- 要保留原本的 `String`，用 `.clone()` 或 `&` 借用

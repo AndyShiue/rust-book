@@ -6,11 +6,11 @@
 
 ## 概念說明
 
-第 2 集提到 mod 裡的東西預設是私有的，這一集我們來把可見性規則講清楚。
+第 2 集提到 `mod` 裡的東西預設是私有的，這一集我們來把可見性規則講清楚。
 
 ### 預設私有
 
-Rust 的哲學是**預設封閉**——所有東西一開始都是私有的，你必須明確地用 `pub` 開放。這跟有些語言預設 public 的設計完全相反。
+Rust 的哲學是**預設封閉**——所有東西一開始都是私有的，你必須明確地用 `pub` 開放。這跟有些語言預設公開的設計完全相反。
 
 ```rust,compile_fail
 mod secrets {
@@ -30,15 +30,15 @@ fn main() {
 }
 ```
 
-你可能會好奇：`fn main()` 和 `mod secrets` 都沒加 `pub`，為什麼 `main` 能看到 `secrets`？因為它們都定義在根 mod 裡——同一個 mod 的成員互相看得到，不需要 `pub`。`pub` 是用來讓**其他 mod** 看到你的東西的。
+你可能會好奇：`fn main()` 和 `mod secrets` 都沒加 `pub`，為什麼 `main` 能看到 `secrets`？因為它們都定義在根 `mod` 裡——同一個 `mod` 的成員互相看得到，不需要 `pub`。`pub` 是用來讓**其他 `mod`** 看到你的東西的。
 
-### pub fn
+### `pub fn`
 
 函數加 `pub` 就對外公開，沒什麼好說的。
 
-### pub struct —— 欄位要個別標記
+### `pub struct` —— 欄位要個別標記
 
-struct 加 `pub` 只是讓這個**型別**公開，欄位還是私有的！每個欄位要**個別**加 `pub`：
+`struct` 加 `pub` 只是讓這個**型別**公開，欄位還是私有的！每個欄位要**個別**加 `pub`：
 
 ```rust,compile_fail
 mod user {
@@ -71,9 +71,9 @@ fn main() {
 }
 ```
 
-這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 struct 有任何私有欄位，外部就無法直接用 `StructName { ... }` 建構，必須透過你提供的建構函數。
+這個設計很重要——它讓你可以控制哪些欄位要暴露、哪些要隱藏。如果 `struct` 有任何私有欄位，外部就無法直接用 `StructName { ... }` 建構，必須透過你提供的建構函數。
 
-tuple struct 也一樣——欄位預設是私有的，要個別加 `pub`：
+tuple `struct` 也一樣——欄位預設是私有的，要個別加 `pub`：
 
 ```rust,compile_fail
 # #![allow(unused_variables)]
@@ -91,9 +91,9 @@ fn main() {
 }
 ```
 
-### pub enum —— variants 自動公開
+### `pub enum` —— variants 自動公開
 
-enum 跟 struct 不一樣：只要 enum 本身是 `pub`，所有 variants 都**自動公開**。
+`enum` 跟 `struct` 不一樣：只要 `enum` 本身是 `pub`，所有 variants 都**自動公開**。
 
 ```rust
 mod status {
@@ -114,11 +114,11 @@ fn main() {
 }
 ```
 
-這很合理——如果你公開了一個 enum 但藏了某些 variant，別人根本沒辦法正確 match，那還不如不公開。
+這很合理——如果你公開了一個 `enum` 但藏了某些 variant，別人根本沒辦法正確 `match`，那還不如不公開。
 
-### pub trait 和 impl
+### `pub trait` 和 `impl`
 
-trait 加 `pub` 後，裡面的 fn **不用也不能**個別加 `pub`——它們的可見性自動跟著 trait 走。如果 trait 是公開的，裡面的 fn 就是公開的；如果 trait 是私有的，裡面的 fn 就是私有的。這很合理：trait 是一個「契約」，如果你公開了這個契約，契約裡的所有條款當然也要公開，不然別人怎麼實作？
+`trait` 加 `pub` 後，裡面的 `fn` **不用也不能**個別加 `pub`——它們的可見性自動跟著 `trait` 走。如果 `trait` 是公開的，裡面的 `fn` 就是公開的；如果 `trait` 是私有的，裡面的 `fn` 就是私有的。這很合理：`trait` 是一個「契約」，如果你公開了這個契約，契約裡的所有條款當然也要公開，不然別人怎麼實作？
 
 ```rust
 mod animal {
@@ -142,7 +142,7 @@ fn main() {
 }
 ```
 
-注意 `use animal::Speak;` 這行——即使 `Dog` 已經實作了 `Speak`，你還是要把 `Speak` trait 引入作用域才能呼叫它的方法。如果拿掉這行，`d.speak()` 會編譯錯誤。這是 Rust 的規則：**trait 的方法只有在 trait 被 use 進來之後才能呼叫。**
+注意 `use animal::Speak;` 這行——即使 `Dog` 已經實作了 `Speak`，你還是要把 `Speak` `trait` 引入作用域才能呼叫它的方法。如果拿掉這行，`d.speak()` 會編譯錯誤。這是 Rust 的規則：**`trait` 的方法只有在 `trait` 被 `use` 進來之後才能呼叫。**
 
 ```rust,compile_fail
 mod animal {
@@ -166,7 +166,7 @@ fn main() {
 }
 ```
 
-`impl` 區塊本身**不需要也不能加 `pub`**。對於 `impl Type`（不是 `impl Trait for Type`），裡面的 fn 各自用 `pub` 控制可見性：
+`impl` 區塊本身**不需要也不能加 `pub`**。對於 `impl Type`（不是 `impl Trait for Type`），裡面的 `fn` 各自用 `pub` 控制可見性：
 
 ```rust,noplayground
 mod shapes {
@@ -189,13 +189,13 @@ mod shapes {
 # fn main() {}
 ```
 
-### pub(crate)、pub(super)、pub(in path)
+### `pub(crate)`、`pub(super)`、`pub(in path)`
 
-有時候你不想完全公開，但又想讓 crate 內部的其他 mod 使用。Rust 提供了精細的控制：
+有時候你不想完全公開，但又想讓 crate 內部的其他 `mod` 使用。Rust 提供了精細的控制：
 
 - `pub(crate)`：整個 crate 內部可見，但外部（別的 crate）看不到
-- `pub(super)`：只有父 mod 可見
-- `pub(in crate::some::path)`：只對指定的 mod 路徑可見——最精細的控制
+- `pub(super)`：只有父 `mod` 可見
+- `pub(in crate::some::path)`：只對指定的 `mod` 路徑可見——最精細的控制
 
 ```rust,compile_fail
 mod database {
@@ -256,10 +256,10 @@ fn main() {
 ## 重點整理
 
 - Rust **預設一切私有**，必須明確加 `pub` 才公開
-- `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`（tuple struct 也一樣）
-- 有私有欄位的 struct 無法從外部直接建構，必須提供建構函數
+- `pub struct` 只公開型別名稱，每個欄位需要**個別**加 `pub`（tuple `struct` 也一樣）
+- 有私有欄位的 `struct` 無法從外部直接建構，必須提供建構函數
 - `pub enum` 的所有 variants **自動公開**
-- `impl Trait for T` 裡的 fn 可見性跟著 trait 走，不加 `pub`；`impl T` 裡的 fn 各自用 `pub` 控制
+- `impl Trait for T` 裡的 `fn` 可見性跟著 `trait` 走，不加 `pub`；`impl T` 裡的 `fn` 各自用 `pub` 控制
 - `pub(crate)`：crate 內部可見，外部不可見
-- `pub(super)`：只有父 mod 可見
-- `pub(in path)`：只對指定的 mod 路徑可見
+- `pub(super)`：只有父 `mod` 可見
+- `pub(in path)`：只對指定的 `mod` 路徑可見

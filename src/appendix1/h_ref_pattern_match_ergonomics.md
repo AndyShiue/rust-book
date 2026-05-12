@@ -24,9 +24,9 @@
 
 你可能會想：那我直接寫 `&val` 不就好了？沒錯，在 `let` 綁定中，兩者完全等價。`ref` 的存在感主要在 `match` 裡面。
 
-### 在 match 中的 `ref`
+### 在 `match` 中的 `ref`
 
-以前（Rust 1.26 之前），如果你想在 match 裡借用而不是 move，必須手動寫 `ref`：
+以前（Rust 1.26 之前），如果你想在 `match` 裡借用而不是 move，必須手動寫 `ref`：
 
 ```rust
 # fn main() {
@@ -41,9 +41,9 @@
 
 如果不寫 `ref`，`s` 會拿走 `String` 的所有權，之後就不能再用 `opt` 了。
 
-### match ergonomics（Rust 1.26+）
+### `match` ergonomics（Rust 1.26+）
 
-從 Rust 1.26 開始，編譯器變聰明了。當你 match 一個**參考**的時候，裡面的綁定會自動變成參考：
+從 Rust 1.26 開始，編譯器變聰明了。當你 `match` 一個**參考**的時候，裡面的綁定會自動變成參考：
 
 ```rust
 # fn main() {
@@ -58,11 +58,11 @@
 # }
 ```
 
-這就是所謂的 **match ergonomics**。編譯器看到你 match 的是一個參考（`&opt`），就會自動幫你在模式裡加上 `ref`。
+這就是所謂的 **`match` ergonomics**。編譯器看到你 `match` 的是一個參考（`&opt`），就會自動幫你在模式裡加上 `ref`。
 
 ### 所以現在還需要寫 `ref` 嗎？
 
-幾乎不需要了。99% 的情況你只要 match 參考（`match &value`），編譯器就會自動處理。但讀舊程式碼的時候，看到 `ref` 至少要知道它在做什麼。
+幾乎不需要了。99% 的情況你只要 `match` 參考（`match &value`），編譯器就會自動處理。但讀舊程式碼的時候，看到 `ref` 至少要知道它在做什麼。
 
 ## 範例程式碼
 
@@ -113,8 +113,8 @@ fn main() {
 ## 重點整理
 
 - `let ref x = val;` 等同於 `let x = &val;`——在 `let` 中兩者完全一樣
-- 在 match 中，`Some(ref x)` 會借用而不是 move 內部的值
-- **match ergonomics（Rust 1.26+）**：match 一個參考時，模式中的變數自動變成參考
+- 在 `match` 中，`Some(ref x)` 會借用而不是 move 內部的值
+- **`match` ergonomics（Rust 1.26+）**：`match` 一個參考時，模式中的變數自動變成參考
 - 現代 Rust 幾乎不需要手動寫 `ref`，用 `match &value` 就好
-- `for (k, v) in &collection` 也受 match ergonomics 影響，`k` 和 `v` 自動是參考
+- `for (k, v) in &collection` 也受 `match` ergonomics 影響，`k` 和 `v` 自動是參考
 - 認識 `ref` 主要是為了讀懂舊程式碼

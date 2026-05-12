@@ -8,15 +8,15 @@
 
 ### 三種迭代方式
 
-前面提到過 `for x in &v` 和 `for x in v` 的差別。今天來正式介紹 Vec 提供的三個方法：
+前面提到過 `for x in &v` 和 `for x in v` 的差別。今天來正式介紹 `Vec` 提供的三個方法：
 
-| 方法 | 產出型別 | 語意 | Vec 之後還能用嗎？ |
+| 方法 | 產出型別 | 語意 | `Vec` 之後還能用嗎？ |
 |------|---------|------|-------------------|
 | `.iter()` | `&T` | 借用每個元素 | ✓ 可以 |
 | `.into_iter()` | `T` | 消耗整個集合 | ✗ 不行 |
 | `.iter_mut()` | `&mut T` | 可變借用每個元素 | ✓ 可以（已修改） |
 
-### .iter() —— 只是看看
+### `.iter()` —— 只是看看
 
 ```rust
 # fn main() {
@@ -30,7 +30,7 @@
 
 `.iter()` 回傳 `&T` 的迭代器。集合本身不受影響，用完還在。
 
-### .into_iter() —— 拿走一切
+### `.into_iter()` —— 拿走一切
 
 ```rust,compile_fail
 # fn main() {
@@ -46,7 +46,7 @@
 
 其實 `for name in names` 就等於 `for name in names.into_iter()`。
 
-### .iter_mut() —— 借來改改
+### `.iter_mut()` —— 借來改改
 
 ```rust
 # fn main() {
@@ -70,9 +70,9 @@
 | `T`（移動所有權） | `.into_iter()` | `for x in v` |
 | `&mut T`（可變借用） | `.iter_mut()` | `for x in &mut v` |
 
-### 背後的 IntoIterator
+### 背後的 `IntoIterator`
 
-上一集學到 `for x in something` 會呼叫 `something.into_iter()`。那三種 for 迴圈是怎麼運作的？
+上一集學到 `for x in something` 會呼叫 `something.into_iter()`。那三種 `for` 迴圈是怎麼運作的？
 
 其實是因為 `Vec<T>`、`&Vec<T>`、`&mut Vec<T>` 分別實作了 `IntoIterator`：
 
@@ -95,7 +95,7 @@ impl<'a, T> IntoIterator for &'a mut Vec<T> {
 
 所以 `for x in &v` 其實是對 `&v`（型別是 `&Vec<T>`）呼叫 `into_iter()`，走到 `&Vec<T>` 的那個 impl，最終拿到 `&T`。
 
-大部分集合型別（Vec、String、陣列等）都遵循這個模式——為自己、`&self`、`&mut self` 三種各實作一次 `IntoIterator`。
+大部分集合型別（`Vec`、`String`、陣列等）都遵循這個模式——為自己、`&self`、`&mut self` 三種各實作一次 `IntoIterator`。
 
 ### 選哪一個？
 

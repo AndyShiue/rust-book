@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會在 match 裡解構一般的 tuple 與 tuple struct。
+學會在 `match` 裡解構一般的 tuple 與 tuple `struct`。
 
 ## 概念說明
 
-第 9 集學了怎麼在 match 裡解構 enum variant。其實不只 enum，我們也能用 match 解構一般的 **tuple**！
+第 9 集學了怎麼在 `match` 裡解構 `enum` variant。其實不只 `enum`，我們也能用 `match` 解構一般的 tuple！
 
 ```rust
 # fn main() {
@@ -21,10 +21,10 @@
 # }
 ```
 
-match 會從上到下比對：
+`match` 會從上到下比對：
 
 - `(0, 0)` → 兩個值都是 0 才會符合
-- `(x, 0)` → 第二個值是 0，第一個值隨便（取出來叫 x）
+- `(x, 0)` → 第二個值是 0，第一個值隨便（取出來叫 `x`）
 - `(0, y)` → 第一個值是 0，第二個值隨便
 - `(x, y)` → 什麼都會符合（最後一個分支當「預設」）
 
@@ -57,9 +57,9 @@ fn main() {
 }
 ```
 
-## tuple struct 也能用同樣的方式
+## tuple `struct` 也能用同樣的方式
 
-還記得第 2 集學的 tuple struct 嗎？它的模式匹配方式和一般 tuple 一模一樣：
+還記得第 2 集學的 tuple `struct` 嗎？它的模式匹配方式和一般 tuple 一模一樣：
 
 ```rust
 struct Point(i32, i32);
@@ -80,5 +80,5 @@ fn main() {
 
 ## 重點整理
 
-- 一般的 tuple 也可以拿來 match
-- tuple struct 也能用同樣的方式進行模式匹配，只是前面要加型別名稱：`Point(x, y)`
+- 一般的 tuple 也可以拿來 `match`
+- tuple `struct` 也能用同樣的方式進行模式匹配，只是前面要加型別名稱：`Point(x, y)`

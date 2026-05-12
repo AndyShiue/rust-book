@@ -16,8 +16,8 @@
 
 想像兩個節點 A 和 B，A 持有 `Rc` 指向 B，B 也持有 `Rc` 指向 A。當外部不再持有它們的時候：
 
-1. A 的外部 `Rc` 被 drop → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放
-2. B 的外部 `Rc` 被 drop → B 的計數減一，但 A 還在指向 B → 計數不為零 → B 不釋放
+1. A 的外部 `Rc` 被 `drop` → A 的計數減一，但 B 還在指向 A → 計數不為零 → A 不釋放
+2. B 的外部 `Rc` 被 `drop` → B 的計數減一，但 A 還在指向 B → 計數不為零 → B 不釋放
 
 結果：A 和 B **永遠不會被釋放**，這就是記憶體洩漏。從外面看不見、卻互相撐著的環——這才是迴圈問題的本質。
 
@@ -34,7 +34,7 @@
 # }
 ```
 
-`Rc::downgrade` 把 `Rc` 降級成 `Weak`。Rc 內部有**兩個**計數器：strong count 和 weak count。`Rc::clone()` 增加 strong count，`Rc::downgrade()` 只增加 weak count。Rc 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。
+`Rc::downgrade` 把 `Rc` 降級成 `Weak`。`Rc` 內部有**兩個**計數器：strong count 和 weak count。`Rc::clone()` 增加 strong count，`Rc::downgrade()` 只增加 weak count。`Rc` 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。
 
 因為 `Weak` 指向的資料可能已經被釋放了，你不能直接存取。必須先 `upgrade()`：
 
@@ -54,9 +54,9 @@
 
 `upgrade()` 回傳 `Option<Rc<T>>`——如果資料還在，給你一個 `Rc`；如果已經釋放，回傳 `None`。
 
-### 用 Weak 打破迴圈
+### 用 `Weak` 打破迴圈
 
-回到剛才的例子。關鍵問題是：strong count 構成的圖上有環。只要把其中一個方向改成 `Weak`，strong count 的圖上就沒有環了——因為 Weak 不貢獻 strong count。
+回到剛才的例子。關鍵問題是：strong count 構成的圖上有環。只要把其中一個方向改成 `Weak`，strong count 的圖上就沒有環了——因為 `Weak` 不貢獻 strong count。
 
 用一個具體的例子來說明。假設我們想建一個**雙向鏈結串列（doubly linked list）**——每個節點同時指向前一個和後一個節點，這樣我們要從頭走到尾還是從尾走到頭都很容易。如果兩個方向都用 `Rc`，相鄰的兩個節點就形成迴圈。
 
@@ -82,17 +82,17 @@ struct Node<T> {
               ←·Weak·←   ←·Weak·←
 ```
 
-Weak 那些邊不算在 strong count 裡。strong count 的圖只有從左到右的箭頭，是一條鏈，沒有環。
+`Weak` 那些邊不算在 strong count 裡。strong count 的圖只有從左到右的箭頭，是一條鏈，沒有環。
 
-外部放掉 A → A 的 strong count 歸零 → A 被 drop → A 的 `next` 也跟著 drop → B 的 strong count 歸零 → B 被 drop → …… 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
+外部放掉 A → A 的 strong count 歸零 → A 被 `drop` → A 的 `next` 也跟著 `drop` → B 的 strong count 歸零 → B 被 `drop` → …… 連鎖反應一路到底。中間沒有任何節點被 `prev` 撐住，因為 `prev` 是 `Weak`，不貢獻 strong count。
 
-### upgrade 出來的 Rc 會造成問題嗎？
+### `upgrade` 出來的 `Rc` 會造成問題嗎？
 
-你可能會想：「如果我 upgrade 一個 Weak 拿到 Rc 之後一直握著不放，不就多了一個 strong count 嗎？」
+你可能會想：「如果我 `upgrade` 一個 `Weak` 拿到 `Rc` 之後一直握著不放，不就多了一個 strong count 嗎？」
 
-沒錯，upgrade 出來的 `Rc` 確實會讓 strong count +1。但這個 `Rc` 是一個**獨立的變數**——它的 strong count 貢獻記在「持有那個 Rc 的變數」頭上，不是記在原本的 `Weak` 欄位上。`Weak` 欄位本身對 strong count 的貢獻永遠是 0。
+沒錯，upgrade 出來的 `Rc` 確實會讓 strong count +1。但這個 `Rc` 是一個**獨立的變數**——它的 strong count 貢獻記在「持有那個 `Rc` 的變數」頭上，不是記在原本的 `Weak` 欄位上。`Weak` 欄位本身對 strong count 的貢獻永遠是 0。
 
-迴圈問題在資料結構建好的當下就已經被解決或沒被解決了，跟你之後怎麼 upgrade 完全無關。
+迴圈問題在資料結構建好的當下就已經被解決或沒被解決了，跟你之後怎麼 `upgrade` 完全無關。
 
 ## 範例程式碼
 
@@ -164,5 +164,5 @@ fn main() {
 - `Rc::downgrade(&rc)` 建立 `Weak<T>`，`weak.upgrade()` 回傳 `Option<Rc<T>>`
 - 用 `Weak` 打破迴圈：讓 strong count 構成的圖上不會有環
 - 雙向鏈結串列的做法：`next` 用 `Rc`（擁有後繼），`prev` 用 `Weak`（觀察前驅）
-- `Weak` 欄位對 strong count 的貢獻永遠是 0，upgrade 出來的 `Rc` 是獨立的變數
+- `Weak` 欄位對 strong count 的貢獻永遠是 0，`upgrade` 出來的 `Rc` 是獨立的變數
 - `Rc::strong_count()` 和 `Rc::weak_count()` 可以查看目前的計數

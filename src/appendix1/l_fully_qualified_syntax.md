@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-學會三種不同層級的方法呼叫語法，以及在 trait 方法名稱衝突時如何消歧義。
+學會三種不同層級的方法呼叫語法，以及在 `trait` 方法名稱衝突時如何消歧義。
 
 > 本集是**第五章**的補充。
 
@@ -33,7 +33,7 @@
 
 最常用的寫法。編譯器會自動找到對應的方法。
 
-### 第二種：指定 Trait 或型別
+### 第二種：指定 `trait` 或型別
 
 ```rust,noplayground
 # trait Animal {
@@ -54,7 +54,7 @@
 # }
 ```
 
-明確告訴編譯器「我要呼叫 `Animal` trait 上的 `speak`」。`&dog` 就是原本的 `&self`。
+明確告訴編譯器「我要呼叫 `Animal` `trait` 上的 `speak`」。`&dog` 就是原本的 `&self`。
 
 ### 第三種：完全限定語法（fully qualified syntax）
 
@@ -77,11 +77,11 @@
 # }
 ```
 
-最明確的寫法：「在 `Dog` 實作的 `Animal` trait 上，呼叫 `speak` 方法，傳入 `&dog`」。
+最明確的寫法：「在 `Dog` 實作的 `Animal` `trait` 上，呼叫 `speak` 方法，傳入 `&dog`」。
 
 ### 什麼時候需要用到？
 
-大部分時候第一種就夠了。但當**多個 trait 定義了同名方法**的時候，編譯器不知道你要呼叫哪一個，就需要更明確的語法：
+大部分時候第一種就夠了。但當**多個 `trait` 定義了同名方法**的時候，編譯器不知道你要呼叫哪一個，就需要更明確的語法：
 
 ```rust,noplayground
 trait Animal {
@@ -132,7 +132,7 @@ trait Robot {
 
 ### 存取 associated type
 
-完全限定語法也可以用來存取某個型別在特定 trait 上的 **associated type**：
+完全限定語法也可以用來存取某個型別在特定 `trait` 上的 **associated type**：
 
 ```rust,noplayground
 // Iterator trait 有一個 associated type 叫 Item
@@ -223,8 +223,8 @@ fn main() {
 
 - 方法呼叫有三種層級：`obj.method()` → `Trait::method(&obj)` → `<Type as Trait>::method(&obj)`
 - 通常用最簡單的就好，有衝突時才升級
-- 當多個 trait 定義同名方法時，需要指定要呼叫哪個 trait 的版本
-- 型別本身的方法優先於 trait 方法
+- 當多個 `trait` 定義同名方法時，需要指定要呼叫哪個 `trait` 的版本
+- 型別本身的方法優先於 `trait` 方法
 - associated function（沒有 `self`）更常需要完全限定語法
 - 完全限定語法的格式：`<Type as Trait>::function(args)`
 - 也可以用來存取 associated type：`<Type as Trait>::TypeName`

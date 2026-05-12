@@ -1,25 +1,25 @@
 # Fn / FnMut / FnOnce
 
 ## 本集目標
-理解 Fn、FnMut、FnOnce 是 trait 而非型別，掌握它們的繼承關係，並學會在 API 設計中選擇正確的 bound。
+理解 `Fn`、`FnMut`、`FnOnce` 是 `trait` 而非型別，掌握它們的繼承關係，並學會選擇正確的閉包 `trait`。
 
 ## 概念說明
 
-### 它們是 trait，不是型別
+### 它們是 `trait`，不是型別
 
-前幾集我們一直說 FnOnce、FnMut、Fn，但還沒正式說明——它們其實是 **trait**。就像第五章學的 `Clone`、`Display` 一樣，`Fn` / `FnMut` / `FnOnce` 是定義在標準庫裡的 trait。每個閉包的匿名 struct 會自動 impl 對應的 trait（上一集講的推斷規則決定 impl 哪些）。
+前幾集我們一直說 `FnOnce`、`FnMut`、`Fn`，但還沒正式說明——它們其實是 **`trait`**。就像第五章學的 `Clone`、`Display` 一樣，`Fn` / `FnMut` / `FnOnce` 是定義在標準庫裡的 `trait`。每個閉包的匿名 `struct` 會自動 `impl` 對應的 `trait`（上一集講的推斷規則決定 `impl` 哪些）。
 
-那這些 trait 到底長什麼樣？
+那這些 `trait` 到底長什麼樣？
 
 - `FnOnce(Args) -> Ret`：可以被呼叫至少一次（可能會消耗自己）
 - `FnMut(Args) -> Ret`：可以被多次呼叫（可能會修改內部狀態）
 - `Fn(Args) -> Ret`：可以被多次呼叫（不會修改任何東西）
 
-注意！`fn(i32) -> i32`（小寫）是函數指標**型別**，而 `Fn(i32) -> i32`（大寫）是 **trait**。兩個完全不同的東西。
+注意！`fn(i32) -> i32`（小寫）是函數指標**型別**，而 `Fn(i32) -> i32`（大寫）是 **`trait`**。兩個完全不同的東西。
 
 ### 繼承關係
 
-這三個 trait 有繼承（supertrait）關係：
+這三個 `trait` 有繼承（supertrait）關係：
 
 ```ignore
 Fn : FnMut : FnOnce
@@ -32,12 +32,12 @@ Fn : FnMut : FnOnce
 
 為什麼是這個方向？
 
-- **Fn → FnMut**：如果一個閉包只需要 `&self` 就能執行，那給它 `&mut self` 當然也行（只是多給了它不需要的修改權限）
-- **FnMut → FnOnce**：如果一個閉包用 `&mut self` 就能執行，那給它 `self`（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次
+- **`Fn` → `FnMut`**：如果一個閉包只需要 `&self` 就能執行，那給它 `&mut self` 當然也行（只是多給了它不需要的修改權限）
+- **`FnMut` → `FnOnce`**：如果一個閉包用 `&mut self` 就能執行，那給它 `self`（整個擁有權）當然也行——擁有一個東西就包含了可以修改它。只是呼叫完之後 struct 被消耗了，不能再呼叫第二次
 
-反過來就不行——一個需要消耗自己（FnOnce）的閉包，不能保證多次呼叫（FnMut）。
+反過來就不行——一個需要消耗自己（`FnOnce`）的閉包，不能保證多次呼叫（`FnMut`）。
 
-### 用 impl Trait 接受閉包
+### 用 `impl Trait` 接受閉包
 
 還記得第五章的 `impl Trait` 嗎？用它來接受閉包參數：
 
@@ -59,23 +59,23 @@ fn call_readonly(f: impl Fn() -> i32) -> i32 {
 # fn main() {}
 ```
 
-注意 `FnMut` 的參數要加 `mut`——因為呼叫 FnMut 閉包需要 `&mut self`，所以 `f` 本身要是 `mut` 的。
+注意 `FnMut` 的參數要加 `mut`——因為呼叫 `FnMut` 閉包需要 `&mut self`，所以 `f` 本身要是 `mut` 的。
 
-### API 設計原則：選能接受最多種閉包的 bound
+### 程式設計原則：選能接受最多種閉包的 bound
 
-當你設計一個接受閉包的函數時，應該選**能接受最多種閉包**的 trait bound：
+當你設計一個接受閉包的函數時，應該選**能接受最多種閉包**的 `trait` bound：
 
 1. 先試 `FnOnce` —— 如果你只需要呼叫一次
 2. 不夠再用 `FnMut` —— 如果你需要多次呼叫
 3. 最後才用 `Fn` —— 如果你需要多次呼叫且不允許修改
 
-為什麼？因為 `FnOnce` 能接受所有閉包（所有閉包都至少是 FnOnce），而 `Fn` 只能接受不修改狀態的閉包。選能接受最多種的 bound，使用者傳入的自由度最高。
+為什麼？因為 `FnOnce` 能接受所有閉包（所有閉包都至少是 `FnOnce`），而 `Fn` 只能接受不修改狀態的閉包。選能接受最多種的 bound，使用者傳入的自由度最高。
 
-實務上 `Fn` 很少用到——大部分需要多次呼叫閉包的 API 用 `FnMut` 就夠了（FnMut 也能接受 Fn 的閉包）。只有少數場景需要**保證閉包不修改狀態**時才會用 `Fn`。
+實務上 `Fn` 很少用到——大部分需要多次呼叫閉包的函數用 `FnMut` 就夠了（`FnMut` 也能接受 `Fn` 的閉包）。只有少數場景需要**保證閉包不修改狀態**時才會用 `Fn`。
 
-### 函數指標也實作了這三個 trait
+### 函數指標也實作了這三個 `trait`
 
-普通的函數（和函數指標 `fn`）自動實作了 `Fn`、`FnMut`、`FnOnce`。所以你可以把函數名稱傳給任何接受這三個 trait 的地方。
+普通的函數（和函數指標 `fn`）自動實作了 `Fn`、`FnMut`、`FnOnce`。所以你可以把函數名稱傳給任何接受這三個 `trait` 的地方。
 
 ## 範例程式碼
 
@@ -138,9 +138,9 @@ fn main() {
 
 ## 重點整理
 
-- `Fn`、`FnMut`、`FnOnce` 是 **trait**，不是型別；`fn` 才是函數指標型別
-- 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（FnOnce 能接受所有閉包，Fn 只接受不修改的）
+- `Fn`、`FnMut`、`FnOnce` 是 **`trait`**，不是型別；`fn` 才是函數指標型別
+- 繼承關係：`Fn` ⊂ `FnMut` ⊂ `FnOnce`（`FnOnce` 能接受所有閉包，`Fn` 只接受不修改的）
 - 用 `impl FnOnce()` / `impl FnMut()` / `impl Fn()` 來接受閉包參數
 - `FnMut` 的參數要加 `mut`
-- API 設計原則：**先選 FnOnce**，需要多次呼叫再改 FnMut，需要保證不修改才用 Fn
-- 函數指標自動實作了 Fn + FnMut + FnOnce
+- 函數接收閉包的設計原則：**先選 `FnOnce`**，需要多次呼叫再改 `FnMut`，需要保證不修改才用 `Fn`
+- 函數指標自動實作了 `Fn` + `FnMut` + `FnOnce`

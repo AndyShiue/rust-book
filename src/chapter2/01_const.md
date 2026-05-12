@@ -21,7 +21,7 @@ fn main() {
 
 看起來跟 `let` 很像對吧？但有幾個重要的差別：
 
-### 差別一：const 一定要標型別
+### 差別一：`const` 一定要標型別
 
 ```rust
 # fn main() {
@@ -44,7 +44,7 @@ fn main() {
 
 這是 Rust 社群的慣例：常數用 `SCREAMING_SNAKE_CASE`（全大寫蛇形命名）。不遵守的話程式還是能跑，但編譯器會碎碎念。
 
-### 差別三：const 不能用 mut
+### 差別三：`const` 不能用 `mut`
 
 ```rust,compile_fail
 # #![allow(unused)]
@@ -57,7 +57,7 @@ fn main() {
 
 常數就是常數，不能變就是不能變，沒有「可變的常數」這種矛盾的東西。
 
-### 差別四：const 可以放在 fn 外面
+### 差別四：`const` 可以放在 `fn` 外面
 
 ```rust
 const MAX_PLAYERS: i32 = 10;
@@ -69,7 +69,7 @@ fn main() {
 
 `let` 只能放在 `fn` 裡面，但 `const` 可以放在最外層，讓整個程式都能用到。
 
-### 什麼時候用 const？
+### 什麼時候用 `const`？
 
 當你有一個值是**固定不變**的，而且你在寫程式的時候就知道它是多少，就用 `const`。比如：
 

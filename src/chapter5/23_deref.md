@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-理解 `Deref` trait 和 Rust 的自動解參考機制，以及智慧指標為什麼能直接呼叫內部型別的方法。
+理解 `Deref` `trait` 和 Rust 的自動解參考機制，以及智慧指標為什麼能直接呼叫內部型別的方法。
 
 ## 概念說明
 
@@ -18,9 +18,9 @@
 # }
 ```
 
-`*b` 得到的是 Box 裡面的 `i32`。這之所以能成立，是因為 `Box<T>` 實作了一個叫 `Deref` 的 trait。
+`*b` 得到的是 `Box` 裡面的 `i32`。這之所以能成立，是因為 `Box<T>` 實作了一個叫 `Deref` 的 `trait`。
 
-### Deref trait 與智慧指標
+### `Deref` `trait` 與智慧指標
 
 `Deref` 告訴 Rust：「當你需要解參考我的時候，該怎麼做。」`Box<T>` 和 `Rc<T>` 都實作了 `Deref`。在 Rust 中，我們常常把**實作了 `Deref` 的型別**叫作**智慧指標（smart pointer）**。
 
@@ -49,7 +49,7 @@ let b = Box::new(42);
 
 所以解參考 `Box<T>` 最終得到的是 `T`。`Rc<T>` 也一樣，解參考 `Rc<T>` 得到 `T`。
 
-### DerefMut
+### `DerefMut`
 
 `DerefMut` 是 `Deref` 的可變版本。當你對一個可變的智慧指標寫入時，Rust 會用 `DerefMut` 來展開：
 
@@ -71,9 +71,9 @@ let b = Box::new(42);
 
 `Box<T>` 同時實作了 `Deref` 和 `DerefMut`，所以既能讀也能寫。`Rc<T>` 則只實作了 `Deref`，不允許透過 `*` 修改內容。
 
-### Deref coercion
+### `Deref` coercion
 
-**Deref coercion** 是 Rust 在需要的時候自動透過 Deref 轉換參考型別的機制。這不只發生在 method call，任何需要型別匹配的地方都可能觸發。
+**`Deref` coercion** 是 Rust 在需要的時候自動透過 `Deref` 轉換參考型別的機制。這不只發生在 method call，任何需要型別匹配的地方都可能觸發。
 
 例如，一個函數接受 `&i32`，你可以直接傳 `&Box<i32>` 進去，Rust 會自動透過 `Deref` 把 `&Box<i32>` 轉成 `&i32`：
 
@@ -88,7 +88,7 @@ fn main() {
 }
 ```
 
-Deref coercion 也可以連鎖。例如 `&Box<Box<i32>>` 會先 deref 成 `&Box<i32>`，再 deref 成 `&i32`。DerefMut 同理。
+`Deref` coercion 也可以連鎖。例如 `&Box<Box<i32>>` 會先 `deref` 成 `&Box<i32>`，再 `deref` 成 `&i32`。`DerefMut` 同理。
 
 ### method call 的自動解參考
 
@@ -138,7 +138,7 @@ fn main() {
 
 Rust 從外往內找方法：外層智慧指標自身的方法優先於內層型別的方法。
 
-一個常見的例子是 `clone`。`Rc` 本身有 `clone` 方法（增加參考計數），`T` 可能也有 `clone` 方法（深度複製資料）。直接呼叫 `.clone()` 會拿到 Rc 的 clone：
+一個常見的例子是 `clone`。`Rc` 本身有 `clone` 方法（增加參考計數），`T` 可能也有 `clone` 方法（深度複製資料）。直接呼叫 `.clone()` 會拿到 `Rc` 的 `clone`：
 
 ```rust,noplayground
 use std::rc::Rc;
@@ -149,7 +149,7 @@ fn main() {
 }
 ```
 
-如果你想呼叫內層 String 的 clone，可以明確寫出來：
+如果你想呼叫內層 `String` 的 `clone`，可以明確寫出來：
 
 ```rust,noplayground
 # use std::rc::Rc;
@@ -206,6 +206,6 @@ fn main() {
 
 - 在 Rust 中，實作了 `Deref` 的型別常被稱為智慧指標；`*v` 展開為 `*(Deref::deref(&v))`，所以解參考 `Box<T>` 得到 `T`
 - `DerefMut` 是 `Deref` 的可變版本；`*v = 值` 展開為 `*(DerefMut::deref_mut(&mut v)) = 值`
-- Deref coercion：Rust 在型別不匹配時會自動透過 Deref 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）
+- `Deref` coercion：Rust 在型別不匹配時會自動透過 `Deref` 轉換參考，不限於 method call（如 `&Box<i32>` → `&i32`）
 - method call 的自動解參考是獨立的機制：用 `.` 呼叫方法時，Rust 會嘗試加 `&`、加 `*` 或兩者組合來找到對應的方法
 - 方法同名時外層優先——`Rc` 的 `clone` 優先於 `String` 的 `clone`

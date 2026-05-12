@@ -6,7 +6,7 @@
 
 ## 概念說明
 
-### for 迴圈不是魔法
+### `for` 迴圈不是魔法
 
 從第一章開始我們就在用 `for` 迴圈：
 
@@ -39,11 +39,11 @@
 
 1. 呼叫 `v.into_iter()` 把 `v` 轉成迭代器
 2. 反覆呼叫 `iter.next()`
-3. 用 `while let Some(x)` 解構（還記得第三章的 while let 嗎？），直到拿到 `None` 就結束
+3. 用 `while let Some(x)` 解構（還記得第三章的 `while let` 嗎？），直到拿到 `None` 就結束
 
-### IntoIterator trait
+### `IntoIterator` `trait`
 
-`IntoIterator` 是一個 trait，定義了「如何把自己轉成迭代器」：
+`IntoIterator` 是一個 `trait`，定義了「如何把自己轉成迭代器」：
 
 ```rust,noplayground
 trait IntoIterator {
@@ -55,11 +55,11 @@ trait IntoIterator {
 # fn main() {}
 ```
 
-任何實作了 `IntoIterator` 的型別都可以用 `for` 迴圈。Vec、陣列、字串切片的 `.chars()`⋯⋯背後都是因為實作了這個 trait。
+任何實作了 `IntoIterator` 的型別都可以用 `for` 迴圈。`Vec`、陣列、字串切片的 `.chars()`⋯⋯背後都是因為實作了這個 `trait`。
 
-### Iterator 也實作了 IntoIterator
+### `Iterator` 也實作了 `IntoIterator`
 
-有個很方便的設計：每個 `Iterator` 都自動實作了 `IntoIterator`（`into_iter()` 直接回傳自己）。所以你可以把迭代器直接丟進 for：
+有個很方便的設計：每個 `Iterator` 都自動實作了 `IntoIterator`（`into_iter()` 直接回傳自己）。所以你可以把迭代器直接丟進 `for`：
 
 ```rust
 # fn main() {
@@ -138,7 +138,7 @@ impl Iterator for Countdown {
 ## 重點整理
 
 - `for x in v` 是簡寫，展開後是 `v.into_iter()` + `while let Some(x) = iter.next()`
-- `IntoIterator` trait 定義了「如何把自己轉成迭代器」
+- `IntoIterator` `trait` 定義了「如何把自己轉成迭代器」
 - 任何實作了 `IntoIterator` 的型別都能用 `for` 迴圈
 - 每個 `Iterator` 自動實作了 `IntoIterator`
 - 之所以能寫 `for i in 1..5` 或 `for i in 1..=5`，就是因為 range 實作了 `IntoIterator`

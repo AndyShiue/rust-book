@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會使用標準庫的 `From` 和 `Into` trait 做型別轉換，理解「實作 From 就自動獲得 Into」的機制。
+學會使用標準庫的 `From` 和 `Into` trait 做型別轉換，理解「實作 `From` 就自動獲得 `Into`」的機制。
 
 ## 概念說明
 
-上一集我們自己定義了 `Convert<T>` trait。其實 Rust 標準庫已經有一套更完整的轉換機制：`From` 和 `Into`。
+上一集我們自己定義了 `Convert<T>` `trait`。其實 Rust 標準庫已經有一套更完整的轉換機制：`From` 和 `Into`。
 
 ### From
 
@@ -44,15 +44,15 @@ trait Into<T> {
 # fn main() {}
 ```
 
-重點：**你只需要實作 `From`，就自動獲得 `Into`。** 不需要自己實作 Into。
+重點：**你只需要實作 `From`，就自動獲得 `Into`。** 不需要自己實作 `Into`。
 
 這又是一個 blanket implementation——Rust 有一個規則是「如果 `Y: From<X>`，那 `X` 自動實作 `Into<Y>`」。
 
-### TryFrom / TryInto
+### `TryFrom` / `TryInto`
 
 有些轉換可能失敗——比如把一個很大的 `i64` 轉成 `i32` 可能會溢位。這時候用 `TryFrom` 和 `TryInto`，它們回傳 `Result` 而不是直接回傳值。
 
-和 From/Into 一樣，實作 `TryFrom` 就自動獲得 `TryInto`。
+和 `From` / `Into` 一樣，實作 `TryFrom` 就自動獲得 `TryInto`。
 
 ## 範例程式碼
 
@@ -124,8 +124,8 @@ fn main() {
 
 ## 重點整理
 
-- `From<T>` 定義「從 T 轉換而來」：`String::from("hello")` 就是這個
+- `From<T>` 定義「從 `T` 轉換而來」：`String::from("hello")` 就是這個
 - 實作 `From` 就自動獲得 `Into`——不需要另外實作
-- `into()` 是 `from()` 的反方向：`let f: Fahrenheit = celsius.into();`
+- `.into()` 是 `.from()` 的反方向：`let f: Fahrenheit = celsius.into();`
 - `TryFrom` / `TryInto` 用於可能失敗的轉換，回傳 `Result`
 - 實作 `TryFrom` 也會自動獲得 `TryInto`

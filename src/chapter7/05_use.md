@@ -8,7 +8,7 @@
 
 在前面我們已經初步接觸過 `use`，這裡要把所有用法和路徑規則講完整。
 
-### 為什麼需要 use
+### 為什麼需要 `use`
 
 每次呼叫都寫完整路徑很累：
 
@@ -49,7 +49,7 @@ use math::add; // 當前 mod 底下的 math 子 mod
 
 ### 外部 crate 的路徑
 
-在 Cargo.toml 加了外部 crate 後，直接用 crate 名稱作為路徑開頭：
+在 `Cargo.toml` 加了外部 crate 後，直接用 crate 名稱作為路徑開頭：
 
 ```rust,ignore
 use std::collections::HashMap;
@@ -68,12 +68,12 @@ use ::rand::Rng;  // 明確表示 rand 是外部 crate，不是本地 mod
 # fn main() {}
 ```
 
-這在你的 crate 裡也有一個叫 `rand` 的 mod 時特別有用，可以避免歧義。
+這在你的 crate 裡也有一個叫 `rand` 的 `mod` 時特別有用，可以避免歧義。
 
 ### super:: 和 self::
 
-- `super::`：往上一層，指向**父 mod**
-- `self::`：指向**當前 mod**（通常省略，但有時在 `use` 中有用）
+- `super::`：往上一層，指向**父 `mod`**
+- `self::`：指向**當前 `mod`**（通常省略，但有時在 `use` 中有用）
 
 ```rust,noplayground
 mod outer {
@@ -91,7 +91,7 @@ mod outer {
 # fn main() {}
 ```
 
-### 一次 use 多個東西
+### 一次 `use` 多個東西
 
 匯入同一個路徑底下的多個東西，可以用大括號合併：
 
@@ -105,9 +105,9 @@ use std::io::{self, Read, Write};
 # fn main() {}
 ```
 
-`self` 在這裡代表 `std::io` 本身，所以你既匯入了 `io` 這個 mod，也匯入了裡面的 `Read` 和 `Write`。
+`self` 在這裡代表 `std::io` 本身，所以你既匯入了 `io` 這個 `mod`，也匯入了裡面的 `Read` 和 `Write`。
 
-### use ... as（別名）
+### `use` ... `as`（別名）
 
 如果兩個不同地方有同名的東西，可以用 `as` 取別名：
 
@@ -126,7 +126,7 @@ fn read_something() -> IoResult<()> {
 # fn main() {}
 ```
 
-### use 的名字衝突
+### `use` 的名字衝突
 
 如果你 `use` 了兩個同名的東西到同一個作用域，Rust 會直接報錯：
 
@@ -140,7 +140,7 @@ mod b {
 }
 
 use a::hello;
-use b::hello;  // 編譯錯誤！hello 已經被定義了
+use b::hello; // 編譯錯誤！hello 已經被定義了
 ```
 
 這時候就用 `as` 取別名來解決。
@@ -172,7 +172,7 @@ fn main() {
 
 ### glob import（星號匯入）
 
-`*` 會把 mod 底下所有 pub 的東西全部帶進來：
+`*` 會把 mod 底下所有 `pub` 的東西全部帶進來：
 
 ```rust,noplayground
 use std::collections::*; // HashMap, HashSet, BTreeMap... 全部可用
@@ -180,11 +180,11 @@ use std::collections::*; // HashMap, HashSet, BTreeMap... 全部可用
 # fn main() {}
 ```
 
-**一般不推薦**在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在**測試**裡很常見——`use super::*;` 可以把父 mod 的所有東西帶進測試 mod。下一集我們會教怎麼用 `cargo test` 寫測試，到時候就會看到這個用法。
+**一般不推薦**在正式程式碼裡用，因為不清楚到底帶了什麼進來，容易衝突。但在**測試**裡很常見——`use super::*;` 可以把父 `mod` 的所有東西帶進測試 `mod`。下一集我們會教怎麼用 `cargo test` 寫測試，到時候就會看到這個用法。
 
-### use enum variant
+### `use` `enum` variant
 
-`use` 不只能匯入 mod 底下的東西，也能匯入 enum 的 variant：
+`use` 不只能匯入 `mod` 底下的東西，也能匯入 `enum` 的 variant：
 
 ```rust,noplayground
 use std::cmp::Ordering::{Less, Equal, Greater};
@@ -200,7 +200,7 @@ fn compare(a: i32, b: i32) {
 # fn main() {}
 ```
 
-不用每次都寫 `Ordering::Less`，直接用 `Less` 就好。這在 match 很多 variant 的時候特別方便。
+不用每次都寫 `Ordering::Less`，直接用 `Less` 就好。這在 `match` 很多 variant 的時候特別方便。
 
 ## 範例程式碼
 
@@ -251,12 +251,12 @@ fn main() {
 ## 重點整理
 
 - `use` 將路徑帶入作用域，讓你不必每次寫完整路徑
-- 絕對路徑用 `crate::` 開頭，相對路徑從當前 mod 位置開始
+- 絕對路徑用 `crate::` 開頭，相對路徑從當前 `mod` 位置開始
 - 外部 crate 直接用名稱開頭；加 `::` 前綴可以明確標記為外部 crate
 - `std` 是標準函式庫，不用加 dependency 就能用，prelude 也在裡面
-- `super::` 指向父 mod，`self::` 指向當前 mod
-- `use a::b::{self, X, Y};` 一次 use 多個東西
+- `super::` 指向父 `mod`，`self::` 指向當前 `mod`
+- `use a::b::{self, X, Y};` 一次 `use` 多個東西
 - `use X as Alias;` 取別名，解決名字衝突
-- 同作用域 use 同名會報錯；不同作用域會 shadow（內層遮蔽外層）
+- 同作用域 `use` 同名會報錯；不同作用域會 shadow（內層遮蔽外層）
 - `use something::*;` 星號匯入——測試裡常用，正式程式碼少用
-- enum 的 variant 也可以被 `use`
+- `enum` 的 variant 也可以被 `use`

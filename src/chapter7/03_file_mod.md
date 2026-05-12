@@ -2,18 +2,18 @@
 
 ## 本集目標
 
-學會將 mod 拆分到不同檔案，理解 Rust 的檔案與 mod 對應規則。
+學會將 `mod` 拆分到不同檔案，理解 Rust 的檔案與 `mod` 對應規則。
 
 ## 概念說明
 
-上一集我們把 mod 寫在同一個檔案裡，但實際專案不可能全部塞在一起。Rust 提供了一套規則，讓你把 mod 拆到獨立的檔案中。
+上一集我們把 `mod` 寫在同一個檔案裡，但實際專案不可能全部塞在一起。Rust 提供了一套規則，讓你把 `mod` 拆到獨立的檔案中。
 
-### 基本拆分：mod + 獨立檔案
+### 基本拆分：`mod` + 獨立檔案
 
-假設你有一個 `math` mod，想把它搬到自己的檔案。做法很簡單：
+假設你有一個 `math` `mod`，想把它搬到自己的檔案。做法很簡單：
 
 1. 在 `main.rs`（或 `lib.rs`）裡寫 `mod math;`（注意結尾是分號，不是大括號）
-2. 建立 `math.rs`，把 mod 的內容放進去
+2. 建立 `math.rs`，把 `mod` 的內容放進去
 
 ```ignore
 src/
@@ -22,6 +22,7 @@ src/
 ```
 
 **main.rs：**
+
 ```rust,ignore
 mod math;
 
@@ -32,6 +33,7 @@ fn main() {
 ```
 
 **math.rs：**
+
 ```rust,ignore
 pub fn add(a: i32, b: i32) -> i32 {
     a + b
@@ -42,11 +44,11 @@ pub fn subtract(a: i32, b: i32) -> i32 {
 }
 ```
 
-注意 `math.rs` 裡面**不需要再寫 `mod math { ... }`**——檔案本身就代表那個 mod。
+注意 `math.rs` 裡面**不需要再寫 `mod math { ... }`**——檔案本身就代表那個 `mod`。
 
-### 子 mod 的資料夾結構
+### 子 `mod` 的資料夾結構
 
-如果 `math` mod 底下還有子 mod，有兩種組織方式：
+如果 `math` `mod` 底下還有子 `mod`，有兩種組織方式：
 
 **方式一：用 `mod.rs`（傳統風格）**
 
@@ -59,7 +61,7 @@ src/
     └── advanced.rs
 ```
 
-`math/mod.rs` 就是 `math` mod 的入口，裡面聲明子 mod：
+`math/mod.rs` 就是 `math` `mod` 的入口，裡面聲明子 `mod`：
 
 ```rust,ignore
 // math/mod.rs
@@ -86,7 +88,7 @@ pub mod advanced;
 
 兩種方式效果完全一樣，選你喜歡的就好。比較新的專案傾向用方式二，因為不會有一堆檔案都叫 `mod.rs`，在編輯器裡比較好辨認。
 
-### lib.rs vs main.rs
+### `lib.rs` vs `main.rs`
 
 一個 Rust 專案（crate）有兩種類型：
 
@@ -120,7 +122,7 @@ fn main() {
 
 ## 範例程式碼
 
-由於檔案 mod 涉及多個檔案，無法用單一檔案示範。以下是完整的多檔案範例，建立對應的檔案結構後用 `cargo run` 執行：
+由於檔案 `mod` 涉及多個檔案，無法用單一檔案示範。以下是完整的多檔案範例，建立對應的檔案結構後用 `cargo run` 執行：
 
 ```ignore
 src/
@@ -174,8 +176,8 @@ pub fn power(base: i32, exp: u32) -> i32 {
 
 ## 重點整理
 
-- `mod math;`（分號結尾）告訴 Rust 去找子 mod
-- 被拆出去的檔案裡**不需要**再寫 `mod math { ... }`，檔案本身就是 mod
-- 子 mod 可以用 `math/mod.rs`（傳統）或 `math.rs` + `math/` 資料夾（推薦）
+- `mod math;`（分號結尾）告訴 Rust 去找子 `mod`
+- 被拆出去的檔案裡**不需要**再寫 `mod math { ... }`，檔案本身就是 `mod`
+- 子 `mod` 可以用 `math/mod.rs`（傳統）或 `math.rs` + `math/` 資料夾（推薦）
 - `main.rs` 是 binary crate 的根，`lib.rs` 是 library crate 的根
 - 一個專案可以同時是 binary crate 和 library crate

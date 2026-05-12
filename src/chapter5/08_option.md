@@ -2,19 +2,19 @@
 
 ## 本集目標
 
-認識 Rust 標準庫最重要的泛型 enum——`Option<T>`，理解它如何取代 null 並防止 runtime 錯誤。
+認識 Rust 標準庫最重要的泛型 enum——`Option<T>`，理解它如何取代 null 並防止執行時期錯誤。
 
 ## 概念說明
 
 ### null 的問題
 
-在某些程式語言裡，任何變數都可能是 `null`（空值）。這導致一個經典問題：你以為變數有值，用了它，結果執行時炸掉——「null pointer exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
+在某些程式語言裡，任何變數都可能是 null（空值）。這導致一個經典問題：你以為變數有值，用了它，結果執行時炸掉——「null pointer exception」。null 的發明者 Tony Hoare 甚至稱它為「十億美金的錯誤」。
 
 Rust 的解法很簡單：**沒有 null。**
 
 取而代之的是一個泛型 enum：`Option<T>`。
 
-### Option 的定義
+### `Option` 的定義
 
 `Option<T>` 長這樣（標準庫已經幫你定義好了）：
 
@@ -32,7 +32,7 @@ enum Option<T> {
 - `Some(T)` 表示「有一個 `T` 型別的值」
 - `None` 表示「沒有值」
 
-### 強制處理 None
+### 強制處理 `None`
 
 `Option` 的厲害之處在於：編譯器**強制**你處理「沒有值」的情況。你不能直接把 `Option<i32>` 當成 `i32` 來用，必須先檢查它到底是 `Some` 還是 `None`。
 
@@ -48,7 +48,7 @@ enum Option<T> {
 # }
 ```
 
-### Option 不用寫完整路徑
+### `Option` 不用寫完整路徑
 
 因為 `Option`、`Some`、`None` 實在太常用了，Rust 預設就把它們引入到每個檔案裡。所以你不需要寫 `Option::Some(42)`，直接寫 `Some(42)` 就好。
 
@@ -93,7 +93,7 @@ fn main() {
 
 ## 重點整理
 
-- `Option<T>` 是 Rust 用來表達「可能沒有值」的泛型 enum，取代了其他語言的 null
+- `Option<T>` 是 Rust 用來表達「可能沒有值」的泛型 `enum`，取代了其他語言的 null
 - `Some(T)` 表示有值，`None` 表示沒有值
 - 編譯器強制你處理 `None` 的情況，執行時期不會有 null pointer exception
 - `Option`、`Some`、`None` 太常用，Rust 預設就引入了，不需要額外路徑

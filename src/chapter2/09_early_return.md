@@ -30,7 +30,7 @@ fn main() {
 - `return x;` → 用 `return` 關鍵字，**要加分號**
 - 最後一行 `-x` → 不加分號，這是「自然回傳」
 
-### return vs 不加分號
+### `return` vs 不加分號
 
 兩種回傳方式的比較：
 
@@ -103,7 +103,7 @@ fn main() {
 
 `return;` 是 `return ();` 的簡寫——因為回傳的是 `()`（unit type），省略不寫更簡潔。
 
-### 不要到處用 return
+### 不要到處用 `return`
 
 雖然每個回傳值都寫 `return` 也能跑，但在 Rust 裡這不是好習慣：
 

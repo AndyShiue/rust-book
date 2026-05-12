@@ -2,17 +2,17 @@
 
 ## 本集目標
 
-認識 Option 和 Result 上接受閉包的常用方法，體會閉包如何讓程式碼更簡潔流暢。
+認識 `Option` 和 `Result` 上接受閉包的常用方法，體會閉包如何讓程式碼更簡潔流暢。
 
 ## 概念說明
 
 第五章我們用 `match` 處理 `Option` 和 `Result`，每次都要展開兩個分支。現在學了閉包，很多操作可以一行搞定。
 
-### Option 的閉包方法
+### `Option` 的閉包方法
 
 以下方法定義在 `Option<T>` 上，簽名中的 `T` 就是 `Option<T>` 的型別參數。
 
-#### map —— 轉換 Some 裡的值
+#### `map` —— 轉換 `Some` 裡的值
 
 ```rust,noplayground
 # fn main() {
@@ -23,9 +23,9 @@
 # }
 ```
 
-如果是 `None`，`map` 什麼都不做，直接回傳 `None`。不用寫 match。
+如果是 `None`，`map` 什麼都不做，直接回傳 `None`。不用寫 `match`。
 
-#### and_then —— 鏈式操作（可能失敗）
+#### `and_then` —— 鏈式操作（可能失敗）
 
 `map` 的閉包回傳普通值，但如果你的轉換本身也可能回傳 `None` 呢？用 `and_then`：
 
@@ -40,7 +40,7 @@
 
 `and_then` 的閉包回傳 `Option`，避免了 `Option<Option<T>>` 的巢狀問題。其實 `and_then` 就等於先 `map` 再 `flatten`——`map` 會產生 `Option<Option<U>>`，`flatten` 再把它攤平成 `Option<U>`。`and_then` 一步到位。
 
-#### unwrap_or_else —— 給一個計算 default 的閉包
+#### `unwrap_or_else` —— 給一個計算預設值的閉包
 
 ```rust
 # fn main() {
@@ -54,9 +54,9 @@
 # }
 ```
 
-跟 `unwrap_or` 不同，`unwrap_or_else` 的預設值是**惰性計算**的——只有在真的是 None 的時候才會執行閉包。
+跟 `unwrap_or` 不同，`unwrap_or_else` 的預設值是**惰性計算**的——只有在真的是 `None` 的時候才會執行閉包。
 
-#### filter —— 條件過濾
+#### `filter` —— 條件過濾
 
 ```rust,noplayground
 # fn main() {
@@ -68,11 +68,11 @@
 # }
 ```
 
-### Result 的閉包方法
+### `Result` 的閉包方法
 
-Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，`T` 是 Ok 的型別，`E` 是 Err 的型別。
+`Result` 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，`T` 是 `Ok` 的型別，`E` 是 `Err` 的型別。
 
-#### map —— 轉換 Ok 的值
+#### `map` —— 轉換 `Ok` 的值
 
 ```rust,noplayground
 # fn main() {
@@ -83,9 +83,9 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 # }
 ```
 
-#### map_err —— 轉換 Err 的值
+#### `map_err` —— 轉換 `Err` 的值
 
-跟 `map` 相反——`map` 對 Ok 做事、Err 不動；`map_err` 對 Err 做事、Ok 不動。
+跟 `map` 相反——`map` 對 `Ok` 做事、`Err` 不動；`map_err` 對 `Err` 做事、`Ok` 不動。
 
 ```rust,noplayground
 # fn main() {
@@ -96,7 +96,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 # }
 ```
 
-#### and_then —— 鏈式操作
+#### `and_then` —— 鏈式操作
 
 ```rust,noplayground
 # fn main() {
@@ -113,9 +113,9 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 # }
 ```
 
-跟 Option 一樣，`and_then` 就等於 `map` 再 `flatten`。
+跟 `Option` 一樣，`and_then` 就等於 `map` 再 `flatten`。
 
-#### unwrap_or_else —— 從 Err 計算 default
+#### `unwrap_or_else` —— 從 `Err` 計算預設值
 
 ```rust
 # fn main() {
@@ -129,9 +129,9 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 # }
 ```
 
-### 跟 match 的比較
+### 跟 `match` 的比較
 
-用 match：
+用 `match`：
 ```rust,noplayground
 # fn main() {
 #     let opt = Some(1);
@@ -150,7 +150,7 @@ Result 也有類似的一套方法。以下方法定義在 `Result<T, E>` 上，
 # }
 ```
 
-一行搞定，而且意圖更清晰——「對 Some 裡的值做轉換」。
+一行搞定，而且意圖更清晰——「對 `Some` 裡的值做轉換」。
 
 ## 範例程式碼
 
@@ -236,5 +236,5 @@ fn main() {
 - `unwrap_or_else` 懶惰計算預設值，只在 `None` / `Err` 時才執行閉包
 - `Option` 的 `filter` 根據條件決定保留 `Some` 或轉成 `None`
 - `Result` 的 `map_err` 可以轉換錯誤型別，方便錯誤處理鏈
-- 這些方法可以鏈式呼叫，比層層 match 更簡潔易讀
+- 這些方法可以鏈式呼叫，比層層 `match` 更簡潔易讀
 - 你可能已經注意到：光看型別簽名就能猜出方法在做什麼（`Option<T>` 的 `map` 接受 `FnOnce(T) -> U`，回傳 `Option<U>`）。這是函數式程式設計的一大特色——型別本身就是文件

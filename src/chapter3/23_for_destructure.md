@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會在 `for` 迴圈的變數位置直接解構 tuple 或 struct。
+學會在 `for` 迴圈的變數位置直接解構 tuple 或 `struct`。
 
 ## 概念說明
 
-我們已經學過 let 可以解構 tuple 和 struct。其實 `for` 迴圈的變數位置也可以——同樣的解構語法直接寫上去就行。
+我們已經學過 `let` 可以解構 tuple 和 `struct`。其實 `for` 迴圈的變數位置也可以——同樣的解構語法直接寫上去就行。
 
 走訪一個裝著 tuple 的陣列：
 
@@ -22,7 +22,7 @@
 
 `(num, name)` 就是模式，陣列裡的每個元素都是 tuple，迴圈會把它拆開分別給 `num` 和 `name`。
 
-走訪 struct 也一樣：
+走訪 `struct` 也一樣：
 
 ```rust
 struct Point {
@@ -43,7 +43,7 @@ fn main() {
 }
 ```
 
-把這想成是 let 解構和 for 迴圈的結合：每次迴圈拿出一個元素時，就用 let 解構的語法把它拆開。
+把這想成是 `let` 解構和 `for` 迴圈的結合：每次迴圈拿出一個元素時，就用 `let` 解構的語法把它拆開。
 
 ## 範例程式碼
 
@@ -85,4 +85,4 @@ fn main() {
 
 - `for` 迴圈的變數位置可以直接寫解構模式
 - 走訪 tuple 的陣列：`for (a, b) in pairs`
-- 走訪 struct 的陣列：`for Point { x, y } in points`
+- 走訪 `struct` 的陣列：`for Point { x, y } in points`

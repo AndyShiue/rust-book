@@ -20,9 +20,9 @@
 cargo login
 ```
 
-按 Enter 後，終端機會提示你貼上 Token——貼上後再按 Enter 就完成了。Token 會被存在本機，之後 publish 時自動使用。
+按 enter 後，終端機會提示你貼上 token——貼上後再按 enter 就完成了。token 會被存在本機，之後 publish 時自動使用。
 
-### 準備 Cargo.toml
+### 準備 `Cargo.toml`
 
 發布前，`Cargo.toml` 需要補上一些必要的 metadata：
 
@@ -232,7 +232,7 @@ cargo publish    # 正式發布！
 
 ## 重點整理
 
-- 在 crates.io 用 GitHub 登入，產生 API Token 後用 `cargo login` 設定
+- 在 crates.io 用 GitHub 登入，產生 API token 後用 `cargo login` 設定
 - `Cargo.toml` 發布前應填寫 `license`、`description`、`homepage`、`repository`、`readme`
 - `cargo package` 可以在發布前檢查問題
 - `cargo publish` 正式發布到 crates.io
@@ -240,6 +240,6 @@ cargo publish    # 正式發布！
 - 已發布的版本無法刪除，只能用 `cargo yank` 標記為不建議使用
 - 發布前寫好 README、文件註解、測試，是對使用者的基本尊重
 
-恭喜你完成了第七章！🎉 到這裡為止，我們已經教完了 Rust 的主要觀念——所有權、借用、泛型、trait、生命週期、閉包、迭代器，以及模組系統和套件管理。你現在已經可以獨當一面了。如果你腦中有什麼點子，現在就是動手實作的好時機！
+恭喜你完成了第七章！🎉 到這裡為止，我們已經教完了 Rust 的主要觀念——所有權、借用、泛型、`trait`、生命週期、閉包、迭代器，以及模組系統和套件管理。你現在已經可以獨當一面了。如果你腦中有什麼點子，現在就是動手實作的好時機！
 
 即便如此，Rust 還有很多獨特而強大的功能。後面的章節會繼續介紹那些還沒介紹的重要主題，希望能帶給你對 Rust 更完整、更全面的認識。

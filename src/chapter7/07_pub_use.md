@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-學會用 `pub use` 重新匯出（re-export）內部項目，讓使用者不需要知道你的 mod 結構。
+學會用 `pub use` 重新匯出（re-export）內部項目，讓使用者不需要知道你的 `mod` 結構。
 
 ## 概念說明
 
@@ -26,7 +26,7 @@ use your_crate::math::advanced::power;
 
 這很麻煩——使用者根本不在意你內部怎麼分資料夾，他只想用 `add` 和 `power`。
 
-### pub use 的魔法
+### `pub use` 的魔法
 
 `pub use` 把內部的東西「重新匯出（re-export）」到當前 mod，讓外部可以用更短的路徑存取：
 
@@ -48,11 +48,11 @@ use your_crate::power;
 
 乾淨多了。
 
-注意：`pub use` 只能匯出**本來就是 pub 的東西**。如果你試圖 `pub use` 一個 private 的 item，編譯器會報錯——你不能把別人藏起來的東西公開出去。
+注意：`pub use` 只能匯出**本來就是 `pub` 的東西**。如果你試圖 `pub use` 一個 private 的 item，編譯器會報錯——你不能把別人藏起來的東西公開出去。
 
 ### re-export 其他 crate 的東西
 
-`pub use` 不只能匯出自己 mod 的內容，也能匯出**其他 crate** 的東西：
+`pub use` 不只能匯出自己 `mod` 的內容，也能匯出**其他 crate** 的東西：
 
 ```rust,ignore
 // lib.rs
@@ -65,7 +65,7 @@ pub use rand::Rng; // 使用者 use your_crate::Rng 就好，不用自己加 ran
 
 ### 分層 re-export
 
-你也可以在中間層的 mod 做 re-export，建立更有層次的公開 API：
+你也可以在中間層的 `mod` 做 re-export，建立更有層次的公開 library：
 
 ```rust,ignore
 // math.rs
@@ -141,5 +141,5 @@ fn main() {
 ## 重點整理
 
 - `pub use path::Item;` 把內部的東西重新匯出，讓外部用更短的路徑存取
-- 可以匯出自己 mod 的內容，也可以匯出其他 crate 的東西
+- 可以匯出自己 `mod` 的內容，也可以匯出其他 crate 的東西
 - library 的 `lib.rs` 常用 `pub use` 把重要型別提升到 crate 頂層

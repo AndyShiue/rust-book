@@ -33,7 +33,7 @@ fn first_word(s: &str) -> &str
 
 注意一個參數可能帶有多個 input lifetime——比如 `&'a &'b T`（參考的參考）就有兩個（`'a` 和 `'b`）。如果有兩個以上的 input lifetime，規則二就不適用了。
 
-**規則三：如果有 `&self` 或 `&mut self` 參數，回傳值的生命週期就等於 self 的**
+**規則三：如果有 `&self` 或 `&mut self` 參數，回傳值的生命週期就等於 `self` 的**
 
 ```rust,ignore
 impl MyStruct {
@@ -120,5 +120,5 @@ fn main() {
 - Rust 有三條**省略規則**，大部分時候會自動補上生命週期標注
 - 規則一：每個參數能放生命週期的位置各自獲得獨立的生命週期
 - 規則二：只有一個 input lifetime → 回傳值的生命週期自動等於它
-- 規則三：method 有 `&self` 或 `&mut self` → 回傳值的生命週期自動等於 self
+- 規則三：method 有 `&self` 或 `&mut self` → 回傳值的生命週期自動等於 `self`
 - 有多個 input lifetime 且回傳型別有 lifetime 時，才需要手動標注

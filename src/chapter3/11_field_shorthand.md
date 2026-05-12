@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-學會用 field shorthand 簡化 struct 的建立和模式匹配。
+學會用 field shorthand 簡化 `struct` 的建立和模式匹配。
 
 ## 概念說明
 
@@ -25,7 +25,7 @@ Rust 提供了一個簡寫：如果變數名和欄位名一樣，可以只寫一
 # }
 ```
 
-這個簡寫不只在 match 裡可以用，**建立 struct 的時候也可以用**：
+這個簡寫不只在 `match` 裡可以用，**建立 `struct` 的時候也可以用**：
 
 ```rust,noplayground
 # struct Point {
@@ -85,6 +85,6 @@ fn main() {
 
 - 當變數名和欄位名相同時，可以只寫一次：`Point { x, y }` 等同於 `Point { x: x, y: y }`
 - 這個簡寫叫做 **field shorthand**
-- 建立 struct / enum variant 時可以用
-- match 模式裡也可以用
+- 建立 `struct` / `enum` variant 時可以用
+- `match` 模式裡也可以用
 - 這是一個很常見的寫法，實際寫 Rust 時常常用簡寫

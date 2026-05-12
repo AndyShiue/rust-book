@@ -2,15 +2,15 @@
 
 ## 本集目標
 
-學會用 `+` 組合多個 trait bound，以及用 `where` 子句讓複雜的 bound 更好讀。
+學會用 `+` 組合多個 `trait` bound，以及用 `where` 子句讓複雜的 bound 更好讀。
 
 ## 概念說明
 
-第 13 集我們學了 `T: Clone`，要求 T 必須實作 Clone。但如果你想同時要求 T 實作多個 trait 呢？
+第 13 集我們學了 `T: Clone`，要求 `T` 必須實作 `Clone`。但如果你想同時要求 `T` 實作多個 `trait` 呢？
 
-### 多個 trait bound
+### 多個 `trait` bound
 
-用 `+` 把多個 trait bound 串起來：
+用 `+` 把多個 `trait` bound 串起來：
 
 ```rust,noplayground
 fn show_clone<T: Clone + std::fmt::Display>(x: &T) {
@@ -22,11 +22,11 @@ fn show_clone<T: Clone + std::fmt::Display>(x: &T) {
 # fn main() {}
 ```
 
-`T: Clone + Display` 表示 T 必須同時實作 Clone 和 Display。
+`T: Clone + Display` 表示 `T` 必須同時實作 `Clone` 和 `Display`。
 
-### where 子句
+### `where` 子句
 
-當 trait bound 很長的時候，寫在 `<>` 裡面會很擠。Rust 提供 `where` 子句，放在函數簽名後面：
+當 `trait` bound 很長的時候，寫在 `<>` 裡面會很擠。Rust 提供 `where` 子句，放在函數簽名後面：
 
 ```rust,noplayground
 fn show_clone<T>(x: &T)
@@ -43,7 +43,7 @@ where
 
 兩種寫法完全等價，只是 `where` 比較好讀。
 
-### where 比角括號更靈活
+### `where` 比角括號更靈活
 
 `where` 子句的冒號前面不只能放 `T`，還能放更複雜的東西。比如一個 tuple 型別：
 
@@ -58,7 +58,7 @@ where
 # fn main() {}
 ```
 
-`(T, U): Clone` 要求 tuple `(T, U)` 能被 clone。這種寫法只能出現在 `where` 子句裡，不能放在 `<>` 裡——這就是 `where` 更靈活的地方。
+`(T, U): Clone` 要求 tuple `(T, U)` 能被 `clone`。這種寫法只能出現在 `where` 子句裡，不能放在 `<>` 裡——這就是 `where` 更靈活的地方。
 
 ## 範例程式碼
 
@@ -94,7 +94,7 @@ fn main() {
 }
 ```
 
-## where 還能用在哪裡
+## `where` 還能用在哪裡
 
 `where` 不只能用在函數上。其他很多會用到泛型的地方也都能用 `where`，例如 `impl` 區塊：
 
@@ -107,11 +107,11 @@ where
 }
 ```
 
-此外，`where` 也能出現在 struct、enum 和 trait 的定義上。目前知道就好了，之後需要用到的時候自然會想起來。
+此外，`where` 也能出現在 `struct`、`enum` 和 `trait` 的定義上。目前知道就好了，之後需要用到的時候自然會想起來。
 
 ## 重點整理
 
-- 用 `+` 組合多個 trait bound：`T: Clone + Display`
-- `where` 子句是另一種寫 trait bound 的方式，更好讀
+- 用 `+` 組合多個 `trait` bound：`T: Clone + Display`
+- `where` 子句是另一種寫 `trait` bound 的方式，更好讀
 - `where` 比角括號更靈活，冒號前面可以放 tuple 等複雜型別（如 `(T, U): Clone`）
-- `where` 不只能用在函數上，impl、struct、enum、trait 等能用泛型的地方都能用
+- `where` 不只能用在函數上，`impl`、`struct`、`enum`、`trait` 等能用泛型的地方都能用

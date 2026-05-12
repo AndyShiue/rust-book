@@ -6,7 +6,7 @@
 
 ## 概念說明
 
-### .zip(iter) —— 把兩個迭代器配對
+### `.zip(iter)` —— 把兩個迭代器配對
 
 `zip` 把兩個迭代器「拉鍊式」地配對起來，產出 tuple：
 
@@ -21,7 +21,7 @@
 
 如果兩個迭代器長度不同，`zip` 在較短的那個結束時就停止。
 
-### .enumerate() —— 帶上索引
+### `.enumerate()` —— 帶上索引
 
 ```rust,noplayground
 # fn main() {
@@ -34,7 +34,7 @@
 
 `enumerate` 把每個元素包成 `(index, element)` 的 tuple，索引從 0 開始。
 
-### .chain(iter) —— 串接兩個迭代器
+### `.chain(iter)` —— 串接兩個迭代器
 
 `chain` 把兩個迭代器首尾相接：
 
@@ -47,7 +47,7 @@
 # }
 ```
 
-### .take(n) —— 只取前 n 個
+### `.take(n)` —— 只取前 n 個
 
 ```rust,noplayground
 # fn main() {
@@ -56,7 +56,7 @@
 # }
 ```
 
-### .skip(n) —— 跳過前 n 個
+### `.skip(n)` —— 跳過前 n 個
 
 ```rust,noplayground
 # fn main() {
@@ -65,7 +65,7 @@
 # }
 ```
 
-### .flatten() —— 把巢狀結構攤平
+### `.flatten()` —— 把巢狀結構攤平
 
 如果迭代器的元素本身也是迭代器（或 `Option`、`Vec` 等），`flatten` 可以把它攤平一層：
 
@@ -77,7 +77,7 @@
 # }
 ```
 
-`Option` 也可以 flatten——`Some(value)` 被取出，`None` 被忽略：
+`Option` 也可以 `flatten`——`Some(value)` 被取出，`None` 被忽略：
 
 ```rust,noplayground
 # fn main() {
@@ -157,5 +157,5 @@ fn main() {
 - `.enumerate()` 為每個元素加上從 0 開始的索引
 - `.chain(iter)` 把兩個迭代器首尾串接
 - `.take(n)` 只取前 n 個元素，`.skip(n)` 跳過前 n 個
-- `.flatten()` 把巢狀結構攤平一層（`Vec<Vec<T>>` → `Vec<T>`，也適用於 Option）
+- `.flatten()` 把巢狀結構攤平一層（`Vec<Vec<T>>` → `Vec<T>`，也適用於 `Option`）
 - 這些方法可以自由組合，打造出強大的資料處理管道

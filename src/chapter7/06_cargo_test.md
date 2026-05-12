@@ -25,13 +25,13 @@ fn it_works() {
 
 跑 `cargo test`，Rust 會自動找出所有標了 `#[test]` 的函數並執行它們。如果測試函數 panic 了，那個測試就算失敗。
 
-### assert 系列巨集
+### `assert` 系列巨集
 
 - `assert!(condition)` — 如果 `condition` 是 `false`，程式 panic
 - `assert_eq!(left, right)` — 如果 `left != right`，程式 panic
 - `assert_ne!(left, right)` — 如果 `left == right`，程式 panic
 
-`assert_eq!` 和 `assert_ne!` 在失敗時會印出兩個值的 Debug 格式，方便你看到底哪裡不對。
+`assert_eq!` 和 `assert_ne!` 在失敗時會印出兩個值的 `Debug` 格式，方便你看到底哪裡不對。
 
 `assert!` 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。但要注意：`assert!` 在 debug 和 release 模式下**都會執行**，即使是正式發布的程式，條件不成立一樣會 panic。如果你只想在開發階段檢查、正式發布時自動移除，可以用 `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!`——它們在 release 模式下會被編譯器完全忽略。
 
@@ -67,9 +67,9 @@ fn test_out_of_bounds_message() {
 # fn main() {}
 ```
 
-### 測試 mod 的慣用結構
+### 測試 `mod` 的慣用結構
 
-上一集學了 `use super::*;`——測試最常這樣用。慣例是在檔案底部加一個測試 mod：
+上一集學了 `use super::*;`——測試最常這樣用。慣例是在檔案底部加一個測試 `mod`：
 
 ```rust,noplayground
 fn add(a: i32, b: i32) -> i32 {
@@ -100,11 +100,11 @@ mod tests {
 
 幾個重點：
 
-- `#[cfg(test)]` 告訴編譯器：這個 mod **只在跑測試時才編譯**。正式發布的程式不會包含測試程式碼
-- `mod tests` 是一個普通的 mod，只是慣例叫 `tests`
-- `use super::*;` 把父 mod（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 `add`、`multiply` 等函數
+- `#[cfg(test)]` 告訴編譯器：這個 `mod` **只在跑測試時才編譯**。正式發布的程式不會包含測試程式碼
+- `mod tests` 是一個普通的 `mod`，只是慣例叫 `tests`
+- `use super::*;` 把父 `mod`（也就是這個檔案的最外層）的所有東西引進來，這樣測試裡就能直接呼叫 `add`、`multiply` 等函數
 
-### cargo test
+### `cargo test`
 
 ```bash
 cargo test
@@ -118,7 +118,7 @@ cargo test
 
 ### 測試私有函數
 
-因為 `mod tests` 是你程式碼的子 mod，而同一個 mod 裡的東西互相看得到——所以測試可以直接測試**私有函數**，不需要 `pub`。
+因為 `mod tests` 是你程式碼的子 `mod`，而同一個 `mod` 裡的東西互相看得到——所以測試可以直接測試**私有函數**，不需要 `pub`。
 
 ## 範例程式碼
 
@@ -194,6 +194,6 @@ fn main() {
 - `assert!(condition)`、`assert_eq!(a, b)`、`assert_ne!(a, b)` 驗證結果（debug 和 release 都會執行）
 - `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!` 只在 debug 模式執行，release 時會被忽略
 - `#[should_panic]` 測試預期中的 panic；加上 `expected = "..."` 可以確認 panic 訊息
-- `#[cfg(test)]` 讓測試 mod 只在測試時編譯
-- `use super::*;` 引入父 mod 的所有東西——測試最常用的寫法
-- 測試可以直接測試私有函數（因為測試 mod 是子 mod）
+- `#[cfg(test)]` 讓測試 `mod` 只在測試時編譯
+- `use super::*;` 引入父 `mod` 的所有東西——測試最常用的寫法
+- 測試可以直接測試私有函數（因為測試 `mod` 是子 `mod`）

@@ -2,7 +2,7 @@
 
 ## 本集目標
 
-學會在函數的參數位置直接解構 tuple 或 struct。
+學會在函數的參數位置直接解構 tuple 或 `struct`。
 
 ## 概念說明
 
@@ -31,7 +31,7 @@ fn print_point((x, y): (i32, i32)) {
 # }
 ```
 
-struct 也可以在參數位置解構：
+`struct` 也可以在參數位置解構：
 
 ```rust,noplayground
 # struct Point {
@@ -89,9 +89,9 @@ fn main() {
 }
 ```
 
-## 為什麼 tuple 和 struct 能用 let 解構？
+## 為什麼 tuple 和 `struct` 能用 `let` 解構？
 
-你可能會好奇：為什麼 tuple 和 struct 就可以在 `let`、`for` 和函數參數裡直接解構？
+你可能會好奇：為什麼 tuple 和 `struct` 就可以在 `let`、`for` 和函數參數裡直接解構？
 
 ```rust,compile_fail
 # struct Point {
@@ -113,9 +113,9 @@ fn main() {
 # }
 ```
 
-答案是：**tuple 和 struct 的解構不會失敗**。一個 `(i32, i32)` 一定有兩個值，一個 `Point` 一定有 `x` 和 `y`——沒有其他可能。
+答案是：**tuple 和 `struct` 的解構不會失敗**。一個 `(i32, i32)` 一定有兩個值，一個 `Point` 一定有 `x` 和 `y`——沒有其他可能。
 
-但 enum 不一樣。一個 `Shape` 可能是 `Circle` 或 `Rectangle`。如果你寫 `let Shape::Circle { radius: f64 } = s;`，但 `s` 其實是 `Rectangle` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
+但 `enum` 不一樣。一個 `Shape` 可能是 `Circle` 或 `Rectangle`。如果你寫 `let Shape::Circle { radius: f64 } = s;`，但 `s` 其實是 `Rectangle` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
 
 比對時一定會成功的模式被叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
 
@@ -124,6 +124,6 @@ fn main() {
 ## 重點整理
 
 - 函數參數也可以直接用模式解構：`fn foo((x, y): (i32, i32))`
-- tuple 和 struct 都可以在參數位置解構
+- tuple 和 `struct` 都可以在參數位置解構
 - 呼叫時和平常一樣傳值，解構是函數內部的事
-- `let`、`for` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 struct 可以，enum 會有問題
+- `let`、`for` 和函數參數只接受不會失敗的模式（irrefutable pattern），所以 tuple 和 `struct` 可以，`enum` 會有問題
