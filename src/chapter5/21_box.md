@@ -35,7 +35,7 @@ Rust 需要在編譯時知道每個型別的大小。但這裡有個問題：要
 
 展開來看：`List` 的大小 = `i32` + `List` 的大小 = `i32` + `i32` + `List` 的大小 = ⋯⋯ 永遠算不完。編譯器在這裡直接報錯：「recursive type has infinite size（遞迴型別大小無限大）」。
 
-解法就是用 Box：
+解法就是用 `Box：
 
 ```rust,noplayground
 enum List {
@@ -48,7 +48,7 @@ enum List {
 
 `Box<List>` 的大小是固定的（就是一個指標的大小），問題就解決了。
 
-### Box 的使用
+### `Box` 的使用
 
 ```rust
 # fn main() {
