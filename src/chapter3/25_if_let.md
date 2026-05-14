@@ -144,9 +144,9 @@ fn main() {
 }
 ```
 
-`x if let Wrapper::Value(v) = lookup(x)` 的意思是：先把值綁定到 `x`，然後用 `lookup(x)` 的結果再做一次模式比對——只有結果是 `Wrapper::Value(v)` 的時候這個分支才成立。
+`x if let Wrapper::Value(v) = lookup(x)` 的意思是：先把值綁定到 `x`，然後用 `lookup(x)` 的結果再做一次模式匹配——只有結果是 `Wrapper::Value(v)` 的時候這個分支才成立。
 
-這個例子其實用一般的 `if let` 也寫得出來。但當程式邏輯更複雜——例如外層的 `match` 已經在比對其他模式，而你又需要在某個分支裡對另一個值做模式比對——`if let` guard 有時可以讓程式碼更好讀，不用在 `match` 的分支裡面再套一層 `if let`。
+這個例子其實用一般的 `if let` 也寫得出來。但當程式邏輯更複雜——例如外層的 `match` 已經在比對其他模式，而你又需要在某個分支裡對另一個值做模式匹配——`if let` guard 有時可以讓程式碼更好讀，不用在 `match` 的分支裡面再套一層 `if let`。
 
 ## 重點整理
 
