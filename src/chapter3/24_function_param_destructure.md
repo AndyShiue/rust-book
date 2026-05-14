@@ -119,7 +119,19 @@ fn main() {
 
 比對時一定會成功的模式被叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
 
-想處理可能失敗的模式？下一集會教 `if let`。
+還有什麼 irrefutable pattern 呢？
+
+```rust
+# fn main() {
+    let arr = [1, 2, 3];
+    let [head, ..] = arr;
+    println!("第一個元素是 {}", head);
+# }
+```
+
+`arr` 的型別是 `[i32; 3]`，編譯器看一眼就知道它一定有三個元素，所以 `[head, ..]` 比對一定成功——這也是 irrefutable pattern，所以可以直接用 `let` 解構。反過來，如果今天是切片 `&[i32]`，那就不行了：切片有可能是空的，`[head, ..]` 在切片身上會變成 refutable，`let` 就接不住了。
+
+想處理 refutable pattern？下一集會教 `if let`。
 
 ## 重點整理
 
