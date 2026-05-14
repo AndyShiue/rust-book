@@ -1,4 +1,4 @@
-# 函數 + 切片參數
+# 切片作為參數
 
 ## 本集目標
 
@@ -48,9 +48,9 @@ fn main() {
     let b = [10, 20, 30];
     let c = [7];
 
-    println!("a 的總和：{}", sum(&a));  // 15
-    println!("b 的總和：{}", sum(&b));  // 60
-    println!("c 的總和：{}", sum(&c));  // 7
+    println!("a 的總和：{}", sum(&a)); // 15
+    println!("b 的總和：{}", sum(&b)); // 60
+    println!("c 的總和：{}", sum(&c)); // 7
 }
 ```
 
@@ -75,8 +75,8 @@ fn main() {
     let arr = [1, 2, 3, 4, 5];
 
     println!("全部：{}", sum(&arr));        // 15
-    println!("前三個：{}", sum(&arr[..3]));  // 6
-    println!("後三個：{}", sum(&arr[2..]));  // 12
+    println!("前三個：{}", sum(&arr[..3])); // 6
+    println!("後三個：{}", sum(&arr[2..])); // 12
 }
 ```
 

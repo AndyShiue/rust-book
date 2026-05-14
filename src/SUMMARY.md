@@ -46,7 +46,7 @@
     - [陣列基礎](chapter2/11_array_basic.md)
     - [陣列走訪](chapter2/12_array_iteration.md)
     - [切片 `&[T]`](chapter2/13_slice.md)
-    - [函數 + 切片參數](chapter2/14_function_slice.md)
+    - [切片作為參數](chapter2/14_slice_as_param.md)
     - [字串切片 `&str`](chapter2/15_str.md)
 - [Struct、Enum 與 Pattern Matching](chapter3/README.md)
     - [`struct`（named fields）](chapter3/01_struct_named_fields.md)
