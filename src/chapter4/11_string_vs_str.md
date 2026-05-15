@@ -105,7 +105,7 @@ fn main() {
 
     // &str 不會 move（它本身就是借用）
     let greeting: &str = "哈囉";
-    let greeting2 = greeting; // 這是 Copy！（&str 是 Copy 的）
+    let greeting2 = greeting;  // 這是 Copy！（&str 是 Copy 的）
     println!("{}", greeting);  // OK
     println!("{}", greeting2); // OK
 }

@@ -127,8 +127,8 @@ fn main() {
     // f64 的特殊情況：NAN
     let nan = f64::NAN;
     println!("NAN == NAN: {}", nan == nan); // false！
-    println!("NAN < 1.0: {}", nan < 1.0);  // false！
-    println!("NAN > 1.0: {}", nan > 1.0);  // false！
+    println!("NAN < 1.0: {}", nan < 1.0);   // false！
+    println!("NAN > 1.0: {}", nan > 1.0);   // false！
 
     // f64 沒有 Ord，所以不能用 .sort()
     // let mut floats = vec![1.0, 2.0, f64::NAN];
