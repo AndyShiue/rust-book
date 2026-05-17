@@ -34,9 +34,9 @@
 # }
 ```
 
-`Rc::downgrade` 把 `Rc` 降級成 `Weak`。`Rc` 內部有**兩個**計數器：strong count 和 weak count。`Rc::clone()` 增加 strong count，`Rc::downgrade()` 只增加 weak count。`Rc` 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。
+`Rc::downgrade` 把 `Rc` 降級成 `Weak`。`Rc` 內部有**兩個**計數器：strong count 和 weak count。`.clone()` 增加 strong count，`Rc::downgrade()` 只增加 weak count。`Rc` 判斷「要不要釋放值」只看 strong count——strong count 歸零就釋放，不管 weak count 是多少。
 
-因為 `Weak` 指向的資料可能已經被釋放了，你不能直接存取。必須先 `upgrade()`：
+因為 `Weak` 指向的資料可能已經被釋放了，你不能直接存取。必須先 `.upgrade()`：
 
 ```rust
 # use std::rc::{Rc, Weak};
@@ -52,7 +52,7 @@
 # }
 ```
 
-`upgrade()` 回傳 `Option<Rc<T>>`——如果資料還在，給你一個 `Rc`；如果已經釋放，回傳 `None`。
+`upgrade` 回傳 `Option<Rc<T>>`——如果資料還在，給你一個 `Rc`；如果已經釋放，回傳 `None`。
 
 ### 用 `Weak` 打破迴圈
 
@@ -90,7 +90,7 @@ struct Node<T> {
 
 你可能會想：「如果我 `upgrade` 一個 `Weak` 拿到 `Rc` 之後一直握著不放，不就多了一個 strong count 嗎？」
 
-沒錯，upgrade 出來的 `Rc` 確實會讓 strong count +1。但這個 `Rc` 是一個**獨立的變數**——它的 strong count 貢獻記在「持有那個 `Rc` 的變數」頭上，不是記在原本的 `Weak` 欄位上。`Weak` 欄位本身對 strong count 的貢獻永遠是 0。
+沒錯，`upgrade` 出來的 `Rc` 確實會讓 strong count +1。但這個 `Rc` 是一個**獨立的變數**——它的 strong count 貢獻記在「持有那個 `Rc` 的變數」頭上，不是記在原本的 `Weak` 欄位上。`Weak` 欄位本身對 strong count 的貢獻永遠是 0。
 
 迴圈問題在資料結構建好的當下就已經被解決或沒被解決了，跟你之後怎麼 `upgrade` 完全無關。
 
@@ -114,7 +114,7 @@ impl<T> Node<T> {
 
 /// 把 b 接在 a 後面
 fn link<T>(a: &Rc<RefCell<Node<T>>>, b: &Rc<RefCell<Node<T>>>) {
-    a.borrow_mut().next = Some(Rc::clone(b));
+    a.borrow_mut().next = Some(b.clone());
     b.borrow_mut().prev = Some(Rc::downgrade(a));
 }
 
@@ -128,20 +128,20 @@ fn main() {
 
     // 從前往後走（用 Rc）
     print!("往後走：");
-    let mut current = Some(Rc::clone(&a));
+    let mut current = Some(a.clone());
     while let Some(node) = current {
         print!("{} ", node.borrow().value);
         // next 是 Option<Rc<...>>，as_ref 變成 Option<&Rc<...>>，再 map clone 出新的 Rc
-        current = node.borrow().next.as_ref().map(Rc::clone);
+        current = node.borrow().next.as_ref().map(|rc| rc.clone());
     }
     println!();
 
     // 從後往前走（用 Weak，需要 upgrade）
     print!("往前走：");
-    let mut current = Some(Rc::clone(&c));
+    let mut current = Some(c.clone());
     while let Some(node) = current {
         print!("{} ", node.borrow().value);
-        current = node.borrow().prev.as_ref().and_then(Weak::upgrade);
+        current = node.borrow().prev.as_ref().and_then(|w| w.upgrade());
     }
     println!();
 
