@@ -36,9 +36,9 @@ fn main() {
 
 ```rust
 # fn main() {
-    const MAX_SCORE: i32 = 100;       // ✅ 全大寫，用底線分隔
-    const PI_VALUE: f64 = 3.14159;    // ✅ 這樣
-    const maxScore: i32 = 100;        // ⚠️ 可以編譯，但編譯器會警告你
+    const MAX_SCORE: i32 = 100;    // ✅ 全大寫，用底線分隔
+    const PI_VALUE: f64 = 3.14159; // ✅ 這樣
+    const maxScore: i32 = 100;     // ⚠️ 可以編譯，但編譯器會警告你
 # }
 ```
 
