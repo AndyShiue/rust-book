@@ -1,8 +1,9 @@
 ---
-title: 從零開始學 Rust
-author: Andy Shiue
+title-meta: 從零開始學 Rust
+author-meta: Andy Shiue
 lang: zh-TW
 documentclass: book
+has-frontmatter: false
 classoption:
   - twoside
   - openany

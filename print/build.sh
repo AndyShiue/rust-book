@@ -33,8 +33,6 @@ pandoc "$MANUSCRIPT" \
   --standalone \
   --from markdown+fenced_code_attributes+raw_tex+smart \
   --top-level-division=chapter \
-  --toc \
-  --toc-depth=2 \
   --number-sections \
   --metadata-file=print/metadata.yaml \
   --include-in-header=print/header.tex \
