@@ -1,0 +1,35 @@
+\usepackage{xeCJK}
+\usepackage{fvextra}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\definecolor{shadecolor}{RGB}{247,247,247}
+\linespread{1.18}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\nouppercase{\leftmark}}
+\fancyhead[LO]{\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}
+  {第\thechapter 章}
+  {0.45em}
+  {}
+\titlespacing*{\chapter}{0pt}{0pt}{2.2em}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries}
+  {\thesection}
+  {0.65em}
+  {}
+\titlespacing*{\section}{0pt}{1.6em}{0.65em}
+
+\AtBeginDocument{%
+  \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\footnotesize,breaklines=false,breakanywhere=false,tabsize=4}%
+}

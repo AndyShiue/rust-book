@@ -37,6 +37,7 @@ pandoc "$MANUSCRIPT" \
   --toc-depth=2 \
   --number-sections \
   --metadata-file=print/metadata.yaml \
+  --include-in-header=print/header.tex \
   --highlight-style=tango \
   --resource-path=.:src \
   --output "$TEX"
@@ -51,6 +52,7 @@ pandoc "$MANUSCRIPT" \
   --toc-depth=2 \
   --number-sections \
   --metadata-file=print/metadata.yaml \
+  --include-in-header=print/header.tex \
   --highlight-style=tango \
   --resource-path=.:src \
   --output "$PDF"
