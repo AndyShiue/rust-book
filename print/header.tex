@@ -4,7 +4,6 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{xcolor}
-\usepackage[Emoticons,Dingbats,MiscellaneousSymbols,MiscellaneousSymbolsAndPictographs,SupplementalSymbolsAndPictographs,TransportAndMapSymbols]{ucharclasses}
 
 \IfFontExistsTF{Noto Emoji}
   {\newfontfamily\EmojiFont{Noto Emoji}[Scale=MatchUppercase]}
@@ -13,12 +12,7 @@
       {\newfontfamily\EmojiFont{Symbola}[Scale=MatchUppercase]}
       {\newfontfamily\EmojiFont{Noto Color Emoji}[Scale=MatchUppercase]}%
   }
-\setTransitionsFor{Emoticons}{\begingroup\EmojiFont}{\endgroup}
-\setTransitionsFor{Dingbats}{\begingroup\EmojiFont}{\endgroup}
-\setTransitionsFor{MiscellaneousSymbols}{\begingroup\EmojiFont}{\endgroup}
-\setTransitionsFor{MiscellaneousSymbolsAndPictographs}{\begingroup\EmojiFont}{\endgroup}
-\setTransitionsFor{SupplementalSymbolsAndPictographs}{\begingroup\EmojiFont}{\endgroup}
-\setTransitionsFor{TransportAndMapSymbols}{\begingroup\EmojiFont}{\endgroup}
+\newcommand{\Emoji}[1]{{\EmojiFont #1}}
 
 \definecolor{shadecolor}{RGB}{247,247,247}
 \linespread{1.18}
