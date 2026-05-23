@@ -18,8 +18,27 @@ jobs:
       - uses: actions/checkout@v6
       - run: rustup update stable
       - run: cargo install mdbook
+      - name: Install print PDF dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pandoc \
+            poppler-utils \
+            texlive-xetex \
+            texlive-latex-extra \
+            texlive-lang-chinese \
+            texlive-fonts-recommended \
+            fonts-jetbrains-mono \
+            fonts-noto \
+            fonts-noto-cjk \
+            fonts-noto-color-emoji \
+            fonts-symbola
       - run: mdbook test
       - run: mdbook build
+      - name: Build and publish print PDF
+        run: |
+          ./print/build.sh
+          cp book/rust-book-a4.pdf book/book.pdf
       - name: Bundle src/ as rust-book-src.zip for AI consumption
         run: (cd src && zip -r ../book/rust-book-src.zip .)
       - uses: actions/configure-pages@v6
