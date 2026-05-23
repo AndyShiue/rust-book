@@ -10,12 +10,14 @@ papersize: a4
 fontsize: 11pt
 toc-title: 目錄
 colorlinks: false
-mainfont: Noto Serif
-CJKmainfont: Noto Serif CJK TC
+mainfont: Noto Sans
+sansfont: Noto Sans
+CJKmainfont: Noto Sans CJK TC
 CJKsansfont: Noto Sans CJK TC
-monofont: Noto Sans Mono CJK TC
+CJKmonofont: Noto Sans Mono CJK TC
+monofont: JetBrains Mono
 monofontoptions:
-  - Scale=0.86
+  - Scale=0.92
 geometry:
   - a4paper
   - inner=24mm

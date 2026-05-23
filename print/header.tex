@@ -1,8 +1,24 @@
 \usepackage{xeCJK}
+\usepackage{fontspec}
 \usepackage{fvextra}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{xcolor}
+\usepackage[Emoticons,Dingbats,MiscellaneousSymbols,MiscellaneousSymbolsAndPictographs,SupplementalSymbolsAndPictographs,TransportAndMapSymbols]{ucharclasses}
+
+\IfFontExistsTF{Noto Emoji}
+  {\newfontfamily\EmojiFont{Noto Emoji}[Scale=MatchUppercase]}
+  {%
+    \IfFontExistsTF{Symbola}
+      {\newfontfamily\EmojiFont{Symbola}[Scale=MatchUppercase]}
+      {\newfontfamily\EmojiFont{Noto Color Emoji}[Scale=MatchUppercase]}%
+  }
+\setTransitionsForEmoticons{\begingroup\EmojiFont}{\endgroup}
+\setTransitionsForDingbats{\begingroup\EmojiFont}{\endgroup}
+\setTransitionsForMiscellaneousSymbols{\begingroup\EmojiFont}{\endgroup}
+\setTransitionsForMiscellaneousSymbolsAndPictographs{\begingroup\EmojiFont}{\endgroup}
+\setTransitionsForSupplementalSymbolsAndPictographs{\begingroup\EmojiFont}{\endgroup}
+\setTransitionsForTransportAndMapSymbols{\begingroup\EmojiFont}{\endgroup}
 
 \definecolor{shadecolor}{RGB}{247,247,247}
 \linespread{1.18}

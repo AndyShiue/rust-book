@@ -19,8 +19,11 @@ sudo apt-get install -y \
   texlive-latex-extra \
   texlive-lang-chinese \
   texlive-fonts-recommended \
+  fonts-jetbrains-mono \
   fonts-noto \
-  fonts-noto-cjk
+  fonts-noto-cjk \
+  fonts-noto-color-emoji \
+  fonts-symbola
 ```
 
 On macOS:
@@ -28,7 +31,7 @@ On macOS:
 ```bash
 brew install pandoc
 brew install --cask mactex-no-gui
-brew install --cask font-noto-serif font-noto-sans font-noto-sans-mono-cjk-tc font-noto-serif-cjk-tc
+brew install --cask font-jetbrains-mono font-noto-sans font-noto-sans-mono-cjk-tc font-noto-color-emoji
 ```
 
 If `xelatex` is not found after installing MacTeX, add this to your shell profile:

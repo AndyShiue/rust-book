@@ -146,8 +146,10 @@ fn main() {
     println!();
 
     // 檢查計數
-    // strong count 記在被指向的節點上：a.next 指向 b → b 的 strong +1，b.next 指向 c → c 的 strong +1
-    // weak count 也記在被指向的節點上：b.prev 指向 a → a 的 weak +1，c.prev 指向 b → b 的 weak +1
+    // strong count 記在被指向的節點上：
+    // a.next 指向 b → b 的 strong +1，b.next 指向 c → c 的 strong +1
+    // weak count 也記在被指向的節點上：
+    // b.prev 指向 a → a 的 weak +1，c.prev 指向 b → b 的 weak +1
     // a: strong=1（變數 a），weak=1（b.prev）
     // b: strong=2（變數 b + a.next），weak=1（c.prev）
     // c: strong=2（變數 c + b.next），weak=0（沒有節點的 prev 指向 c）

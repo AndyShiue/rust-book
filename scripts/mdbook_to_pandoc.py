@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--src-dir", type=Path, default=Path("src"))
     parser.add_argument("--output", type=Path, default=Path("build/print/manuscript.md"))
     parser.add_argument("--code-report", type=Path, default=Path("build/print/code-lines.txt"))
-    parser.add_argument("--code-line-limit", type=int, default=104)
+    parser.add_argument("--code-line-limit", type=int, default=96)
     return parser.parse_args()
 
 

@@ -25,8 +25,11 @@ jobs:
             texlive-latex-extra \
             texlive-lang-chinese \
             texlive-fonts-recommended \
+            fonts-jetbrains-mono \
             fonts-noto \
-            fonts-noto-cjk
+            fonts-noto-cjk \
+            fonts-noto-color-emoji \
+            fonts-symbola
 
       - name: Build A4 print PDF
         run: ./print/build.sh
