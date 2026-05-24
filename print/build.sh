@@ -37,6 +37,7 @@ pandoc "$MANUSCRIPT" \
   --metadata-file=print/metadata.yaml \
   --include-in-header=print/header.tex \
   --highlight-style=tango \
+  --columns=120 \
   --resource-path=.:src \
   --output "$TEX"
 
