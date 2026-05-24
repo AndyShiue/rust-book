@@ -40,9 +40,22 @@ If `xelatex` is not found after installing MacTeX, add this to your shell profil
 export PATH="/Library/TeX/texbin:$PATH"
 ```
 
-For the GitHub Actions build, the workflow downloads single-language TC font
-files into `print/fonts/` and XeLaTeX loads those files directly. This avoids
-Ubuntu resolving the Pan-CJK font collection to the Japanese face.
+### Chinese fonts
+
+The GitHub Actions build downloads these Traditional Chinese font files into
+`print/fonts/` before running XeLaTeX:
+
+- `NotoSansCJKtc-Regular.otf`
+- `NotoSansCJKtc-Bold.otf`
+- `NotoSansMonoCJKtc-Regular.otf`
+
+`print/header.tex` loads these files by path when they exist. This avoids Ubuntu
+resolving the Pan-CJK Noto collection to the Japanese face, which would show up
+in the PDF as `NotoSansCJKjp-*`.
+
+For local builds, installing Noto CJK fonts is usually enough. If you want the
+local PDF to match GitHub Actions exactly, download the same files into
+`print/fonts/`; that directory is ignored by git.
 
 ## Build
 
