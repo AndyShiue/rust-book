@@ -53,7 +53,7 @@ impl Add for Point {
 `std::ops` 裡常用的 `trait`：
 
 | 運算子 | `trait` | 方法 |
-|--------|------  -|------|
+|--------|---------|------|
 | `+` | `Add` | `add(self, rhs)` |
 | `-` | `Sub` | `sub(self, rhs)` |
 | `*` | `Mul` | `mul(self, rhs)` |

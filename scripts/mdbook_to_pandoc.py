@@ -127,6 +127,18 @@ def wrap_emoji_like_chars(text: str) -> str:
     return "".join(rewritten)
 
 
+def normalize_table_escaped_pipes(line: str) -> str:
+    stripped = line.strip()
+    if not (stripped.startswith("|") and stripped.endswith("|")):
+        return line
+    return line.replace("`\\|`", "\\|")
+
+
+def apply_print_markdown_fixes(line: str) -> str:
+    # Keep mdBook-facing Markdown untouched; normalize table syntax only for Pandoc.
+    return normalize_table_escaped_pipes(line)
+
+
 def rewrite_markdown(
     text: str,
     *,
@@ -173,6 +185,8 @@ def rewrite_markdown(
                 code_report.append(f"{source}:{line_number}: width {width}: {line}")
             rewritten.append(line)
             continue
+
+        line = apply_print_markdown_fixes(line)
 
         heading_match = HEADING_RE.match(line)
         if heading_match:
