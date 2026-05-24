@@ -81,6 +81,7 @@ cargo publish
 3. 再次 `cargo publish`
 
 SemVer 的規則：
+
 - **1.0 之前**（`0.x.y`）：整個 API 都被視為不穩定，任何版本都可能有破壞性變更
 - **1.0 之後**：
   - bug 修復：`1.0.0` → `1.0.1`（patch）
