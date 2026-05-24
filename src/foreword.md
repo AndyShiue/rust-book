@@ -10,7 +10,15 @@
 
 > `rust-book-src.zip`：[https://andyshiue.github.io/rust-book/rust-book-src.zip](https://andyshiue.github.io/rust-book/rust-book-src.zip)
 
-最後提一下一件事，不然怕沒人知道：你可以直接在教學裡面跑程式。文內程式原始碼的右上角有幾個按鈕，按了就知道會發生什麼事了。大概先這樣吧......
+另外本教學也有 PDF 版供讀者下載：
+
+> PDF 版：[https://andyshiue.github.io/rust-book/book.pdf](https://andyshiue.github.io/rust-book/book.pdf)
+
+但我可能不會長期維護 PDF 版，因此還是比較建議閱讀有互動功能的網頁版教學。如果你現在就正在閱讀 PDF 版的話，以下是網頁版的網址：
+
+> 網頁版：[https://andyshiue.github.io/rust-book/](https://andyshiue.github.io/rust-book/)
+
+最後提一下上面說的互動功能，不然怕沒人知道：你可以直接在網頁版教學裡面跑程式。文內程式原始碼的右上角有幾個按鈕，按了就知道會發生什麼事了。大概先這樣吧......
 
 本教學除大綱外，初稿由 AI 完成，並經人類修改：
 
