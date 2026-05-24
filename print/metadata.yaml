@@ -13,9 +13,6 @@ toc-title: 目錄
 colorlinks: false
 mainfont: Noto Sans
 sansfont: Noto Sans
-CJKmainfont: Noto Sans CJK TC
-CJKsansfont: Noto Sans CJK TC
-CJKmonofont: Noto Sans Mono CJK TC
 monofont: JetBrains Mono
 monofontoptions:
   - Scale=0.92

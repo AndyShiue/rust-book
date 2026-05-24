@@ -5,7 +5,7 @@ This directory contains the Pandoc-based print pipeline for the A4 paper edition
 ## Requirements
 
 GitHub Actions builds the PDF on Ubuntu with the dependencies declared in
-`.github/workflows/build-print.yml`. For local builds, install Pandoc, XeLaTeX,
+`.github/workflows/deploy.yml`. For local builds, install Pandoc, XeLaTeX,
 and Noto CJK fonts.
 
 On Ubuntu/Debian:
@@ -39,6 +39,10 @@ If `xelatex` is not found after installing MacTeX, add this to your shell profil
 ```bash
 export PATH="/Library/TeX/texbin:$PATH"
 ```
+
+For the GitHub Actions build, the workflow downloads single-language TC font
+files into `print/fonts/` and XeLaTeX loads those files directly. This avoids
+Ubuntu resolving the Pan-CJK font collection to the Japanese face.
 
 ## Build
 

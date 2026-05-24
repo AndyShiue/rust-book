@@ -36,9 +36,27 @@
 \newcommand{\PrintCodeBlockSetup}{\xeCJKsetup{CJKecglue={}}}
 
 \ifXeTeX
-  \setCJKmainfont[Language=Chinese Traditional]{Noto Sans CJK TC}
-  \setCJKsansfont[Language=Chinese Traditional]{Noto Sans CJK TC}
-  \setCJKmonofont[Language=Chinese Traditional]{Noto Sans Mono CJK TC}
+  \IfFileExists{print/fonts/NotoSansCJKtc-Regular.otf}{%
+    \setCJKmainfont[
+      Path=print/fonts/,
+      BoldFont=NotoSansCJKtc-Bold.otf,
+      Language=Chinese Traditional
+    ]{NotoSansCJKtc-Regular.otf}
+    \setCJKsansfont[
+      Path=print/fonts/,
+      BoldFont=NotoSansCJKtc-Bold.otf,
+      Language=Chinese Traditional
+    ]{NotoSansCJKtc-Regular.otf}
+    \setCJKmonofont[
+      Path=print/fonts/,
+      AutoFakeBold=2,
+      Language=Chinese Traditional
+    ]{NotoSansMonoCJKtc-Regular.otf}
+  }{%
+    \setCJKmainfont[Language=Chinese Traditional]{Noto Sans CJK TC}
+    \setCJKsansfont[Language=Chinese Traditional]{Noto Sans CJK TC}
+    \setCJKmonofont[Language=Chinese Traditional]{Noto Sans Mono CJK TC}
+  }%
 \fi
 
 \definecolor{shadecolor}{RGB}{247,247,247}
