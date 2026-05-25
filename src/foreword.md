@@ -10,6 +10,8 @@
 
 > `rust-book-src.zip`：[https://andyshiue.github.io/rust-book/rust-book-src.zip](https://andyshiue.github.io/rust-book/rust-book-src.zip)
 
+強烈建議要用好一點的 AI 模型讀壓縮檔！免費的 AI 甚至可能完全懶得讀壓縮檔內的內容。個人目前建議使用 GPT-5.5 Thinking，自己試過效果還不錯。
+
 另外本教學也有 PDF 版供讀者下載：
 
 > PDF 版：[https://andyshiue.github.io/rust-book/book.pdf](https://andyshiue.github.io/rust-book/book.pdf)

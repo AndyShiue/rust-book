@@ -144,7 +144,7 @@
 - `&self` / `&mut self` / `self` 在 method 中的意義
 - stack vs heap 的基本概念
 - `String` 與 `&str` 的差異
-- `Vec<T>` 與所有權的互動
+- `Vec` 與所有權的互動
 
 ### 讀完第五章（33 集）後，新增（這章很大，務必細看）：
 
