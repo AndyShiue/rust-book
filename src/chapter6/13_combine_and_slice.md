@@ -51,7 +51,7 @@
 
 ```rust,noplayground
 # fn main() {
-    let first_three: Vec<i32> = (1..=100).take(3).collect();
+    let first_three: Vec<i32> = (1..=100).into_iter().take(3).collect();
     // [1, 2, 3]
 # }
 ```
@@ -60,7 +60,7 @@
 
 ```rust,noplayground
 # fn main() {
-    let after_skip: Vec<i32> = (1..=10).skip(7).collect();
+    let after_skip: Vec<i32> = (1..=10).into_iter().skip(7).collect();
     // [8, 9, 10]
 # }
 ```
@@ -115,7 +115,7 @@ fn main() {
     println!("\n今日行程：{:?}", all_tasks);
 
     // take 和 skip
-    let numbers: Vec<i32> = (1..=20).collect();
+    let numbers: Vec<i32> = (1..=20).into_iter().collect();
     let first_five: Vec<&i32> = numbers.iter().take(5).collect();
     let last_five: Vec<&i32> = numbers.iter().skip(15).collect();
     println!("\n前 5 個：{:?}", first_five);

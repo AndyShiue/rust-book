@@ -200,7 +200,7 @@ fn main() {
     let primes: Vec<i32> = iter::from_fn(move || {
         loop {
             candidate += 1;
-            let is_prime = (2..candidate).all(|d| candidate % d != 0);
+            let is_prime = (2..candidate).into_iter().all(|d| candidate % d != 0);
             if is_prime {
                 return Some(candidate);
             }
@@ -213,6 +213,7 @@ fn main() {
     // 不需要中間 Vec——全部在一條管道裡
     println!("\n--- 零中間 Vec ---");
     let sum_of_even_squares: i32 = (1..=100)
+        .into_iter()
         .filter(|x| x % 2 == 0)
         .map(|x| x * x)
         .sum();

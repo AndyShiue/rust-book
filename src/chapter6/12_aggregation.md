@@ -23,8 +23,8 @@
 
 ```rust,noplayground
 # fn main() {
-    let total: i32 = (1..=10).sum();         // 55
-    let factorial: i64 = (1..=10).product(); // 3628800
+    let total: i32 = (1..=10).into_iter().sum();         // 55
+    let factorial: i64 = (1..=10).into_iter().product(); // 3628800
 # }
 ```
 
@@ -54,7 +54,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 ```rust,noplayground
 # fn main() {
-    let sum = (1..=5).fold(0, |acc, x| acc + x);
+    let sum = (1..=5).into_iter().fold(0, |acc, x| acc + x);
     // 步驟：0+1=1, 1+2=3, 3+3=6, 6+4=10, 10+5=15
 # }
 ```
@@ -64,13 +64,13 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 ```rust,noplayground
 # fn main() {
     // count = fold 從 0 開始，每次 +1
-    let count = (1..=5).fold(0, |acc, _x| acc + 1);
+    let count = (1..=5).into_iter().fold(0, |acc, _x| acc + 1);
 
     // sum = fold 從 0 開始，每次加上元素
-    let sum = (1..=5).fold(0, |acc, x| acc + x);
+    let sum = (1..=5).into_iter().fold(0, |acc, x| acc + x);
 
     // product = fold 從 1 開始，每次乘上元素
-    let product = (1..=5).fold(1, |acc, x| acc * x);
+    let product = (1..=5).into_iter().fold(1, |acc, x| acc * x);
 
     // min / max 的實作留給底下的 reduce 做——用 fold 的話不太自然
 # }
@@ -80,7 +80,7 @@ fn fold<B>(self, init: B, f: impl FnMut(B, Self::Item) -> B) -> B;
 
 ```rust,noplayground
 # fn main() {
-    let text = (1..=5).fold(String::new(), |mut acc, x| {
+    let text = (1..=5).into_iter().fold(String::new(), |mut acc, x| {
         if !acc.is_empty() {
             acc.push_str(", ");
         }
@@ -140,7 +140,7 @@ fn main() {
     println!("最低分：{:?}，最高分：{:?}", min, max);
 
     // .product()
-    let factorial: i64 = (1..=10).product();
+    let factorial: i64 = (1..=10).into_iter().product();
     println!("\n10! = {}", factorial);
 
     // .fold() —— 計算平均分

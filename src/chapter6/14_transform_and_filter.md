@@ -78,12 +78,12 @@
 
 ```rust,noplayground
 # fn main() {
-    let reversed: Vec<i32> = (1..=5).rev().collect();
+    let reversed: Vec<i32> = (1..=5).into_iter().rev().collect();
     // [5, 4, 3, 2, 1]
 # }
 ```
 
-`.rev()` 需要迭代器實作 `DoubleEndedIterator` `trait`——也就是說，它必須能從兩端取元素。`Vec`、陣列、Range 等都支援，但像 `from_fn` 產出的迭代器就不支援（因為沒有「尾端」的概念）。
+`.rev()` 需要迭代器實作 `DoubleEndedIterator` `trait`——也就是說，它必須能從兩端取元素。`Vec`、陣列等都支援，但像 `from_fn` 產出的迭代器就不支援（因為沒有「尾端」的概念）。
 
 ### 鏈式呼叫的威力
 
@@ -138,7 +138,7 @@ fn main() {
     println!("原本還在：{:?}", names);
 
     // rev —— 反轉
-    let countdown: Vec<i32> = (1..=5).rev().collect();
+    let countdown: Vec<i32> = (1..=5).into_iter().rev().collect();
     println!("\n倒數：{:?}", countdown);
 
     // 鏈式組合

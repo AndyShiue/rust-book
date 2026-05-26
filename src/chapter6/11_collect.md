@@ -14,11 +14,9 @@
 
 ```rust,noplayground
 # fn main() {
-    let v: Vec<i32> = (1..=5).collect();
+    let v: Vec<i32> = (1..=5).into_iter().collect();
 # }
 ```
-
-你可能注意到了——`1..=5` 是第一章學的 range 語法，它事實上是實作了 `Iterator`！所以可以直接對它呼叫 `.collect()` 和其他迭代器方法。
 
 ### 收集成 `String`
 
@@ -51,11 +49,11 @@
 ```rust
 fn main() {
     // 基本 collect —— Range 轉 Vec
-    let numbers: Vec<i32> = (1..=10).collect();
+    let numbers: Vec<i32> = (1..=10).into_iter().collect();
     println!("1 到 10：{:?}", numbers);
 
     // turbofish 語法
-    let numbers2 = (1..=5).collect::<Vec<i32>>();
+    let numbers2 = (1..=5).into_iter().collect::<Vec<i32>>();
     println!("turbofish：{:?}", numbers2);
 
     // 收集成 String
@@ -63,7 +61,7 @@ fn main() {
     println!("字串：{}", greeting);
 
     // .last()
-    let last_num = (1..=100).last();
+    let last_num = (1..=100).into_iter().last();
     println!("\n1..=100 的最後一個：{:?}", last_num);
 
     let empty: Vec<i32> = vec![];
@@ -74,7 +72,6 @@ fn main() {
 
 ## 重點整理
 
-- range 不僅實作了 `IntoIterator`，其實它本身就是一個 `Iterator`
 - `.collect()` 把迭代器的元素收集成目標集合型別
 - 用型別標註 `let v: Vec<i32>` 或 turbofish `.collect::<Vec<i32>>()` 告訴 Rust 目標型別
 - 可以收集成 `Vec`、`String` 等多種型別
