@@ -281,16 +281,12 @@
 **步驟**：
 
 1. 確認讀者讀到第幾章第幾集。
-2. 優先查看本文件第 8 節的「固定練習題題庫」，從讀者進度可用的題目裡挑 **1～3 題**。
-3. 若題庫裡有難度標示，照「基礎 → 小挑戰 → 綜合」的順序出題。
+2. 優先查看本文件第 8 節的「固定練習題題庫」，依題庫條目的狀態決定回應方式。
+3. 若有 `可用` 題目，從讀者進度內可用的題目裡挑 **1～3 題**；若題庫裡有難度標示，照「基礎 → 小挑戰 → 綜合」的順序出題。
 4. 不要一開始就附參考答案，除非讀者明確要求，或讀者已經嘗試過並需要對照。
-5. 若讀者指定的那一集還沒有固定題目，先明白告訴讀者「這一集 GUIDE 還沒有固定題目」，然後問他想做前面已經整理好的題目，還是先往後多讀幾集。
-6. 如果讀者選「前面的題目」，建議他做最近一個不超過目前進度、且狀態不是 `TODO` 的題目。
-7. 如果讀者選「後面的題目」，鼓勵他先多讀幾集，等讀到有固定題庫的位置再練習；不要直接給超出進度的題目。
-8. 如果讀者仍然堅持想練指定的那一集，才可以臨時出 **1 題**；題目前要明說「這一集 GUIDE 還沒有固定題目，下面是我依照你目前進度臨時出的練習」。
-9. 臨時題目優先用觀念確認或小修改，不要設計成大型綜合題；情境可以日常一點（成績、購物、年齡、字串處理等），不要瞬間跳到「實作一個 hash map」。
-10. 固定題庫以「程式題」為主，不為了湊題目放操作確認或名詞問答。
-11. 如果該集只是安裝、環境設定、閱讀導引、專案操作，或只是第一次照著書跑範例，不需要硬出練習題；可以改成確認讀者是否完成操作，或建議他繼續讀到下一個適合練習的集數。
+5. 若該集沒有可用題目，依第 8 節「題庫狀態」說明處理：可能是 `不出題`、`TODO`，或目前還沒有條目。
+6. 如果讀者仍然堅持想練沒有固定題目的指定集數，才可以臨時出 **1 題**；題目前要明說「這一集 GUIDE 沒有固定題目，下面是我依照你目前進度臨時出的練習」。
+7. 臨時題目優先用觀念確認或小修改，不要設計成大型綜合題；情境可以日常一點（成績、購物、年齡、字串處理等），不要瞬間跳到「實作一個 hash map」。
 
 **避免**：
 - 自行把固定題目改得更難，導致用到讀者還沒學的語法。
@@ -380,14 +376,26 @@
 2. 讀者作答後，先用「批改重點」判斷他是否抓到本題目標。
 3. 讀者卡住時，照「提示方向」一層一層給，不要一次把答案攤開。
 4. 讀者要求解答、或已經嘗試過仍卡住時，才可以給「參考答案」。
-5. 題庫中標成 `TODO` 的地方代表尚未填寫；AI 不要假裝有固定題目，要回到 5.2 的「無固定題目」流程，先讓讀者選擇做前面的題目或先往後讀。
+5. 固定題庫以「程式題」為主，不為了湊題目放操作確認或名詞問答。
+
+### 題庫狀態
+
+- `可用`：可以直接出給讀者。若讀者要求多題，從目前進度內的 `可用` 題目挑 1～3 題。
+- `草稿`：題目方向可參考，但還沒定稿；除非讀者明確要求，否則優先挑 `可用` 題目。
+- `TODO`：題目尚未填寫；AI 不要假裝有固定題目，應告訴讀者這一集 GUIDE 還沒有固定題目，並建議他做前面最近的 `可用` 題目，或先往後讀到下一個適合練習的集數。
+- `不出題`：作者刻意不安排題目。AI 應簡短說明不出題原因，建議讀者做前面最近的 `可用` 題目，或繼續讀到下一個適合練習的集數；不要臨時補題，除非讀者明確堅持要練該集。
+
+常見不出題原因包括：該集只是安裝或專案操作、題目會變成名詞問答、題目只是在重打正文範例、目前進度還缺少必要語法、或這個概念比較適合等幾集後放進綜合題。
 
 ### 題目格式
 
 ````md
 #### 第 X 章第 Y 集：標題
 
-狀態：TODO / 草稿 / 可用
+狀態：TODO / 不出題 / 草稿 / 可用
+
+不出題原因：
+- 若狀態是 `不出題`，簡短說明原因；其他狀態可省略這段。
 
 練習目標：
 - ...
@@ -412,6 +420,22 @@
 ````
 
 ### 第 1 章
+
+#### 第 1 章第 1 集：安裝 Rust
+
+狀態：不出題
+
+不出題原因：
+- 這集目標是安裝工具並確認 `rustc --version` 能跑，屬於環境設定，不適合出程式題。
+- AI 可以協助確認安裝是否成功，或處理終端機找不到指令等問題，但不要硬出練習題。
+
+#### 第 1 章第 2 集：第一個程式
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是第一次用 `cargo new` 建專案、打開 `src/main.rs`、用 `cargo run` 跑範例，屬於專案操作與照著書跑第一個程式。
+- 若硬出題，容易變成操作確認或名詞問答；請建議讀者先確定程式能跑，再繼續讀到下一個適合練習的集數。
 
 #### 第 1 章第 3 集：變數與輸出
 
@@ -522,6 +546,22 @@ fn main() {
     println!("{} % {} = {}", total, group, total % group);
 }
 ```
+
+#### 第 1 章第 6 集：運算子優先順序
+
+狀態：不出題
+
+不出題原因：
+- 這集重點是理解「先乘除後加減」以及用括號改變順序；若出題很容易只是重打正文範例。
+- 這個概念會自然出現在後面的算式題裡，不需要在本集硬出獨立題目。
+
+#### 第 1 章第 7 集：比較運算子
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是認識 `==`、`!=`、`<`、`>`、`<=`、`>=` 以及比較結果是 `true` / `false`。
+- 單獨出題容易太簡單或變成符號問答；比較運算子會從第 8 集 `if` 開始自然放進程式題裡練。
 
 #### 第 1 章第 8 集：`if`
 
@@ -1279,6 +1319,7 @@ a = 3, b = 7
 - 第 2 題內層範圍要依照外層變數改變，例如 `1..=row`。
 - 第 3 題要使用 loop label，例如 `'outer: for a in 1..=9 { ... }`。
 - 第 3 題找到第一組後要 `break 'outer;`，不能只 `break` 內層。
+- 第 1 題和第 2 題可能會出現「變數沒有使用」的 warning，這是正常的；不要用底線變數消掉 warning，底線變數到第 2 章第 3 集才教。
 - 不要使用陣列、`Vec`、函數或遞迴。
 
 提示方向：
@@ -1305,8 +1346,8 @@ fn main() {
 
     let width = width_input.trim().parse::<i32>().expect("請輸入數字");
 
-    for _row in 1..=height {
-        for _col in 1..=width {
+    for row in 1..=height {
+        for col in 1..=width {
             print!("*");
         }
         println!();
@@ -1324,7 +1365,7 @@ fn main() {
     let levels = input.trim().parse::<i32>().expect("請輸入數字");
 
     for row in 1..=levels {
-        for _col in 1..=row {
+        for col in 1..=row {
             print!("*");
         }
         println!();
@@ -1417,6 +1458,30 @@ fn main() {
     }
 }
 ```
+
+#### 第 1 章第 23 集：型別（基礎）
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是認識 `i32`、`f64`、`bool`、型別推斷與手動標註型別。
+- 若出題容易變成把範例重打一遍；這些型別會在後續程式題裡持續自然使用。
+
+#### 第 1 章第 24 集：型別（數字詳解）
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是補充數字型別、預設型別、數字後綴與浮點數精確度等觀念。
+- 若出題容易變成型別名稱記憶題或表格問答；目前不需要要求讀者刻意練所有數字型別。
+
+#### 第 1 章第 25 集：`char`
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是認識 `char`、單引號與雙引號的差別，以及 Unicode 字元。
+- 單獨出題練習價值不高；下一集「跳脫字元」更適合用輸出題練單引號、雙引號與特殊字元。
 
 #### 第 1 章第 26 集：跳脫字元
 
@@ -1532,146 +1597,850 @@ fn main() {
 
 ### 第 2 章
 
+#### 第 2 章第 1 集：`const`
+
+狀態：可用
+
+練習目標：
+- 確認讀者會用 `const` 宣告常數。
+- 確認讀者知道 `const` 一定要標型別。
+- 確認讀者知道常數命名慣例是全大寫加底線。
+- 確認讀者知道 `const` 可以放在 `fn main()` 外面。
+
+題目：
+1. 寫一個成績判斷程式。請在 `fn main()` 外面宣告常數 `PASS_SCORE: i32 = 60`。程式請使用者輸入分數，如果分數大於或等於 `PASS_SCORE`，印出 `及格`，否則印出 `不及格`。
+
+執行範例：
+
+```text
+請輸入分數：
+72
+及格
+```
+
+批改重點：
+- `PASS_SCORE` 應該用 `const` 宣告，不要用 `let`。
+- `const PASS_SCORE: i32 = 60;` 應該放在 `fn main()` 外面。
+- `const` 一定要標型別，不能寫成 `const PASS_SCORE = 60;`。
+- 常數名稱要用全大寫加底線。
+- 不要寫 `const mut`，常數不能加 `mut`。
+- 判斷時要使用 `score >= PASS_SCORE`，不要直接把 `60` 寫死在 `if` 裡。
+
+提示方向：
+1. 常數可以寫在 `fn main()` 上方。
+2. `const` 的格式是 `const 名稱: 型別 = 值;`。
+3. 讀到分數後，用 `score >= PASS_SCORE` 判斷。
+
+參考答案：
+
+```rust
+const PASS_SCORE: i32 = 60;
+
+fn main() {
+    println!("請輸入分數：");
+
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+    let score = input.trim().parse::<i32>().expect("請輸入數字");
+
+    if score >= PASS_SCORE {
+        println!("及格");
+    } else {
+        println!("不及格");
+    }
+}
+```
+
+#### 第 2 章第 2 集：shadowing
+
+狀態：不出題
+
+不出題原因：
+- 這集雖然重要，但題目容易變成重打正文範例，或刻意製造概念題。
+- Shadowing 之後很適合自然放進綜合題裡練，不需要在這一集硬出題。
+
+#### 第 2 章第 3 集：底線變數
+
+狀態：可用
+
+練習目標：
+- 確認讀者知道不需要迴圈變數時可以用 `_`。
+- 確認讀者會用 `for _ in 0..n` 單純重複執行固定次數。
+- 確認讀者知道 `_` 不是之後要拿來使用的變數。
+
+題目：
+1. 寫一個簡單的密碼檢查程式。正確密碼是 `"rust"`。讓使用者最多輸入 3 次密碼；如果輸入正確，就印出 `登入成功` 並結束迴圈；如果輸入錯誤，就印出 `密碼錯誤`。請使用 `for _ in 0..3`，因為這題不需要知道目前是第幾次。
+
+執行範例：
+
+```text
+請輸入密碼：
+abc
+密碼錯誤
+請輸入密碼：
+rust
+登入成功
+```
+
+批改重點：
+- 要使用 `for _ in 0..3`。
+- 不要寫成 `for i in 0..3` 後又完全不用 `i`。
+- 每一輪都要讀取一次新的輸入。
+- 可以用 `input.trim() == "rust"` 判斷密碼是否正確。
+- 登入成功後要使用 `break` 跳出迴圈。
+- 不要要求讀者處理「三次都錯」後的額外訊息；這題重點是 `_` 和固定次數迴圈。
+
+提示方向：
+1. `for _ in 0..3` 代表重複三次，但不需要知道目前是第幾次。
+2. 每次迴圈裡都可以照 stdin 固定寫法讀一行。
+3. 如果 `input.trim() == "rust"`，就印出成功並 `break`。
+
+參考答案：
+
+```rust
+fn main() {
+    for _ in 0..3 {
+        println!("請輸入密碼：");
+
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+        if input.trim() == "rust" {
+            println!("登入成功");
+            break;
+        } else {
+            println!("密碼錯誤");
+        }
+    }
+}
+```
+
+#### 第 2 章第 4 集：tuple
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是 tuple 的基本建立、取值與單元素 tuple 語法；單獨出題容易太簡單，或只是重打正文範例。
+- Tuple 之後可以自然放進函數回傳值、解構或綜合題裡練，不需要在本集硬出題。
+
+#### 第 2 章第 5 集：`{:?}` `Debug` 格式
+
+狀態：不出題
+
+不出題原因：
+- 這集主要介紹輸出格式工具：`{:?}`、`{:#?}`、`dbg!`。
+- 單獨出題容易只是要求讀者把 `{}` 改成 `{:?}`，練習價值不高。
+- `Debug` 格式之後會在 struct、enum、derive 等章節自然大量使用，到時再放進題目更有意義。
+
+#### 第 2 章第 6 集：簡單函數
+
+狀態：可用
+
+練習目標：
+- 確認讀者會用 `fn 名字() { ... }` 定義函數。
+- 確認讀者會在 `main` 裡呼叫自己定義的函數。
+- 確認讀者知道函數可以呼叫多次。
+- 確認讀者使用 snake_case 命名函數。
+
+題目：
+1. 寫一個程式，定義一個函數 `print_menu()`，裡面印出三行菜單。然後在 `main` 裡呼叫 `print_menu()` 兩次。
+
+預期輸出：
+
+```text
+今日菜單
+1. 拉麵
+2. 咖哩飯
+今日菜單
+1. 拉麵
+2. 咖哩飯
+```
+
+批改重點：
+- 要定義 `fn print_menu() { ... }`。
+- 要在 `main` 裡呼叫 `print_menu();` 兩次。
+- 不要使用函數參數；函數參數下一集才教。
+- 函數名稱要用 snake_case，不要寫成 `printMenu`。
+- 函數可以放在 `main` 上面或下面，兩者都可以。
+
+提示方向：
+1. 先寫 `fn print_menu() { ... }`，把三行 `println!` 放進去。
+2. 在 `main` 裡寫兩次 `print_menu();`。
+3. 呼叫函數時，函數名稱後面要有 `()` 和分號。
+
+參考答案：
+
+```rust
+fn print_menu() {
+    println!("今日菜單");
+    println!("1. 拉麵");
+    println!("2. 咖哩飯");
+}
+
+fn main() {
+    print_menu();
+    print_menu();
+}
+```
+
+#### 第 2 章第 7 集：函數參數
+
+狀態：可用
+
+練習目標：
+- 確認讀者會定義帶參數的函數。
+- 確認讀者知道函數參數一定要標型別。
+- 確認讀者會呼叫函數並傳入對應的值。
+- 確認讀者知道本集還沒有函數回傳值，所以函數直接印出結果。
+
+題目：
+1. 寫一個程式，定義函數 `print_total(price: i32, count: i32)`，印出總價 `price * count`。在 `main` 裡請使用者輸入單價和數量，轉成數字後呼叫 `print_total(price, count)`。
+
+執行範例：
+
+```text
+請輸入單價：
+30
+請輸入數量：
+4
+總價是 120 元
+```
+
+批改重點：
+- 要定義 `fn print_total(price: i32, count: i32)`。
+- 參數 `price` 和 `count` 都必須標型別。
+- `print_total` 裡直接 `println!`，不要寫回傳值；函數回傳值下一集才教。
+- `main` 裡要讀取兩次輸入，分別轉成 `price` 和 `count`。
+- 呼叫時要寫 `print_total(price, count);`。
+- 不要把所有邏輯都寫在 `main` 裡，這題要練函數參數。
+
+提示方向：
+1. 函數參數格式是 `參數名: 型別`。
+2. 可以先在 `main` 裡讀到 `price` 和 `count`。
+3. 再把兩個值傳給 `print_total(price, count);`。
+
+參考答案：
+
+```rust
+fn print_total(price: i32, count: i32) {
+    println!("總價是 {} 元", price * count);
+}
+
+fn main() {
+    println!("請輸入單價：");
+
+    let mut price_input = String::new();
+    std::io::stdin().read_line(&mut price_input).expect("讀取失敗");
+
+    let price = price_input.trim().parse::<i32>().expect("請輸入數字");
+
+    println!("請輸入數量：");
+
+    let mut count_input = String::new();
+    std::io::stdin().read_line(&mut count_input).expect("讀取失敗");
+
+    let count = count_input.trim().parse::<i32>().expect("請輸入數字");
+
+    print_total(price, count);
+}
+```
+
 #### 第 2 章第 8 集：函數回傳值
 
-狀態：TODO
+狀態：可用
 
 練習目標：
-- TODO
+- 確認讀者會用 `-> 型別` 宣告函數回傳型別。
+- 確認讀者知道最後一行不加分號就是回傳值。
+- 確認讀者會在 `main` 裡接住函數回傳值。
+- 確認讀者會用 tuple 回傳多個值。
 
 題目：
-1. TODO
+1. 寫一個函數 `calculate_total(price: i32, count: i32) -> i32`，回傳總價 `price * count`。在 `main` 裡請使用者輸入單價和數量，呼叫函數後印出總價。
+2. 寫一個函數 `buy_ticket(money: i32, price: i32) -> (i32, i32)`，回傳「可以買幾張票」和「剩下多少錢」。在 `main` 裡請使用者輸入手上的錢和票價，最後印出結果。
 
-批改重點：
-- TODO
+執行範例：
 
-提示方向：
-1. TODO
-
-參考答案：
-
-```rust
-// TODO
+```text
+請輸入單價：
+30
+請輸入數量：
+4
+總價是 120 元
 ```
 
-### 第 3 章
-
-#### 第 3 章第 4 集：`match` C-style `enum`
-
-狀態：TODO
-
-練習目標：
-- TODO
-
-題目：
-1. TODO
-
-批改重點：
-- TODO
-
-提示方向：
-1. TODO
-
-參考答案：
-
-```rust
-// TODO
+```text
+請輸入你有多少錢：
+230
+請輸入票價：
+70
+可以買 3 張，剩下 20 元
 ```
 
-### 第 4 章
-
-#### 第 4 章第 1 集：所有權（鑰匙圈比喻）
-
-狀態：TODO
-
-練習目標：
-- TODO
-
-題目：
-1. TODO
-
 批改重點：
-- TODO
+- 第 1 題函數要回傳 `i32`，不要直接在函數裡 `println!`。
+- 第 1 題最後一行應該是 `price * count`，不要加分號。
+- 第 2 題函數回傳型別應該是 `(i32, i32)`。
+- 第 2 題可以用 `money / price` 和 `money % price` 算出兩個值。
+- 第 2 題要用 tuple 回傳，例如 `(count, change)`。
+- 呼叫 tuple 回傳值後，可以用 `.0`、`.1` 取出結果。
+- 不要使用 `return`；early `return` 下一集才教，這集先練最後一行回傳值。
 
 提示方向：
-1. TODO
+1. 回傳型別寫在參數後面：`fn name(...) -> i32`。
+2. 函數最後一行不要加分號。
+3. 回傳兩個值時，可以把它們包成 tuple。
 
 參考答案：
 
 ```rust
-// TODO
+fn calculate_total(price: i32, count: i32) -> i32 {
+    price * count
+}
+
+fn main() {
+    println!("請輸入單價：");
+
+    let mut price_input = String::new();
+    std::io::stdin().read_line(&mut price_input).expect("讀取失敗");
+    let price = price_input.trim().parse::<i32>().expect("請輸入數字");
+
+    println!("請輸入數量：");
+
+    let mut count_input = String::new();
+    std::io::stdin().read_line(&mut count_input).expect("讀取失敗");
+    let count = count_input.trim().parse::<i32>().expect("請輸入數字");
+
+    let total = calculate_total(price, count);
+
+    println!("總價是 {} 元", total);
+}
 ```
 
-### 第 5 章
-
-#### 第 5 章第 8 集：`Option<T>`
-
-狀態：TODO
-
-練習目標：
-- TODO
-
-題目：
-1. TODO
-
-批改重點：
-- TODO
-
-提示方向：
-1. TODO
-
-參考答案：
-
 ```rust
-// TODO
+fn buy_ticket(money: i32, price: i32) -> (i32, i32) {
+    let count = money / price;
+    let change = money % price;
+
+    (count, change)
+}
+
+fn main() {
+    println!("請輸入你有多少錢：");
+
+    let mut money_input = String::new();
+    std::io::stdin().read_line(&mut money_input).expect("讀取失敗");
+    let money = money_input.trim().parse::<i32>().expect("請輸入數字");
+
+    println!("請輸入票價：");
+
+    let mut price_input = String::new();
+    std::io::stdin().read_line(&mut price_input).expect("讀取失敗");
+    let price = price_input.trim().parse::<i32>().expect("請輸入數字");
+
+    let result = buy_ticket(money, price);
+
+    println!("可以買 {} 張，剩下 {} 元", result.0, result.1);
+}
 ```
 
-### 第 6 章
+#### 第 2 章第 9 集：early `return`
 
-#### 第 6 章第 8 集：`Iterator` `trait`
-
-狀態：TODO
+狀態：可用
 
 練習目標：
-- TODO
+- 確認讀者會用 `return 值;` 提前離開函數。
+- 確認讀者知道 `return` 後面要加分號。
+- 確認讀者知道一般最後一行仍然用不加分號的自然回傳。
+- 確認讀者理解 guard clause 的用途。
 
 題目：
-1. TODO
+1. 寫一個函數 `discount_price(price: i32, is_member: bool) -> i32`。如果 `price <= 0`，代表價格不合理，直接 `return 0;`。如果價格合理，會員打 8 折，非會員原價。請在 `main` 裡讓使用者輸入價格，並用一個變數 `is_member = true` 呼叫函數，最後印出折扣後價格。
 
-批改重點：
-- TODO
+執行範例：
 
-提示方向：
-1. TODO
-
-參考答案：
-
-```rust
-// TODO
+```text
+請輸入價格：
+100
+折扣後價格是 80 元
 ```
 
-### 第 7 章
-
-#### 第 7 章第 2 集：`mod`
-
-狀態：TODO
-
-練習目標：
-- TODO
-
-題目：
-1. TODO
-
 批改重點：
-- TODO
+- 函數開頭要先檢查 `price <= 0`，並使用 `return 0;` 提前離開。
+- `return 0;` 後面要有分號。
+- 價格合理時，不要用 `return` 到處回傳；最後可以用 `if is_member { price * 8 / 10 } else { price }` 自然回傳。
+- 函數回傳型別要寫 `-> i32`。
+- 不要使用浮點數折扣；目前用整數運算就好。
+- 不要引入 `Result` 或 `Option`；這些第五章才會教。
 
 提示方向：
-1. TODO
+1. 先寫 guard clause：`if price <= 0 { return 0; }`。
+2. 後面再處理會員和非會員的價格。
+3. `if` 當表達式可以直接當函數最後一行的回傳值。
 
 參考答案：
 
 ```rust
-// TODO
+fn discount_price(price: i32, is_member: bool) -> i32 {
+    if price <= 0 {
+        return 0;
+    }
+
+    if is_member {
+        price * 8 / 10
+    } else {
+        price
+    }
+}
+
+fn main() {
+    println!("請輸入價格：");
+
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+    let price = input.trim().parse::<i32>().expect("請輸入數字");
+
+    let is_member = true;
+    let final_price = discount_price(price, is_member);
+
+    println!("折扣後價格是 {} 元", final_price);
+}
+```
+
+#### 第 2 章第 10 集：遞迴
+
+狀態：可用
+
+練習目標：
+- 確認讀者知道遞迴函數要有停止條件。
+- 確認讀者知道每次遞迴呼叫都要讓問題往停止條件靠近。
+- 確認讀者能把「計算結果」和「印出過程」兩種遞迴情境分開。
+- 確認讀者能把「讀取輸入」放在 `main` 裡，把「計算並回傳結果」放在函數裡。
+
+題目：
+1. 寫一個函數 `is_power_of_two(n: i32) -> bool`，判斷 `n` 是不是 2 的次方。這個函數只負責計算並回傳結果，不要在函數裡讀取 stdin 或印出文字。請特別擋掉負數和 0：它們都不是 2 的次方。請在 `main` 裡讀取一個整數，呼叫這個函數，並印出 `是 2 的次方` 或 `不是 2 的次方`。請用遞迴，不要用迴圈。
+2. 寫一個函數 `print_collatz(n: i32)`，印出輸入數字的 Collatz sequence。規則是：如果 `n` 是 1，就印出 1 並停止；如果 `n` 是偶數，下一個數字是 `n / 2`；如果 `n` 是奇數，下一個數字是 `3 * n + 1`。請在 `main` 裡讀取一個正整數，呼叫這個函數，並用遞迴一路印到 1，不要用迴圈。
+
+執行範例：
+
+```text
+請輸入數字：
+16
+是 2 的次方
+```
+
+```text
+請輸入起始數字：
+6
+6
+3
+10
+5
+16
+8
+4
+2
+1
+```
+
+批改重點：
+- `is_power_of_two` 必須只依靠參數 `n` 計算並回傳 `bool`，不要在函數裡讀取 stdin 或印出結果。
+- `is_power_of_two` 至少要處理 `n == 1`、`n <= 0`、奇數、偶數這幾種情況；負數和 0 都應該回傳 `false`。
+- `print_collatz` 要先印出目前的 `n`，再決定要不要繼續呼叫自己。
+- `print_collatz` 的停止條件應該是 `n == 1`。
+- 兩題都不要使用 `loop`、`while`、`for`、陣列或 `Vec`。
+- 這一集的重點是練習遞迴，不是研究 Collatz 猜想的數學細節；可以假設輸入是正整數。
+
+提示方向：
+1. `is_power_of_two(1)` 應該回傳 `true`。
+2. 小於等於 0 的數不是 2 的次方。
+3. 如果 `n` 是奇數而且不是 1，就不可能是 2 的次方。
+4. 如果 `n` 是偶數，可以把問題縮小成檢查 `n / 2`。
+5. Collatz 的函數可以先 `println!("{}", n);`，再用 `if` 決定下一次呼叫要傳入哪個數字。
+
+參考答案：
+
+```rust
+fn is_power_of_two(n: i32) -> bool {
+    if n == 1 {
+        true
+    } else if n <= 0 {
+        false
+    } else if n % 2 != 0 {
+        false
+    } else {
+        is_power_of_two(n / 2)
+    }
+}
+
+fn main() {
+    println!("請輸入數字：");
+
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+    let n = input.trim().parse::<i32>().expect("請輸入數字");
+
+    if is_power_of_two(n) {
+        println!("是 2 的次方");
+    } else {
+        println!("不是 2 的次方");
+    }
+}
+```
+
+```rust
+fn print_collatz(n: i32) {
+    println!("{}", n);
+
+    if n == 1 {
+        return;
+    }
+
+    if n % 2 == 0 {
+        print_collatz(n / 2);
+    } else {
+        print_collatz(3 * n + 1);
+    }
+}
+
+fn main() {
+    println!("請輸入起始數字：");
+
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+    let n = input.trim().parse::<i32>().expect("請輸入數字");
+
+    print_collatz(n);
+}
+```
+
+#### 第 2 章第 11 集：陣列基礎
+
+狀態：可用
+
+練習目標：
+- 確認讀者會建立固定長度陣列。
+- 確認讀者知道陣列元素必須是同一種型別。
+- 確認讀者會用 `{:?}` 印出整個陣列。
+- 確認讀者會用索引取出陣列中的元素，並知道索引從 0 開始。
+- 避免偷跑下一集的陣列走訪。
+
+題目：
+1. 寫一個程式，讓使用者輸入三天的溫度，存成陣列 `temperatures`。接著印出整個陣列、第一天溫度、第三天溫度，以及第一天和第三天差幾度。差幾度不能是負數；請自己用 `if` 判斷並算出絕對值。請用索引取值。
+
+執行範例：
+
+```text
+請輸入第一天溫度：
+25
+請輸入第二天溫度：
+27
+請輸入第三天溫度：
+22
+三天溫度：[25, 27, 22]
+第一天溫度：25
+第三天溫度：22
+第一天和第三天差 3 度
+```
+
+批改重點：
+- 要把三個溫度存成陣列，例如 `let temperatures = [day1, day2, day3];`。
+- 要用 `{:?}` 印出整個陣列，不要用 `{}`。
+- 第一天要用 `temperatures[0]`，第三天要用 `temperatures[2]`。
+- 差幾度不能是負數；要用 `if` 自己判斷誰比較大，再做減法。
+- 不要呼叫現成的絕對值函數；這題要練目前已學過的 `if` 和運算子。
+- 不要使用 `for x in temperatures`；陣列走訪下一集才教。
+- 不要讓讀者輸入索引再取值；這會引入 `usize` 型別轉換，容易讓焦點偏掉。
+
+提示方向：
+1. 先各自讀取 `day1`、`day2`、`day3`。
+2. 再把三個變數放進陣列：`[day1, day2, day3]`。
+3. 印整個陣列時使用 `{:?}`。
+4. 陣列第一個元素的索引是 0。
+
+參考答案：
+
+```rust
+fn main() {
+    println!("請輸入第一天溫度：");
+
+    let mut day1_input = String::new();
+    std::io::stdin().read_line(&mut day1_input).expect("讀取失敗");
+    let day1 = day1_input.trim().parse::<i32>().expect("請輸入數字");
+
+    println!("請輸入第二天溫度：");
+
+    let mut day2_input = String::new();
+    std::io::stdin().read_line(&mut day2_input).expect("讀取失敗");
+    let day2 = day2_input.trim().parse::<i32>().expect("請輸入數字");
+
+    println!("請輸入第三天溫度：");
+
+    let mut day3_input = String::new();
+    std::io::stdin().read_line(&mut day3_input).expect("讀取失敗");
+    let day3 = day3_input.trim().parse::<i32>().expect("請輸入數字");
+
+    let temperatures = [day1, day2, day3];
+
+    println!("三天溫度：{:?}", temperatures);
+    println!("第一天溫度：{}", temperatures[0]);
+    println!("第三天溫度：{}", temperatures[2]);
+    let difference = if temperatures[2] >= temperatures[0] {
+        temperatures[2] - temperatures[0]
+    } else {
+        temperatures[0] - temperatures[2]
+    };
+
+    println!("第一天和第三天差 {} 度", difference);
+}
+```
+
+#### 第 2 章第 12 集：陣列走訪
+
+狀態：可用
+
+練習目標：
+- 確認讀者會用 `for x in arr` 走訪陣列。
+- 確認讀者會在走訪陣列時對每個元素做處理。
+- 確認讀者會使用可變變數作為累加器。
+- 確認讀者能分辨「用索引把輸入放進陣列」和「直接走訪陣列元素」的差別。
+
+題目：
+1. 寫一個程式，先建立可變陣列 `expenses`，裡面有 5 個 `0`。接著用 `for i in 0..5` 讀取 5 筆今日花費，並把每一筆放進 `expenses[i]`。輸入完成後，用 `for expense in expenses` 走訪陣列，印出每一筆花費。如果某一筆花費大於或等於 100，就額外印出 `這筆比較高`。最後印出總花費。
+
+執行範例：
+
+```text
+請輸入第 1 筆花費：
+80
+請輸入第 2 筆花費：
+120
+請輸入第 3 筆花費：
+45
+請輸入第 4 筆花費：
+200
+請輸入第 5 筆花費：
+60
+花費：80 元
+花費：120 元
+這筆比較高
+花費：45 元
+花費：200 元
+這筆比較高
+花費：60 元
+總花費：505 元
+```
+
+批改重點：
+- 要先建立可變陣列，例如 `let mut expenses = [0; 5];`。
+- 讀取輸入時可以使用 `for i in 0..5`，並把讀到的花費放進 `expenses[i]`。
+- 處理花費時要使用 `for expense in expenses` 走訪陣列。
+- 要用 `let mut total = 0;` 或類似做法建立累加器。
+- 每次走訪時要把 `expense` 加進 `total`。
+- 判斷高花費時可以用 `if expense >= 100`。
+- 不要在計算總花費時繼續用索引走訪，例如 `for i in 0..5 { total += expenses[i]; }`；這集的主角是 `for expense in expenses`。
+- 不要使用 `len()`、slice 或 `Vec`。
+
+提示方向：
+1. 先寫 `let mut expenses = [0; 5];`。
+2. 用 `for i in 0..5` 讀取輸入，提示文字可以印出 `i + 1`。
+3. 讀到數字後，把它放進 `expenses[i]`。
+4. 走訪前先準備 `let mut total = 0;`。
+5. 在 `for expense in expenses` 裡印出花費、判斷是否大於等於 100，並累加總花費。
+
+參考答案：
+
+```rust
+fn main() {
+    let mut expenses = [0; 5];
+
+    for i in 0..5 {
+        println!("請輸入第 {} 筆花費：", i + 1);
+
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+        let expense = input.trim().parse::<i32>().expect("請輸入數字");
+        expenses[i] = expense;
+    }
+
+    let mut total = 0;
+
+    for expense in expenses {
+        println!("花費：{} 元", expense);
+
+        if expense >= 100 {
+            println!("這筆比較高");
+        }
+
+        total += expense;
+    }
+
+    println!("總花費：{} 元", total);
+}
+```
+
+#### 第 2 章第 13 集：切片 `&[T]`
+
+狀態：不出題
+
+不出題原因：
+- 這集主要是認識切片語法、範圍邊界、`&` 先記起來，以及切片不是複製資料。
+- 若出題容易只是把正文範例換一組陣列和範圍，練習價值不高。
+- 若要求讀者自行輸入範圍，又會提早牽涉索引型別、越界處理和借用細節，焦點容易偏掉。
+- 切片更適合在下一集「切片作為函數參數」裡一起練。
+
+#### 第 2 章第 14 集：切片作為參數
+
+狀態：可用
+
+練習目標：
+- 確認讀者會把函數參數寫成 `&[i32]`。
+- 確認讀者知道呼叫時可以傳整個陣列的切片，例如 `&steps`。
+- 確認讀者知道呼叫時也可以傳陣列的一部分，例如 `&steps[..5]` 和 `&steps[5..]`。
+- 確認讀者能在函數裡走訪切片。
+- 確認讀者理解同一個函數可以處理不同長度的資料。
+
+題目：
+1. 寫一個函數 `count_goal_days(steps: &[i32]) -> i32`，計算有幾天步數大於或等於 `8000`。在 `main` 裡讓使用者輸入 7 天步數，存成陣列 `steps`。接著分別呼叫 `count_goal_days(&steps)`、`count_goal_days(&steps[..5])`、`count_goal_days(&steps[5..])`，印出一整週、平日、週末各有幾天達標。
+
+執行範例：
+
+```text
+請輸入第 1 天步數：
+9000
+請輸入第 2 天步數：
+7500
+請輸入第 3 天步數：
+8200
+請輸入第 4 天步數：
+6000
+請輸入第 5 天步數：
+10000
+請輸入第 6 天步數：
+3000
+請輸入第 7 天步數：
+12000
+一整週達標 4 天
+平日達標 3 天
+週末達標 1 天
+```
+
+批改重點：
+- 函數參數要寫成 `steps: &[i32]`，不要寫成固定長度陣列 `[i32; 7]`。
+- `count_goal_days` 裡要用 `for step in steps` 走訪切片。
+- 函數內要用可變累加器計算達標天數。
+- 呼叫整週時要傳 `&steps`。
+- 呼叫平日時要傳 `&steps[..5]`，代表第 1 天到第 5 天。
+- 呼叫週末時要傳 `&steps[5..]`，代表第 6 天到第 7 天。
+- 不要為整週、平日、週末各寫一個函數；這題重點是同一個切片參數函數可以接受不同長度資料。
+- 不要使用 `Vec` 或 Iterator 方法。
+
+提示方向：
+1. 先寫 `fn count_goal_days(steps: &[i32]) -> i32`。
+2. 函數裡準備 `let mut count = 0;`。
+3. 用 `for step in steps` 走訪每一天步數。
+4. 如果 `step >= 8000`，就讓 `count += 1`。
+5. 在 `main` 裡可以用可變陣列 `[0; 7]` 搭配 `for i in 0..7` 讀取 7 天步數。
+
+參考答案：
+
+```rust
+fn count_goal_days(steps: &[i32]) -> i32 {
+    let mut count = 0;
+
+    for step in steps {
+        if step >= 8000 {
+            count += 1;
+        }
+    }
+
+    count
+}
+
+fn main() {
+    let mut steps = [0; 7];
+
+    for i in 0..7 {
+        println!("請輸入第 {} 天步數：", i + 1);
+
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).expect("讀取失敗");
+
+        let step = input.trim().parse::<i32>().expect("請輸入數字");
+        steps[i] = step;
+    }
+
+    let week_count = count_goal_days(&steps);
+    let weekday_count = count_goal_days(&steps[..5]);
+    let weekend_count = count_goal_days(&steps[5..]);
+
+    println!("一整週達標 {} 天", week_count);
+    println!("平日達標 {} 天", weekday_count);
+    println!("週末達標 {} 天", weekend_count);
+}
+```
+
+#### 第 2 章第 15 集：字串切片 `&str`
+
+狀態：可用
+
+練習目標：
+- 確認讀者知道字串字面值可以當作 `&str` 使用。
+- 確認讀者會把函數參數寫成 `&str`。
+- 確認讀者會把英文字串切片傳進函數。
+- 確認讀者知道不要隨便切中文字串。
+
+題目：
+1. 寫一個函數 `print_ticket(name: &str, from: &str, to: &str)`，印出乘客姓名、出發站和抵達站。在 `main` 裡宣告 `let route = "TPE-TNN";`，用 `&route[0..3]` 取出出發站 `TPE`，用 `&route[4..7]` 取出抵達站 `TNN`。最後分別替 `"Andy"` 和 `"小明"` 印出車票資訊。
+
+執行範例：
+
+```text
+乘客：Andy
+出發：TPE
+抵達：TNN
+乘客：小明
+出發：TPE
+抵達：TNN
+```
+
+批改重點：
+- 函數參數要寫成 `name: &str`、`from: &str`、`to: &str`。
+- `route` 可以寫成 `let route = "TPE-TNN";`。
+- 出發站要用 `&route[0..3]`，抵達站要用 `&route[4..7]`。
+- `route` 是純英文字母和符號，這裡用 byte 索引切片是安全的。
+- `"Andy"` 和 `"小明"` 都可以直接傳給 `name: &str`。
+- 不要對 `"小明"` 做字串切片；中文不是一個字 1 byte，切錯位置會 panic。
+- 不要引入 `String`；這一集先練 `&str`。
+
+提示方向：
+1. 先寫 `fn print_ticket(name: &str, from: &str, to: &str)`。
+2. 函數裡用三個 `println!` 印出乘客、出發、抵達。
+3. 在 `main` 裡從 `route` 切出 `from` 和 `to`。
+4. 呼叫時可以寫 `print_ticket("Andy", from, to);`。
+
+參考答案：
+
+```rust
+fn print_ticket(name: &str, from: &str, to: &str) {
+    println!("乘客：{}", name);
+    println!("出發：{}", from);
+    println!("抵達：{}", to);
+}
+
+fn main() {
+    let route = "TPE-TNN";
+    let from = &route[0..3];
+    let to = &route[4..7];
+
+    print_ticket("Andy", from, to);
+    print_ticket("小明", from, to);
+}
 ```
 
 ---
