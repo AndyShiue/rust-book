@@ -2,7 +2,7 @@
 
 [前言](foreword.md)
 
-# 第壹部
+# 第一部
 
 - [基礎](chapter1/README.md)
     - [安裝 Rust](chapter1/01_install_rust.md)
@@ -169,7 +169,7 @@
     - [fully qualified syntax](appendix1/l_fully_qualified_syntax.md)
     - [DST 簡介](appendix1/m_dst_intro.md)
 
-# 第貳部
+# 第二部
 
 - [多執行緒](chapter9/README.md)
     - [指標](chapter9/01_pointer.md)

@@ -8,7 +8,7 @@
 
 ### 每個 variant 都有一個整數值
 
-第三章學了 C-style `enum`。每個 variant 背後都有一個整數，叫做 **discriminant**。Rust 用它來區分目前是哪個 variant。
+第 3 章學了 C-style `enum`。每個 variant 背後都有一個整數，叫做 **discriminant**。Rust 用它來區分目前是哪個 variant。
 
 ```rust,noplayground
 enum Color {

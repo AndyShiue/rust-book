@@ -1619,7 +1619,7 @@ fn main() {
 - 價格合理時，不要用 `return` 到處回傳；最後可以用 `if is_member { price * 8 / 10 } else { price }` 自然回傳。
 - 函數回傳型別要寫 `-> i32`。
 - 不要使用浮點數折扣；目前用整數運算就好。
-- 不要引入 `Result` 或 `Option`；這些第五章才會教。
+- 不要引入 `Result` 或 `Option`；這些第 5 章才會教。
 
 提示方向：
 1. 先寫 guard clause：`if price <= 0 { return 0; }`。

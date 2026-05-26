@@ -35,13 +35,13 @@ enum Result<T, E> {
 
 `Option` 只知道「有或沒有」，`Result` 還知道「為什麼沒有」。
 
-### 回顧第一章的黑盒子
+### 回顧第 1 章的黑盒子
 
-還記得第一章的 `.expect("讀取失敗")` 和 `.parse::<i32>().expect("請輸入數字")` 嗎？
+還記得第 1 章的 `.expect("讀取失敗")` 和 `.parse::<i32>().expect("請輸入數字")` 嗎？
 
 `.parse()` 回傳的就是 `Result`。`expect` 的行為和 `Option` 的 `expect` 一模一樣——成功就取出 `Ok` 的值，失敗就 panic 並印出你的訊息。
 
-現在我們終於能完整理解第一章的那段「黑盒子」程式碼了。
+現在我們終於能完整理解第 1 章的那段「黑盒子」程式碼了。
 
 ### 常用方法
 
@@ -81,7 +81,7 @@ fn main() {
     let safe = divide(10, 0).unwrap_or(0);
     println!("安全的結果：{}", safe);
 
-    // 回顧第一章：parse 回傳 Result
+    // 回顧第 1 章：parse 回傳 Result
     let input = "42";
     let num: Result<i32, _> = input.parse();
     match num {
@@ -101,4 +101,4 @@ fn main() {
 - `Ok(T)` 對應成功，`Err(E)` 對應失敗
 - `Result`、`Ok`、`Err` 和 `Option` 一樣，是 Rust 預設就引入每個檔案的
 - `unwrap()`、`expect()`、`unwrap_or()` 的用法和 `Option` 完全對稱
-- 第一章的 `.parse().expect(...)` 就是在用 `Result`——現在我們能理解了
+- 第 1 章的 `.parse().expect(...)` 就是在用 `Result`——現在我們能理解了

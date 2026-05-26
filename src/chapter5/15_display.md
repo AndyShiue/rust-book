@@ -6,7 +6,7 @@
 
 ## 概念說明
 
-第二章我們學了 `{:?}` 來印出 tuple、陣列和加了 `#[derive(Debug)]` 的 `struct`。但 `{:?}` 是給開發者看的「`Debug` 格式」。如果你想用 `{}` 來印出自訂型別，就需要實作 `Display` `trait`。
+第 2 章我們學了 `{:?}` 來印出 tuple、陣列和加了 `#[derive(Debug)]` 的 `struct`。但 `{:?}` 是給開發者看的「`Debug` 格式」。如果你想用 `{}` 來印出自訂型別，就需要實作 `Display` `trait`。
 
 ### `Display` vs `Debug`
 

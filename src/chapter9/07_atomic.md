@@ -79,7 +79,7 @@ if ready.load(Ordering::Relaxed) {    // 看到 true
 
 ### interior mutability
 
-注意看上面的程式碼——`store` 和 `fetch_add` 明明在修改值，卻不需要 `&mut self`，只要 `&self` 就行。這跟第五章學的 `Cell` 一樣，是 interior mutability。
+注意看上面的程式碼——`store` 和 `fetch_add` 明明在修改值，卻不需要 `&mut self`，只要 `&self` 就行。這跟第 5 章學的 `Cell` 一樣，是 interior mutability。
 
 為什麼一定要這樣設計？因為如果要 `&mut self` 才能修改，那就只有一個執行緒能拿到 `&mut`，其他執行緒根本碰不到這個值——那還跨什麼執行緒？atomic 的重點就是讓多個執行緒透過 `&` 同時存取同一個值，所以必須有 interior mutability。
 

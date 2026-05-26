@@ -8,7 +8,7 @@
 
 ### `for` 迴圈不是魔法
 
-從第一章開始我們就在用 `for` 迴圈：
+從第 1 章開始我們就在用 `for` 迴圈：
 
 ```rust
 # fn main() {
@@ -39,7 +39,7 @@
 
 1. 呼叫 `v.into_iter()` 把 `v` 轉成迭代器
 2. 反覆呼叫 `iter.next()`
-3. 用 `while let Some(x)` 解構（還記得第三章的 `while let` 嗎？），直到拿到 `None` 就結束
+3. 用 `while let Some(x)` 解構（還記得第 3 章的 `while let` 嗎？），直到拿到 `None` 就結束
 
 ### `IntoIterator` `trait`
 

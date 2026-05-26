@@ -8,7 +8,7 @@
 
 ### 問題：不同型別放在同一個地方
 
-第五章學了 `impl Trait`，可以寫 `fn print_it(x: &impl Display)` 讓函數接受任何實作 `Display` 的型別。但如果你想把不同型別的值放在同一個 `Vec` 裡呢？
+第 5 章學了 `impl Trait`，可以寫 `fn print_it(x: &impl Display)` 讓函數接受任何實作 `Display` 的型別。但如果你想把不同型別的值放在同一個 `Vec` 裡呢？
 
 ```rust,noplayground
 trait Describe {
@@ -168,7 +168,7 @@ fn main() {
 
 ### `Box<dyn Fn()>` vs `impl Fn()`
 
-第六章學了閉包。`Box<dyn Fn()>` 讓你把不同的閉包統一成同一個型別：
+第 6 章學了閉包。`Box<dyn Fn()>` 讓你把不同的閉包統一成同一個型別：
 
 ```rust
 # fn main() {

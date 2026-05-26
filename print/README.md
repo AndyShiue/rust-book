@@ -74,7 +74,7 @@ The build uses `src/SUMMARY.md` as the source of truth:
 
 - first-level summary items become chapters and start on a new page;
 - nested lesson files become sections and do not force page breaks;
-- `第壹部` and `第貳部` become standalone centered part pages.
+- `第一部` and `第二部` become standalone centered part pages.
 
 The code line report lists visible code lines wider than the configured A4 line limit. Override the limit when needed:
 

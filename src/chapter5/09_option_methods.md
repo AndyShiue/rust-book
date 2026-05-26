@@ -80,7 +80,7 @@ fn main() {
     let result2 = find_even(&has_even).expect("應該要有偶數");
     println!("找到偶數：{}", result2);
 
-    // if let：第三章學過的語法
+    // if let：第 3 章學過的語法
     if let Some(n) = find_even(&has_even) {
         println!("用 if let 取出：{}", n);
     }
@@ -106,4 +106,4 @@ fn main() {
 - `expect("訊息")`：和 `unwrap` 一樣，但 panic 時印出自訂訊息
 - `unwrap_or(預設值)`：`None` 時回傳預設值，不會 panic
 - `flatten()`：把 `Option<Option<T>>` 壓成 `Option<T>`
-- 搭配 `if let Some(x) = ...`（第三章學的）也很方便
+- 搭配 `if let Some(x) = ...`（第 3 章學的）也很方便

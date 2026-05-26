@@ -24,7 +24,7 @@ trait Add<Rhs = Self> {
 三個重點：
 
 - `Rhs = Self`：上一集學的預設參數，加法右邊預設和左邊同型別
-- `type Output`：第五章學的 associated type，加法的結果不一定跟輸入同型別
+- `type Output`：第 5 章學的 associated type，加法的結果不一定跟輸入同型別
 - `self` 不是 `&self`：`add` 會消耗左邊的值（`Copy` 的型別不受影響）
 
 ### 幫 `Point` 實作 `Add`

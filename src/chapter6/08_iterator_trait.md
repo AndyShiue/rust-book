@@ -24,7 +24,7 @@ trait Iterator {
 - `Some(值)` —— 還有下一個元素
 - `None` —— 迭代結束了
 
-還記得第五章學的 associated type 嗎？`type Item` 就是一個 associated type，代表「這個迭代器產出的元素型別」。
+還記得第 5 章學的 associated type 嗎？`type Item` 就是一個 associated type，代表「這個迭代器產出的元素型別」。
 
 ### 手動呼叫 `next`
 
@@ -46,7 +46,7 @@ trait Iterator {
 
 ### 只需實作 `next`，其他方法免費送
 
-`Iterator` `trait` 提供了大量的**預設實作**（還記得第五章嗎？）。因為所有的迭代操作本質上都是「不斷呼叫 `next` 直到 `None`」，所以只要你實作了 `next`，像 `map`、`filter`、`count`、`sum` 等幾十個方法全部自動可用。
+`Iterator` `trait` 提供了大量的**預設實作**（還記得第 5 章嗎？）。因為所有的迭代操作本質上都是「不斷呼叫 `next` 直到 `None`」，所以只要你實作了 `next`，像 `map`、`filter`、`count`、`sum` 等幾十個方法全部自動可用。
 
 ### 自訂 `Iterator`
 

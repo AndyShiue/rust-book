@@ -41,13 +41,13 @@
 
 ### 章節大綱
 
-書分成兩部。**第壹部（第 1～7 章 + 附錄一）**是主線，從零基礎一路鋪到能寫一個 crate；**第貳部（第 9～11 章）**是進階主題，預設讀者已經把第壹部讀完了。
+書分成兩部。**第一部（第 1～7 章 + 附錄一）**是主線，從零基礎一路鋪到能寫一個 crate；**第二部（第 9～11 章）**是進階主題，預設讀者已經把第一部讀完了。
 
 這裡只是整本書的高層目錄，幫你快速掌握章節結構與大方向；實際判斷某個語法、API 或術語是否已經教過時，請以第 3 節「章節概念地圖」為準，必要時再讀對應章節原文。
 
 | 章節 | 集數 | 主題 |
 | --- | --- | --- |
-| **第壹部** | | |
+| **第一部** | | |
 | 第 1 章 | 27 | 變數、型別、輸入輸出、if/else、迴圈 |
 | 第 2 章 | 15 | `const`、shadowing、tuple、`Debug`、函數、陣列、切片 |
 | 第 3 章 | 30 | struct、enum、`match` 與各種 pattern、method、associated function |
@@ -56,7 +56,7 @@
 | 第 6 章 | 15 | 閉包、`Fn`/`FnMut`/`FnOnce`、Iterator 及常用方法 |
 | 第 7 章 | 10 | Cargo、`mod`、`use`、`pub`、`cargo test`、`cargo publish` |
 | 附錄一 | 13 | 補充小主題（短路求值、`break` 回傳值、raw string、`let` chains、`Rc` 迴圈與 `Weak`、DST 等） |
-| **第貳部** | | |
+| **第二部** | | |
 | 第 9 章 | 13 | 多執行緒：`thread::spawn`、`Send`/`Sync`、`Arc`、`Mutex`、`mpsc`、死鎖 |
 | 第 10 章 | 19 | 進階語言功能：`dyn Trait`、`const fn`、`const` generics、macro、`unsafe`、`static`、never type |
 | 第 11 章 | 12 | 進階標準庫：`AsRef`、`HashMap`/`HashSet`、`std::path`、I/O、`Error` trait、`thiserror`/`anyhow` |
@@ -200,13 +200,13 @@
 
 ### 附錄一（13 集）
 
-附錄一是**第壹部的一部分**，編排在第 7 章之後、第貳部之前，是主線的延續而不是「番外」。預設讀者讀完第 7 章後會接著把附錄一全部讀完再進入第貳部——第貳部其實也用到附錄一裡的東西（例如第 9 章講 `Arc::clone` 時就用到了 fully qualified syntax）。所以讀者讀到**第貳部任何一集**時，可以**放心假設**他已經讀完整個附錄一，可以直接用附錄一裡的概念解釋（如 fully qualified syntax、`Weak` 等）。
+附錄一是**第一部的一部分**，編排在第 7 章之後、第二部之前，是主線的延續而不是「番外」。預設讀者讀完第 7 章後會接著把附錄一全部讀完再進入第二部——第二部其實也用到附錄一裡的東西（例如第 9 章講 `Arc::clone` 時就用到了 fully qualified syntax）。所以讀者讀到**第二部任何一集**時，可以**放心假設**他已經讀完整個附錄一，可以直接用附錄一裡的概念解釋（如 fully qualified syntax、`Weak` 等）。
 
 附錄內容依序：數字字面值格式、`&&`/`||` 的短路求值、`break` 回傳值、多行字串與 raw string、格式化字串進階、`struct`/`enum` 放在 `fn` 裡面、`struct` update syntax、`ref` pattern 與 `match` ergonomics、`panic!`/`todo!`/`unimplemented!`/`unreachable!`、`let` chains、`Rc` 迴圈與 `Weak`、fully qualified syntax、DST 簡介。
 
 ---
 
-> **以下是第貳部（進階）**。預設讀者已經把第壹部讀完才會碰；如果讀者讀到第貳部，AI 可以自由引用第壹部包含附錄一任何概念，不必再克制。
+> **以下是第二部（進階）**。預設讀者已經把第一部讀完才會碰；如果讀者讀到第二部，AI 可以自由引用第一部包含附錄一任何概念，不必再克制。
 
 ### 讀完第 9 章（13 集，多執行緒）後，新增：
 

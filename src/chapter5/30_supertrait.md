@@ -26,7 +26,7 @@ trait Summarize: std::fmt::Display {
 
 ### `Copy: Clone`
 
-第四章學過 `Copy` 和 `Clone`。它們之間就是 supertrait 的關係：
+第 4 章學過 `Copy` 和 `Clone`。它們之間就是 supertrait 的關係：
 
 ```rust,noplayground
 trait Copy: Clone { }

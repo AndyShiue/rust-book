@@ -8,7 +8,7 @@
 
 ### 問題：想用函數算 `const` 的值
 
-第二章學了 `const`——編譯期常數。但 `const` 的值只能用簡單的表達式：
+第 2 章學了 `const`——編譯期常數。但 `const` 的值只能用簡單的表達式：
 
 ```rust,noplayground
 const MAX: i32 = 100;        // OK

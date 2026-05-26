@@ -6,7 +6,7 @@
 
 ## 概念說明
 
-第四章我們學了 `Debug`、`Clone`、`Copy`。Rust 標準庫還有其他可以 `derive` 的 `trait`，今天來認識最常用的幾個。
+第 4 章我們學了 `Debug`、`Clone`、`Copy`。Rust 標準庫還有其他可以 `derive` 的 `trait`，今天來認識最常用的幾個。
 
 ### `PartialEq` 和 `Eq`
 

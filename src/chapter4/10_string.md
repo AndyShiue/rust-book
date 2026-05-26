@@ -8,7 +8,7 @@
 
 ### 之前的字串都是借來的
 
-從第一章開始，我們一直在用 `&str` 這個型別：
+從第 1 章開始，我們一直在用 `&str` 這個型別：
 
 ```rust,noplayground
 # fn main() {
@@ -30,7 +30,7 @@
 # }
 ```
 
-`String::from` 是一個 associated function（跟第三章學的一樣，用 `::` 呼叫），它會把 `&str` 的內容複製一份到 heap 上，建立一個你擁有的 `String`。
+`String::from` 是一個 associated function（跟第 3 章學的一樣，用 `::` 呼叫），它會把 `&str` 的內容複製一份到 heap 上，建立一個你擁有的 `String`。
 
 ### `push_str`：在後面加上文字
 

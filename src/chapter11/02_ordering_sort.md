@@ -8,7 +8,7 @@
 
 ### `Ordering`
 
-第五章學了 `Ord` `trait`，知道實作了 `Ord` 的型別可以比大小。`Ord` 的核心方法是 `cmp`，它比較兩個值，回傳 `std::cmp::Ordering`——一個只有三個值的 `enum`：
+第 5 章學了 `Ord` `trait`，知道實作了 `Ord` 的型別可以比大小。`Ord` 的核心方法是 `cmp`，它比較兩個值，回傳 `std::cmp::Ordering`——一個只有三個值的 `enum`：
 
 ```rust
 use std::cmp::Ordering;
@@ -37,7 +37,7 @@ fn main() {
 
 ### 浮點數的問題
 
-`f64` 沒有實作 `Ord`（第五章提過，因為 `NAN` 和任何值比較都是 `false`），所以不能直接用 `cmp::min`。
+`f64` 沒有實作 `Ord`（第 5 章提過，因為 `NAN` 和任何值比較都是 `false`），所以不能直接用 `cmp::min`。
 
 `f64` 只有 `PartialOrd`，它的方法是 `partial_cmp`，回傳 `Option<Ordering>` 而不是 `Ordering`——因為碰到 `NAN` 的時候沒辦法比大小，只能回傳 `None`。
 

@@ -8,7 +8,7 @@
 
 第二集我們定義了泛型 `struct` `Pair<T>`。這集要幫它 `impl`。
 
-回想第三章，`impl` `struct` 是這樣寫的：
+回想第 3 章，`impl` `struct` 是這樣寫的：
 
 ```rust,noplayground
 # struct Point {
@@ -82,7 +82,7 @@ impl<T> Pair<T> {
 
 ### 實作 `trait` 也是一樣
 
-第四章教 `trait` 的時候，我們幫具體型別實作了 `trait`，像 `impl Describe for Cat`。如果你想幫一個泛型型別實作 `trait`，語法也是一樣——在 `impl` 後面加上 `<T>` 來宣告型別參數：
+第 4 章教 `trait` 的時候，我們幫具體型別實作了 `trait`，像 `impl Describe for Cat`。如果你想幫一個泛型型別實作 `trait`，語法也是一樣——在 `impl` 後面加上 `<T>` 來宣告型別參數：
 
 ```rust,noplayground
 # trait SomeTrait {}

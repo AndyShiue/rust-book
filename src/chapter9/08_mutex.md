@@ -34,7 +34,7 @@ fn main() {
 }
 ```
 
-`MutexGuard` 實作了 `Deref` 和 `DerefMut`（第五章學的），所以它也是一種智慧指標——你可以直接把它當 `&T` 或 `&mut T` 使用。
+`MutexGuard` 實作了 `Deref` 和 `DerefMut`（第 5 章學的），所以它也是一種智慧指標——你可以直接把它當 `&T` 或 `&mut T` 使用。
 
 同一時間只有一個執行緒能 `lock` 成功。其他執行緒呼叫 `.lock()` 時會**阻塞**（等待），直到持有鎖的執行緒把 guard `drop` 掉。
 
