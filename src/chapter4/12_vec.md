@@ -26,6 +26,14 @@
 
 這樣就建立了一個包含 5 個 `i32` 的 `Vec`。Rust 會根據你放的值自動推斷型別。
 
+跟陣列的 `[0; 5]` 類似，`vec!` 也支援「重複 N 次」的寫法：
+
+```rust,noplayground
+# fn main() {
+    let zeros = vec![0; 10]; // 10 個 0
+# }
+```
+
 你也可以建立空的 `Vec`，然後一個一個加：
 
 ```rust,noplayground
