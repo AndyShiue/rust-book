@@ -8,10 +8,7 @@
 
 ### 動機
 
-正常情況下 panic 會讓整個程式（或當前執行緒）直接中止。但有些場景你不希望這樣：
-
-- **FFI 邊界**：如果 Rust 的程式碼是被 C 呼叫的（進階語言功能那章提過 FFI），panic 不能往上傳到 C 那邊，否則是未定義行為。必須在 Rust 這邊就攔住
-- **多執行緒任務**：如果你的程式 `spawn` 了很多執行緒各自跑不同的任務，不希望其中一個任務 panic 就讓整個程式掛掉
+正常情況下 panic 會讓當前的執行緒直接中止。但在 **FFI 邊界**，panic 不能往上傳到 C 那邊，否則是未定義行為（進階語言功能那章提過 FFI）。`catch_unwind` 讓你在 Rust 這邊攔住 panic，不讓它跨越語言邊界。
 
 ### 基本用法
 
@@ -100,7 +97,7 @@ fn main() {
 ## 重點整理
 
 - `catch_unwind` 攔截 panic，回傳 `Ok(值)` 或 `Err`
-- 用途：FFI 邊界、多執行緒任務隔離
+- 主要用途：FFI 邊界，防止 panic 跨越語言邊界
 - `UnwindSafe`：`&mut T` 不是 `UnwindSafe`（資料可能是半成品）
 - `AssertUnwindSafe`：手動保證安全，繞過 `UnwindSafe` 檢查
 - `panic = "abort"` 設定下 `catch_unwind` 無效
