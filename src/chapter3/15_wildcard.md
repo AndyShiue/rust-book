@@ -14,34 +14,34 @@
 
 放在 `match` 的最後面，表示「其他所有情況都走這裡」：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let score = 95;
     match score {
         100 => println!("滿分！"),
         _ => println!("不是滿分"),
     }
-# }
+}
 ```
 
 **2. 忽略某個位置的值**
 
 在 tuple 或 `enum` 的模式裡，用 `_` 佔住不需要的位置：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let point = (5, 5);
     match point {
         (0, _) => println!("在 y 軸上"), // 不關心第二個值
         (_, 0) => println!("在 x 軸上"), // 不關心第一個值
         (_, _) => println!("其他位置"),
     }
-# }
+}
 ```
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 enum Direction {
     Up,
     Down,

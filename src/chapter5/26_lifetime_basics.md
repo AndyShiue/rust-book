@@ -81,16 +81,16 @@ fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
 
 回到剛才的例子：
 
-```rust
-# fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
-#     if a.len() > b.len() {
-#         a
-#     } else {
-#         b
-#     }
-# }
-#
-# fn main() {
+```rust,editable
+fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
+    if a.len() > b.len() {
+        a
+    } else {
+        b
+    }
+}
+
+fn main() {
     let s1 = String::from("hello world"); // s1 的壽命比較長
     let result;
     {
@@ -99,7 +99,7 @@ fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
         println!("{}", result);           // ✅ 這裡 s1 和 s2 都還活著
     } // s2 在這裡被釋放
     // println!("{}", result);            // ❌ 不行！'a 是取 s1 和 s2 的交集，s2 已經死了
-# }
+}
 ```
 
 `'a` 被推斷為 `s2` 的壽命（較短的那個），所以 `result` 只能在 `s2` 還活著的範圍內使用。
@@ -141,7 +141,7 @@ fn first_char(s: &str) -> &str {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 // 回傳借用時，需要標注生命週期
 fn longer<'a>(a: &'a str, b: &'a str) -> &'a str {
     if a.len() > b.len() {

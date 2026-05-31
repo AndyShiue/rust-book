@@ -10,15 +10,15 @@
 
 這可能是整個第 6 章最重要的概念：**迭代器的轉換方法不會立刻執行**。
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3, 4, 5];
     let iter = v.iter().map(|x| {
         println!("處理 {}", x);
         x * 2
     });
     // 到這裡為止，什麼都沒有印出來！
-# }
+}
 ```
 
 `map` 並沒有「跑過」每個元素。它只是建立了一個新的迭代器結構，記錄了「等下要做什麼」。直到有人呼叫 `collect()`、`for`、`sum()` 等「消費」方法時，才會一個一個元素地拉動。
@@ -162,7 +162,7 @@ note: iterators are lazy and do nothing unless consumed
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 use std::iter;
 
 fn main() {

@@ -8,10 +8,10 @@
 
 上一集學的 `struct` 每個欄位都有名字。但有時候，欄位的意義已經很明顯了，不需要特別取名。這時候可以用 **tuple `struct`**——它長得像 tuple 和 `struct` 的混合體。
 
-```rust
+```rust,editable
 struct Point(i32, i32);
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 建立值的時候用 `Point(3, 7)`——注意，這裡的 `Point` 既是**型別的名字**，也是**建立值時使用的名字**。取值用 `.0`、`.1`，就像 tuple 一樣。
@@ -20,15 +20,15 @@ struct Point(i32, i32);
 
 另外還有一種更極端的情況：`struct` 完全沒有欄位，叫做 **unit `struct`**。它通常用來當作一個「標記」，表示某種身份或角色，但本身不帶任何資料。
 
-```rust
+```rust,editable
 struct Marker;
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 // tuple struct：欄位沒有名字，用位置存取
 struct Point(i32, i32);
 

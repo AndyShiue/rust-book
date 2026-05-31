@@ -8,8 +8,8 @@
 
 第 9 集學了怎麼在 `match` 裡解構 `enum` variant。其實不只 `enum`，我們也能用 `match` 解構一般的 tuple！
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let point = (3, 7);
 
     match point {
@@ -18,7 +18,7 @@
         (0, y) => println!("在 y 軸上，y = {}", y),
         (x, y) => println!("在 ({}, {})", x, y),
     }
-# }
+}
 ```
 
 `match` 會從上到下比對：
@@ -32,7 +32,7 @@
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     let point = (2, 0);
 
@@ -61,7 +61,7 @@ fn main() {
 
 還記得第 2 集學的 tuple `struct` 嗎？它的模式匹配方式和一般 tuple 一模一樣：
 
-```rust
+```rust,editable
 struct Point(i32, i32);
 
 fn main() {

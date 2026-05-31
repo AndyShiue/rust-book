@@ -12,7 +12,7 @@
 
 假設你要根據條件給變數不同的值，你可能會這樣寫：
 
-```rust
+```rust,editable
 fn main() {
     let condition = true;
     let x;
@@ -31,7 +31,7 @@ fn main() {
 
 ### if 當表達式
 
-```rust
+```rust,editable
 fn main() {
     let condition = true;
     let x = if condition { 1 } else { 2 };
@@ -48,13 +48,13 @@ fn main() {
 
 ### 注意：大括號裡面不加分號
 
-```rust
-# fn main() {
-#     let condition = true;
+```rust,editable
+fn main() {
+    let condition = true;
     let x = if condition { 1 } else { 2 };
     //                      ^          ^
     //                   沒有分號     沒有分號
-# }
+}
 ```
 
 這些值（1 和 2）後面**沒有分號**。在 Rust 裡，不加分號的值就是「回傳值」。這是 Rust 的表達式語法，之後學函數的時候會更詳細地講。

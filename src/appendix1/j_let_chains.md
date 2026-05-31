@@ -12,7 +12,7 @@
 
 第 3 章學了 `if let`。但如果你需要連續做多次模式匹配，就會變成巢狀的 `if let`：
 
-```rust
+```rust,editable
 enum Wrapper {
     Value(i32),
     Empty,
@@ -38,15 +38,15 @@ fn main() {
 
 你可以用 `&&` 把多個 `let` 和布林條件串在同一個 `if` 裡：
 
-```rust
-# enum Wrapper {
-#     Value(i32),
-#     Empty,
-# }
-#
-# fn get_a() -> Wrapper { Wrapper::Value(10) }
-# fn get_b(x: i32) -> Wrapper { Wrapper::Value(x + 1) }
-#
+```rust,editable
+enum Wrapper {
+    Value(i32),
+    Empty,
+}
+
+fn get_a() -> Wrapper { Wrapper::Value(10) }
+fn get_b(x: i32) -> Wrapper { Wrapper::Value(x + 1) }
+
 fn main() {
     if let Wrapper::Value(a) = get_a()
         && a > 0
@@ -71,7 +71,7 @@ while let Some(item) = next_item()
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 enum Command {
     Run { speed: i32 },
     Stop,

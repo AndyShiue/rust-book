@@ -10,22 +10,22 @@
 
 `@`（at 符號）可以解決這個問題。它讓你在比對的同時，把實際的值存到一個變數裡：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let age = 50;
     match age {
         n @ 0..=12 => println!("{}歲，是小孩", n),
         n @ 13..=19 => println!("{}歲，是青少年", n),
         n => println!("{}歲，是大人", n),
     }
-# }
+}
 ```
 
 `n @ 0..=12` 的意思是「如果值在 0 到 12 之間，就把這個值叫做 `n`」。這樣你就能同時做範圍檢查和取值了。
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     let age = 15;
 
@@ -63,7 +63,7 @@ fn main() {
 
 `@` 可以搭配任何模式，不只是 range。比如搭配 `|`（多個值）：
 
-```rust
+```rust,editable
 fn main() {
     let day = 6;
 

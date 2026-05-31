@@ -12,10 +12,10 @@
 
 看這個例子：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v: Vec<_> = vec![1, 2, 3];
-# }
+}
 ```
 
 這裡我們告訴 Rust「這是一個 `Vec`」，但裡面的元素型別用 `_` 表示「你自己推斷吧」。Rust 看到 `1, 2, 3` 是整數，就推斷 `_` = `i32`。
@@ -36,7 +36,7 @@ turbofish 裡也可以用 `_`：
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     // 用 _ 讓 Rust 推斷 Vec 的元素型別
     let v: Vec<_> = vec![1, 2, 3];

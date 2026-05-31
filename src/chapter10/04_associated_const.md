@@ -28,29 +28,29 @@ impl HasLimit for i8 {
 
 實作的時候必須指定值。使用時用 `Type::CONST` 的語法：
 
-```rust
-# trait HasLimit {
-#     const LIMIT: i32;
-# }
-#
-# impl HasLimit for u8 {
-#     const LIMIT: i32 = 255;
-# }
-#
-# impl HasLimit for i8 {
-#     const LIMIT: i32 = 127;
-# }
-# fn main() {
+```rust,editable
+trait HasLimit {
+    const LIMIT: i32;
+}
+
+impl HasLimit for u8 {
+    const LIMIT: i32 = 255;
+}
+
+impl HasLimit for i8 {
+    const LIMIT: i32 = 127;
+}
+fn main() {
     println!("u8：{}", <u8 as HasLimit>::LIMIT); // 255
     println!("i8：{}", <i8 as HasLimit>::LIMIT); // 127
-# }
+}
 ```
 
 ### associated `const` 可以有預設值
 
 跟 `trait` 的預設方法一樣，associated `const` 也能有預設值：
 
-```rust
+```rust,editable
 trait Config {
     const TIMEOUT: u64 = 30;
     const RETRIES: u32 = 3;
@@ -62,15 +62,15 @@ impl Config for MyApp {
     const TIMEOUT: u64 = 60; // 覆蓋預設
     // RETRIES 用預設值 3
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 ### `impl` 裡的 associated `const`
 
 associated `const` 不一定要在 `trait` 裡——你也可以直接在 `impl` 區塊裡定義跟型別綁定的常數：
 
-```rust
+```rust,editable
 struct Circle;
 
 impl Circle {
@@ -86,7 +86,7 @@ fn main() {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 trait Bounded {
     const LOWER: i32;
     const UPPER: i32;

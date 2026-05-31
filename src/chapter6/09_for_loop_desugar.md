@@ -10,13 +10,13 @@
 
 從第 1 章開始我們就在用 `for` 迴圈：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3];
     for x in v {
         println!("{}", x);
     }
-# }
+}
 ```
 
 看起來很簡單對吧？但這背後到底發生了什麼事？
@@ -25,14 +25,14 @@
 
 上面的 `for` 迴圈，編譯器其實會轉換成這樣：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3];
     let mut iter = v.into_iter();
     while let Some(x) = iter.next() {
         println!("{}", x);
     }
-# }
+}
 ```
 
 三個步驟：
@@ -61,19 +61,19 @@ trait IntoIterator {
 
 有個很方便的設計：每個 `Iterator` 都自動實作了 `IntoIterator`（`into_iter()` 直接回傳自己）。所以你可以把迭代器直接丟進 `for`：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3];
     let iter = v.iter(); // 這是一個 Iterator
     for x in iter {      // Iterator 也實作了 IntoIterator
         println!("{}", x);
     }
-# }
+}
 ```
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     // 正常的 for 迴圈
     let fruits = vec!["蘋果", "香蕉", "橘子"];

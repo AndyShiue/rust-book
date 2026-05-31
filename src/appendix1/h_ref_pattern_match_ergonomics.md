@@ -28,15 +28,15 @@
 
 以前（Rust 1.26 之前），如果你想在 `match` 裡借用而不是 move，必須手動寫 `ref`：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let opt = Some(String::from("hello"));
     match opt {
         Some(ref s) => println!("{}", s), // 借用，不 move
         None => println!("nothing"),
     }
     // opt 還能用，因為我們只是借用了裡面的值
-# }
+}
 ```
 
 如果不寫 `ref`，`s` 會拿走 `String` 的所有權，之後就不能再用 `opt` 了。
@@ -45,8 +45,8 @@
 
 從 Rust 1.26 開始，編譯器變聰明了。當你 `match` 一個**參考**的時候，裡面的綁定會自動變成參考：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let opt = Some(String::from("hello"));
     match &opt {     // 注意這裡是 &opt
         Some(s) => { // s 自動是 &String，不需要寫 ref
@@ -55,7 +55,7 @@
         None => println!("nothing"),
     }
     // opt 還能用！
-# }
+}
 ```
 
 這就是所謂的 **`match` ergonomics**。編譯器看到你 `match` 的是一個參考（`&opt`），就會自動幫你在模式裡加上 `ref`。
@@ -66,7 +66,7 @@
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     // ===== ref 基本用法 =====
     let name = String::from("Rust");

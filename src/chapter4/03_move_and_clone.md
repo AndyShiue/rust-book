@@ -31,12 +31,12 @@
 
 不只是賦值，把值傳進函數也會發生 move：
 
-```rust
-# struct Point {
-#     x: i32,
-#     y: i32,
-# }
-#
+```rust,editable
+struct Point {
+    x: i32,
+    y: i32,
+}
+
 fn print_point(p: Point) {
     println!("({}, {})", p.x, p.y);
 }
@@ -68,19 +68,19 @@ struct Point {
 
 然後用 `.clone()` 來複製：
 
-```rust
-# #[derive(Debug, Clone)]
-# struct Point {
-#     x: i32,
-#     y: i32,
-# }
-#
-# fn main() {
+```rust,editable
+#[derive(Debug, Clone)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
     let p1 = Point { x: 1, y: 2 };
     let p2 = p1.clone();  // 複製一份，p1 還在
     println!("{:?}", p1); // OK！p1 還能用
     println!("{:?}", p2); // p2 是獨立的副本
-# }
+}
 ```
 
 回想第 1 集的比喻：`clone` 就是「複製一份完整的鑰匙圈和保險箱」。兩個變數各自擁有自己的資料，互不干擾。
@@ -89,19 +89,19 @@ struct Point {
 
 你可能會注意到，整數的行為不太一樣：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let a = 42;
     let b = a;
     println!("{}", a); // 這居然可以！
-# }
+}
 ```
 
 為什麼整數不會 move？這個問題我們下一集再來解答。
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 #[derive(Debug, Clone)]
 struct Point {
     x: i32,

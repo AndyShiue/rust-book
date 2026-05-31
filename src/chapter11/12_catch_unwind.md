@@ -12,7 +12,7 @@
 
 ### 基本用法
 
-```rust
+```rust,editable
 use std::panic;
 
 fn main() {
@@ -69,7 +69,7 @@ panic = "abort"
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 use std::panic;
 
 fn might_fail(x: i32) -> i32 {

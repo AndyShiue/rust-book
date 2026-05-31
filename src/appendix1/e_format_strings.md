@@ -14,11 +14,11 @@
 
 你可以直接在 `{}` 裡寫變數名稱：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let name = "Andy";
     println!("{name}"); // 等同於 println!("{}", name)
-# }
+}
 ```
 
 這比一直寫 `{}` 然後在後面對應變數方便多了，尤其是有很多變數的時候。注意只能放變數名，不能放表達式（`"{x + 1}"` 不行）。
@@ -27,59 +27,59 @@
 
 用 `:.N` 控制小數點後幾位：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let pi = 3.14159265;
     println!("{pi:.2}"); // 印出 3.14
-# }
+}
 ```
 
 ### 寬度
 
 用 `:N` 指定最小寬度——不夠寬的話會用空白補齊：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let x = 42;
     println!("{x:5}"); // "   42"（寬度 5，靠右，空白補齊）
-# }
+}
 ```
 
 ### 對齊
 
 用 `:>N`、`:<N`、`:^N` 來明確控制靠右、靠左、置中：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let name = "Andy";
     println!("[{name:>10}]"); // 靠右對齊，寬度 10
     println!("[{name:<10}]"); // 靠左對齊
     println!("[{name:^10}]"); // 置中
-# }
+}
 ```
 
 ### 填充字元
 
 預設用空白填充，你也可以指定其他字元：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let id = 42;
     println!("{id:0>5}"); // 印出 00042（用 0 填充）
-# }
+}
 ```
 
 ### 進位制顯示
 
 用 `:b`、`:x`、`:o` 分別以二進位、十六進位、八進位顯示數字：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let n = 255;
     println!("{n:b}"); // 11111111
     println!("{n:x}"); // ff
     println!("{n:o}"); // 377
-# }
+}
 ```
 
 這些格式也可以組合——例如 `{:0>8b}` 是「零填充到 8 位的二進位」。
@@ -88,15 +88,15 @@
 
 如果你想在格式化字串裡印出 `{` 或 `}` 本身，用 `{{` 和 `}}`：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     println!("這是大括號：{{}}"); // 印出：這是大括號：{}
-# }
+}
 ```
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn main() {
     let name = "小明";
     let score = 87.5678;

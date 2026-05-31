@@ -14,7 +14,7 @@
 
 ### 建立與基本操作
 
-```rust
+```rust,editable
 use std::collections::HashMap;
 
 fn main() {
@@ -45,17 +45,17 @@ fn main() {
 
 ### 走訪
 
-```rust
-# use std::collections::HashMap;
-#
-# fn main() {
-#     let scores: HashMap<&str, i32> = vec![("Alice", 95), ("Bob", 80)]
-#         .into_iter()
-#         .collect();
+```rust,editable
+use std::collections::HashMap;
+
+fn main() {
+    let scores: HashMap<&str, i32> = vec![("Alice", 95), ("Bob", 80)]
+        .into_iter()
+        .collect();
     for (name, score) in &scores {
         println!("{}: {}", name, score);
     }
-# }
+}
 ```
 
 注意走訪順序是**不固定**的——每次跑可能不一樣。如果你需要固定順序，用 `BTreeMap`（之後會介紹）。
@@ -140,7 +140,7 @@ fn main() {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 use std::collections::HashMap;
 
 fn main() {

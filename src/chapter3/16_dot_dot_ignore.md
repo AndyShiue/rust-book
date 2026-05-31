@@ -12,7 +12,7 @@ Rust 提供了 `..`（兩個點），意思是「剩下的我都不要了」。
 
 ### 在 `match` `struct` 時使用
 
-```rust
+```rust,editable
 struct Player {
     id: i32,
     hp: i32,
@@ -36,8 +36,8 @@ fn main() {
 
 ### 在 `match` tuple 時使用
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let scores = (90, 85, 78, 92, 88);
 
     match scores {
@@ -51,7 +51,7 @@ fn main() {
     match scores {
         (first, .., last) => println!("第一科 {}，最後一科 {}", first, last),
     }
-# }
+}
 ```
 
 `(first, ..)` 只取第一個，`(.., last)` 只取最後一個，`(first, .., last)` 取頭和尾。
@@ -62,8 +62,8 @@ tuple `struct` 和 `enum` 的 tuple variant 也能用類似的方式匹配，例
 
 第 13 集學過 slice pattern，`..` 在陣列和切片裡也一樣好用：
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
 let data: &[i32] = &[10, 20, 30, 40, 50];
 
 match data {
@@ -71,7 +71,7 @@ match data {
     [only] => println!("只有一個：{}", only),
     [] => println!("空的"),
 }
-# }
+}
 ```
 
 ### 注意：`..` 只能出現一次
@@ -80,7 +80,7 @@ match data {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 struct Player {
     id: i32,
     hp: i32,

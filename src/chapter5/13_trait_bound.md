@@ -24,12 +24,12 @@ fn duplicate<T>(x: &T) -> (T, T) {
 
 解法是加上 **`trait` bound**，告訴 Rust「`T` 必須實作 `Clone`」：
 
-```rust
+```rust,editable
 fn duplicate<T: Clone>(x: &T) -> (T, T) {
     (x.clone(), x.clone())
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 `T: Clone` 的意思是「`T` 必須實作 `Clone` `trait`」。這樣 Rust 就知道 `x.clone()` 一定可以呼叫。
@@ -99,7 +99,7 @@ impl<T: Clone> Pair<T> {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 #[derive(Debug)]
 struct Pair<T> {
     first: T,

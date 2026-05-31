@@ -22,13 +22,13 @@ fn print_point((x, y): (i32, i32)) {
 
 呼叫的時候和平常一樣，傳一個 tuple 進去：
 
-```rust
-# fn print_point((x, y): (i32, i32)) {
-#     println!("({}, {})", x, y);
-# }
-# fn main() {
+```rust,editable
+fn print_point((x, y): (i32, i32)) {
+    println!("({}, {})", x, y);
+}
+fn main() {
     print_point((3, 7));
-# }
+}
 ```
 
 `struct` 也可以在參數位置解構：
@@ -48,7 +48,7 @@ fn print_point_struct(Point { x, y }: Point) {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 struct Point {
     x: i32,
     y: i32,
@@ -121,12 +121,12 @@ fn main() {
 
 還有什麼 irrefutable pattern 呢？
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let arr = [1, 2, 3];
     let [head, ..] = arr;
     println!("第一個元素是 {}", head);
-# }
+}
 ```
 
 `arr` 的型別是 `[i32; 3]`，編譯器看一眼就知道它一定有三個元素，所以 `[head, ..]` 比對一定成功——這也是 irrefutable pattern，所以可以直接用 `let` 解構。反過來，如果今天是切片 `&[i32]`，那就不行了：切片有可能是空的，`[head, ..]` 在切片身上會變成 refutable，`let` 就接不住了。

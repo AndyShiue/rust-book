@@ -16,7 +16,7 @@
 
 ### 基本操作
 
-```rust
+```rust,editable
 use std::collections::HashSet;
 
 fn main() {
@@ -34,7 +34,7 @@ fn main() {
 
 ### 從迭代器建立
 
-```rust
+```rust,editable
 use std::collections::HashSet;
 
 fn main() {
@@ -91,17 +91,17 @@ fn main() {
 
 ### 其他關係
 
-```rust
-# use std::collections::HashSet;
-#
-# fn main() {
+```rust,editable
+use std::collections::HashSet;
+
+fn main() {
     let small: HashSet<i32> = [1, 2].into_iter().collect();
     let big: HashSet<i32> = [1, 2, 3, 4].into_iter().collect();
 
     println!("{}", small.is_subset(&big));   // true
     println!("{}", big.is_superset(&small)); // true
     println!("{}", small.is_disjoint(&big)); // false（有交集）
-# }
+}
 ```
 
 ### 走訪
@@ -121,7 +121,7 @@ fn main() {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 use std::collections::HashSet;
 
 fn main() {

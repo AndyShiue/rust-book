@@ -12,11 +12,11 @@
 
 還記得第 1 章學 `parse` 的時候，我們寫過這樣的程式碼嗎？
 
-```rust
-# fn main() {
-#     let input = "1";
+```rust,editable
+fn main() {
+    let input = "1";
     let num = input.trim().parse::<i32>().expect("請輸入數字");
-# }
+}
 ```
 
 當時我們把 `::<i32>` 當黑盒子照抄。現在學了泛型，終於可以理解它了！
@@ -48,7 +48,7 @@ Vec::<i32>::new();
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 fn first<T>(a: T, _b: T) -> T {
     a
 }

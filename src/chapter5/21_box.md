@@ -50,18 +50,18 @@ enum List {
 
 ### `Box` 的使用
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let x = Box::new(42);
     println!("{}", x); // 可以直接用，Rust 會自動拿裡面的值
-# }
+}
 ```
 
 `Box::new(value)` 把值搬到 heap 上。`Box` 擁有裡面的值，離開作用域時會自動釋放（因為 `Box` 實作了 `Drop`）。
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 // 用 Box 的遞迴型別：連結串列
 enum List {
     Node(i32, Box<List>),

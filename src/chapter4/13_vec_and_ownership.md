@@ -39,7 +39,7 @@
 
 跟 `String` / `&str` 的建議一樣——如果函數只需要讀取 `i32` 的 `Vec` 的內容，用切片 `&[i32]`：
 
-```rust
+```rust,editable
 fn sum(nums: &[i32]) -> i32 {
     let mut total = 0;
     for x in nums {
@@ -63,28 +63,28 @@ fn main() {
 
 **`for x in v`——move！**
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3];
     for x in v {
         println!("{}", x);
     }
     // v 被 move 走了，不能再用！
-# }
+}
 ```
 
 `for x in v` 會消耗整個 `Vec`。迴圈結束後，`v` 就不存在了。
 
 **`for x in &v`——borrow！**
 
-```rust
-# fn main() {
+```rust,editable
+fn main() {
     let v = vec![1, 2, 3];
     for x in &v {
         println!("{}", x);
     }
     println!("v 還在：{:?}", v); // OK！
-# }
+}
 ```
 
 `for x in &v` 只是借用，`v` 不會被消耗。
@@ -93,7 +93,7 @@ fn main() {
 
 ## 範例程式碼
 
-```rust
+```rust,editable
 // 參數用切片：&Vec 自動轉 &[i32]
 fn sum(nums: &[i32]) -> i32 {
     let mut total = 0;
