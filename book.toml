@@ -12,6 +12,7 @@ preferred-dark-theme = "ayu"
 git-repository-url = "https://github.com/AndyShiue/rust-book"
 edit-url-template = "https://github.com/AndyShiue/rust-book/edit/main/{path}"
 site-url = "https://andyshiue.github.io/rust-book/"
+additional-css = ["theme/code-fix.css"]
 
 [output.html.playground]
 editable = true

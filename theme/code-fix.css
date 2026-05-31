@@ -1,0 +1,14 @@
+code,
+pre > code,
+.ace_editor {
+    line-height: 1.5 !important;
+}
+
+.ace_editor .ace_line {
+    line-height: inherit !important;
+}
+
+:root {
+    --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Noto Sans Mono CJK TC", "Noto Sans Mono", monospace;
+}
