@@ -64,13 +64,13 @@ fn main() {
 **`for x in v`——move！**
 
 ```rust,editable
-# fn main() {
+fn main() {
     let v = vec![1, 2, 3];
     for x in v {
         println!("{}", x);
     }
     // v 被 move 走了，不能再用！
-# }
+}
 ```
 
 `for x in v` 會消耗整個 `Vec`。迴圈結束後，`v` 就不存在了。
@@ -78,13 +78,13 @@ fn main() {
 **`for x in &v`——borrow！**
 
 ```rust,editable
-# fn main() {
+fn main() {
     let v = vec![1, 2, 3];
     for x in &v {
         println!("{}", x);
     }
     println!("v 還在：{:?}", v); // OK！
-# }
+}
 ```
 
 `for x in &v` 只是借用，`v` 不會被消耗。

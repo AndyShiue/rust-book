@@ -28,8 +28,8 @@ fn duplicate<T>(x: &T) -> (T, T) {
 fn duplicate<T: Clone>(x: &T) -> (T, T) {
     (x.clone(), x.clone())
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 `T: Clone` 的意思是「`T` 必須實作 `Clone` `trait`」。這樣 Rust 就知道 `x.clone()` 一定可以呼叫。

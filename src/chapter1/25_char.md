@@ -32,10 +32,10 @@ fn main() {
 - **雙引號 `"`** → 字串，可以放很多字元
 
 ```rust,editable
-# fn main() {
+fn main() {
     let c = 'A';     // char，一個字元
     let s = "Hello"; // 字串，五個字元
-# }
+}
 ```
 
 如果你用單引號放超過一個字元，Rust 會報錯：

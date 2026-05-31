@@ -37,11 +37,11 @@
 `String` 可以修改！用 `push_str` 來接上更多文字：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut s = String::from("你好");
     s.push_str("，世界！");
     println!("{}", s); // 你好，世界！
-# }
+}
 ```
 
 注意變數要宣告成 `let mut`，因為我們要修改它。
@@ -51,12 +51,12 @@
 `format!` 跟 `println!` 的用法一模一樣，只是它不會印出來，而是回傳一個 `String`：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let name = "小明";
     let age = 20;
     let msg = format!("我叫{}，今年{}歲", name, age);
     println!("{}", msg);
-# }
+}
 ```
 
 ### `String` 也適用所有權規則

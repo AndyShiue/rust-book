@@ -38,8 +38,8 @@ fn make_greeter(name: String) -> impl Fn() {
 fn make_greeter(name: String) -> impl Fn() {
     move || println!("Hello, {}!", name)
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 `move` 告訴 Rust：「不要用借用，把所有捕捉的變數都**搬進**閉包裡。」這樣 `name` 就歸閉包所有了，不管原本的作用域怎麼結束，閉包都能繼續用 `name`。
@@ -71,14 +71,14 @@ fn make_greeter(name: String) -> impl Fn() {
 `move` 只影響**怎麼捕捉**，不影響**怎麼使用**：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let name = String::from("Alice");
     let greet = move || println!("Hello, {}!", name);
     // name 被 move 進閉包了，但閉包只是「讀取」name
     // 所以這個閉包是 Fn，可以多次呼叫
     greet();
     greet();
-# }
+}
 ```
 
 ### 閉包自動實作的 `trait`
@@ -90,13 +90,13 @@ fn make_greeter(name: String) -> impl Fn() {
 - 其他某些 `trait` 也是同理
 
 ```rust,editable
-# fn main() {
+fn main() {
     let x = 42;
     let f = move || x + 1; // x 是 i32（Copy），所以 f 也是 Copy
     let g = f; // Copy 了 f
     println!("{}", f()); // f 還能用
     println!("{}", g());
-# }
+}
 ```
 
 ## 範例程式碼

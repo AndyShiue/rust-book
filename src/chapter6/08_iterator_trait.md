@@ -31,7 +31,7 @@ trait Iterator {
 你可以直接手動呼叫 `.next()` 來逐一取得元素：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let v = vec![10, 20, 30];
     let mut iter = v.iter();
 
@@ -39,7 +39,7 @@ trait Iterator {
     println!("{:?}", iter.next()); // Some(&20)
     println!("{:?}", iter.next()); // Some(&30)
     println!("{:?}", iter.next()); // None
-# }
+}
 ```
 
 注意 `iter` 必須是 `mut` 的，因為每次呼叫 `.next()` 都會推進內部狀態。

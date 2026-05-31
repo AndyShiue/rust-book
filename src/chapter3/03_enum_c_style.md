@@ -18,22 +18,22 @@ enum Color {
     Green,
     Blue,
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 每一個選項叫做一個 **variant**（變體）。建立 `enum` 值的時候，要用 `型別名::變體名` 的寫法：
 
 ```rust,editable
-# enum Color {
-#     Red,
-#     Green,
-#     Blue,
-# }
-#
-# fn main() {
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+fn main() {
     let c = Color::Red;
-# }
+}
 ```
 
 注意中間是兩個冒號 `::`，這在 Rust 裡叫做「路徑運算子」，表示「`Color` 底下的 `Red`」。

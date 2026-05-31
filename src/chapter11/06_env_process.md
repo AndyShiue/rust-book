@@ -67,10 +67,10 @@ fn main() {
 ### `eprintln!`
 
 ```rust,editable
-# fn main() {
+fn main() {
     eprintln!("這是錯誤訊息");
     println!("這是正常輸出");
-# }
+}
 ```
 
 `println!` 輸出到 **`stdout`**（標準輸出），`eprintln!` 輸出到 **`stderr`**（標準錯誤）。兩者在終端機上看起來一樣，但可以分開導向不同的地方。錯誤訊息應該用 `eprintln!`。

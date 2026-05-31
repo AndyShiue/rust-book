@@ -49,12 +49,12 @@ fn main() {
 ### 注意：大括號裡面不加分號
 
 ```rust,editable
-# fn main() {
-#     let condition = true;
+fn main() {
+    let condition = true;
     let x = if condition { 1 } else { 2 };
     //                      ^          ^
     //                   沒有分號     沒有分號
-# }
+}
 ```
 
 這些值（1 和 2）後面**沒有分號**。在 Rust 裡，不加分號的值就是「回傳值」。這是 Rust 的表達式語法，之後學函數的時候會更詳細地講。

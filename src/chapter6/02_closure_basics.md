@@ -61,11 +61,11 @@
 這是閉包和函數指標最大的差別：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let offset = 10;
     let add_offset = |x| x + offset; // 捕捉了 offset
     println!("{}", add_offset(5));   // 15
-# }
+}
 ```
 
 `add_offset` 這個閉包「記住」了外部的 `offset`，每次呼叫都會用到它。普通函數做不到這件事。
@@ -81,7 +81,7 @@
 這意味著你可以傳一個**會消耗捕捉到的變數**的閉包給它：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let prefix = String::from("結果是：");
     let result: Result<i32, String> = Ok(42);
     let message = result.map(|x| {
@@ -91,7 +91,7 @@
         s
     });
     println!("{:?}", message); // Ok("結果是：42")
-# }
+}
 ```
 
 這個閉包把 `prefix` move 進來了，呼叫一次之後 `prefix` 就沒了。但沒關係，`map` 本來就只呼叫接收的函數一次。
@@ -103,7 +103,7 @@
 你可以傳一個**會修改捕捉到的變數**的閉包：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut numbers = vec![1, 2, 3, 4, 5, 6];
     let mut removed_count = 0;
     numbers.retain(|x| {
@@ -116,7 +116,7 @@
     });
     println!("{:?}，移除了 {} 個", numbers, removed_count);
     // [2, 4, 6]，移除了 3 個
-# }
+}
 ```
 
 這個閉包每次被呼叫都會修改 `removed_count`——它是 `FnMut`。注意它沒有 move 任何東西（只是透過 `&mut` 修改外部變數），所以可以被呼叫很多次。

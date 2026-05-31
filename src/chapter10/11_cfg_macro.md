@@ -11,13 +11,13 @@
 上一集學了 `#[cfg(...)]`——條件編譯，不符合條件的程式碼整塊被移除。但有時候你只是想根據條件走不同分支，不想移除整塊程式碼。`cfg!` 就是做這件事的：
 
 ```rust,editable
-# fn main() {
+fn main() {
     if cfg!(target_os = "windows") {
         println!("你在 Windows 上");
     } else {
         println!("你不在 Windows 上");
     }
-# }
+}
 ```
 
 ### 跟 `#[cfg]` 的差別

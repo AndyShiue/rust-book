@@ -36,12 +36,12 @@
 ### 函數參數用 `&` 就不會 move
 
 ```rust,editable
-# #[derive(Debug)]
-# struct Point {
-#     x: i32,
-#     y: i32,
-# }
-#
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
 fn print_point(p: &Point) {
     println!("({}, {})", p.x, p.y);
 }
@@ -88,11 +88,11 @@ fn sum(nums: &[i32]) -> i32 {
 `&` 是「借」，反過來 `*` 就是「順著借用找到原本的值」，叫做**解參考（dereference）**：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let x = 42;
     let r = &x;
     println!("{}", *r); // 42，和 x 一樣
-# }
+}
 ```
 
 不過大部分情況下你不需要手動寫 `*`——Rust 在用 `.` 存取欄位、呼叫 method、或 `println!` 的時候都會自動幫你解參考。所以目前知道有這個東西就好，下一集會用到它。
@@ -102,12 +102,12 @@ fn sum(nums: &[i32]) -> i32 {
 上一集學了 Copy——有些型別賦值的時候會自動複製，不會 move。不管 `T` 是什麼，`&T` 都是 Copy 的。畢竟參考只是借用，複製一個參考不會影響原本的資料，只是多了一個人在看而已：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let s = String::from("hello");
     let r1 = &s;
     let r2 = r1; // 複製參考，不是 move
     println!("{} {}", r1, r2); // r1 和 r2 都能用
-# }
+}
 ```
 
 注意：`String` 本身不是 `Copy`（賦值會 move），但 `&String` 是 `Copy`。

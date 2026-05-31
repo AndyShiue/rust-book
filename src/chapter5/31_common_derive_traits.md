@@ -34,13 +34,13 @@ struct Point { x: i32, y: i32 }
 `NAN` 和任何值比較都會回傳 `false`——包括它自己：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let nan = f64::NAN;
     println!("{}", nan < 1.0);  // false
     println!("{}", nan > 1.0);  // false
     println!("{}", nan == nan); // false
     println!("{}", nan <= nan); // false
-# }
+}
 ```
 
 這就是為什麼 `f64` 不能有 `Ord`——你沒辦法把 `NAN` 放進一個排序裡，因為它和誰比結果都是 `false`，沒有一個合理的位置可以放它。

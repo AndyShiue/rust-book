@@ -10,8 +10,8 @@
 
 ```rust,editable
 struct Point(i32, i32);
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 建立值的時候用 `Point(3, 7)`——注意，這裡的 `Point` 既是**型別的名字**，也是**建立值時使用的名字**。取值用 `.0`、`.1`，就像 tuple 一樣。
@@ -22,8 +22,8 @@ struct Point(i32, i32);
 
 ```rust,editable
 struct Marker;
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 ## 範例程式碼

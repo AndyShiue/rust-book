@@ -39,17 +39,17 @@
 因為 `Weak` 指向的資料可能已經被釋放了，你不能直接存取。必須先 `.upgrade()`：
 
 ```rust,editable
-# use std::rc::{Rc, Weak};
-#
-# fn main() {
-#     let strong = Rc::new(42);
-#     let weak: Weak<i32> = Rc::downgrade(&strong);
-#
+use std::rc::{Rc, Weak};
+
+fn main() {
+    let strong = Rc::new(42);
+    let weak: Weak<i32> = Rc::downgrade(&strong);
+
     match weak.upgrade() {
         Some(rc) => println!("還在：{}", rc),
         None => println!("已經被釋放了"),
     }
-# }
+}
 ```
 
 `upgrade` 回傳 `Option<Rc<T>>`——如果資料還在，給你一個 `Rc`；如果已經釋放，回傳 `None`。

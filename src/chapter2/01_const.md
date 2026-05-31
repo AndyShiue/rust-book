@@ -24,10 +24,10 @@ fn main() {
 ### 差別一：`const` 一定要標型別
 
 ```rust,editable
-# fn main() {
+fn main() {
     const MAX_SCORE: i32 = 100; // ✅ 一定要寫 : i32
     let max_score = 100;        // ✅ let 可以省略，編譯器會自己推
-# }
+}
 ```
 
 用 `const` 的時候，你不能偷懶不寫型別，編譯器會跟你抱怨。
@@ -35,11 +35,11 @@ fn main() {
 ### 差別二：命名慣例是全大寫加底線
 
 ```rust,editable
-# fn main() {
+fn main() {
     const MAX_SCORE: i32 = 100;    // ✅ 全大寫，用底線分隔
     const PI_VALUE: f64 = 3.14159; // ✅ 這樣
     const maxScore: i32 = 100;     // ⚠️ 可以編譯，但編譯器會警告你
-# }
+}
 ```
 
 這是 Rust 社群的慣例：常數用 `SCREAMING_SNAKE_CASE`（全大寫蛇形命名）。不遵守的話程式還是能跑，但編譯器會碎碎念。

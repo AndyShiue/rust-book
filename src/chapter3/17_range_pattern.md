@@ -11,13 +11,13 @@
 Rust 提供了 **range pattern**，讓你在 `match` 裡用範圍來比對：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let score = 12;
     match score {
         1..=5 => println!("低分"),
         _ => {}
     }
-# }
+}
 ```
 
 `1..=5` 代表 1、2、3、4、5（包含頭尾）。這個 `..=` 和第 1 章學的 `for i in 0..=5` 是差不多的意思。
@@ -25,14 +25,14 @@ Rust 提供了 **range pattern**，讓你在 `match` 裡用範圍來比對：
 除了 `..=`（包含結尾），也可以用 `..`（不包含結尾）：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let score = 65;
     match score {
         0..50 => println!("不及格"),  // 0 到 49
         50..=100 => println!("及格"), // 50 到 100（包含）
         _ => {}
     }
-# }
+}
 ```
 
 ### 注意：兩種 `..` 不要搞混！
@@ -49,14 +49,14 @@ Rust 編譯器會根據前後文判斷是哪一種，不會搞混。但初學時
 range pattern 也支援只寫一邊：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let temperature = 25;
     match temperature {
         ..0 => println!("零下"),        // 小於 0
         0..=30 => println!("普通"),     // 0 到 30
         31.. => println!("很熱"),       // 31 以上
     }
-# }
+}
 ```
 
 ### `char` 也能用
@@ -64,7 +64,7 @@ range pattern 也支援只寫一邊：
 range pattern 不只能用在數字，也能用在 `char`：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let c = '哼';
     match c {
         'a'..='z' => println!("小寫英文字母"),
@@ -72,7 +72,7 @@ range pattern 不只能用在數字，也能用在 `char`：
         '0'..='9' => println!("數字"),
         _ => println!("其他字元"),
     }
-# }
+}
 ```
 
 ## 範例程式碼

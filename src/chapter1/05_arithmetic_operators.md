@@ -40,11 +40,11 @@ fn main() {
 你有注意到嗎？我們在 `println!` 裡面放了三個 `{}`：
 
 ```rust,editable
-# fn main() {
-#     let a = 10;
-#     let b = 3;
+fn main() {
+    let a = 10;
+    let b = 3;
     println!("{} + {} = {}", a, b, a + b);
-# }
+}
 ```
 
 Rust 會按照順序把值填進去：

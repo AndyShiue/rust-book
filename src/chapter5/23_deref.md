@@ -11,11 +11,11 @@
 到目前為止，我們只對一般的參考（`&T`）用過 `*`。但其實 `*` 也能用在其他型別上：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let b = Box::new(42);
     let val: i32 = *b; // 把值從 Box 裡拿出來
     println!("{}", val); // 42
-# }
+}
 ```
 
 `*b` 得到的是 `Box` 裡面的 `i32`。這之所以能成立，是因為 `Box<T>` 實作了一個叫 `Deref` 的 `trait`。
@@ -62,11 +62,11 @@ let b = Box::new(42);
 `DerefMut::deref_mut` 回傳 `&mut T`，外面的 `*` 解開後就能寫入值。例如：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut b = Box::new(0);
     *b = 42;
     println!("{}", *b); // 42
-# }
+}
 ```
 
 `Box<T>` 同時實作了 `Deref` 和 `DerefMut`，所以既能讀也能寫。`Rc<T>` 則只實作了 `Deref`，不允許透過 `*` 修改內容。

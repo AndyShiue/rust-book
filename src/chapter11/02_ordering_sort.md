@@ -79,7 +79,7 @@ fn main() {
 `Vec` 和切片提供了幾種排序方法：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut nums = vec![3, 1, 4, 1, 5];
 
     // sort：由小到大，要求 Ord
@@ -94,7 +94,7 @@ fn main() {
     let mut words = vec!["banana", "apple", "fig"];
     words.sort_by_key(|w| w.len());
     println!("{:?}", words); // ["fig", "apple", "banana"]
-# }
+}
 ```
 
 ### `Reverse`

@@ -19,8 +19,8 @@ struct Point {
     x: i32,
     y: i32,
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 `struct` 定義一般放在 `fn main()` 外面，這樣其他函數也能用到。放在上面或下面都可以（和函數一樣，不受定義順序限制）。
@@ -61,8 +61,8 @@ struct Point {
     x: i32,
     y: i32, // ← 這個逗號可加可不加
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 Rust 允許在 `struct` 定義、`struct` 建立、函數呼叫等地方的最後一個項目後面加逗號。這叫做 **trailing comma**（結尾逗號）。加了不會錯，而且好處是之後新增欄位時，不用回去幫上一行補逗號，git diff 也比較乾淨。

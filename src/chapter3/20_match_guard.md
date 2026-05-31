@@ -11,13 +11,13 @@
 Rust 的 **`match` guard** 讓你在模式後面加上 `if 條件`：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let n = 137;
     match n {
         x if x % 2 == 0 => println!("{} 是偶數", x),
         x => println!("{} 是奇數", x),
     }
-# }
+}
 ```
 
 `x if x % 2 == 0` 的意思是「先把值綁定到 `x`，然後額外檢查 `x % 2 == 0` 是否成立」。只有模式匹配**而且** guard 條件為 `true` 的時候，這個分支才會被執行。

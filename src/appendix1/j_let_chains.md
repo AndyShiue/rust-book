@@ -39,14 +39,14 @@ fn main() {
 你可以用 `&&` 把多個 `let` 和布林條件串在同一個 `if` 裡：
 
 ```rust,editable
-# enum Wrapper {
-#     Value(i32),
-#     Empty,
-# }
-#
-# fn get_a() -> Wrapper { Wrapper::Value(10) }
-# fn get_b(x: i32) -> Wrapper { Wrapper::Value(x + 1) }
-#
+enum Wrapper {
+    Value(i32),
+    Empty,
+}
+
+fn get_a() -> Wrapper { Wrapper::Value(10) }
+fn get_b(x: i32) -> Wrapper { Wrapper::Value(x + 1) }
+
 fn main() {
     if let Wrapper::Value(a) = get_a()
         && a > 0

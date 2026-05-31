@@ -31,19 +31,19 @@ Rust 會在值離開作用域時**自動呼叫** `drop`。你不能手動呼叫 
 如果你想提前釋放一個值，用 `drop()`：
 
 ```rust,editable
-# struct MyType { name: String }
-#
-# impl Drop for MyType {
-#     fn drop(&mut self) {
-#         println!("MyType 被丟棄了！");
-#     }
-# }
-#
-# fn main() {
+struct MyType { name: String }
+
+impl Drop for MyType {
+    fn drop(&mut self) {
+        println!("MyType 被丟棄了！");
+    }
+}
+
+fn main() {
     let x = MyType { name: String::from("小明") };
     drop(x); // 提前丟棄
     // x 不能再用了
-# }
+}
 ```
 
 `drop` 是一個函數（不是 method），它會取走值的所有權，然後讓值離開作用域，觸發 `Drop`。

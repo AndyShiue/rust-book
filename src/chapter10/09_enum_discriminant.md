@@ -27,12 +27,12 @@ enum Color {
 上一集學了 `as`。C-style enum 可以用 `as` 轉成整數看到它的 discriminant：
 
 ```rust,editable
-# enum Color {
-#     Red,   // 0
-#     Green, // 1
-#     Blue,  // 2
-# }
-#
+enum Color {
+    Red,   // 0
+    Green, // 1
+    Blue,  // 2
+}
+
 fn main() {
     println!("{}", Color::Red as i32);   // 0
     println!("{}", Color::Green as i32); // 1

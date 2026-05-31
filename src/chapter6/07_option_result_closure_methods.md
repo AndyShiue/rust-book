@@ -43,7 +43,7 @@
 **`unwrap_or_else` —— 給一個計算預設值的閉包**
 
 ```rust,editable
-# fn main() {
+fn main() {
     // Option<T> 上的方法：
     // fn unwrap_or_else(self, f: impl FnOnce() -> T) -> T
     let x: Option<i32> = None;
@@ -51,7 +51,7 @@
         println!("沒有值，計算預設值...");
         42
     });
-# }
+}
 ```
 
 跟 `unwrap_or` 不同，`unwrap_or_else` 的預設值是**惰性計算**的——只有在真的是 `None` 的時候才會執行閉包。
@@ -118,7 +118,7 @@
 **`unwrap_or_else` —— 從 `Err` 計算預設值**
 
 ```rust,editable
-# fn main() {
+fn main() {
     // Result<T, E> 上的方法：
     // fn unwrap_or_else(self, f: impl FnOnce(E) -> T) -> T
     let r: Result<i32, String> = Err(String::from("oops"));
@@ -126,7 +126,7 @@
         println!("發生錯誤：{}，使用預設值", e);
         0
     });
-# }
+}
 ```
 
 ### 跟 `match` 的比較

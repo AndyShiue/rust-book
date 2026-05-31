@@ -11,11 +11,11 @@
 上一集我們發現，`struct` 的值在賦值或傳入函數時會被 move，但整數不會：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let a = 42;
     let b = a;
     println!("{}", a); // 完全沒問題！
-# }
+}
 ```
 
 為什麼？答案就是 **`Copy` `trait`**。
@@ -39,7 +39,7 @@
 另外，**tuple** 和**陣列**如果裡面每個元素都是 `Copy` 的，那它們整體也是 `Copy` 的：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let t = (1, true, 'a');  // (i32, bool, char) → 全部 Copy → tuple 也是 Copy
     let t2 = t;
     println!("{:?}", t);     // OK！
@@ -47,7 +47,7 @@
     let arr = [1, 2, 3];     // [i32; 3] → i32 是 Copy → 陣列也是 Copy
     let arr2 = arr;
     println!("{:?}", arr);   // OK！
-# }
+}
 ```
 
 這就是為什麼你在前面幾章寫的程式碼裡，整數、tuple、陣列可以隨便賦值給多個變數、傳進多個函數，完全不會有問題。
@@ -75,17 +75,17 @@ struct Point {
 加上之後，`Point` 的行為就跟整數一樣了——賦值不會 move：
 
 ```rust,editable
-# #[derive(Debug, Copy, Clone)]
-# struct Point {
-#     x: i32,
-#     y: i32,
-# }
-#
-# fn main() {
+#[derive(Debug, Copy, Clone)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
     let p1 = Point { x: 1, y: 2 };
     let p2 = p1; // 自動複製，p1 還在！
     println!("{:?}", p1); // OK
-# }
+}
 ```
 
 ### copy 和 `clone` 的差別

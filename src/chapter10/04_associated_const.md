@@ -29,21 +29,21 @@ impl HasLimit for i8 {
 實作的時候必須指定值。使用時用 `Type::CONST` 的語法：
 
 ```rust,editable
-# trait HasLimit {
-#     const LIMIT: i32;
-# }
-#
-# impl HasLimit for u8 {
-#     const LIMIT: i32 = 255;
-# }
-#
-# impl HasLimit for i8 {
-#     const LIMIT: i32 = 127;
-# }
-# fn main() {
+trait HasLimit {
+    const LIMIT: i32;
+}
+
+impl HasLimit for u8 {
+    const LIMIT: i32 = 255;
+}
+
+impl HasLimit for i8 {
+    const LIMIT: i32 = 127;
+}
+fn main() {
     println!("u8：{}", <u8 as HasLimit>::LIMIT); // 255
     println!("i8：{}", <i8 as HasLimit>::LIMIT); // 127
-# }
+}
 ```
 
 ### associated `const` 可以有預設值
@@ -62,8 +62,8 @@ impl Config for MyApp {
     const TIMEOUT: u64 = 60; // 覆蓋預設
     // RETRIES 用預設值 3
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 ### `impl` 裡的 associated `const`

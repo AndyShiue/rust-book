@@ -38,7 +38,7 @@
 假設我們有這樣的閉包：
 
 ```rust,editable
-# fn main () {
+fn main () {
     let name = String::from("Alice");
     let greet = || {
         let s = name; // 閉包體內把 name 移走了
@@ -46,7 +46,7 @@
     };
     greet();
     // greet(); // 編譯錯誤！name 已經被移走，不能再呼叫
-# }
+}
 ```
 
 編譯器會產生類似這樣的東西：
@@ -77,7 +77,7 @@ impl GreetOnce {
 假設閉包修改了捕捉的變數：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut name = String::from("Alice");
     let mut greet = || {
         name.push_str("!");
@@ -85,7 +85,7 @@ impl GreetOnce {
     };
     greet();
     greet(); // 可以多次呼叫
-# }
+}
 ```
 
 編譯器產生的東西：
@@ -126,14 +126,14 @@ struct SomeClosure<'a> {
 如果閉包只是讀取捕捉的變數，完全不修改：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let name = String::from("Alice");
     let greet = || {
         println!("Hello, {}!", name);
     };
     greet();
     greet(); // 可以多次呼叫，完全沒問題
-# }
+}
 ```
 
 編譯器產生的東西：

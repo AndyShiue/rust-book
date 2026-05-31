@@ -13,11 +13,11 @@
 ### `&mut` 就是「借來改」
 
 ```rust,editable
-# fn main() {
+fn main() {
     let mut x = 10;
     let r: &mut i32 = &mut x; // 可變借用
     *r = 20;                  // 透過 r 修改 x 的值
-# }
+}
 ```
 
 幾個重點：

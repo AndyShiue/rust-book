@@ -11,13 +11,13 @@
 走訪一個裝著 tuple 的陣列：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let pairs = [(1, "one"), (2, "two"), (3, "three")];
 
     for (num, name) in pairs {
         println!("{} = {}", num, name);
     }
-# }
+}
 ```
 
 `(num, name)` 就是模式，陣列裡的每個元素都是 tuple，迴圈會把它拆開分別給 `num` 和 `name`。

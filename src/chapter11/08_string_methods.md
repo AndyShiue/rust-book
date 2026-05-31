@@ -50,11 +50,11 @@
 ### 逐字元走訪
 
 ```rust,editable
-# fn main() {
+fn main() {
     for c in "hello".chars() {
         println!("{}", c);
     }
-# }
+}
 ```
 
 `.chars()` 回傳 Unicode 字元的迭代器。也有 `.bytes()` 回傳原始 byte。

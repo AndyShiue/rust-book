@@ -43,13 +43,13 @@ fn calculate_tax(income: f64) -> f64 {
 「這個功能沒有實作」。跟 `todo!()` 很像，但語義不同——`todo!()` 明確表示「之後會做」，`unimplemented!()` 則**不保證之後會做**。可能是不打算做，可能是目前沒需求，也可能是 `trait` 要求的方法但對這個型別沒意義：
 
 ```rust,editable
-# trait Foo {
-#     fn bar(&self) -> u8;
-#     fn baz(&self);
-# }
-#
-# struct MyStruct;
-#
+trait Foo {
+    fn bar(&self) -> u8;
+    fn baz(&self);
+}
+
+struct MyStruct;
+
 impl Foo for MyStruct {
     fn bar(&self) -> u8 {
         1 + 1
@@ -60,8 +60,8 @@ impl Foo for MyStruct {
         unimplemented!()
     }
 }
-#
-# fn main() {}
+
+fn main() {}
 ```
 
 ### `unreachable!()`
@@ -69,13 +69,13 @@ impl Foo for MyStruct {
 「這行程式碼不應該被執行到」。如果你確定某段邏輯不可能走到，用這個來標記：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let direction = "north";
     match direction {
         "north" | "south" | "east" | "west" => println!("有效方向"),
         _ => unreachable!("方向只有四種，不可能走到這裡"),
     }
-# }
+}
 ```
 
 如果真的走到了，表示你的假設有誤，panic 會幫你發現這個 bug。

@@ -9,29 +9,29 @@
 還記得第 1 章學過 `if` 可以當表達式嗎？
 
 ```rust,editable
-# fn main() {
-#     let condition = true;
+fn main() {
+    let condition = true;
     let x = if condition { 1 } else { 2 };
-# }
+}
 ```
 
 `match` 也可以！你可以把整個 `match` 放在 `let` 的右邊，讓每個分支回傳一個值：
 
 ```rust,editable
-# enum Color {
-#     Red,
-#     Green,
-#     Blue,
-# }
-#
-# fn main() {
-#     let c = Color::Red;
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+fn main() {
+    let c = Color::Red;
     let msg = match c {
         Color::Red => "紅色",
         Color::Green => "綠色",
         Color::Blue => "藍色",
     };
-# }
+}
 ```
 
 注意最後面有一個分號 `;`，因為整個 `let msg = match ... { ... };` 是一個 `let` 陳述式。

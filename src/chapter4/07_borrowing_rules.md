@@ -49,13 +49,13 @@
 多個人同時讀，沒有任何問題：
 
 ```rust,editable
-# fn main() {
+fn main() {
     let x = 10;
     let r1 = &x;
     let r2 = &x;
     let r3 = &x;
     println!("{} {} {}", r1, r2, r3); // 完全OK
-# }
+}
 ```
 
 ### 懸垂參考（dangling reference）
