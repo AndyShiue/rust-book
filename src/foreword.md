@@ -24,5 +24,5 @@
 
 本教學除大綱外，初稿由 AI 完成，並經人類修改：
 
-- 模型：Claude 4.5 / 4.6 / 4.7
+- 模型：Claude 4.5 ~ 4.8
 - 馬具：OpenClaw / Claude Code
