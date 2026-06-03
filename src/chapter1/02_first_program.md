@@ -70,7 +70,7 @@ Hello, world!
 
 ### 改一下再跑
 
-現在回到 VS Code，把 `println!` 裡面的文字改成：
+現在回到你喜歡的文字編輯器，把 `println!` 裡面的文字改成：
 
 ```rust,editable
 fn main() {
