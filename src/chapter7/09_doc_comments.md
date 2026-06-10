@@ -73,13 +73,13 @@ Rust 社群有一些約定俗成的文件段落名稱：
 
 ### 文件範例就是測試（doctest）
 
-重點來了。`# Examples` 裡的程式碼區塊不只是給人看的——**`cargo test` 會把每一個文件範例抽出來、編譯、執行**，這叫做 **doctest**。第 6 集學的 `cargo test` 其實除了跑 `#[test]` 函數之外，也會跑所有的 doctest（輸出裡的 `Doc-tests` 區段就是它）。
+重點來了。`# Examples` 裡的程式碼區塊不只是給人看的——**`cargo test` 會把每一個文件範例抽出來、編譯、執行**，這叫做 **doctest**。第 6 集學的 `cargo test` 其實除了跑 `#[test]` 函數之外，也會跑所有的 doctest。
 
 每個文件範例會被當成一個**獨立的小程式**來編譯——它在你的 library **外面**，就像一個使用你 library 的人寫的程式。所以範例裡必須寫 `use my_math_lib::gcd;`，就像真正的使用者一樣。忘記寫 `use`，doctest 會編譯失敗——而**編譯失敗也算測試失敗**。順帶一提，範例裡不需要寫 `fn main()`，rustdoc 會自動幫你包一層。
 
 這個設計帶來一個很美好的結果：**範例永遠是對的**。如果你改了函數的名字或簽名，卻忘了改文件裡的範例，`cargo test` 立刻就跳錯誤給你看。在很多語言裡，文件範例會隨著程式碼演進而悄悄過期；在 Rust，過期的範例會直接擋住你的測試。
 
-一個要注意的地方：只有 **library crate**（`lib.rs`）的 doctest 會執行。binary crate（`main.rs`）裡的文件註解一樣能產生文件，但裡面的範例**不會**被當成測試跑。
+一個要注意的地方：只有 **library crate** 的 doctest 會執行。binary crate 裡的文件註解一樣能產生文件，但裡面的範例**不會**被當成測試跑。
 
 ### `cargo doc`
 
@@ -190,6 +190,6 @@ impl Temperature {
 - `# Examples` 是最重要的文件段落——好的範例勝過千言萬語
 - **文件範例就是 doctest**：`cargo test` 會編譯並執行所有文件範例，編譯失敗或 `assert` 失敗都算測試失敗
 - doctest 以「library 使用者」的身分編譯，所以範例裡要寫 `use your_crate::...`
-- doctest 只對 library crate（`lib.rs`）執行
+- doctest 只對 library crate 執行
 - `cargo doc --open` 一鍵產生並打開 HTML 文件
 - 你在 docs.rs 上看到的文件，就是用同樣的機制產生的
