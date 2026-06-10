@@ -1,3 +1,6 @@
+% 讓 XeTeX 為經過字形替換(如連字)的文字輸出 ActualText,
+% 確保 PDF 中的搜尋與複製能還原成原始字元。
+\XeTeXgenerateactualtext=1
 \usepackage{xeCJK}
 \usepackage{fontspec}
 \usepackage{fvextra}
@@ -24,11 +27,12 @@
 }
 \makeatother
 
-\IfFontExistsTF{Noto Emoji}
-  {\newfontfamily\EmojiFont{Noto Emoji}[Scale=MatchUppercase]}
+% Symbola 優先:Noto Emoji 缺 → ← ✓ ✗ 等字形,落在它身上會整個字消失
+\IfFontExistsTF{Symbola}
+  {\newfontfamily\EmojiFont{Symbola}[Scale=MatchUppercase]}
   {%
-    \IfFontExistsTF{Symbola}
-      {\newfontfamily\EmojiFont{Symbola}[Scale=MatchUppercase]}
+    \IfFontExistsTF{Noto Emoji}
+      {\newfontfamily\EmojiFont{Noto Emoji}[Scale=MatchUppercase]}
       {\newfontfamily\EmojiFont{Noto Color Emoji}[Scale=MatchUppercase]}%
   }
 \newcommand{\Emoji}[1]{{\EmojiFont #1}}
@@ -59,6 +63,21 @@
   }%
 \fi
 
+% 西文主字型 Noto Sans 缺 ⋯(U+22EF)與 ⊂(U+2282),
+% 宣告為 CJK 字元類讓 Noto Sans CJK TC 負責,避免字直接消失。
+\xeCJKDeclareCharClass{CJK}{"22EF, "2282}
+
+% 表格(longtable)用 \small,避免比較表過寬突出版心
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\small}
+% 容許段落多一點伸縮,減少行內程式碼造成的超寬行
+\emergencystretch=3em
+
+% 行內程式碼內部不要插入中英文間距,避免字串看起來多了空格
+\usepackage{letltxmacro}
+\LetLtxMacro\PrintOrigTexttt\texttt
+\renewcommand{\texttt}[1]{{\xeCJKsetup{CJKecglue={}}\PrintOrigTexttt{#1}}}
+
 \definecolor{shadecolor}{RGB}{247,247,247}
 \linespread{1.18}
 \setlength{\parindent}{0pt}
@@ -77,6 +96,10 @@
   \fancyhead[LO]{\nouppercase{\rightmark}}%
   \renewcommand{\headrulewidth}{0.4pt}%
 }
+
+% 頁眉與章標題一致,用「第N章」而非英文「Chapter N.」
+\renewcommand{\chaptermark}[1]{\markboth{第\thechapter 章\quad #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
 
 \setlength{\cftpartnumwidth}{3.2em}
 \setlength{\cftchapnumwidth}{2.8em}

@@ -31,7 +31,7 @@ fi
 
 pandoc "$MANUSCRIPT" \
   --standalone \
-  --from markdown+fenced_code_attributes+raw_tex+smart \
+  --from markdown+fenced_code_attributes+raw_tex+smart+lists_without_preceding_blankline \
   --top-level-division=chapter \
   --number-sections \
   --metadata-file=print/metadata.yaml \

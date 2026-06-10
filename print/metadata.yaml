@@ -16,6 +16,12 @@ sansfont: Noto Sans
 monofont: JetBrains Mono
 monofontoptions:
   - Scale=0.92
+  # 關閉 JetBrains Mono 的連字(ligatures)::: -> => != 等符號組合
+  # 會被合併成單一字形,該字形在 PDF 內沒有正確的 Unicode 對應,
+  # 導致搜尋與複製時變成 ^: ^> 之類的亂碼。
+  # (不能用 RawFeature={...}:pandoc 會把 metadata 裡的大括號轉義)
+  - Contextuals=AlternateOff
+  - Ligatures=CommonOff
 geometry:
   - a4paper
   - inner=24mm

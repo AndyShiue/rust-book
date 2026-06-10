@@ -25,6 +25,7 @@ CODE_SYMBOLS = {
     "→",
     "⇒",
     "🎉",
+    "💥",
     "🚀",
     "🦀",
     "😊",
@@ -50,6 +51,41 @@ def patch_code_symbols(text: str) -> str:
     return "".join(patched)
 
 
+def patch_inline_symbols(text: str) -> str:
+    """Wrap code symbols with \\Emoji outside code blocks (inline \\texttt, prose)."""
+    patched: list[str] = []
+    index = 0
+    while index < len(text):
+        char = text[index]
+        if char in CODE_SYMBOLS:
+            sequence = char
+            index += 1
+            if index < len(text) and text[index] == "️":
+                sequence += text[index]
+                index += 1
+            patched.append(f"\\Emoji{{{sequence}}}")
+            continue
+        patched.append(char)
+        index += 1
+    return "".join(patched)
+
+
+def patch_symbols_outside_highlighting(source: str) -> str:
+    """Apply patch_inline_symbols to body text outside Highlighting blocks."""
+    begin = source.find("\\begin{document}")
+    if begin == -1:
+        return source
+    preamble, body = source[:begin], source[begin:]
+    parts: list[str] = []
+    last = 0
+    for match in HIGHLIGHTING_RE.finditer(body):
+        parts.append(patch_inline_symbols(body[last:match.start()]))
+        parts.append(match.group(0))
+        last = match.end()
+    parts.append(patch_inline_symbols(body[last:]))
+    return preamble + "".join(parts)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("tex", type=Path)
@@ -66,6 +102,7 @@ def main() -> None:
         )
 
     patched = HIGHLIGHTING_RE.sub(replace, source)
+    patched = patch_symbols_outside_highlighting(patched)
     tex.write_text(patched, encoding="utf-8")
 
 
