@@ -115,7 +115,7 @@ fn main() {
 
 答案是：**tuple 和 `struct` 的解構不會失敗**。一個 `(i32, i32)` 一定有兩個值，一個 `Point` 一定有 `x` 和 `y`——沒有其他可能。
 
-但 `enum` 不一樣。一個 `Shape` 可能是 `Circle` 或 `Rectangle`。如果你寫 `let Shape::Circle { radius: f64 } = s;`，但 `s` 其實是 `Rectangle` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
+但 `enum` 不一樣。一個 `Shape` 可能是 `Circle` 或 `Rectangle`。如果你寫 `let Shape::Circle { radius } = s;`，但 `s` 其實是 `Rectangle` 呢？這就失敗了。Rust 不允許 `let` 裡出現可能失敗的模式。
 
 比對時一定會成功的模式被叫做 **irrefutable pattern**（不可反駁的模式），可能失敗的叫做 **refutable pattern**（可反駁的模式）。`let`、`for` 和函數參數只接受 irrefutable pattern。
 
