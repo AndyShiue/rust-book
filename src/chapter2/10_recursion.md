@@ -82,7 +82,7 @@ factorial(5)
 
 ```rust,editable
 fn countdown(n: u32) {
-    if n <= 0 {
+    if n == 0 {
         println!("發射！🚀");
         return;
     }

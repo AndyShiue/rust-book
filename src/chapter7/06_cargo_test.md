@@ -35,7 +35,7 @@ fn it_works() {
 
 `assert!` 系列不只能用在測試裡——你也可以在普通程式碼裡用它們來檢查條件。但要注意：`assert!` 在 debug 和 release 模式下**都會執行**，即使是正式發布的程式，條件不成立一樣會 panic。如果你只想在開發階段檢查、正式發布時自動移除，可以用 `debug_assert!`、`debug_assert_eq!`、`debug_assert_ne!`——它們在 release 模式下會被編譯器完全忽略。
 
-不過在**測試**裡面，直接用 `assert!` 系列就好——測試本來就不會用 release build 跑。
+不過在**測試**裡面，直接用 `assert!` 系列就好——測試本來就預設用 debug build 跑。
 
 ### 測試預期中的 panic
 

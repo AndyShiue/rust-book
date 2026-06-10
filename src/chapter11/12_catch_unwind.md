@@ -33,7 +33,7 @@ fn main() {
 
 ### `UnwindSafe`
 
-`catch_unwind` 要求閉包是 `UnwindSafe` 的。為什麼？因為 panic 的時候，閉包裡的操作可能做到一半，資料處於不一致的狀態——跟第 8 章 poisoning 的道理一樣。
+`catch_unwind` 要求閉包是 `UnwindSafe` 的。為什麼？因為 panic 的時候，閉包裡的操作可能做到一半，資料處於不一致的狀態——跟多執行緒那章 poisoning 的道理一樣。
 
 `&mut T` 不是 `UnwindSafe`：如果你透過 `&mut` 修改資料修到一半 panic 了，catch 之後那份資料可能是半成品。`&T`、`i32` 等不可變的東西是 `UnwindSafe` 的。
 

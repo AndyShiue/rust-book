@@ -11,31 +11,31 @@
 `struct` 的每個欄位各佔一塊記憶體。`union` 不一樣——**所有欄位共享同一塊記憶體**：
 
 ```rust,noplayground
-union IntOrFloat {
+union IntOrBool {
     i: i32,
-    f: f32,
+    b: bool,
 }
 #
 # fn main() {}
 ```
 
-`IntOrFloat` 的大小是最大欄位的大小（4 bytes）。`i` 和 `f` 佔的是同一塊記憶體——寫入 `i` 會覆蓋 `f` 的內容。
+`IntOrBool` 的大小是最大欄位的大小（4 bytes）。`i` 和 `b` 佔的是同一塊記憶體——寫入 `i` 會覆蓋 `b` 的內容。
 
 ### 寫入不需要 `unsafe`，讀取需要
 
 ```rust,noplayground
-# union IntOrFloat {
+# union IntOrBool {
 #     i: i32,
-#     f: f32,
+#     b: bool,
 # }
 #
 # fn main() {
-    let u = IntOrFloat { i: 42 };
+    let u = IntOrBool { i: 1 };
     let value = unsafe { u.i }; // 讀取需要 unsafe
 # }
 ```
 
-為什麼讀取需要 `unsafe`？因為 Rust 不知道你上次寫入的是哪個欄位。如果你用 `i` 寫入 42，再用 `f` 讀出來，Rust 會把那 4 bytes 當成 `f32` 解讀——得到一個無意義的浮點數。
+為什麼讀取需要 `unsafe`？因為 Rust 不知道你上次寫入的是哪個欄位。`bool` 在記憶體中**必須是 0 或 1**。如果你用 `i` 寫入 42，再用 `b` 讀出來，那塊記憶體的內容是 42——對 `bool` 來說不是有效的值，這是**未定義行為**。讀取 union 欄位時，你必須自己保證記憶體裡的內容對你要讀的型別是有效的——編譯器檢查不了這件事，所以要 `unsafe`。
 
 ### 跟 `enum` 的差別
 
@@ -52,30 +52,31 @@ union IntOrFloat {
 ## 範例程式碼
 
 ```rust,editable
-union Value {
-    integer: i64,
-    float: f64,
-    boolean: bool,
+union IntOrBool {
+    i: i32,
+    b: bool,
 }
 
 fn main() {
-    let v = Value { integer: 42 };
+    // 寫入不需要 unsafe
+    let u = IntOrBool { b: true };
 
     // 讀取需要 unsafe
     unsafe {
-        println!("integer: {}", v.integer);
-        // 同一塊記憶體用不同型別解讀
-        println!("float: {}", v.float); // 無意義的值
+        // 寫 b 讀 b，沒問題
+        println!("b = {}", u.b);
     }
 
-    // 寫入不需要 unsafe
-    let v2 = Value { float: 3.14 };
+    let v = IntOrBool { i: 42 };
     unsafe {
-        println!("float: {}", v2.float);
+        println!("i = {}", v.i);
+        // 千萬不要這樣做：
+        // println!("b = {}", v.b);
+        // bool 必須是 0 或 1，但這塊記憶體是 42 → 未定義行為！
     }
 
     // union 的大小 = 最大欄位的大小
-    println!("size: {} bytes", std::mem::size_of::<Value>()); // 8
+    println!("size: {} bytes", std::mem::size_of::<IntOrBool>()); // 4
 }
 ```
 
@@ -83,5 +84,6 @@ fn main() {
 
 - `union` 的所有欄位共享同一塊記憶體
 - 寫入不需要 `unsafe`，讀取需要——因為 Rust 不知道裡面存的是哪個欄位
+- 讀取時你必須保證記憶體內容對該型別有效——`bool` 必須是 0 或 1，寫入 42 後讀 `b` 是未定義行為
 - 跟 `enum` 不同：`union` 沒有 discriminant，不追蹤目前是哪個 variant
 - 主要用途是 FFI（跟 C 語言的 `union` 對應）

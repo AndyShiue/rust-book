@@ -132,7 +132,7 @@ trait Describe {
 }
 
 fn main() {
-    println!("{}", size_of::<&usize>());        // 8
+    println!("{}", size_of::<&i32>());          // 8
     println!("{}", size_of::<&dyn Describe>()); // 16（位址 + vtable 指標）
     println!("{}", size_of::<&[i32]>());        // 16（位址 + 長度）
 }

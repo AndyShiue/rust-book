@@ -51,7 +51,7 @@ enum Direction {
 }
 
 fn main() {
-    let dir = Direction::Up;
+    let _dir = Direction::Up;
 
     // 目前我們還不會用 enum 做太多事
     // 下一集會學 match，就能根據 enum 的值做不同的事情

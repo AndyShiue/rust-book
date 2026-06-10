@@ -2,11 +2,11 @@
 
 ## 本集目標
 
-學會撰寫文件註解，用 `cargo doc` 產生專業的 HTML 文件。
+學會撰寫文件註解，理解文件範例就是測試（doctest），並用 `cargo doc` 產生專業的 HTML 文件。
 
 ## 概念說明
 
-Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來的，而是內建在語法裡的。
+Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來的，而是內建在語法裡的。更厲害的是：文件裡的範例程式碼會被 `cargo test` 當成測試執行，所以 Rust 的文件範例永遠不會悄悄過期。
 
 ### `///` 項目文件註解
 
@@ -20,6 +20,8 @@ Rust 把文件當作語言的一等公民——不是用外部工具硬擠出來
 /// # Examples
 ///
 /// ```
+/// use my_math_lib::gcd;
+///
 /// let result = gcd(12, 8);
 /// assert_eq!(result, 4);
 /// ```
@@ -69,6 +71,16 @@ Rust 社群有一些約定俗成的文件段落名稱：
 - `# Panics` — 什麼情況下會 panic
 - `# Errors` — 如果回傳 `Result`，什麼情況下會是 `Err`
 
+### 文件範例就是測試（doctest）
+
+重點來了。`# Examples` 裡的程式碼區塊不只是給人看的——**`cargo test` 會把每一個文件範例抽出來、編譯、執行**，這叫做 **doctest**。第 6 集學的 `cargo test` 其實除了跑 `#[test]` 函數之外，也會跑所有的 doctest（輸出裡的 `Doc-tests` 區段就是它）。
+
+每個文件範例會被當成一個**獨立的小程式**來編譯——它在你的 library **外面**，就像一個使用你 library 的人寫的程式。所以範例裡必須寫 `use my_math_lib::gcd;`，就像真正的使用者一樣。忘記寫 `use`，doctest 會編譯失敗——而**編譯失敗也算測試失敗**。順帶一提，範例裡不需要寫 `fn main()`，rustdoc 會自動幫你包一層。
+
+這個設計帶來一個很美好的結果：**範例永遠是對的**。如果你改了函數的名字或簽名，卻忘了改文件裡的範例，`cargo test` 立刻就跳錯誤給你看。在很多語言裡，文件範例會隨著程式碼演進而悄悄過期；在 Rust，過期的範例會直接擋住你的測試。
+
+一個要注意的地方：只有 **library crate**（`lib.rs`）的 doctest 會執行。binary crate（`main.rs`）裡的文件註解一樣能產生文件，但裡面的範例**不會**被當成測試跑。
+
 ### `cargo doc`
 
 寫好文件註解後，一行指令就能產生漂亮的 HTML 文件：
@@ -87,7 +99,9 @@ cargo doc --open
 
 ## 範例程式碼
 
-```rust,editable
+換一個完整的例子。假設 `Cargo.toml` 裡 `[package]` 的 `name` 是 `temperature`，以下是 `src/lib.rs` 的內容：
+
+```rust,noplayground
 //! # 溫度轉換工具
 //!
 //! 提供攝氏和華氏之間的轉換函數。
@@ -101,6 +115,8 @@ cargo doc --open
 /// # Examples
 ///
 /// ```
+/// use temperature::celsius_to_fahrenheit;
+///
 /// let f = celsius_to_fahrenheit(100.0);
 /// assert!((f - 212.0).abs() < 0.001);
 /// ```
@@ -117,6 +133,8 @@ pub fn celsius_to_fahrenheit(c: f64) -> f64 {
 /// # Examples
 ///
 /// ```
+/// use temperature::fahrenheit_to_celsius;
+///
 /// let c = fahrenheit_to_celsius(32.0);
 /// assert!((c - 0.0).abs() < 0.001);
 /// ```
@@ -136,6 +154,15 @@ pub enum Temperature {
 
 impl Temperature {
     /// 將任何溫度轉換為攝氏。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use temperature::Temperature;
+    ///
+    /// let body = Temperature::Fahrenheit(98.6);
+    /// assert!((body.to_celsius() - 37.0).abs() < 0.001);
+    /// ```
     pub fn to_celsius(&self) -> f64 {
         match self {
             Temperature::Celsius(c) => *c,
@@ -151,14 +178,8 @@ impl Temperature {
         }
     }
 }
-
-fn main() {
-    let boiling = Temperature::Celsius(100.0);
-    println!("水的沸點：{}°C = {}°F", boiling.to_celsius(), boiling.to_fahrenheit());
-
-    let body = Temperature::Fahrenheit(98.6);
-    println!("體溫：{}°F = {}°C", body.to_fahrenheit(), body.to_celsius());
-}
+#
+# fn main() {}
 ```
 
 ## 重點整理
@@ -167,5 +188,8 @@ fn main() {
 - `//!` 為包含它的項目（`mod`、crate）撰寫文件，通常放在檔案最頂端
 - 文件註解支援完整的 Markdown 語法
 - `# Examples` 是最重要的文件段落——好的範例勝過千言萬語
+- **文件範例就是 doctest**：`cargo test` 會編譯並執行所有文件範例，編譯失敗或 `assert` 失敗都算測試失敗
+- doctest 以「library 使用者」的身分編譯，所以範例裡要寫 `use your_crate::...`
+- doctest 只對 library crate（`lib.rs`）執行
 - `cargo doc --open` 一鍵產生並打開 HTML 文件
 - 你在 docs.rs 上看到的文件，就是用同樣的機制產生的

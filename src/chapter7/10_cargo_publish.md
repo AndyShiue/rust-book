@@ -143,6 +143,7 @@ categories = ["mathematics"]
 ///
 /// ```
 /// use my_math_lib::gcd;
+///
 /// assert_eq!(gcd(12, 8), 4);
 /// ```
 pub fn gcd(mut a: u64, mut b: u64) -> u64 {
@@ -160,6 +161,7 @@ pub fn gcd(mut a: u64, mut b: u64) -> u64 {
 ///
 /// ```
 /// use my_math_lib::lcm;
+///
 /// assert_eq!(lcm(4, 6), 12);
 /// ```
 pub fn lcm(a: u64, b: u64) -> u64 {
@@ -175,6 +177,7 @@ pub fn lcm(a: u64, b: u64) -> u64 {
 ///
 /// ```
 /// use my_math_lib::is_prime;
+///
 /// assert!(is_prime(7));
 /// assert!(!is_prime(4));
 /// ```

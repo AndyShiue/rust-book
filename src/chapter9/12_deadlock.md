@@ -54,7 +54,7 @@ fn main() {
 
 ### 同一個執行緒也會死鎖
 
-就算只有一個執行緒，對同一個 `Mutex` `lock` 兩次也會死鎖——因為第一次 `lock` 還沒放開，第二次 `lock` 就永遠等不到：
+就算只有一個執行緒，對同一個 `Mutex` `lock` 兩次也有可能會死鎖——如果第一次 `lock` 還沒放開，第二次 `lock` 就永遠等不到：
 
 ```rust,ignore,mdbook-runnable
 use std::sync::Mutex;
@@ -62,7 +62,7 @@ use std::sync::Mutex;
 fn main() {
     let m = Mutex::new(42);
     let _g1 = m.lock().expect("取得鎖失敗");
-    let _g2 = m.lock().expect("取得鎖失敗"); // 死鎖！第一個鎖還沒放，第二次 lock 永遠等不到
+    let _g2 = m.lock().expect("取得鎖失敗"); // 可能死鎖！第一個鎖還沒放，第二次 lock 永遠等不到
 }
 ```
 
@@ -110,5 +110,5 @@ fn main() {
 
 - 死鎖：多個執行緒互相等待對方放鎖，程式永遠卡住
 - Rust 的編譯器不會擋死鎖——`Send` / `Sync` 保護的是資料競爭，死鎖是邏輯問題
-- 同一個執行緒對同一個 `Mutex` `lock` 兩次也會死鎖，因為第一次的鎖還沒放開
+- 同一個執行緒對同一個 `Mutex` `lock` 兩次也有可能會死鎖，因為第一次的鎖還沒放開
 - 避免方法：統一取鎖順序、減少同時持有多個鎖、guard 用完趕快 `drop`

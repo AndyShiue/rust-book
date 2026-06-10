@@ -137,7 +137,7 @@ trait Robot {
 ```rust,noplayground
 // Iterator trait 有一個 associated type 叫 Item
 // 用完全限定語法取得它的具體型別：
-type MyItem = <Vec<i32> as Iterator>::Item; // i32
+type MyItem = <Vec<i32> as IntoIterator>::Item; // i32
 #
 # fn main() {}
 ```

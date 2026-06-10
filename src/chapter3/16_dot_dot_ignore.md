@@ -64,13 +64,13 @@ tuple `struct` 和 `enum` 的 tuple variant 也能用類似的方式匹配，例
 
 ```rust,editable
 fn main() {
-let data: &[i32] = &[10, 20, 30, 40, 50];
+    let data: &[i32] = &[10, 20, 30, 40, 50];
 
-match data {
-    [first, .., last] => println!("頭 = {}，尾 = {}", first, last),
-    [only] => println!("只有一個：{}", only),
-    [] => println!("空的"),
-}
+    match data {
+        [first, .., last] => println!("頭 = {}，尾 = {}", first, last),
+        [only] => println!("只有一個：{}", only),
+        [] => println!("空的"),
+    }
 }
 ```
 

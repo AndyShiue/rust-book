@@ -104,11 +104,17 @@ fn main() {
 上一集學了 Copy——有些型別賦值的時候會自動複製，不會 move。不管 `T` 是什麼，`&T` 都是 Copy 的。畢竟參考只是借用，複製一個參考不會影響原本的資料，只是多了一個人在看而已：
 
 ```rust,editable
+#[derive(Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+
 fn main() {
-    let s = String::from("hello");
+    let s = Point { x: 0, y: 0 };
     let r1 = &s;
     let r2 = r1; // 複製參考，不是 move
-    println!("{} {}", r1, r2); // r1 和 r2 都能用
+    println!("{:?}, {:?}", r1, r2); // r1 和 r2 都能用
 }
 ```
 

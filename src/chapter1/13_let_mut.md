@@ -43,11 +43,11 @@ fn main() {
 
 ### 小整理
 
-```rust,editable
-fn main() {
+```rust,noplayground
+# fn main() {
     let x = 5;     // 不可變，之後不能改
     let mut x = 5; // 可變，之後可以改
-}
+# }
 ```
 
 Rust 不是不讓你改變數，它只是要你**明確說出來**。這是 Rust 的一個設計哲學：**有意識地做出選擇**。

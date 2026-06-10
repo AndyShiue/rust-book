@@ -29,18 +29,19 @@ use std::fmt::Display;
 ## 範例程式碼
 
 ```rust,editable
-use std::mem::size_of;
+use std::cmp::max;
 
 fn main() {
     // 沒有 use 的話，要寫完整路徑：
-    println!("i32 的大小：{} bytes", std::mem::size_of::<i32>());
+    println!("較小的是：{}", std::cmp::min(3, 7));
 
-    // 有了 use，直接寫 size_of 就好：
-    println!("bool 的大小：{} bytes", size_of::<bool>());
-    println!("f64 的大小：{} bytes", size_of::<f64>());
-    println!("char 的大小：{} bytes", size_of::<char>());
+    // 有了 use，直接寫 max 就好：
+    println!("較大的是：{}", max(3, 7));
+    println!("較大的是：{}", max(10, -2));
 }
 ```
+
+`std::cmp::max` 和 `std::cmp::min` 是標準庫提供的函數，回傳兩個值中比較大或比較小的那個。它們不在 prelude 裡，所以要嘛寫完整路徑，要嘛用 `use` 引入。
 
 ## 重點整理
 

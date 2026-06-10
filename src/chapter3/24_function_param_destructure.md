@@ -109,7 +109,7 @@ fn main() {
 #     let s = Shape::Circle { radius: 6.7 };
     let (x, y) = (1, 2);    // OK
     let Point { x, y } = p; // OK
-    let Shape::Circle { radius: f64 } = s; // 不行！
+    let Shape::Circle { radius } = s; // 不行！
 # }
 ```
 
